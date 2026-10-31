@@ -1,0 +1,2328 @@
+[
+  {
+    "code": "A",
+    "name": "Kedisiplinan",
+    "unsurs": [
+      {
+        "id": "pres-a-1",
+        "name": "1. Selalu tepat waktu sholat berjama'ah (1 bulan penuh)",
+        "type": "HASANAH",
+        "indicators": [
+          {
+            "id": "ind-pres-a1-1",
+            "text": "Disiplin",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-a1-2",
+            "text": "Ketaatan/Kepatuhan",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-a1-3",
+            "text": "Penghormatan Waktu Wajib",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-a1-4",
+            "text": "Tanggung Jawab Ibadah",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-a1-5",
+            "text": "Istiqomah",
+            "type": "HASANAH",
+            "default_score": 0.075,
+            "tingkat": "Tinggi"
+          }
+        ]
+      },
+      {
+        "id": "pres-a-2",
+        "name": "2. Menjadi yang pertama hadir di masjid sebelum adzan",
+        "type": "HASANAH",
+        "indicators": [
+          {
+            "id": "ind-pres-a2-1",
+            "text": "Disiplin",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-a2-2",
+            "text": "Semangat Ibadah",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-a2-3",
+            "text": "Penghormatan Waktu Wajib",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-a2-4",
+            "text": "Keteladanan",
+            "type": "HASANAH",
+            "default_score": 0.075,
+            "tingkat": "Tinggi"
+          }
+        ]
+      },
+      {
+        "id": "pres-a-3",
+        "name": "3. Melaksanakan sholat rawatib (Qobliyah & Ba'diyah) secara rutin",
+        "type": "HASANAH",
+        "indicators": [
+          {
+            "id": "ind-pres-a3-1",
+            "text": "Ketaatan Beribadah",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-a3-2",
+            "text": "Kedisiplinan Waktu",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-a3-3",
+            "text": "Tanggung Jawab Spiritual",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-a3-4",
+            "text": "Istiqomah",
+            "type": "HASANAH",
+            "default_score": 0.075,
+            "tingkat": "Tinggi"
+          }
+        ]
+      },
+      {
+        "id": "pres-a-4",
+        "name": "4. Mengikuti dzikir & do'a setelah sholat dengan khusyu'",
+        "type": "HASANAH",
+        "indicators": [
+          {
+            "id": "ind-pres-a4-1",
+            "text": "Kekhusyu'an/Ta'abbud",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-a4-2",
+            "text": "Disiplin",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-a4-3",
+            "text": "Adab Terhadap Majelis",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-a4-4",
+            "text": "Penghayatan Ibadah",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pres-a-5",
+        "name": "5. Selalu membawa perlengkapan sholat & belajar dengan lengkap",
+        "type": "HASANAH",
+        "indicators": [
+          {
+            "id": "ind-pres-a5-1",
+            "text": "Disiplin",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-a5-2",
+            "text": "Rasa Tanggung Jawab",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-a5-3",
+            "text": "Kesiapan Rohani",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-a5-4",
+            "text": "Kesiapan Menuntut Ilmu",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pres-a-6",
+        "name": "6. Menjawab adzan & segera bersiap ke masjid",
+        "type": "HASANAH",
+        "indicators": [
+          {
+            "id": "ind-pres-a6-1",
+            "text": "Ketaatan",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-a6-2",
+            "text": "Kedisiplinan",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-a6-3",
+            "text": "Adab",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-a6-4",
+            "text": "Penghormatan",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pres-a-7",
+        "name": "7. Membaca Al-Qur'an sebelum adzan & sesudah sholat berjama'ah",
+        "type": "HASANAH",
+        "indicators": [
+          {
+            "id": "ind-pres-a7-1",
+            "text": "Kedisiplinan (Ibadah & Waktu)",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-a7-2",
+            "text": "Tanggung Jawab Spiritual",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-a7-3",
+            "text": "Kecintaan pada Al-Qur'an",
+            "type": "HASANAH",
+            "default_score": 0.075,
+            "tingkat": "Tinggi"
+          },
+          {
+            "id": "ind-pres-a7-4",
+            "text": "Istiqomah",
+            "type": "HASANAH",
+            "default_score": 0.075,
+            "tingkat": "Tinggi"
+          }
+        ]
+      },
+      {
+        "id": "pres-a-8",
+        "name": "8. Menjaga kebersihan & kerapian masjid",
+        "type": "HASANAH",
+        "indicators": [
+          {
+            "id": "ind-pres-a8-1",
+            "text": "Hormat Pada Masjid",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-a8-2",
+            "text": "Kebersihan & Keindahan",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-a8-3",
+            "text": "Amanah/Tanggung Jawab",
+            "type": "HASANAH",
+            "default_score": 0.075,
+            "tingkat": "Tinggi"
+          },
+          {
+            "id": "ind-pres-a8-4",
+            "text": "Rasa Memiliki",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pres-a-9",
+        "name": "9. Menjaga ketenangan & adab selama berada di masjid",
+        "type": "HASANAH",
+        "indicators": [
+          {
+            "id": "ind-pres-a9-1",
+            "text": "Adab Terhadap Masjid",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-a9-2",
+            "text": "Khusyu' Dalam Ibadah",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-a9-3",
+            "text": "Penguasaan Diri",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-a9-4",
+            "text": "Menghormati Orang Beribadah",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pres-a-10",
+        "name": "10. Meletakkan sandal di rak & baju di lemari dengan rapi",
+        "type": "HASANAH",
+        "indicators": [
+          {
+            "id": "ind-pres-a10-1",
+            "text": "Disiplin",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-a10-2",
+            "text": "Kerapian",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-a10-3",
+            "text": "Kebersihan",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-a10-4",
+            "text": "Tanggung Jawab Diri",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pres-a-11",
+        "name": "11. Menjaga kebersihan & kerapian kamar (kamar terbaik)",
+        "type": "HASANAH",
+        "indicators": [
+          {
+            "id": "ind-pres-a11-1",
+            "text": "Disiplin",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-a11-2",
+            "text": "Kebersihan",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-a11-3",
+            "text": "Kerapian",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-a11-4",
+            "text": "Kerjasama",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-a11-5",
+            "text": "Tanggung Jawab",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pres-a-12",
+        "name": "12. Mengunci lemari & menjaga barang pribadi dengan baik",
+        "type": "HASANAH",
+        "indicators": [
+          {
+            "id": "ind-pres-a12-1",
+            "text": "Disiplin",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-a12-2",
+            "text": "Kewaspadaan",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-a12-3",
+            "text": "Amanah",
+            "type": "HASANAH",
+            "default_score": 0.075,
+            "tingkat": "Tinggi"
+          },
+          {
+            "id": "ind-pres-a12-4",
+            "text": "Tanggung Jawab Diri",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pres-a-13",
+        "name": "13. Mengikuti muhadatsah pagi & olahraga pagi secara aktif",
+        "type": "HASANAH",
+        "indicators": [
+          {
+            "id": "ind-pres-a13-1",
+            "text": "Disiplin",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-a13-2",
+            "text": "Semangat Belajar",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-a13-3",
+            "text": "Kesungguhan",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-a13-4",
+            "text": "Kesehatan Jasmani",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pres-a-14",
+        "name": "14. Tidur tepat waktu (sebelum jam 23.00) & berdo'a bersama",
+        "type": "HASANAH",
+        "indicators": [
+          {
+            "id": "ind-pres-a14-1",
+            "text": "Disiplin",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-a14-2",
+            "text": "Pengendalian Diri",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-a14-3",
+            "text": "Kepatuhan Aturan",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-a14-4",
+            "text": "Istiqomah",
+            "type": "HASANAH",
+            "default_score": 0.075,
+            "tingkat": "Tinggi"
+          }
+        ]
+      },
+      {
+        "id": "pres-a-15",
+        "name": "15. Makan tepat waktu, mengantri & menghabiskan makanan",
+        "type": "HASANAH",
+        "indicators": [
+          {
+            "id": "ind-pres-a15-1",
+            "text": "Disiplin",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-a15-2",
+            "text": "Kesabaran",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-a15-3",
+            "text": "Rasa Syukur",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-a15-4",
+            "text": "Kepatuhan Aturan",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pres-a-16",
+        "name": "16. Berpakaian sesuai ketentuan pesantren (1 bulan penuh)",
+        "type": "HASANAH",
+        "indicators": [
+          {
+            "id": "ind-pres-a16-1",
+            "text": "Disiplin",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-a16-2",
+            "text": "Kesopanan",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-a16-3",
+            "text": "Kepatuhan Aturan",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-a16-4",
+            "text": "Menjaga Aurat",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pres-a-17",
+        "name": "17. Mematuhi tata tertib perizinan (tidak terlambat kembali)",
+        "type": "HASANAH",
+        "indicators": [
+          {
+            "id": "ind-pres-a17-1",
+            "text": "Disiplin",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-a17-2",
+            "text": "Kejujuran",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-a17-3",
+            "text": "Tanggung Jawab",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-a17-4",
+            "text": "Kepatuhan Pada Pengasuhan",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pres-a-18",
+        "name": "18. Selalu berbahasa resmi (Arab & Inggris)",
+        "type": "HASANAH",
+        "indicators": [
+          {
+            "id": "ind-pres-a18-1",
+            "text": "Disiplin",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-a18-2",
+            "text": "Kesungguhan",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-a18-3",
+            "text": "Semangat Belajar",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-a18-4",
+            "text": "Keteladanan",
+            "type": "HASANAH",
+            "default_score": 0.075,
+            "tingkat": "Tinggi"
+          },
+          {
+            "id": "ind-pres-a18-5",
+            "text": "Istiqomah",
+            "type": "HASANAH",
+            "default_score": 0.075,
+            "tingkat": "Tinggi"
+          }
+        ]
+      },
+      {
+        "id": "pres-a-19",
+        "name": "19. Tidak pernah melanggar selama satu bulan penuh",
+        "type": "HASANAH",
+        "indicators": [
+          {
+            "id": "ind-pres-a19-1",
+            "text": "Disiplin",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-a19-2",
+            "text": "Pengendalian Diri",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-a19-3",
+            "text": "Kepatuhan Aturan",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-a19-4",
+            "text": "Keteladanan",
+            "type": "HASANAH",
+            "default_score": 0.075,
+            "tingkat": "Tinggi"
+          },
+          {
+            "id": "ind-pres-a19-5",
+            "text": "Istiqomah",
+            "type": "HASANAH",
+            "default_score": 0.075,
+            "tingkat": "Tinggi"
+          }
+        ]
+      },
+      {
+        "id": "pres-a-20",
+        "name": "20. Menjadi teladan kedisiplinan bagi santri lain",
+        "type": "HASANAH",
+        "indicators": [
+          {
+            "id": "ind-pres-a20-1",
+            "text": "Keteladanan",
+            "type": "HASANAH",
+            "default_score": 0.075,
+            "tingkat": "Tinggi"
+          },
+          {
+            "id": "ind-pres-a20-2",
+            "text": "Disiplin",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-a20-3",
+            "text": "Kepemimpinan",
+            "type": "HASANAH",
+            "default_score": 0.075,
+            "tingkat": "Tinggi"
+          },
+          {
+            "id": "ind-pres-a20-4",
+            "text": "Kepedulian",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "code": "B",
+    "name": "Adab/Ta'zim",
+    "unsurs": [
+      {
+        "id": "pres-b-1",
+        "name": "1. Bersikap santun & taat pada instruksi guru/pengurus",
+        "type": "HASANAH",
+        "indicators": [
+          {
+            "id": "ind-pres-b1-1",
+            "text": "Ta'zim",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-b1-2",
+            "text": "Ketaatan",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-b1-3",
+            "text": "Kesopanan",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-b1-4",
+            "text": "Pengendalian Diri",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pres-b-2",
+        "name": "2. Menyapa & mengucapkan salam kepada guru, kakak kelas dan teman",
+        "type": "HASANAH",
+        "indicators": [
+          {
+            "id": "ind-pres-b2-1",
+            "text": "Adab",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-b2-2",
+            "text": "Keramahan",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-b2-3",
+            "text": "Menghormati Sesama",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-b2-4",
+            "text": "Akhlak Mulia",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pres-b-3",
+        "name": "3. Berbicara sopan & tidak memotong pembicaraan orang lain",
+        "type": "HASANAH",
+        "indicators": [
+          {
+            "id": "ind-pres-b3-1",
+            "text": "Adab Berbicara",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-b3-2",
+            "text": "Kesabaran",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-b3-3",
+            "text": "Menghargai Orang Lain",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-b3-4",
+            "text": "Pengendalian Diri",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pres-b-4",
+        "name": "4. Memuliakan kitab/buku (tidak diletakkan di lantai)",
+        "type": "HASANAH",
+        "indicators": [
+          {
+            "id": "ind-pres-b4-1",
+            "text": "Ta'zim terhadap Ilmu",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-b4-2",
+            "text": "Adab Menuntut Ilmu",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-b4-3",
+            "text": "Kecintaan pada Ilmu",
+            "type": "HASANAH",
+            "default_score": 0.075,
+            "tingkat": "Tinggi"
+          },
+          {
+            "id": "ind-pres-b4-4",
+            "text": "Kehati-hatian",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pres-b-5",
+        "name": "5. Menerima penertiban/nasihat pengurus & guru dengan lapang dada",
+        "type": "HASANAH",
+        "indicators": [
+          {
+            "id": "ind-pres-b5-1",
+            "text": "Ketaatan",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-b5-2",
+            "text": "Kerendahan Hati",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-b5-3",
+            "text": "Ta'zim",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-b5-4",
+            "text": "Kesabaran",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pres-b-6",
+        "name": "6. Menjaga ketenangan di kamar, dapur dan kamar mandi",
+        "type": "HASANAH",
+        "indicators": [
+          {
+            "id": "ind-pres-b6-1",
+            "text": "Adab",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-b6-2",
+            "text": "Kepedulian",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-b6-3",
+            "text": "Pengendalian Diri",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-b6-4",
+            "text": "Kebersamaan",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pres-b-7",
+        "name": "7. Meminta izin sebelum memakai barang orang lain",
+        "type": "HASANAH",
+        "indicators": [
+          {
+            "id": "ind-pres-b7-1",
+            "text": "Amanah",
+            "type": "HASANAH",
+            "default_score": 0.075,
+            "tingkat": "Tinggi"
+          },
+          {
+            "id": "ind-pres-b7-2",
+            "text": "Kejujuran",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-b7-3",
+            "text": "Menghargai Hak Orang Lain",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-b7-4",
+            "text": "Adab",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pres-b-8",
+        "name": "8. Makan dan minum dengan adab (duduk, tangan kanan)",
+        "type": "HASANAH",
+        "indicators": [
+          {
+            "id": "ind-pres-b8-1",
+            "text": "Adab",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-b8-2",
+            "text": "Mengikuti Sunnah",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-b8-3",
+            "text": "Kesopanan",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-b8-4",
+            "text": "Pengendalian Diri",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pres-b-9",
+        "name": "9. Menjaga nama baik pondok di dalam & luar lingkungan pesantren",
+        "type": "HASANAH",
+        "indicators": [
+          {
+            "id": "ind-pres-b9-1",
+            "text": "Menjaga Marwah Pondok",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-b9-2",
+            "text": "Akhlak Mulia",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-b9-3",
+            "text": "Tanggung Jawab",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-b9-4",
+            "text": "Keteladanan",
+            "type": "HASANAH",
+            "default_score": 0.075,
+            "tingkat": "Tinggi"
+          }
+        ]
+      },
+      {
+        "id": "pres-b-10",
+        "name": "10. Menjadi santri teladan (akhlak terbaik pilihan pengurus/guru)",
+        "type": "HASANAH",
+        "indicators": [
+          {
+            "id": "ind-pres-b10-1",
+            "text": "Akhlak Mulia",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-b10-2",
+            "text": "Keteladanan",
+            "type": "HASANAH",
+            "default_score": 0.075,
+            "tingkat": "Tinggi"
+          },
+          {
+            "id": "ind-pres-b10-3",
+            "text": "Ta'zim",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-b10-4",
+            "text": "Kepemimpinan",
+            "type": "HASANAH",
+            "default_score": 0.075,
+            "tingkat": "Tinggi"
+          },
+          {
+            "id": "ind-pres-b10-5",
+            "text": "Kepedulian",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pres-b-11",
+        "name": "11. Membantu & menasihati teman dengan baik (kepedulian sosial)",
+        "type": "HASANAH",
+        "indicators": [
+          {
+            "id": "ind-pres-b11-1",
+            "text": "Kepedulian",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-b11-2",
+            "text": "Ukhuwah",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-b11-3",
+            "text": "Kerjasama",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-b11-4",
+            "text": "Kesabaran",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pres-b-12",
+        "name": "12. Berbuat jujur (mengembalikan barang temuan/mengakui kesalahan)",
+        "type": "HASANAH",
+        "indicators": [
+          {
+            "id": "ind-pres-b12-1",
+            "text": "Kejujuran",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-b12-2",
+            "text": "Amanah",
+            "type": "HASANAH",
+            "default_score": 0.075,
+            "tingkat": "Tinggi"
+          },
+          {
+            "id": "ind-pres-b12-3",
+            "text": "Keberanian",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-b12-4",
+            "text": "Akhlak Mulia",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "code": "C",
+    "name": "Kemandirian & Kebersihan",
+    "unsurs": [
+      {
+        "id": "pres-c-1",
+        "name": "1. Bangun tidur tepat waktu tanpa dibangunkan",
+        "type": "HASANAH",
+        "indicators": [
+          {
+            "id": "ind-pres-c1-1",
+            "text": "Kemandirian",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-c1-2",
+            "text": "Disiplin",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-c1-3",
+            "text": "Tanggung Jawab",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-c1-4",
+            "text": "Semangat Ibadah",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pres-c-2",
+        "name": "2. Mencuci peralatan makan sendiri setelah makan",
+        "type": "HASANAH",
+        "indicators": [
+          {
+            "id": "ind-pres-c2-1",
+            "text": "Kemandirian",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-c2-2",
+            "text": "Kebersihan",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-c2-3",
+            "text": "Tanggung Jawab",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-c2-4",
+            "text": "Kepedulian",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pres-c-3",
+        "name": "3. Merapikan lemari & pakaian pribadi secara mandiri",
+        "type": "HASANAH",
+        "indicators": [
+          {
+            "id": "ind-pres-c3-1",
+            "text": "Kemandirian",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-c3-2",
+            "text": "Kerapian",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-c3-3",
+            "text": "Tanggung Jawab Diri",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-c3-4",
+            "text": "Disiplin",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pres-c-4",
+        "name": "4. Memiliki tabungan & mengelola uang saku dengan bijak",
+        "type": "HASANAH",
+        "indicators": [
+          {
+            "id": "ind-pres-c4-1",
+            "text": "Kemandirian",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-c4-2",
+            "text": "Hemat",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-c4-3",
+            "text": "Perencanaan",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-c4-4",
+            "text": "Tanggung Jawab",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pres-c-5",
+        "name": "5. Membuang sampah pada tempatnya & menjaga lingkungan",
+        "type": "HASANAH",
+        "indicators": [
+          {
+            "id": "ind-pres-c5-1",
+            "text": "Kebersihan",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-c5-2",
+            "text": "Kepedulian Lingkungan",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-c5-3",
+            "text": "Disiplin",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-c5-4",
+            "text": "Tanggung Jawab",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pres-c-6",
+        "name": "6. Melaksanakan piket kamar sesuai jadwal",
+        "type": "HASANAH",
+        "indicators": [
+          {
+            "id": "ind-pres-c6-1",
+            "text": "Tanggung Jawab",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-c6-2",
+            "text": "Kerjasama",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-c6-3",
+            "text": "Disiplin",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-c6-4",
+            "text": "Kebersihan",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pres-c-7",
+        "name": "7. Membersihkan toilet setelah digunakan & ikut menjaga kebersihannya",
+        "type": "HASANAH",
+        "indicators": [
+          {
+            "id": "ind-pres-c7-1",
+            "text": "Kebersihan",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-c7-2",
+            "text": "Kepedulian",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-c7-3",
+            "text": "Tanggung Jawab",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-c7-4",
+            "text": "Kemandirian",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pres-c-8",
+        "name": "8. Mencuci & merawat pakaian sendiri dengan rapi",
+        "type": "HASANAH",
+        "indicators": [
+          {
+            "id": "ind-pres-c8-1",
+            "text": "Kemandirian",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-c8-2",
+            "text": "Kebersihan",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-c8-3",
+            "text": "Kerapian",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-c8-4",
+            "text": "Tanggung Jawab Diri",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pres-c-9",
+        "name": "9. Inisiatif membersihkan area umum tanpa diperintah",
+        "type": "HASANAH",
+        "indicators": [
+          {
+            "id": "ind-pres-c9-1",
+            "text": "Inisiatif",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-c9-2",
+            "text": "Kepedulian",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-c9-3",
+            "text": "Kerjasama",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-c9-4",
+            "text": "Keteladanan",
+            "type": "HASANAH",
+            "default_score": 0.075,
+            "tingkat": "Tinggi"
+          }
+        ]
+      },
+      {
+        "id": "pres-c-10",
+        "name": "10. Meraih juara kebersihan/kerapian kamar tingkat asrama",
+        "type": "HASANAH",
+        "indicators": [
+          {
+            "id": "ind-pres-c10-1",
+            "text": "Kebersihan",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-c10-2",
+            "text": "Kerjasama",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-c10-3",
+            "text": "Kerapian",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-c10-4",
+            "text": "Kemandirian",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-c10-5",
+            "text": "Kebanggaan Bersama",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "code": "D",
+    "name": "Ubudiyah/Ibadah",
+    "unsurs": [
+      {
+        "id": "pres-d-1",
+        "name": "1. Melaksanakan sholat fardhu berjama'ah penuh (1 bulan)",
+        "type": "HASANAH",
+        "indicators": [
+          {
+            "id": "ind-pres-d1-1",
+            "text": "Ketaatan Beribadah",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-d1-2",
+            "text": "Istiqomah",
+            "type": "HASANAH",
+            "default_score": 0.075,
+            "tingkat": "Tinggi"
+          },
+          {
+            "id": "ind-pres-d1-3",
+            "text": "Disiplin",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-d1-4",
+            "text": "Tanggung Jawab Ibadah",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pres-d-2",
+        "name": "2. Menjaga sholat dhuha & hajat berjama'ah",
+        "type": "HASANAH",
+        "indicators": [
+          {
+            "id": "ind-pres-d2-1",
+            "text": "Semangat Ibadah",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-d2-2",
+            "text": "Istiqomah",
+            "type": "HASANAH",
+            "default_score": 0.075,
+            "tingkat": "Tinggi"
+          },
+          {
+            "id": "ind-pres-d2-3",
+            "text": "Kedekatan kepada Allah",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-d2-4",
+            "text": "Disiplin",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pres-d-3",
+        "name": "3. Rutin puasa sunnah Senin-Kamis",
+        "type": "HASANAH",
+        "indicators": [
+          {
+            "id": "ind-pres-d3-1",
+            "text": "Istiqomah",
+            "type": "HASANAH",
+            "default_score": 0.075,
+            "tingkat": "Tinggi"
+          },
+          {
+            "id": "ind-pres-d3-2",
+            "text": "Pengendalian Diri",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-d3-3",
+            "text": "Ketaatan Beribadah",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-d3-4",
+            "text": "Kesungguhan",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pres-d-4",
+        "name": "4. Melaksanakan puasa Ramadhan penuh & aktif ibadah malam",
+        "type": "HASANAH",
+        "indicators": [
+          {
+            "id": "ind-pres-d4-1",
+            "text": "Ketaatan",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-d4-2",
+            "text": "Kesungguhan",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-d4-3",
+            "text": "Pengendalian Diri",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-d4-4",
+            "text": "Istiqomah",
+            "type": "HASANAH",
+            "default_score": 0.075,
+            "tingkat": "Tinggi"
+          }
+        ]
+      },
+      {
+        "id": "pres-d-5",
+        "name": "5. Mengikuti sahur/buka puasa bersama dengan tertib",
+        "type": "HASANAH",
+        "indicators": [
+          {
+            "id": "ind-pres-d5-1",
+            "text": "Kebersamaan",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-d5-2",
+            "text": "Disiplin",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-d5-3",
+            "text": "Kepatuhan Aturan",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-d5-4",
+            "text": "Adab",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pres-d-6",
+        "name": "6. Tadarus Al-Qur'an dengan tertib & khusyu'",
+        "type": "HASANAH",
+        "indicators": [
+          {
+            "id": "ind-pres-d6-1",
+            "text": "Khusyu'",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-d6-2",
+            "text": "Adab Terhadap Al-Qur'an",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-d6-3",
+            "text": "Istiqomah",
+            "type": "HASANAH",
+            "default_score": 0.075,
+            "tingkat": "Tinggi"
+          },
+          {
+            "id": "ind-pres-d6-4",
+            "text": "Kecintaan pada Al-Qur'an",
+            "type": "HASANAH",
+            "default_score": 0.075,
+            "tingkat": "Tinggi"
+          }
+        ]
+      },
+      {
+        "id": "pres-d-7",
+        "name": "7. Hafal bacaan sholat dengan baik & benar",
+        "type": "HASANAH",
+        "indicators": [
+          {
+            "id": "ind-pres-d7-1",
+            "text": "Kesungguhan",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-d7-2",
+            "text": "Semangat Belajar",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-d7-3",
+            "text": "Ketelitian",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-d7-4",
+            "text": "Tanggung Jawab Ibadah",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pres-d-8",
+        "name": "8. Hafal do'a-do'a setelah sholat & do'a harian",
+        "type": "HASANAH",
+        "indicators": [
+          {
+            "id": "ind-pres-d8-1",
+            "text": "Kesungguhan",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-d8-2",
+            "text": "Semangat Belajar",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-d8-3",
+            "text": "Penghayatan Ibadah",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-d8-4",
+            "text": "Istiqomah",
+            "type": "HASANAH",
+            "default_score": 0.075,
+            "tingkat": "Tinggi"
+          }
+        ]
+      },
+      {
+        "id": "pres-d-9",
+        "name": "9. Berwudhu dengan tertib, tenang & sesuai sunnah",
+        "type": "HASANAH",
+        "indicators": [
+          {
+            "id": "ind-pres-d9-1",
+            "text": "Khusyu'",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-d9-2",
+            "text": "Adab Ibadah",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-d9-3",
+            "text": "Pengendalian Diri",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-d9-4",
+            "text": "Mengikuti Sunnah",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pres-d-10",
+        "name": "10. Mengikuti wirid dengan tertib & khusyu'",
+        "type": "HASANAH",
+        "indicators": [
+          {
+            "id": "ind-pres-d10-1",
+            "text": "Khusyu'",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-d10-2",
+            "text": "Istiqomah",
+            "type": "HASANAH",
+            "default_score": 0.075,
+            "tingkat": "Tinggi"
+          },
+          {
+            "id": "ind-pres-d10-3",
+            "text": "Hormat Pada Majelis",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-d10-4",
+            "text": "Kehadiran Hati",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pres-d-11",
+        "name": "11. Berpakaian layak & bersih ketika sholat",
+        "type": "HASANAH",
+        "indicators": [
+          {
+            "id": "ind-pres-d11-1",
+            "text": "Adab Ibadah",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-d11-2",
+            "text": "Kebersihan",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-d11-3",
+            "text": "Menghormati Ibadah",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-d11-4",
+            "text": "Kesiapan Rohani",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pres-d-12",
+        "name": "12. Merawat & menggunakan perlengkapan ibadah sendiri dengan baik",
+        "type": "HASANAH",
+        "indicators": [
+          {
+            "id": "ind-pres-d12-1",
+            "text": "Amanah",
+            "type": "HASANAH",
+            "default_score": 0.075,
+            "tingkat": "Tinggi"
+          },
+          {
+            "id": "ind-pres-d12-2",
+            "text": "Tanggung Jawab",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-d12-3",
+            "text": "Kebersihan",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-d12-4",
+            "text": "Adab Ibadah",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pres-d-13",
+        "name": "13. Menjadi imam/muadzin/pembimbing ibadah yang baik",
+        "type": "HASANAH",
+        "indicators": [
+          {
+            "id": "ind-pres-d13-1",
+            "text": "Keberanian",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-d13-2",
+            "text": "Tanggung Jawab",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-d13-3",
+            "text": "Kepemimpinan",
+            "type": "HASANAH",
+            "default_score": 0.075,
+            "tingkat": "Tinggi"
+          },
+          {
+            "id": "ind-pres-d13-4",
+            "text": "Keteladanan Ibadah",
+            "type": "HASANAH",
+            "default_score": 0.075,
+            "tingkat": "Tinggi"
+          }
+        ]
+      },
+      {
+        "id": "pres-d-14",
+        "name": "14. Menambah hafalan Al-Qur'an (setoran tahfidz)",
+        "type": "HASANAH",
+        "indicators": [
+          {
+            "id": "ind-pres-d14-1",
+            "text": "Kesungguhan",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-d14-2",
+            "text": "Istiqomah",
+            "type": "HASANAH",
+            "default_score": 0.075,
+            "tingkat": "Tinggi"
+          },
+          {
+            "id": "ind-pres-d14-3",
+            "text": "Kecintaan pada Al-Qur'an",
+            "type": "HASANAH",
+            "default_score": 0.075,
+            "tingkat": "Tinggi"
+          },
+          {
+            "id": "ind-pres-d14-4",
+            "text": "Semangat Belajar",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-d14-5",
+            "text": "Ketekunan",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "code": "E",
+    "name": "Prestasi Akademik, Bahasa & Kepemimpinan",
+    "unsurs": [
+      {
+        "id": "pres-e-1",
+        "name": "1. Juara kelas / peringkat terbaik di madrasah",
+        "type": "HASANAH",
+        "indicators": [
+          {
+            "id": "ind-pres-e1-1",
+            "text": "Kesungguhan Belajar",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-e1-2",
+            "text": "Ketekunan",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-e1-3",
+            "text": "Disiplin",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-e1-4",
+            "text": "Semangat Ilmu",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pres-e-2",
+        "name": "2. Juara lomba tingkat pondok (pidato, kaligrafi, MTQ, dll)",
+        "type": "HASANAH",
+        "indicators": [
+          {
+            "id": "ind-pres-e2-1",
+            "text": "Kemampuan",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-e2-2",
+            "text": "Kesungguhan",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-e2-3",
+            "text": "Percaya Diri",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-e2-4",
+            "text": "Membawa Nama Baik Pondok",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pres-e-3",
+        "name": "3. Juara lomba tingkat kabupaten/provinsi/nasional",
+        "type": "HASANAH",
+        "indicators": [
+          {
+            "id": "ind-pres-e3-1",
+            "text": "Kemampuan",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-e3-2",
+            "text": "Ketekunan",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-e3-3",
+            "text": "Percaya Diri",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-e3-4",
+            "text": "Membawa Nama Baik Pondok",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-e3-5",
+            "text": "Kebanggaan Bersama",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pres-e-4",
+        "name": "4. Aktif & berprestasi dalam muhadatsah/pidato",
+        "type": "HASANAH",
+        "indicators": [
+          {
+            "id": "ind-pres-e4-1",
+            "text": "Keberanian",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-e4-2",
+            "text": "Kemampuan Berbahasa",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-e4-3",
+            "text": "Percaya Diri",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-e4-4",
+            "text": "Kesungguhan",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pres-e-5",
+        "name": "5. Terbaik dalam penguasaan bahasa Arab & Inggris",
+        "type": "HASANAH",
+        "indicators": [
+          {
+            "id": "ind-pres-e5-1",
+            "text": "Kesungguhan",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-e5-2",
+            "text": "Kemampuan Berbahasa",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-e5-3",
+            "text": "Istiqomah",
+            "type": "HASANAH",
+            "default_score": 0.075,
+            "tingkat": "Tinggi"
+          },
+          {
+            "id": "ind-pres-e5-4",
+            "text": "Keteladanan",
+            "type": "HASANAH",
+            "default_score": 0.075,
+            "tingkat": "Tinggi"
+          }
+        ]
+      },
+      {
+        "id": "pres-e-6",
+        "name": "6. Aktif sebagai pengurus/organisasi santri dengan baik",
+        "type": "HASANAH",
+        "indicators": [
+          {
+            "id": "ind-pres-e6-1",
+            "text": "Kepemimpinan",
+            "type": "HASANAH",
+            "default_score": 0.075,
+            "tingkat": "Tinggi"
+          },
+          {
+            "id": "ind-pres-e6-2",
+            "text": "Tanggung Jawab",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-e6-3",
+            "text": "Kerjasama",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-e6-4",
+            "text": "Amanah",
+            "type": "HASANAH",
+            "default_score": 0.075,
+            "tingkat": "Tinggi"
+          }
+        ]
+      },
+      {
+        "id": "pres-e-7",
+        "name": "7. Berperan aktif dalam kegiatan pesantren (panitia, tim, dll)",
+        "type": "HASANAH",
+        "indicators": [
+          {
+            "id": "ind-pres-e7-1",
+            "text": "Inisiatif",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-e7-2",
+            "text": "Kerjasama",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-e7-3",
+            "text": "Tanggung Jawab",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-e7-4",
+            "text": "Pengorbanan",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pres-e-8",
+        "name": "8. Menumbuhkan karya (tulisan, mading, seni) yang bermanfaat",
+        "type": "HASANAH",
+        "indicators": [
+          {
+            "id": "ind-pres-e8-1",
+            "text": "Kreativitas",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-e8-2",
+            "text": "Inisiatif",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-e8-3",
+            "text": "Kesungguhan",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pres-e8-4",
+            "text": "Manfaat bagi Orang Lain",
+            "type": "HASANAH",
+            "default_score": 0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      }
+    ]
+  }
+]

@@ -1,0 +1,3778 @@
+[
+  {
+    "code": "A",
+    "name": "Kedisiplinan",
+    "unsurs": [
+      {
+        "id": "pel-a-1",
+        "name": "1. Keterlambatan waktu sholat berjama'ah",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-a1-1",
+            "text": "Disiplin",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-a1-2",
+            "text": "Ketaatan/Kepatuhan",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          },
+          {
+            "id": "ind-pel-a1-3",
+            "text": "Penghormatan Waktu Wajib",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a1-4",
+            "text": "Tanggung Jawab Ibadah",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-a1-5",
+            "text": "Pengendalian Diri",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pel-a-2",
+        "name": "2. Sengaja Menunda Sholat Berjama'ah Hingga Selesai (Sholat sendiri dikamar)",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-a2-1",
+            "text": "Disiplin",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-a2-2",
+            "text": "Kejujuran/Keterbukaan",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a2-3",
+            "text": "Sikap Ta'zim terhadap Jama'ah",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          },
+          {
+            "id": "ind-pel-a2-4",
+            "text": "Tanggung Jawab Ibadah",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-a2-5",
+            "text": "Komitmen Kewajiban Santri",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pel-a-3",
+        "name": "3. Tidak Melengkapi Peralatan Sholat",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-a3-1",
+            "text": "Disiplin",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-a3-2",
+            "text": "Rasa Tanggung Jawab",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-a3-3",
+            "text": "Adab terhadap Ibadah",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a3-4",
+            "text": "Kepatuhan Pada Aturan",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-a3-5",
+            "text": "Kesiapan Rohani",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          }
+        ]
+      },
+      {
+        "id": "pel-a-4",
+        "name": "4. Tidak Melaksanakan Sholat Rawatib (Sholat Qobliyah & Ba'diyah)",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-a4-1",
+            "text": "Ketaatan Beribadah",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a4-2",
+            "text": "Kedisiplinan Waktu",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          },
+          {
+            "id": "ind-pel-a4-3",
+            "text": "Tanggung Jawab Spiritual",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a4-4",
+            "text": "Kepatuhan Terhadap Tata Tertib",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a4-5",
+            "text": "Pesantren",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pel-a-5",
+        "name": "5. Tidak Mengikuti Dzikir Setelah Sholat Berjama'ah",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-a5-1",
+            "text": "Kekhusyu'an/Ta'abbud",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-a5-2",
+            "text": "Disiplin",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a5-3",
+            "text": "Adab Terhadap Majelis",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          },
+          {
+            "id": "ind-pel-a5-4",
+            "text": "Ketaatan Kepada Pengasuh",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          },
+          {
+            "id": "ind-pel-a5-5",
+            "text": "Penghayatan Ibadah",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pel-a-6",
+        "name": "6. Tidak Membawa Tas Sandal & Kutaib",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-a6-1",
+            "text": "Kebersihan Lingkungan",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a6-2",
+            "text": "Penghormatan Terhadap Masjid",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a6-3",
+            "text": "Ketaatan Aturan",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a6-4",
+            "text": "Kerapian",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          },
+          {
+            "id": "ind-pel-a6-5",
+            "text": "Kewaspadaan",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          },
+          {
+            "id": "ind-pel-a6-6",
+            "text": "Disiplin Diri",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a6-7",
+            "text": "Kesiapan Menuntut Ilmu",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-a6-8",
+            "text": "Tanggung Jawab Belajar",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a6-9",
+            "text": "Kesungguhan",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          }
+        ]
+      },
+      {
+        "id": "pel-a-7",
+        "name": "7. Tidak Membaca Al-Qur'an Sebelum Adzan Berkumandang & Sesudah Sholat Berjama'ah",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-a7-1",
+            "text": "Kedisiplinan (Ibadah & Waktu)",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a7-2",
+            "text": "Kepatuhan Terhadap Peraturan",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a7-3",
+            "text": "Tanggung Jawab Spiritual",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a7-4",
+            "text": "Khidmat/Penghormatan Waktu",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pel-a-8",
+        "name": "8. Tidak Menjawab Adzan/Tetap Beraktivitas Saat Adzan Berkumandang",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-a8-1",
+            "text": "Ketaatan",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-a8-2",
+            "text": "Kedisiplinan",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a8-3",
+            "text": "Adab",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a8-4",
+            "text": "Penghormatan",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          }
+        ]
+      },
+      {
+        "id": "pel-a-9",
+        "name": "9. Mengobrol Didalam Masjid",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-a9-1",
+            "text": "Adab Terhadap Masjid",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-a9-2",
+            "text": "Khusyu' Dalam Ibadah",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a9-3",
+            "text": "Menghormati Orang Beribadah",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a9-4",
+            "text": "Penguasaan Diri",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a9-5",
+            "text": "Disiplin Berjama'ah",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          },
+          {
+            "id": "ind-pel-a9-6",
+            "text": "Kepatuhan Terhadap Aturan Pesantren",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          }
+        ]
+      },
+      {
+        "id": "pel-a-10",
+        "name": "10. Mencoret-Coret Dinding & Lantai Maasjid",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-a10-1",
+            "text": "Hormat Pada Masjid",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a10-2",
+            "text": "Kebersihan & Keindahan",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          },
+          {
+            "id": "ind-pel-a10-3",
+            "text": "Amanah/Tanggung Jawab",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          },
+          {
+            "id": "ind-pel-a10-4",
+            "text": "Disiplin & Ketaatan Aturan",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a10-5",
+            "text": "Rasa Memiliki",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pel-a-11",
+        "name": "11. Keluar Dari Masjid Sesudah Berada Dalam Masjid",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-a11-1",
+            "text": "Disiplin",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-a11-2",
+            "text": "Kepatuhan Aturan",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a11-3",
+            "text": "Khidmat Ibadah",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-a11-4",
+            "text": "Rasa Tnggung Jawab",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a11-5",
+            "text": "Penghormatan Waktu Sholat",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pel-a-12",
+        "name": "12. Bercanda & Mengobrol Ketika Wudhu",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-a12-1",
+            "text": "Khusyu'",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          },
+          {
+            "id": "ind-pel-a12-2",
+            "text": "Hormat Pada Ibadah",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          },
+          {
+            "id": "ind-pel-a12-3",
+            "text": "Istiqomah",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          },
+          {
+            "id": "ind-pel-a12-4",
+            "text": "Menjaga Kehormatan",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a12-5",
+            "text": "Adab Ibadah",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          },
+          {
+            "id": "ind-pel-a12-6",
+            "text": "Pengendalian Diri",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pel-a-13",
+        "name": "13. Meninggalkan Barang (Al-Qur'an, Sajadah Tas Sandal, Kutaib) Dimasjid",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-a13-1",
+            "text": "Rasa Tanggungjawab",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a13-2",
+            "text": "Disiplin Diri",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a13-3",
+            "text": "Kewaspadaan",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pel-a-14",
+        "name": "14. Melipat Sajadah Ketika Dzikir & Do'a Berlangsung",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-a14-1",
+            "text": "Khidmah",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          },
+          {
+            "id": "ind-pel-a14-2",
+            "text": "Kekhusyu'an",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-a14-3",
+            "text": "Rasa Hormat Pada Majelis",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a14-4",
+            "text": "Sabar",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-a14-5",
+            "text": "Kehadiran Hati",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pel-a-15",
+        "name": "15. Tidur Ketika Waktu Dzikir dan Do'a",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-a15-1",
+            "text": "Hormat Pada Majelis",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          },
+          {
+            "id": "ind-pel-a15-2",
+            "text": "Semangat Ibadah",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-a15-3",
+            "text": "Menjaga Kehormatan Diri",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a15-4",
+            "text": "Disiplin",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          },
+          {
+            "id": "ind-pel-a15-5",
+            "text": "Istiqomah",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pel-a-16",
+        "name": "16. Bercanda & Bercerita Ketika Waktu Dzikir & Do'a",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-a16-1",
+            "text": "Khusyu'",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          },
+          {
+            "id": "ind-pel-a16-2",
+            "text": "Hormat Pada Ibadah",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          },
+          {
+            "id": "ind-pel-a16-3",
+            "text": "Istiqomah",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          },
+          {
+            "id": "ind-pel-a16-4",
+            "text": "Menjaga Kehormatan",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a16-5",
+            "text": "Adab Ibadah",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          },
+          {
+            "id": "ind-pel-a16-6",
+            "text": "Pengendalian Diri",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pel-a-17",
+        "name": "17. Tidak meletakkan sandal di rak",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-a17-1",
+            "text": "Disiplin",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-a17-2",
+            "text": "Rasa Tanggung Jawab",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-a17-3",
+            "text": "Kemampuan menyesuaikan diri",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pel-a-18",
+        "name": "18. Tidak meletakkan baju di lemari",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-a18-1",
+            "text": "Disiplin",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-a18-2",
+            "text": "Kerapian",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a18-3",
+            "text": "Kebersihan",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-a18-4",
+            "text": "Tanggung Jawab Diri",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pel-a-19",
+        "name": "19. Tidak mengunci lemari jika berkegitan dan berada diluar kamar",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-a19-1",
+            "text": "Disiplin",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-a19-2",
+            "text": "Penguasaan diri",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          }
+        ]
+      },
+      {
+        "id": "pel-a-20",
+        "name": "20. Tidak mengambil air wudhu, sikat gigi dan berdo'a bersama sebelum tidur",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-a20-1",
+            "text": "Disiplin",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-a20-2",
+            "text": "Ketaatan terhadap sunnah",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a20-3",
+            "text": "Kebersihan & kesucian diri",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-a20-4",
+            "text": "Rasa hormat",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pel-a-21",
+        "name": "21. Tidak menjaga kebersihan kamar",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-a21-1",
+            "text": "Disiplin",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-a21-2",
+            "text": "Rasa tanggungjawab",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          },
+          {
+            "id": "ind-pel-a21-3",
+            "text": "Penguasaan diri",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a21-4",
+            "text": "Kemampuan menyesuaikan diri",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pel-a-22",
+        "name": "22. Menetap dikamar pada jam kegiatan",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-a22-1",
+            "text": "Disiplin",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-a22-2",
+            "text": "Rasa Tanggung Jawab",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-a22-3",
+            "text": "Penguasaan diri",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a22-4",
+            "text": "Ketaatan",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          },
+          {
+            "id": "ind-pel-a22-5",
+            "text": "Penghormatan terhadap majelis",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pel-a-23",
+        "name": "23. Menyimpan uang lebih dari 50.000",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-a23-1",
+            "text": "Kepatuhan aturan",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-a23-2",
+            "text": "Risiko kehilangan",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a23-3",
+            "text": "Potensi hidup boros",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pel-a-24",
+        "name": "24. Berolahraga dalam kamar",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-a24-1",
+            "text": "Kepatuhan pada aturan",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a24-2",
+            "text": "Menjaga ketenangan bersama",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          },
+          {
+            "id": "ind-pel-a24-3",
+            "text": "Adab terhadap fasilitas/kamar",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          },
+          {
+            "id": "ind-pel-a24-4",
+            "text": "Menjaga keselamatan diri",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          },
+          {
+            "id": "ind-pel-a24-5",
+            "text": "Pemeliharaan kerapian kamar",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          }
+        ]
+      },
+      {
+        "id": "pel-a-25",
+        "name": "25. Makan nasi di dalam kamar",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-a25-1",
+            "text": "Pelanggaran disiplin",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-a25-2",
+            "text": "Pelanggaran kebersihan lingkungan",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pel-a-26",
+        "name": "26. Bercerita pada jam waktu tidur",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-a26-1",
+            "text": "Kedisiplinan waktu istirahat",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-a26-2",
+            "text": "Mengganggu waktu tidur santri lain",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          }
+        ]
+      },
+      {
+        "id": "pel-a-27",
+        "name": "27. Meletakkan sandal di depan kamar",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-a27-1",
+            "text": "Kedisiplinan peraturan asrama",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a27-2",
+            "text": "Kerapian lingkungan kamar",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a27-3",
+            "text": "Kepedulian terhadap failitas bersama",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a27-4",
+            "text": "Penghormatan waktu istirahat",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          }
+        ]
+      },
+      {
+        "id": "pel-a-28",
+        "name": "28. Pulang ke kamar pada jam pelajaran dan ketika waktu sholat",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-a28-1",
+            "text": "Kedisiplinan belajar dan sholat",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          },
+          {
+            "id": "ind-pel-a28-2",
+            "text": "Ketaatan pada aturan",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a28-3",
+            "text": "Tanggung Jawab tugas",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a28-4",
+            "text": "Kesungguhan menuntut ilmu",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-a28-5",
+            "text": "Kekhawatiran terhadap kehilangan",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          }
+        ]
+      },
+      {
+        "id": "pel-a-29",
+        "name": "29. Mmemasuki kamar lain tanpa izin",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-a29-1",
+            "text": "Akhlak (sopan santun)",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a29-2",
+            "text": "Penghormatan privasi",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a29-3",
+            "text": "Ketertiban pesantren",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a29-4",
+            "text": "Penguasaan diri",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pel-a-30",
+        "name": "30. Menyentuh kasur selain waktu tidur",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-a30-1",
+            "text": "Kedisiplinan waktu",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a30-2",
+            "text": "Ketaatan instruksi pengasuh",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-a30-3",
+            "text": "Penguasaan diri",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pel-a-31",
+        "name": "31. Tidak Piket Kamar",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-a31-1",
+            "text": "Disiplin",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-a31-2",
+            "text": "Tanggung Jawab",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          },
+          {
+            "id": "ind-pel-a31-3",
+            "text": "Kebersihan dan kerapian",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a31-4",
+            "text": "Kepedulian Lingungan",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          },
+          {
+            "id": "ind-pel-a31-5",
+            "text": "Kerja sama",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a31-6",
+            "text": "Kemampuan mengatur waktu",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pel-a-32",
+        "name": "32. Meletakkan barang diatas lemari",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-a32-1",
+            "text": "Disiplin asrama/kamar",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a32-2",
+            "text": "Kebersihan lingkungan",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a32-3",
+            "text": "Kerapian kamar",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-a32-4",
+            "text": "Tanggung Jawab bersama",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a32-5",
+            "text": "Rasa kepedulian",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          }
+        ]
+      },
+      {
+        "id": "pel-a-33",
+        "name": "33. Tidak membawa tas sandal ke dapur",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-a33-1",
+            "text": "Kebersihan & kerapian lingkungan",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-a33-2",
+            "text": "Kedisiplinan",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a33-3",
+            "text": "Ketaatan pada pengurus",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          }
+        ]
+      },
+      {
+        "id": "pel-a-34",
+        "name": "34. Tidak mengantri ketika mengambil nasi",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-a34-1",
+            "text": "Kesabaran & akhlak",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a34-2",
+            "text": "Ketertiban umum",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          }
+        ]
+      },
+      {
+        "id": "pel-a-35",
+        "name": "35. Tidak mencuci piring masing-masing setelah makan",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-a35-1",
+            "text": "Kebersihan",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a35-2",
+            "text": "Tanggung Jawab mandiri",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          },
+          {
+            "id": "ind-pel-a35-3",
+            "text": "Kepedulian lingkungan dapur",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a35-4",
+            "text": "Tenggang rasa sesama santri",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pel-a-36",
+        "name": "36. Tidak membaca do'a sebelum & sesudah makan",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-a36-1",
+            "text": "Adab & sopan santun",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          },
+          {
+            "id": "ind-pel-a36-2",
+            "text": "Spiritual/ketaatan ibadah",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a36-3",
+            "text": "Kedisiplinan sunnah",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pel-a-37",
+        "name": "37. Tidak makan tepat waktu",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-a37-1",
+            "text": "Kedisiplinan waktu",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a37-2",
+            "text": "Tanggung Jawab",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          },
+          {
+            "id": "ind-pel-a37-3",
+            "text": "Ketaatan terhadap aturan",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a37-4",
+            "text": "Adab & kesyukuran",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-a37-5",
+            "text": "Keteraturan diri",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          }
+        ]
+      },
+      {
+        "id": "pel-a-38",
+        "name": "38. Tidak menghabiskan nasi ketika makan",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-a38-1",
+            "text": "Rasa syukur",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          },
+          {
+            "id": "ind-pel-a38-2",
+            "text": "Menghargai rezeki",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a38-3",
+            "text": "Kedisiplinan & tanggung jawab",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          }
+        ]
+      },
+      {
+        "id": "pel-a-39",
+        "name": "39. Membawa alat-alat dapur keluar dari dapur",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-a39-1",
+            "text": "Kedisiplinan",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-a39-2",
+            "text": "Amanah/tanggung jawab",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a39-3",
+            "text": "Ketertiban lingkungan",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          },
+          {
+            "id": "ind-pel-a39-4",
+            "text": "Ketaatan aturan",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pel-a-40",
+        "name": "40. Membuat kegaduhan ketika waktu makan",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-a40-1",
+            "text": "Penguasaan diri",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          },
+          {
+            "id": "ind-pel-a40-2",
+            "text": "Etika/adab makan",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a40-3",
+            "text": "Penghormatan terhadap makanan",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          },
+          {
+            "id": "ind-pel-a40-4",
+            "text": "Ketertiban umum",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pel-a-41",
+        "name": "41. Meninggalkan nasi / sampah diatas meja Makan",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-a41-1",
+            "text": "Kebersihan & kerapian",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a41-2",
+            "text": "Kedisiplinan & ketaatan aturan",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          },
+          {
+            "id": "ind-pel-a41-3",
+            "text": "Tanggung Jawab",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-a41-4",
+            "text": "Kepedulian lingkungan",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          }
+        ]
+      },
+      {
+        "id": "pel-a-42",
+        "name": "42. Membuang nasi & sayur",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-a42-1",
+            "text": "Syukur Nikmat",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a42-2",
+            "text": "Perilaku mubazir",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a42-3",
+            "text": "Kebersihan lingkungan dapur",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pel-a-43",
+        "name": "43. Membawa & Memakai rok/baju berbahan jeans dan jersey",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-a43-1",
+            "text": "Disiplin berpakaian",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          },
+          {
+            "id": "ind-pel-a43-2",
+            "text": "Kesederhanaan",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a43-3",
+            "text": "Kesopanan berpakaian",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a43-4",
+            "text": "Menutup aurat dengan sempurna",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-a43-5",
+            "text": "Menjaga kehormatan",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pel-a-44",
+        "name": "44. Memakai baju yang menerawang",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-a44-1",
+            "text": "Disiplin berpakaian",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          },
+          {
+            "id": "ind-pel-a44-2",
+            "text": "Ketaatan terhadap syari'at",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          },
+          {
+            "id": "ind-pel-a44-3",
+            "text": "Menutup aurat dengan sempurna",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          },
+          {
+            "id": "ind-pel-a44-4",
+            "text": "Kesopanan & kesantunan",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pel-a-45",
+        "name": "45. Memakai baju kekecilan & pendek",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-a45-1",
+            "text": "Kesopanan berpakaian",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-a45-2",
+            "text": "Menutup aurat dengan sempurna",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a45-3",
+            "text": "Ketaatan terhadap syari'at",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-a45-4",
+            "text": "Pengendalian diri",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          }
+        ]
+      },
+      {
+        "id": "pel-a-46",
+        "name": "46. Memakai celana pendek ketika tidur",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-a46-1",
+            "text": "Disiplin berpakaian",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          },
+          {
+            "id": "ind-pel-a46-2",
+            "text": "Muruah (kehormatan diri)",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a46-3",
+            "text": "Rasa tanggung jawab",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a46-4",
+            "text": "Ketaatan syari'at",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          }
+        ]
+      },
+      {
+        "id": "pel-a-47",
+        "name": "47. Memakai jilbab wolfis (beli diluar)",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-a47-1",
+            "text": "Ketaatan pada aturan pondok",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          },
+          {
+            "id": "ind-pel-a47-2",
+            "text": "Kedisiplinan keseragaman",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a47-3",
+            "text": "Rasa tanggung jawab",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pel-a-48",
+        "name": "48. Memakai ciput kecuali warna hitam dan putih",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-a48-1",
+            "text": "Kedisiplinan keseragaman",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-a48-2",
+            "text": "Kerapian",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a48-3",
+            "text": "Ketaatan pada aturan pondok",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pel-a-49",
+        "name": "49. Memakai tanktop kecuali warna hitam, putih & biru dongker",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-a49-1",
+            "text": "Kedisiplinan",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-a49-2",
+            "text": "Kerapian",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a49-3",
+            "text": "Menutup aurat dengan sempurna",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          },
+          {
+            "id": "ind-pel-a49-4",
+            "text": "Kesopanan & kesantunan",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pel-a-50",
+        "name": "50. Memakai belt ketika memakai gamis/kemeja",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-a50-1",
+            "text": "Disiplin berpakaian",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          },
+          {
+            "id": "ind-pel-a50-2",
+            "text": "Kesopanan/etika berpakian",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a50-3",
+            "text": "Kesederhanaan",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          }
+        ]
+      },
+      {
+        "id": "pel-a-51",
+        "name": "51. Melipat lengan baju",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-a51-1",
+            "text": "Adab dan takzim",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          },
+          {
+            "id": "ind-pel-a51-2",
+            "text": "Kedisiplinan diri",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a51-3",
+            "text": "Menutup aurat dengan sempurna",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          }
+        ]
+      },
+      {
+        "id": "pel-a-52",
+        "name": "52. Memakai pakaian bergambar makhluk hidup",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-a52-1",
+            "text": "Disiplin berpakaian",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          },
+          {
+            "id": "ind-pel-a52-2",
+            "text": "Kesopanan/etika berpakaian",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          },
+          {
+            "id": "ind-pel-a52-3",
+            "text": "Kedisiplinan diri",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          },
+          {
+            "id": "ind-pel-a52-4",
+            "text": "Ketaatan pada aturan pondok",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pel-a-53",
+        "name": "53. Memakai gamis berkaret di pinggang",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-a53-1",
+            "text": "Disiplin berpakaian",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          },
+          {
+            "id": "ind-pel-a53-2",
+            "text": "Kesopanan/etika berpakaian",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          },
+          {
+            "id": "ind-pel-a53-3",
+            "text": "Kesederhanaan",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          }
+        ]
+      },
+      {
+        "id": "pel-a-54",
+        "name": "54. Tidak menyesuaikan pakaian dengan kegiatan dan waktu",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-a54-1",
+            "text": "Disiplin",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-a54-2",
+            "text": "Ketaatan pada aturan pondok",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-a54-3",
+            "text": "kerapian",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a54-4",
+            "text": "Kewaspadaan diri",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          }
+        ]
+      },
+      {
+        "id": "pel-a-55",
+        "name": "55. Tidak memakai lejing ketika memakai baju seragam sekolah",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-a55-1",
+            "text": "Ketaatan pada aturan pondok",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          },
+          {
+            "id": "ind-pel-a55-2",
+            "text": "Kerapian",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a55-3",
+            "text": "Kesopanan/etika berpakaian",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-a55-4",
+            "text": "Adab dan takzim",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pel-a-56",
+        "name": "56. Tidak memakai kaos kaki ketika mudifah",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-a56-1",
+            "text": "Kedisiplinan diri",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a56-2",
+            "text": "Ketaatan pada aturan pondok",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-a56-3",
+            "text": "Kerapian",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a56-4",
+            "text": "Adab dan takzim",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pel-a-57",
+        "name": "57. Tidak memakai gamis/kemeja ketika mudifah",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-a57-1",
+            "text": "Ketaatan pada aturan pondok",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          },
+          {
+            "id": "ind-pel-a57-2",
+            "text": "Kedisipinan diri",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a57-3",
+            "text": "Kerapian",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a57-4",
+            "text": "Adab dan takzim",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pel-a-58",
+        "name": "58. Tidak memakai jaket ketika muajjah malam",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-a58-1",
+            "text": "Kedisiplinan diri",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a58-2",
+            "text": "Ketaatan pada aturan pondok",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-a58-3",
+            "text": "Kerapian dan kesehatan",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          }
+        ]
+      },
+      {
+        "id": "pel-a-59",
+        "name": "59. Tidak mengikuti muhadatsah pagi",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-a59-1",
+            "text": "Kedisiplinan",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-a59-2",
+            "text": "Kepatuhan pada pengurus",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-a59-3",
+            "text": "Tanggung jawab",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-a59-4",
+            "text": "Kesungguhan",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a59-5",
+            "text": "Penghormatan bahasa",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          }
+        ]
+      },
+      {
+        "id": "pel-a-60",
+        "name": "60. Tidak mengikuti olahraga pagi (jum'at, ahad & selasa)",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-a60-1",
+            "text": "Kedisiplinan",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-a60-2",
+            "text": "Kepatuhan pada pengurus",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-a60-3",
+            "text": "Tanggung jawab",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-a60-4",
+            "text": "Kebersamaan",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a60-5",
+            "text": "Keuletan (fisik)",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          }
+        ]
+      },
+      {
+        "id": "pel-a-61",
+        "name": "61. Tidak mengumpulkan teks pidato ke ustadzah pembimbing",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-a61-1",
+            "text": "Kedisiplinan",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-a61-2",
+            "text": "Rasa Tanggung jawab",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-a61-3",
+            "text": "Ketaatan pada pengurus",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-a61-4",
+            "text": "Menghargai waktu",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          },
+          {
+            "id": "ind-pel-a61-5",
+            "text": "Inisiatif/kreativitas",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pel-a-62",
+        "name": "62. Tidak tidur setelah berdo'a bersama",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-a62-1",
+            "text": "Disiplin",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-a62-2",
+            "text": "Rasa Tanggung jawab",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-a62-3",
+            "text": "Penguasaan diri",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pel-a-63",
+        "name": "63. Tidak berdo'a bersama sebelum belajar",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-a63-1",
+            "text": "Disiplin",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-a63-2",
+            "text": "Adab terhadap ilmu",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          },
+          {
+            "id": "ind-pel-a63-3",
+            "text": "Kebersamaan/ukhuwah",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pel-a-64",
+        "name": "64. Tidur diatas jam 23.00 malam (begadang tanpa uzur)",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-a64-1",
+            "text": "Disiplin",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-a64-2",
+            "text": "Tanggung jawab",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          },
+          {
+            "id": "ind-pel-a64-3",
+            "text": "Pengendalian diri",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          },
+          {
+            "id": "ind-pel-a64-4",
+            "text": "Kesiapan ibadah",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pel-a-65",
+        "name": "65. Tidak menelpon di wartel pengasuhan",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-a65-1",
+            "text": "Disiplin",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-a65-2",
+            "text": "Ketaatan pada  aturan pondok",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a65-3",
+            "text": "Kejujuran",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          }
+        ]
+      },
+      {
+        "id": "pel-a-66",
+        "name": "66. Tidak izin ke bagian penerimaan tamu ketika mudifah",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-a66-1",
+            "text": "Ketaatan pada aturan pondok",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          },
+          {
+            "id": "ind-pel-a66-2",
+            "text": "Kejujuran",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a66-3",
+            "text": "Rasa tanggung jawab",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a66-4",
+            "text": "Sopan santun/adab",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-a66-5",
+            "text": "Pengendalian diri",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pel-a-67",
+        "name": "67. Membawa barang elektronik (HP DLL)",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-a67-1",
+            "text": "Ketaatan pada  aturan pondok",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-a67-2",
+            "text": "Kejujuran",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a67-3",
+            "text": "Kesederhanaan",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          },
+          {
+            "id": "ind-pel-a67-4",
+            "text": "Disiplin",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          }
+        ]
+      },
+      {
+        "id": "pel-a-68",
+        "name": "68. Keluar kampus/pondok tanpa izin pengasuhan",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-a68-1",
+            "text": "Ketaatan pada aturan pondok",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          },
+          {
+            "id": "ind-pel-a68-2",
+            "text": "Disiplin",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a68-3",
+            "text": "Kejujuran",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          },
+          {
+            "id": "ind-pel-a68-4",
+            "text": "Tanggung jawab",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a68-5",
+            "text": "Pengendalian diri",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pel-a-69",
+        "name": "69. Terlambat kembali ke pondok dari masa perizinan",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-a69-1",
+            "text": "Kedisiplinan",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-a69-2",
+            "text": "Rasa tanggung jawab",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-a69-3",
+            "text": "Kemampuan menepati janji/waktu",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          }
+        ]
+      },
+      {
+        "id": "pel-a-70",
+        "name": "70. Memalsukan tanda tangan pengasuh/pengurus",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-a70-1",
+            "text": "Kejujuran",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a70-2",
+            "text": "Rasa Tangung jawab",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          },
+          {
+            "id": "ind-pel-a70-3",
+            "text": "Integritas diri",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pel-a-71",
+        "name": "71. Berpacaran & bertemu dengan lawan jenis",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-a71-1",
+            "text": "Kesusilaan akhlak",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a71-2",
+            "text": "Pengendalian diri",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a71-3",
+            "text": "Ketaatan syari'at",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          },
+          {
+            "id": "ind-pel-a71-4",
+            "text": "Menjaga nama baik",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-a71-5",
+            "text": "Kejujuran",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pel-a-72",
+        "name": "72. Mengambil (mencuri) barang milik orang lain",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-a72-1",
+            "text": "Kejujuran",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a72-2",
+            "text": "Rasa tanggung jawab",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-a72-3",
+            "text": "Menghormati hak sesama",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-a72-4",
+            "text": "Pengendalian diri",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-a72-5",
+            "text": "Ketaatan pada aturan pondok",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          }
+        ]
+      },
+      {
+        "id": "pel-a-73",
+        "name": "73. Mudifah dengan tetangga & teman",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-a73-1",
+            "text": "Disiplin",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-a73-2",
+            "text": "Ketaatan pada aturan pondok",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-a73-3",
+            "text": "Rasa tanggung jawab",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pel-a-74",
+        "name": "74. Orangtua, saudara/teman masuk ke dalam kamar",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-a74-1",
+            "text": "Ketaatan pada aturan pondok",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          },
+          {
+            "id": "ind-pel-a74-2",
+            "text": "Rasa tanggung jawab",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-a74-3",
+            "text": "Kewaspadaan",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a74-4",
+            "text": "Privasi",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pel-a-75",
+        "name": "75. Mewarnai rambut",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-a75-1",
+            "text": "Kedisiplinan",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-a75-2",
+            "text": "Ketaatan aturan pondok",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          },
+          {
+            "id": "ind-pel-a75-3",
+            "text": "Etika/Adab",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-a75-4",
+            "text": "Kesederhanaan penampilan",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          }
+        ]
+      },
+      {
+        "id": "pel-a-76",
+        "name": "76. Memanjangkan dan mewarnai kuku",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-a76-1",
+            "text": "Kebersihan",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a76-2",
+            "text": "Kdisiplinan",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-a76-3",
+            "text": "Kerapian",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-a76-4",
+            "text": "Keabsahan ibadah",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          },
+          {
+            "id": "ind-pel-a76-5",
+            "text": "Ketaatan pada aturan pondok",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          },
+          {
+            "id": "ind-pel-a76-6",
+            "text": "Kesederhanaan",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pel-a-77",
+        "name": "77. Tidak berbahasa resmi (arab & inggris)",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-a77-1",
+            "text": "Kedisiplinan",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-a77-2",
+            "text": "Ketaatan pada aturan pondok",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-a77-3",
+            "text": "Kepatuhan",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "code": "B",
+    "name": "Adab/Ta'zim",
+    "unsurs": [
+      {
+        "id": "pel-b-1",
+        "name": "1. Membentak/membantah instruksi",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-b1-1",
+            "text": "Hormat guru/pengurus",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-b1-2",
+            "text": "Pengendalian diri",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-b1-3",
+            "text": "Kesopanan",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          }
+        ]
+      },
+      {
+        "id": "pel-b-2",
+        "name": "2. Memotong pembicaraan dengan tidak sopan",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-b2-1",
+            "text": "Hormat guru/pengurus",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-b2-2",
+            "text": "Pengendalian diri",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-b2-3",
+            "text": "Kesopanan",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          }
+        ]
+      },
+      {
+        "id": "pel-b-3",
+        "name": "3. Menatap dengan pandangan menantang",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-b3-1",
+            "text": "Hormat guru/pengurus",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-b3-2",
+            "text": "Pengendalian diri",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-b3-3",
+            "text": "Kesopanan",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          }
+        ]
+      },
+      {
+        "id": "pel-b-4",
+        "name": "4. Tidur saat kumpul dengan guru/pengurus",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-b4-1",
+            "text": "Hifdzul majelis /hormat majelis",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          },
+          {
+            "id": "ind-pel-b4-2",
+            "text": "Kedisiplinan",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-b4-3",
+            "text": "Rasa tanggungjawab",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          }
+        ]
+      },
+      {
+        "id": "pel-b-5",
+        "name": "5. Bercanda atau membuat kegaduhan dikamar, dapur, kamar mandi dll",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-b5-1",
+            "text": "Hifdzul majelis /hormat majelis",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          },
+          {
+            "id": "ind-pel-b5-2",
+            "text": "Kedisiplinan",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-b5-3",
+            "text": "Rasa tanggungjawab",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          }
+        ]
+      },
+      {
+        "id": "pel-b-6",
+        "name": "6. Kabur saat jam kegiatan",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-b6-1",
+            "text": "Hifdzul majelis /hormat majelis",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          },
+          {
+            "id": "ind-pel-b6-2",
+            "text": "Kedisiplinan",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-b6-3",
+            "text": "Rasa tanggungjawab",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-b6-4",
+            "text": "Kejujuran",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          }
+        ]
+      },
+      {
+        "id": "pel-b-7",
+        "name": "7. Meletakkan kitab (alqur'an)/ buku dilantai",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-b7-1",
+            "text": "Memuliakan kitab/buku",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-b7-2",
+            "text": "Kebersihan hati",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-b7-3",
+            "text": "Kesadaran spiritual",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pel-b-8",
+        "name": "8. Melangkahi atau melempar kitab/buku",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-b8-1",
+            "text": "Memuliakan kitab/buku",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-b8-2",
+            "text": "Kebersihan hati",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-b8-3",
+            "text": "Kesadaran spiritual",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pel-b-9",
+        "name": "9. Menolak saat ditertibkan oleh pengurus & guru",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-b9-1",
+            "text": "Kepatuhan tata tertib",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-b9-2",
+            "text": "Penguasaan emosi",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-b9-3",
+            "text": "Etika/adab",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          }
+        ]
+      },
+      {
+        "id": "pel-b-10",
+        "name": "10. Mengeluarkan kata\" kotor atau tidak sopan pada pengurus/guru",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-b10-1",
+            "text": "Kepatuhan tata tertib",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-b10-2",
+            "text": "Penguasaan emosi",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-b10-3",
+            "text": "Etika berbicara",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pel-b-11",
+        "name": "11. Memakai barang orang lain tanpa izin",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-b11-1",
+            "text": "Amanah dan kejujuran",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-b11-2",
+            "text": "Adab mu'amalah",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          },
+          {
+            "id": "ind-pel-b11-3",
+            "text": "Kepedulian lingkungan",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          }
+        ]
+      },
+      {
+        "id": "pel-b-12",
+        "name": "12. Makan dan minum berdiri",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-b12-1",
+            "text": "Pengendalian diri",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-b12-2",
+            "text": "Kepatuhan pada sunnah",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-b12-3",
+            "text": "Kewibawaan santri",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          },
+          {
+            "id": "ind-pel-b12-4",
+            "text": "Kedisiplinan",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          }
+        ]
+      },
+      {
+        "id": "pel-b-13",
+        "name": "13. Tidak mengucapkan salam/ menyapa ketika ketika bertemu guru, kakak kelas dan teman",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-b13-1",
+            "text": "Hormat guru/pengurus",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-b13-2",
+            "text": "Pengendalian diri",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-b13-3",
+            "text": "Kesopanan",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          }
+        ]
+      },
+      {
+        "id": "pel-b-14",
+        "name": "14. Tidak menjaga nama baik pondok",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-b14-1",
+            "text": "Rasa tanggung jawab",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          },
+          {
+            "id": "ind-pel-b14-2",
+            "text": "Loyalitas terhadap pondok",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-b14-3",
+            "text": "Akhlakul karimah",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-b14-4",
+            "text": "Penguasaan diri",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pel-b-15",
+        "name": "15. Terlibat tindakan kriminal/asusila yang mencoreng nama baik pondok",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-b15-1",
+            "text": "Akhlakul karimah",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-b15-2",
+            "text": "Rasa tanggung jawab",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-b15-3",
+            "text": "Disiplin",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "code": "C",
+    "name": "Kemandirian & Kebersihan",
+    "unsurs": [
+      {
+        "id": "pel-c-1",
+        "name": "1. Terlambat bangun tidur/dibangunkan pengurus secara paksa",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-c1-1",
+            "text": "Pengendalian diri",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-c1-2",
+            "text": "Kedisiplinan waktu",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          }
+        ]
+      },
+      {
+        "id": "pel-c-2",
+        "name": "2. Tidak mencuci peralatan makan sendiri setelah makan",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-c2-1",
+            "text": "Tanggung jawab pribadi",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-c2-2",
+            "text": "Inisiatif diri",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          }
+        ]
+      },
+      {
+        "id": "pel-c-3",
+        "name": "3. Bergantung pada orang lain untuk merapikan lemari pribadi",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-c3-1",
+            "text": "Kemandirian tugas",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-c3-2",
+            "text": "Kerapian diri",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pel-c-4",
+        "name": "4. Tidak memiliki tabungan",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-c4-1",
+            "text": "Kemandirian diri",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-c4-2",
+            "text": "Hidup Hemat",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-c4-3",
+            "text": "Inisiatif diri",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          }
+        ]
+      },
+      {
+        "id": "pel-c-5",
+        "name": "5. Membuang sampah sembarangan",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-c5-1",
+            "text": "Kepedulian lingkungan",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-c5-2",
+            "text": "Rasa tanggung jawab",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          }
+        ]
+      },
+      {
+        "id": "pel-c-6",
+        "name": "6. Pakaian berserakan di kamar",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-c6-1",
+            "text": "Kerapian kamar",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-c6-2",
+            "text": "Disiplin asrama",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          }
+        ]
+      },
+      {
+        "id": "pel-c-7",
+        "name": "7. Piket kamar tidak dilaksanakan sesuai jadwal",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-c7-1",
+            "text": "Kerja sama",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-c7-2",
+            "text": "Loyalitas tugas kamar",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-c7-3",
+            "text": "Rasa tanggung jawab",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pel-c-8",
+        "name": "8. Tidak membersihkan toilet setelah digunakan",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-c8-1",
+            "text": "Rasa empati sosial",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-c8-2",
+            "text": "Kebersihan fasilitas",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "code": "D",
+    "name": "Ubudiyah/Ibadah",
+    "unsurs": [
+      {
+        "id": "pel-d-1",
+        "name": "1. Meninggalkan shalat fardhu",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-d1-1",
+            "text": "Ketaatan ibadah",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          },
+          {
+            "id": "ind-pel-d1-2",
+            "text": "Integritas/kejujuran",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-d1-3",
+            "text": "Sikap mental/adab",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          },
+          {
+            "id": "ind-pel-d1-4",
+            "text": "Ketaatan pada syariat",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-d1-5",
+            "text": "Rasa tanggung jawab",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          }
+        ]
+      },
+      {
+        "id": "pel-d-2",
+        "name": "2. Membuat kegaduhan saat tadarus",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-d2-1",
+            "text": "Tanggung jawab",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-d2-2",
+            "text": "Adab terhadap Al-Qur'an",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-d2-3",
+            "text": "Pengendalian diri",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          }
+        ]
+      },
+      {
+        "id": "pel-d-3",
+        "name": "3. Sengaja membatalkan puasa ramadhan tanpa uzur",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-d3-1",
+            "text": "Ketaatan tertinggi",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-d3-2",
+            "text": "Kejujuran",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pel-d-4",
+        "name": "4. Tidak ikut sahur/buka puasa bersama yg diwajibkan",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-d4-1",
+            "text": "Kebersamaan",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          },
+          {
+            "id": "ind-pel-d4-2",
+            "text": "Kedisiplinan",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pel-d-5",
+        "name": "5. Tidur saat azan dan shalat berlangsung",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-d5-1",
+            "text": "Adab/sopan santun",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-d5-2",
+            "text": "Menghargai syari'at",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          }
+        ]
+      },
+      {
+        "id": "pel-d-6",
+        "name": "6. Tidak melaksanakan shalat dhuha & hajat berjama'ah",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-d6-1",
+            "text": "Kedisiplinan",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-d6-2",
+            "text": "ketaatan",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pel-d-7",
+        "name": "7. Tidak hafal bacaan sholat",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-d7-1",
+            "text": "Tanggung jawab",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-d7-2",
+            "text": "Keseriusan ibadah",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-d7-3",
+            "text": "Usaha/ikhtiar",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          }
+        ]
+      },
+      {
+        "id": "pel-d-8",
+        "name": "8. Tidak hafal do'a setelah sholat",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-d8-1",
+            "text": "Tanggung jawab",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-d8-2",
+            "text": "Keseriusan ibadah",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-d8-3",
+            "text": "Usaha/ikhtiar",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          }
+        ]
+      },
+      {
+        "id": "pel-d-9",
+        "name": "9. Terburu-buru & bermain saat berwudhu",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-d9-1",
+            "text": "Tumakninah",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-d9-2",
+            "text": "Kesempurnaan ibadah",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-d9-3",
+            "text": "Ketertiban",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-d9-4",
+            "text": "Rasa tanggung jawab",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pel-d-10",
+        "name": "10. Jarang puasa sunnah senin-kamis",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-d10-1",
+            "text": "Ketaatan",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-d10-2",
+            "text": "Pengendalian diri",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-d10-3",
+            "text": "Rasa tanggung jawab",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          }
+        ]
+      },
+      {
+        "id": "pel-d-11",
+        "name": "11. Tidak mengikuti wirid",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-d11-1",
+            "text": "Ketaatan",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-d11-2",
+            "text": "Pengendalian diri",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-d11-3",
+            "text": "Rasa tanggung jawab",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-d11-4",
+            "text": "Kedisiplinan",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          }
+        ]
+      },
+      {
+        "id": "pel-d-12",
+        "name": "12. Tidak memakai pakaian yang layak ketika sholat (celana, baju kotor, mukenah terawang)",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-d12-1",
+            "text": "Kepatuhan aturan",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-d12-2",
+            "text": "Kepsopanan",
+            "type": "SAYYIAH",
+            "default_score": -0.1,
+            "tingkat": "Berat"
+          }
+        ]
+      },
+      {
+        "id": "pel-d-13",
+        "name": "13. Menggunakan barang (sajadah, mukenah, al-qur'an) santriwati lain tanpa izin",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-d13-1",
+            "text": "Kejujuran",
+            "type": "SAYYIAH",
+            "default_score": -0.05,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-d13-2",
+            "text": "Rasa tanggung jawab",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          }
+        ]
+      },
+      {
+        "id": "pel-d-14",
+        "name": "14. Sengaja tidak berpuasa wajib",
+        "type": "SAYYIAH",
+        "indicators": [
+          {
+            "id": "ind-pel-d14-1",
+            "text": "Keimanan",
+            "type": "SAYYIAH",
+            "default_score": -0.025,
+            "tingkat": "Ringan"
+          },
+          {
+            "id": "ind-pel-d14-2",
+            "text": "Ketaqwaan",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          },
+          {
+            "id": "ind-pel-d14-3",
+            "text": "Ketaatan",
+            "type": "SAYYIAH",
+            "default_score": -0.075,
+            "tingkat": "Sedang"
+          }
+        ]
+      }
+    ]
+  }
+]
