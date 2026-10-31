@@ -37,7 +37,17 @@ export default function PengasuhanAbsenPage() {
   const { santriList, kelasList, currentUser, batchAddAbsensi, showToast } = useMizan();
 
   const [selectedPrayer, setSelectedPrayer] = useState<WaktuSholat>("Subuh");
-  const [selectedGender, setSelectedGender] = useState<"Putra" | "Putri">("Putra");
+  const isSuperAdmin = currentUser.role === "SUPER_ADMIN";
+  const userGender = currentUser.gender || "Putra";
+  const [selectedGender, setSelectedGender] = useState<"Putra" | "Putri">(
+    isSuperAdmin ? "Putra" : userGender
+  );
+
+  useEffect(() => {
+    if (!isSuperAdmin) {
+      setSelectedGender(userGender);
+    }
+  }, [isSuperAdmin, userGender]);
   const [selectedClass, setSelectedClass] = useState<string>("1A");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedDate, setSelectedDate] = useState<string>("2026-10-31");
@@ -218,22 +228,28 @@ export default function PengasuhanAbsenPage() {
               <label className="block text-[10px] font-bold uppercase tracking-wider text-[#94A3B8] mb-1">
                 Kategori Santri
               </label>
-              <div className="grid grid-cols-2 gap-1.5">
-                {(["Putra", "Putri"] as const).map((g) => (
-                  <button
-                    key={g}
-                    type="button"
-                    onClick={() => setSelectedGender(g)}
-                    className={`py-1.5 rounded-xl text-xs font-bold text-center transition-all ${
-                      selectedGender === g
-                        ? "bg-[#172033] text-white shadow-xs"
-                        : "bg-[#EEF2F6] text-[#64748B]"
-                    }`}
-                  >
-                    {g}
-                  </button>
-                ))}
-              </div>
+              {isSuperAdmin ? (
+                <div className="grid grid-cols-2 gap-1.5">
+                  {(["Putra", "Putri"] as const).map((g) => (
+                    <button
+                      key={g}
+                      type="button"
+                      onClick={() => setSelectedGender(g)}
+                      className={`py-1.5 rounded-xl text-xs font-bold text-center transition-all ${
+                        selectedGender === g
+                          ? "bg-[#172033] text-white shadow-xs"
+                          : "bg-[#EEF2F6] text-[#64748B]"
+                      }`}
+                    >
+                      {g}
+                    </button>
+                  ))}
+                </div>
+              ) : (
+                <div className="py-1.5 px-3 rounded-xl text-xs font-bold bg-[#1B4D3E] text-white text-center">
+                  Santri {userGender}
+                </div>
+              )}
             </div>
 
             <div>

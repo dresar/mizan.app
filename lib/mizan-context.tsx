@@ -31,6 +31,7 @@ interface MizanContextType {
   switchRole: (role: Role, userId?: string) => void;
   loginUser: (user: UserProfile) => void;
   logoutUser: () => void;
+  updateUserAvatar: (avatarUrl: string) => void;
   santriList: Santri[];
   accessibleSantriList: Santri[];
   getSantri: (id: string) => Santri | undefined;
@@ -172,6 +173,16 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
       void 0;
     }
     showToast("Anda telah keluar dari aplikasi.", "info");
+  };
+
+  const updateUserAvatar = (newUrl: string) => {
+    setCurrentUser((prev) => ({
+      ...prev,
+      avatarUrl: newUrl
+    }));
+    setUserList((prev) =>
+      prev.map((u) => (u.id === currentUser.id ? { ...u, avatarUrl: newUrl } : u))
+    );
   };
 
   const switchRole = (role: Role, userId?: string) => {
@@ -526,6 +537,7 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
         switchRole,
         loginUser,
         logoutUser,
+        updateUserAvatar,
         santriList,
         accessibleSantriList,
         getSantri,

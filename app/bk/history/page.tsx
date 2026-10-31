@@ -35,7 +35,7 @@ const PRAYER_TIMES: ("ALL" | WaktuSholat)[] = [
 ];
 
 export default function PengasuhanHistoryPage() {
-  const { absensiList, kelasList, updateAbsensi, deleteAbsensi, showToast } = useMizan();
+  const { absensiList, santriList, currentUser, kelasList, updateAbsensi, deleteAbsensi, showToast } = useMizan();
 
   const [selectedPrayer, setSelectedPrayer] = useState<"ALL" | WaktuSholat>("ALL");
   const [selectedStatus, setSelectedStatus] = useState<"ALL" | StatusAbsensi>("ALL");
@@ -56,9 +56,16 @@ export default function PengasuhanHistoryPage() {
         searchQuery.trim() === "" ||
         item.santriName.toLowerCase().includes(searchQuery.toLowerCase());
 
-      return matchPrayer && matchStatus && matchClass && matchSearch;
+      const matchGender =
+        currentUser.role === "SUPER_ADMIN" ||
+        (() => {
+          const s = santriList.find((santri) => santri.id === item.santriId);
+          return !s || s.gender === currentUser.gender;
+        })();
+
+      return matchPrayer && matchStatus && matchClass && matchSearch && matchGender;
     });
-  }, [absensiList, selectedPrayer, selectedStatus, selectedClass, searchQuery]);
+  }, [absensiList, santriList, currentUser, selectedPrayer, selectedStatus, selectedClass, searchQuery]);
 
   const handleStartEdit = (id: string, currentStatus: StatusAbsensi) => {
     setEditingRecordId(id);

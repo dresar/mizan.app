@@ -22,11 +22,13 @@ import { Avatar } from "@/components/ui/Avatar";
 
 export default function GuruProfilPage() {
   const router = useRouter();
-  const { currentUser, penilaianList, absensiList, logoutUser, showToast, refreshData } = useMizan();
+  const { currentUser, penilaianList, absensiList, logoutUser, showToast, refreshData, updateUserAvatar } = useMizan();
 
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [avatarUrl, setAvatarUrl] = useState(currentUser.avatarUrl || "");
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string>("");
   const [isSavingPassword, setIsSavingPassword] = useState(false);
   const [isSavingAvatar, setIsSavingAvatar] = useState(false);
 
@@ -71,21 +73,57 @@ export default function GuruProfilPage() {
     }
   };
 
-  const handleUpdateAvatar = async (e: React.FormEvent) => {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      setSelectedFile(file);
+      setPreviewUrl(URL.createObjectURL(file));
+    }
+  };
+
+  const handleUploadAvatar = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!selectedFile && !avatarUrl) {
+      showToast("Pilih file foto terlebih dahulu.", "error");
+      return;
+    }
+
     setIsSavingAvatar(true);
     try {
-      const res = await fetch("/api/auth/update-password", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId: currentUser.id, avatarUrl })
-      });
-      const data = await res.json();
-      if (data.success) {
-        showToast("Foto profil berhasil diperbarui.", "success");
-        await refreshData();
-      } else {
-        showToast(data.message || "Gagal memperbarui profil.", "error");
+      if (selectedFile) {
+        const formData = new FormData();
+        formData.append("file", selectedFile);
+        formData.append("userId", currentUser.id);
+
+        const res = await fetch("/api/upload-avatar", {
+          method: "POST",
+          body: formData
+        });
+
+        const data = await res.json();
+        if (data.success) {
+          showToast("Foto profil berhasil disimpan ke server VPS.", "success");
+          updateUserAvatar(data.avatarUrl);
+          setSelectedFile(null);
+          setPreviewUrl("");
+          await refreshData();
+        } else {
+          showToast(data.message || "Gagal mengunggah foto.", "error");
+        }
+      } else if (avatarUrl) {
+        const res = await fetch("/api/auth/update-password", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userId: currentUser.id, avatarUrl })
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast("Foto profil berhasil diperbarui.", "success");
+          updateUserAvatar(avatarUrl);
+          await refreshData();
+        } else {
+          showToast(data.message || "Gagal memperbarui profil.", "error");
+        }
       }
     } catch {
       showToast("Kendala koneksi ke server.", "error");
@@ -261,38 +299,52 @@ export default function GuruProfilPage() {
           <div className="flex items-center gap-2 pb-1 border-b border-[#E2E8F0]">
             <Camera className="w-4 h-4 text-[#A8833E]" />
             <h2 className="text-xs font-bold text-[#172033] uppercase tracking-wider">
-              Tautan Foto Profil
+              Unggah Foto Profil (Storage VPS)
             </h2>
           </div>
 
-          <form onSubmit={handleUpdateAvatar} className="space-y-3 pt-1">
-            <div>
-              <label className="block text-[11px] font-bold text-[#475569] mb-1">
-                URL Foto Profil (Opsional)
-              </label>
-              <input
-                type="url"
-                value={avatarUrl}
-                onChange={(e) => setAvatarUrl(e.target.value)}
-                placeholder="https://contoh.com/foto-ustadz.jpg"
-                className="w-full px-3 py-2 text-xs bg-[#EEF2F6] border border-transparent rounded-xl focus:bg-white focus:border-[#1B4D3E] focus:outline-none"
-              />
+          <form onSubmit={handleUploadAvatar} className="space-y-3 pt-1">
+            <div className="flex items-center gap-3">
+              <div className="w-16 h-16 rounded-2xl mizan-card border border-[#E2EBF4] overflow-hidden flex items-center justify-center shrink-0 bg-[#FAF7F2]">
+                {previewUrl ? (
+                  <img src={previewUrl} alt="Preview" className="w-full h-full object-cover" />
+                ) : currentUser.avatarUrl ? (
+                  <img src={currentUser.avatarUrl} alt={currentUser.name} className="w-full h-full object-cover" />
+                ) : (
+                  <span className="font-bold text-sm text-[#1B4D3E]">{currentUser.avatarInitials}</span>
+                )}
+              </div>
+
+              <div className="flex-1 space-y-1">
+                <label className="block text-[11px] font-bold text-[#475569]">
+                  Pilih Gambar dari Perangkat
+                </label>
+                <input
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp"
+                  onChange={handleFileChange}
+                  className="block w-full text-xs text-[#64748B] file:mr-2.5 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-[11px] file:font-bold file:bg-[#1B4D3E] file:text-white hover:file:bg-[#153e32] cursor-pointer"
+                />
+                <p className="text-[10px] text-[#94A3B8]">
+                  Format JPG, PNG, atau WebP (Maksimal 5 MB). Disimpan di storage VPS lokal.
+                </p>
+              </div>
             </div>
 
             <button
               type="submit"
-              disabled={isSavingAvatar}
-              className="py-2.5 px-5 rounded-2xl bg-[#A8833E] text-white font-bold text-xs flex items-center justify-center gap-2 hover:bg-[#8f6d2e] transition-colors disabled:opacity-60"
+              disabled={isSavingAvatar || (!selectedFile && !avatarUrl)}
+              className="py-2.5 px-5 rounded-2xl bg-[#1B4D3E] text-white font-bold text-xs flex items-center justify-center gap-2 hover:bg-[#153e32] transition-colors disabled:opacity-50 cursor-pointer"
             >
               {isSavingAvatar ? (
                 <>
                   <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                  <span>Menyimpan...</span>
+                  <span>Mengunggah ke VPS...</span>
                 </>
               ) : (
                 <>
                   <Save className="w-3.5 h-3.5" />
-                  <span>Perbarui Foto Profil</span>
+                  <span>Simpan Foto ke Server VPS</span>
                 </>
               )}
             </button>

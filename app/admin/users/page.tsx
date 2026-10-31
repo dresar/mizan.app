@@ -53,12 +53,14 @@ export default function AdminUsersPage() {
     }
 
     setIsSubmitting(true);
-    const roleTitle =
-      formData.role === "SUPER_ADMIN"
-        ? "Super Admin Pengasuhan"
-        : formData.gender === "Putri"
-        ? "Pembina Santriwati Putri"
-        : "Pembina Santri Putra";
+    let roleTitle = "Pembina Santri Putra";
+    if (formData.role === "SUPER_ADMIN") {
+      roleTitle = "Super Admin Pengasuhan";
+    } else if (formData.role === "PENGASUHAN") {
+      roleTitle = formData.gender === "Putri" ? "Pengasuhan Santriwati Putri" : "Pengasuhan Santri Putra";
+    } else {
+      roleTitle = formData.gender === "Putri" ? "Pembina Santriwati Putri" : "Pembina Santri Putra";
+    }
 
     const res = await addUser({
       ...formData,
@@ -241,6 +243,7 @@ export default function AdminUsersPage() {
                     className="w-full px-3 py-2 text-xs bg-[#EEF2F6] border border-transparent rounded-xl focus:bg-white focus:border-[#1B4D3E] focus:outline-none"
                   >
                     <option value="GURU">Guru / Pembina Asrama</option>
+                    <option value="PENGASUHAN">Bagian Pengasuhan & BK (Presensi Sholat)</option>
                     <option value="SUPER_ADMIN">Super Admin Pengasuhan</option>
                   </select>
                 </div>

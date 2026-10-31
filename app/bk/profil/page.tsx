@@ -21,11 +21,12 @@ import { Avatar } from "@/components/ui/Avatar";
 
 export default function PengasuhanProfilPage() {
   const router = useRouter();
-  const { currentUser, absensiList, logoutUser, showToast, refreshData } = useMizan();
+  const { currentUser, logoutUser, showToast, refreshData, updateUserAvatar } = useMizan();
 
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [avatarUrl, setAvatarUrl] = useState(currentUser.avatarUrl || "");
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string>("");
   const [isSavingPassword, setIsSavingPassword] = useState(false);
   const [isSavingAvatar, setIsSavingAvatar] = useState(false);
 
@@ -62,21 +63,41 @@ export default function PengasuhanProfilPage() {
     }
   };
 
-  const handleUpdateAvatar = async (e: React.FormEvent) => {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      setSelectedFile(file);
+      setPreviewUrl(URL.createObjectURL(file));
+    }
+  };
+
+  const handleUploadAvatar = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!selectedFile) {
+      showToast("Pilih file foto terlebih dahulu.", "error");
+      return;
+    }
+
     setIsSavingAvatar(true);
     try {
-      const res = await fetch("/api/auth/update-password", {
+      const formData = new FormData();
+      formData.append("file", selectedFile);
+      formData.append("userId", currentUser.id);
+
+      const res = await fetch("/api/upload-avatar", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId: currentUser.id, avatarUrl })
+        body: formData
       });
+
       const data = await res.json();
       if (data.success) {
-        showToast("Foto profil berhasil diperbarui.", "success");
+        showToast("Foto profil tersimpan di storage VPS.", "success");
+        updateUserAvatar(data.avatarUrl);
+        setSelectedFile(null);
+        setPreviewUrl("");
         await refreshData();
       } else {
-        showToast(data.message || "Gagal memperbarui profil.", "error");
+        showToast(data.message || "Gagal mengunggah foto.", "error");
       }
     } catch {
       showToast("Kendala koneksi ke server.", "error");
@@ -94,15 +115,17 @@ export default function PengasuhanProfilPage() {
     <RoleShell>
       <div className="w-full space-y-4 max-w-4xl mx-auto overflow-x-hidden pb-16">
         <Card className="p-5 sm:p-6 text-center space-y-3 bg-white">
-          <div className="mx-auto w-20 h-20 rounded-3xl mizan-card flex items-center justify-center text-2xl font-black text-[#1B4D3E] overflow-hidden">
-            {currentUser.avatarUrl ? (
-              <img
-                src={currentUser.avatarUrl}
-                alt={currentUser.name}
-                className="w-full h-full object-cover"
-              />
+          <div className="mx-auto w-20 h-20 rounded-3xl mizan-card flex items-center justify-center text-2xl font-black text-[#1B4D3E] overflow-hidden border border-[#E2EBF4]">
+            {previewUrl ? (
+              <img src={previewUrl} alt="Preview" className="w-full h-full object-cover" />
+            ) : currentUser.avatarUrl ? (
+              <img src={currentUser.avatarUrl} alt={currentUser.name} className="w-full h-full object-cover" />
             ) : (
-              <Avatar initials={currentUser.avatarInitials || "BK"} size="xl" variant="gold" />
+              <Avatar
+                initials={currentUser.avatarInitials || "BK"}
+                size="xl"
+                variant={currentUser.gender === "Putri" ? "gold" : "primary"}
+              />
             )}
           </div>
 
@@ -115,7 +138,7 @@ export default function PengasuhanProfilPage() {
             </p>
             <div className="inline-flex items-center gap-1.5 mt-2 px-3 py-1 rounded-full mizan-pill bg-[#ECFDF5] text-[#065F46] text-[11px] font-bold">
               <CheckCircle2 className="w-3.5 h-3.5" />
-              <span>Otoritas Khusus Presensi 7 Waktu Sholat</span>
+              <span>Otoritas Khusus Presensi 7 Waktu Sholat ({currentUser.gender === "Putri" ? "Santriwati Putri" : "Santri Putra"})</span>
             </div>
           </div>
         </Card>
@@ -142,13 +165,69 @@ export default function PengasuhanProfilPage() {
 
             <CardInset className="p-3">
               <span className="text-[10px] text-[#94A3B8] font-bold uppercase block">
-                Hak Akses Utama
+                Bidang Pengasuhan
               </span>
               <p className="font-bold text-[#172033] mt-0.5">
-                Pengelolaan Absensi Sholat 7 Waktu Pondok
+                Santri {currentUser.gender === "Putri" ? "Putri" : "Putra"}
               </p>
             </CardInset>
           </div>
+        </Card>
+
+        <Card className="p-4 sm:p-5 space-y-3 bg-white">
+          <div className="flex items-center gap-2 pb-1 border-b border-[#E2E8F0]">
+            <Camera className="w-4 h-4 text-[#A8833E]" />
+            <h2 className="text-xs font-bold text-[#172033] uppercase tracking-wider">
+              Unggah Foto Profil (Storage VPS)
+            </h2>
+          </div>
+
+          <form onSubmit={handleUploadAvatar} className="space-y-3 pt-1">
+            <div className="flex items-center gap-3">
+              <div className="w-16 h-16 rounded-2xl mizan-card border border-[#E2EBF4] overflow-hidden flex items-center justify-center shrink-0 bg-[#FAF7F2]">
+                {previewUrl ? (
+                  <img src={previewUrl} alt="Preview" className="w-full h-full object-cover" />
+                ) : currentUser.avatarUrl ? (
+                  <img src={currentUser.avatarUrl} alt={currentUser.name} className="w-full h-full object-cover" />
+                ) : (
+                  <span className="font-bold text-sm text-[#1B4D3E]">{currentUser.avatarInitials}</span>
+                )}
+              </div>
+
+              <div className="flex-1 space-y-1">
+                <label className="block text-[11px] font-bold text-[#475569]">
+                  Pilih Gambar dari Perangkat
+                </label>
+                <input
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp"
+                  onChange={handleFileChange}
+                  className="block w-full text-xs text-[#64748B] file:mr-2.5 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-[11px] file:font-bold file:bg-[#1B4D3E] file:text-white hover:file:bg-[#153e32] cursor-pointer"
+                />
+                <p className="text-[10px] text-[#94A3B8]">
+                  Format JPG, PNG, atau WebP (Maksimal 5 MB). Disimpan di storage VPS lokal.
+                </p>
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              disabled={isSavingAvatar || !selectedFile}
+              className="py-2.5 px-5 rounded-2xl bg-[#1B4D3E] text-white font-bold text-xs flex items-center justify-center gap-2 hover:bg-[#153e32] transition-colors disabled:opacity-50 cursor-pointer"
+            >
+              {isSavingAvatar ? (
+                <>
+                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  <span>Mengunggah ke VPS...</span>
+                </>
+              ) : (
+                <>
+                  <Save className="w-3.5 h-3.5" />
+                  <span>Simpan Foto ke Server VPS</span>
+                </>
+              )}
+            </button>
+          </form>
         </Card>
 
         <Card className="p-4 sm:p-5 space-y-3 bg-white">
@@ -193,7 +272,7 @@ export default function PengasuhanProfilPage() {
             <button
               type="submit"
               disabled={isSavingPassword}
-              className="py-2.5 px-5 rounded-2xl bg-[#1B4D3E] text-white font-bold text-xs flex items-center justify-center gap-2 hover:bg-[#153e32] transition-colors disabled:opacity-60"
+              className="py-2.5 px-5 rounded-2xl bg-[#1B4D3E] text-white font-bold text-xs flex items-center justify-center gap-2 hover:bg-[#153e32] transition-colors disabled:opacity-60 cursor-pointer"
             >
               {isSavingPassword ? (
                 <>
@@ -214,7 +293,7 @@ export default function PengasuhanProfilPage() {
           <button
             type="button"
             onClick={handleLogout}
-            className="w-full py-3 px-4 rounded-2xl mizan-card bg-white text-xs font-bold flex items-center justify-center gap-2 text-red-600 border border-red-200 hover:bg-red-50 transition-colors shadow-xs"
+            className="w-full py-3 px-4 rounded-2xl mizan-card bg-white text-xs font-bold flex items-center justify-center gap-2 text-red-600 border border-red-200 hover:bg-red-50 transition-colors shadow-xs cursor-pointer"
           >
             <LogOut className="w-4 h-4" />
             <span>Keluar dari Aplikasi</span>
