@@ -29,6 +29,7 @@ export default function AdminDashboardPage() {
   const { santriList, guruList, absensiList, setGuruStatus } = useMizan();
 
   const [leaderboardGender, setLeaderboardGender] = useState<"ALL" | "Putra" | "Putri">("ALL");
+  const [attentionGender, setAttentionGender] = useState<"ALL" | "Putra" | "Putri">("ALL");
   const [guruSearch, setGuruSearch] = useState("");
   const [guruGenderFilter, setGuruGenderFilter] = useState<"ALL" | "Putra" | "Putri">("ALL");
   const [guruStatusFilter, setGuruStatusFilter] = useState<"ALL" | StatusGuru>("ALL");
@@ -69,15 +70,43 @@ export default function AdminDashboardPage() {
   const rankedSantriList = useMemo(() => {
     let list = [...santriList];
     if (leaderboardGender !== "ALL") {
-      list = list.filter((s) => s.gender === leaderboardGender);
+      return list
+        .filter((s) => s.gender === leaderboardGender)
+        .sort((a, b) => b.currentScore - a.currentScore)
+        .slice(0, 10);
     }
-    return list.sort((a, b) => b.currentScore - a.currentScore).slice(0, 10);
+    const putra = list
+      .filter((s) => s.gender === "Putra")
+      .sort((a, b) => b.currentScore - a.currentScore)
+      .slice(0, 5);
+    const putri = list
+      .filter((s) => s.gender === "Putri")
+      .sort((a, b) => b.currentScore - a.currentScore)
+      .slice(0, 5);
+    return [...putra, ...putri];
   }, [santriList, leaderboardGender]);
 
   const needAttentionSantri = useMemo(() => {
-    return [...santriList]
-      .filter((s) => s.currentScore < 80 || (s.status !== "Aman" && s.status !== "Baik"))
-      .sort((a, b) => a.currentScore - b.currentScore);
+    let list = [...santriList];
+    if (attentionGender !== "ALL") {
+      return list
+        .filter((s) => s.gender === attentionGender)
+        .sort((a, b) => a.currentScore - b.currentScore)
+        .slice(0, 5);
+    }
+    const putra = list
+      .filter((s) => s.gender === "Putra")
+      .sort((a, b) => a.currentScore - b.currentScore)
+      .slice(0, 5);
+    const putri = list
+      .filter((s) => s.gender === "Putri")
+      .sort((a, b) => a.currentScore - b.currentScore)
+      .slice(0, 5);
+    return [...putra, ...putri];
+  }, [santriList, attentionGender]);
+
+  const totalNeedAttentionCount = useMemo(() => {
+    return santriList.filter((s) => s.currentScore < 80 || (s.status !== "Aman" && s.status !== "Baik")).length;
   }, [santriList]);
 
   const getGuruBadgeVariant = (status: StatusGuru) => {
@@ -187,10 +216,10 @@ export default function AdminDashboardPage() {
               </div>
             </div>
             <div className="text-2xl sm:text-3xl font-black font-mono text-red-600">
-              {needAttentionSantri.length}
+              {totalNeedAttentionCount}
             </div>
             <p className="text-[10px] text-[#64748B] mt-1">
-              Skor di bawah 70,000
+              Skor di bawah 80,000
             </p>
           </CardSub>
         </div>
@@ -203,11 +232,11 @@ export default function AdminDashboardPage() {
               <div className="flex items-center gap-2">
                 <Trophy className="w-4 h-4 text-[#A8833E]" />
                 <h2 className="text-xs sm:text-sm font-bold text-[#172033] uppercase tracking-wider">
-                  Peringkat 10 Santri & Santriwati Teladan
+                  Peringkat Santri & Santriwati Teladan
                 </h2>
               </div>
               <p className="text-[11px] text-[#64748B] mt-0.5">
-                10 santri peraih capaian akhlak tertinggi pondok (Maksimal 99,000)
+                5 Putra & 5 Putri peraih capaian akhlak tertinggi pondok (Maksimal 99,000)
               </p>
             </div>
 
@@ -296,46 +325,85 @@ export default function AdminDashboardPage() {
           </div>
         </Card>
 
-        <Card className="p-4 sm:p-5 space-y-3 bg-white">
-          <div className="flex items-center justify-between pb-2 border-b border-[#E2E8F0]">
-            <div className="flex items-center gap-2">
-              <ShieldAlert className="w-4 h-4 text-red-600" />
-              <h2 className="text-xs sm:text-sm font-bold text-[#172033] uppercase tracking-wider">
-                Santri Perlu Pembinaan Segera (Skor Terendah)
-              </h2>
+        <Card className="p-4 sm:p-5 space-y-4 bg-white">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-2 border-b border-[#E2E8F0]">
+            <div>
+              <div className="flex items-center gap-2">
+                <ShieldAlert className="w-4 h-4 text-red-600" />
+                <h2 className="text-xs sm:text-sm font-bold text-[#172033] uppercase tracking-wider">
+                  Santri Perlu Pembinaan Segera (Skor Terendah)
+                </h2>
+              </div>
+              <p className="text-[11px] text-[#64748B] mt-0.5">
+                5 Putra & 5 Putri dengan perolehan skor akhlak terendah yang memerlukan pembinaan intensif
+              </p>
             </div>
-            <span className="text-[11px] font-bold text-red-700 bg-red-50 px-2.5 py-0.5 rounded-full mizan-pill">
-              {needAttentionSantri.length} Santri
-            </span>
+
+            <div className="inline-flex rounded-xl p-1 bg-[#EEF2F6] self-start sm:self-auto">
+              {(["ALL", "Putra", "Putri"] as const).map((g) => (
+                <button
+                  key={g}
+                  type="button"
+                  onClick={() => setAttentionGender(g)}
+                  className={`px-3 py-1 rounded-lg text-[10px] font-bold transition-all ${
+                    attentionGender === g
+                      ? "bg-white text-red-700 shadow-xs"
+                      : "text-[#64748B] hover:text-[#172033]"
+                  }`}
+                >
+                  {g === "ALL" ? "Semua" : g}
+                </button>
+              ))}
+            </div>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-2 gap-2.5">
-            {needAttentionSantri.slice(0, 4).map((santri) => (
-              <Link
-                key={santri.id}
-                href={`/guru/santri/${santri.id}`}
-                className="p-3 rounded-2xl border border-red-200 bg-[#FEF2F2]/60 flex flex-col justify-between gap-2 hover:border-red-400 transition-all"
-              >
-                <div className="flex items-center gap-2 min-w-0">
-                  <Avatar initials={santri.avatar} size="sm" variant="primary" />
-                  <div className="min-w-0 flex-1">
-                    <p className="text-xs font-bold text-[#172033] truncate">
-                      {santri.name}
-                    </p>
-                    <p className="text-[10px] text-red-700 truncate">
-                      {santri.class} • {santri.status}
-                    </p>
-                  </div>
-                </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            {needAttentionSantri.map((santri, idx) => {
+              const rank = idx + 1;
+              return (
+                <Link
+                  key={santri.id}
+                  href={`/guru/santri/${santri.id}`}
+                  className="p-3 rounded-2xl border border-red-200 bg-[#FEF2F2]/60 flex items-center justify-between gap-2.5 transition-all group hover:border-red-400 hover:bg-[#FEF2F2]"
+                >
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <div className="w-7 h-7 rounded-xl flex items-center justify-center font-bold text-xs shrink-0 bg-red-100 text-red-700">
+                      {rank}
+                    </div>
 
-                <div className="flex items-center justify-between pt-1.5 border-t border-red-100">
-                  <span className="text-xs font-black font-mono text-red-600 block">
-                    {formatScore(santri.currentScore)}
-                  </span>
-                  <span className="text-[9px] text-[#64748B] font-bold">Profil</span>
-                </div>
-              </Link>
-            ))}
+                    <Avatar
+                      initials={santri.avatar}
+                      size="md"
+                      variant={santri.gender === "Putra" ? "primary" : "gold"}
+                    />
+
+                    <div className="min-w-0">
+                      <p className="text-xs font-bold text-[#172033] truncate group-hover:text-red-700 transition-colors">
+                        {santri.name}
+                      </p>
+                      <p className="text-[10px] text-[#64748B]">
+                        Kelas {santri.class} • {santri.gender}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="text-right shrink-0">
+                    <span className="text-xs font-black font-mono text-red-600 block">
+                      {formatScore(santri.currentScore)}
+                    </span>
+                    <span className="inline-flex items-center gap-1 text-[10px] font-bold text-red-700 bg-red-100 border border-red-200 px-2.5 py-0.5 rounded-full mt-1">
+                      <AlertTriangle className="w-3 h-3 text-red-600" />
+                      {santri.status || "Binaan"}
+                    </span>
+                  </div>
+                </Link>
+              );
+            })}
+            {needAttentionSantri.length === 0 && (
+              <div className="col-span-2 py-8 text-center text-xs text-[#065F46] bg-[#ECFDF5] rounded-2xl border border-[#A7F3D0]">
+                Alhamdulillah, tidak ada santri yang memerlukan pembinaan intensif.
+              </div>
+            )}
           </div>
         </Card>
 
