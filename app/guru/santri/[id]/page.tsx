@@ -238,20 +238,11 @@ Wassalamu'alaikum Warahmatullahi Wabarakatuh.
           </div>
         </div>
 
-        <div className="hidden print:flex items-center justify-between pb-4 border-b-2 border-[#1B4D3E] mb-4 gap-4">
-          <img src="/logo-raport.png" alt="Logo Pondok" className="w-16 h-16 object-contain" />
-          <div className="text-center flex-1">
-            <h2 className="text-lg font-bold font-serif text-[#1B4D3E]">
-              PONDOK PESANTREN MODERN RAUDHATUSSALAM MAHATO
-            </h2>
-            <p className="text-xs text-gray-600">
-              LEMBAR REKAPITULASI SIKAP, ADAB, DAN KEDISIPLINAN SANTRI
-            </p>
-            <p className="text-[10px] text-gray-500 mt-0.5 font-mono">
-              Dokumen Dicetak Pada: {printDate}
-            </p>
-          </div>
-          <div className="w-16" />
+        <div className="hidden print:block pb-2 mb-4">
+          <img src="/kop-surat.png" alt="Kop Surat Resmi" className="w-full object-contain" />
+          <p className="text-[10px] text-gray-500 text-right font-mono mt-1">
+            Dokumen Dicetak Pada: {printDate}
+          </p>
         </div>
 
         <Card className="p-4 sm:p-6 bg-white">
@@ -259,7 +250,7 @@ Wassalamu'alaikum Warahmatullahi Wabarakatuh.
             <div className="w-20 h-20 rounded-3xl mizan-card flex items-center justify-center shrink-0">
               <Avatar
                 initials={santri.avatar}
-                size="xl"
+                size="2xl"
                 variant={santri.gender === "Putra" ? "primary" : "gold"}
               />
             </div>

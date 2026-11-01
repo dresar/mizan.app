@@ -6,7 +6,7 @@ interface AvatarProps {
   initials: string;
   src?: string | null;
   name?: string;
-  size?: "xs" | "sm" | "md" | "lg" | "xl";
+  size?: "xs" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl";
   variant?: "primary" | "gold" | "neutral";
   className?: string;
 }
@@ -21,11 +21,13 @@ export function Avatar({
 }: AvatarProps) {
   const [imgError, setImgError] = useState(false);
 
-  let sizeClass = "w-10 h-10 text-sm";
-  if (size === "xs") sizeClass = "w-6 h-6 text-[10px]";
-  if (size === "sm") sizeClass = "w-8 h-8 text-xs";
-  if (size === "lg") sizeClass = "w-12 h-12 text-base font-semibold";
-  if (size === "xl") sizeClass = "w-16 h-16 text-xl font-bold";
+  let sizeClass = "w-12 h-12 text-sm font-bold";
+  if (size === "xs") sizeClass = "w-7 h-7 text-[11px] font-semibold";
+  if (size === "sm") sizeClass = "w-9 h-9 text-xs font-bold";
+  if (size === "lg") sizeClass = "w-16 h-16 text-lg font-black";
+  if (size === "xl") sizeClass = "w-20 h-20 text-2xl font-black";
+  if (size === "2xl") sizeClass = "w-24 h-24 text-3xl font-black";
+  if (size === "3xl") sizeClass = "w-28 h-28 text-4xl font-black";
 
   let colorClass = "bg-[#1B4D3E] text-white border border-[#143B2F]";
   if (variant === "gold") colorClass = "bg-[#C5A059] text-white border border-[#AD8742]";

@@ -235,7 +235,7 @@ export default function OrtuDashboardPage() {
                     <div className="flex items-center gap-3 min-w-0">
                       <Avatar
                         initials={santri.avatar}
-                        size="md"
+                        size="lg"
                         variant={santri.gender === "Putri" ? "gold" : "primary"}
                       />
                       <div className="min-w-0">
@@ -352,7 +352,7 @@ export default function OrtuDashboardPage() {
             <div className="flex items-center gap-3.5">
               <Avatar
                 initials={selectedSantri.avatar}
-                size="lg"
+                size="2xl"
                 variant={selectedSantri.gender === "Putri" ? "gold" : "primary"}
               />
               <div>

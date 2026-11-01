@@ -89,7 +89,7 @@ export default function SantriProfilPage() {
           <div className="relative z-10 flex flex-col items-center">
             <Avatar
               initials={santri.avatar}
-              size="xl"
+              size="2xl"
               variant="gold"
               className="mb-3 ring-4 ring-white/20"
             />

@@ -454,7 +454,7 @@ export default function AdminRaporPage() {
                           <Avatar
                             src={s.avatar}
                             initials={s.name.slice(0, 2).toUpperCase()}
-                            size="sm"
+                            size="md"
                             variant={s.gender === "Putri" ? "gold" : "primary"}
                           />
                           <div className="min-w-0">
@@ -592,7 +592,7 @@ export default function AdminRaporPage() {
                   <Avatar
                     src={selectedDetailSantri.avatar}
                     initials={selectedDetailSantri.name.slice(0, 2).toUpperCase()}
-                    size="md"
+                    size="xl"
                     variant={selectedDetailSantri.gender === "Putri" ? "gold" : "primary"}
                   />
                   <div>
