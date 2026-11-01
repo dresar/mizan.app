@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { useMizan } from "@/lib/mizan-context";
 import { Avatar } from "@/components/ui/Avatar";
+import { NotificationDrawer, MizanNotification } from "@/components/NotificationDrawer";
 
 export default function Header() {
   const router = useRouter();
@@ -34,8 +35,92 @@ export default function Header() {
 
   const [isOpen, setIsOpen] = useState(false);
   const [isNotifOpen, setIsNotifOpen] = useState(false);
+  const [readNotifIds, setReadNotifIds] = useState<string[]>([]);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const notifRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem("mizan_read_notifs");
+      if (stored) {
+        setReadNotifIds(JSON.parse(stored));
+      }
+    } catch {
+      void 0;
+    }
+  }, []);
+
+  const uParam = currentUser?.username ? `?u=${encodeURIComponent(currentUser.username)}` : "";
+
+  const notifications: MizanNotification[] = useMemo(() => {
+    return [
+      {
+        id: "notif-eval-santri",
+        title: "Evaluasi Pembinaan Santri",
+        message: "Terdapat santri dalam batas perhatian pembinaan adab khusus pondok.",
+        time: "10m lalu",
+        type: "urgent",
+        link: activeRole === "PENGASUHAN" ? `/bk/santri${uParam}` : `/admin/santri${uParam}`
+      },
+      {
+        id: "notif-sholat-today",
+        title: "Presensi Sholat Berjamaah",
+        message: "Data kehadiran sholat 7 waktu santri hari ini telah tercatat tertib.",
+        time: "45m lalu",
+        type: "success",
+        link: activeRole === "PENGASUHAN" ? `/bk/history${uParam}` : `/guru/absen${uParam}`
+      },
+      {
+        id: "notif-rapor-master",
+        title: "Pembaruan Rapor Terpadu",
+        message: "Tabel rekapitulasi rapor santri dan santriwati siap diunduh & dicetak.",
+        time: "2j lalu",
+        type: "info",
+        link: `/admin/rapor${uParam}`
+      },
+      {
+        id: "notif-hasanah-baru",
+        title: "Apresiasi Capaian Hasanah",
+        message: "Catatan kebaikan dan prestasi baru santri berhasil dicatat oleh pembina.",
+        time: "4j lalu",
+        type: "success",
+        link: activeRole === "PENGASUHAN" ? `/bk/history${uParam}` : `/guru/riwayat${uParam}`
+      },
+      {
+        id: "notif-jadwal-disiplin",
+        title: "Jadwal Evaluasi Disiplin",
+        message: "Pemeriksaan kedisiplinan dan kerapian kamar santri pekan ini oleh mudabbir.",
+        time: "1h lalu",
+        type: "warning",
+        link: activeRole === "SUPER_ADMIN" ? `/admin/wali-kelas${uParam}` : `/guru/dashboard${uParam}`
+      }
+    ];
+  }, [currentUser, activeRole, uParam]);
+
+  const handleMarkAsRead = (id: string) => {
+    setReadNotifIds((prev) => {
+      if (prev.includes(id)) return prev;
+      const next = [...prev, id];
+      try {
+        localStorage.setItem("mizan_read_notifs", JSON.stringify(next));
+      } catch {
+        void 0;
+      }
+      return next;
+    });
+  };
+
+  const handleMarkAllAsRead = () => {
+    const allIds = notifications.map((n) => n.id);
+    setReadNotifIds(allIds);
+    try {
+      localStorage.setItem("mizan_read_notifs", JSON.stringify(allIds));
+    } catch {
+      void 0;
+    }
+  };
+
+  const unreadCount = notifications.filter((n) => !readNotifIds.includes(n.id)).length;
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -60,8 +145,6 @@ export default function Header() {
     logoutUser();
     router.push("/login");
   };
-
-  const uParam = currentUser?.username ? `?u=${encodeURIComponent(currentUser.username)}` : "";
 
   let dashboardHref = `/guru/dashboard${uParam}`;
   if (activeRole === "SUPER_ADMIN") dashboardHref = `/admin/dashboard${uParam}`;
@@ -130,85 +213,21 @@ export default function Header() {
               aria-label="Notifikasi Aplikasi"
             >
               <Bell className="w-4 h-4 text-[#A8833E]" />
-              <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-[#B91C1C] text-white text-[9px] font-bold flex items-center justify-center border-2 border-white">
-                3
-              </span>
+              {unreadCount > 0 && (
+                <span className="absolute -top-1 -right-1 min-w-4 h-4 px-1 rounded-full bg-[#B91C1C] text-white text-[9px] font-bold flex items-center justify-center border-2 border-white shadow-2xs font-mono">
+                  {unreadCount}
+                </span>
+              )}
             </button>
 
-            {isNotifOpen && (
-              <div className="absolute right-0 top-full mt-2 w-80 rounded-2xl bg-white shadow-xl border border-[#E2EBF4] z-50 p-3 space-y-2.5 transition-all">
-                <div className="flex items-center justify-between pb-2 border-b border-[#E2EBF4]">
-                  <div className="flex items-center gap-2">
-                    <Bell className="w-4 h-4 text-[#1B4D3E]" />
-                    <span className="text-xs font-bold text-[#172033]">
-                      Notifikasi Aplikasi
-                    </span>
-                  </div>
-                  <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-[#ECFDF5] text-[#065F46] border border-[#A7F3D0]">
-                    3 Baru
-                  </span>
-                </div>
-
-                <div className="space-y-2 max-h-72 overflow-y-auto pr-0.5 text-xs">
-                  <Link
-                    href="/admin/rapor"
-                    onClick={() => setIsNotifOpen(false)}
-                    className="p-2.5 rounded-xl border border-[#FECACA] bg-[#FEF2F2]/60 hover:bg-[#FEF2F2] flex items-start gap-2.5 transition-colors block"
-                  >
-                    <AlertTriangle className="w-4 h-4 text-[#B91C1C] shrink-0 mt-0.5" />
-                    <div className="min-w-0 flex-1">
-                      <p className="font-bold text-[#B91C1C] text-[11px]">
-                        Evaluasi Rapor Santri
-                      </p>
-                      <p className="text-[10px] text-[#64748B] mt-0.5">
-                        Terdapat santri dalam batas perhatian pembinaan adab khusus.
-                      </p>
-                    </div>
-                  </Link>
-
-                  <div className="p-2.5 rounded-xl border border-[#A7F3D0] bg-[#ECFDF5]/60 flex items-start gap-2.5">
-                    <ShieldCheck className="w-4 h-4 text-[#065F46] shrink-0 mt-0.5" />
-                    <div className="min-w-0 flex-1">
-                      <p className="font-bold text-[#065F46] text-[11px]">
-                        Presensi Sholat Berjamaah
-                      </p>
-                      <p className="text-[10px] text-[#64748B] mt-0.5">
-                        Data kehadiran sholat 7 waktu santri hari ini telah tercatat tertib.
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="p-2.5 rounded-xl border border-[#E2EBF4] bg-[#FAF7EE] flex items-start gap-2.5">
-                    <FileText className="w-4 h-4 text-[#A8833E] shrink-0 mt-0.5" />
-                    <div className="min-w-0 flex-1">
-                      <p className="font-bold text-[#172033] text-[11px]">
-                        Pembaruan Master Rapor
-                      </p>
-                      <p className="text-[10px] text-[#64748B] mt-0.5">
-                        Tabel rapor terpadu santri dan santriwati siap diunduh &amp; dicetak.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="pt-2 border-t border-[#E2EBF4] flex items-center justify-between">
-                  <button
-                    type="button"
-                    onClick={() => setIsNotifOpen(false)}
-                    className="text-[11px] font-bold text-[#64748B] hover:text-[#172033]"
-                  >
-                    Tutup
-                  </button>
-                  <Link
-                    href="/admin/rapor"
-                    onClick={() => setIsNotifOpen(false)}
-                    className="text-[11px] font-bold text-[#1B4D3E] hover:underline"
-                  >
-                    Buka
-                  </Link>
-                </div>
-              </div>
-            )}
+            <NotificationDrawer
+              isOpen={isNotifOpen}
+              onClose={() => setIsNotifOpen(false)}
+              notifications={notifications}
+              readNotifIds={readNotifIds}
+              onMarkAsRead={handleMarkAsRead}
+              onMarkAllAsRead={handleMarkAllAsRead}
+            />
           </div>
 
           <div className="relative" ref={dropdownRef}>

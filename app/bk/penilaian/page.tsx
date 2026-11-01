@@ -75,13 +75,15 @@ interface MasterFlatItem {
 export default function PengasuhanPenilaianPage() {
   const router = useRouter();
   const {
-    santriList,
+    accessibleSantriList,
     currentUser,
     addPenilaian,
     showToast,
     penilaianList,
     absensiList
   } = useMizan();
+
+  const isSuperAdmin = currentUser.role === "SUPER_ADMIN";
 
   const [genderFilter, setGenderFilter] = useState<"Semua" | "Putra" | "Putri">(
     currentUser.gender === "Putri" ? "Putri" : "Putra"
@@ -335,13 +337,13 @@ export default function PengasuhanPenilaianPage() {
   };
 
   const classList = useMemo(() => {
-    const classes = Array.from(new Set(santriList.map((s) => s.class)));
+    const classes = Array.from(new Set(accessibleSantriList.map((s) => s.class))).sort();
     return ["ALL", ...classes];
-  }, [santriList]);
+  }, [accessibleSantriList]);
 
   const filteredSantriList = useMemo(() => {
-    return santriList.filter((s) => {
-      const matchGender = genderFilter === "Semua" || s.gender === genderFilter;
+    return accessibleSantriList.filter((s) => {
+      const matchGender = isSuperAdmin ? (genderFilter === "Semua" || s.gender === genderFilter) : true;
       const matchSearch =
         s.name.toLowerCase().includes(santriSearch.toLowerCase()) ||
         s.nis.includes(santriSearch);
@@ -349,7 +351,7 @@ export default function PengasuhanPenilaianPage() {
         selectedClassFilter === "ALL" || s.class === selectedClassFilter;
       return matchGender && matchSearch && matchClass;
     });
-  }, [santriList, genderFilter, santriSearch, selectedClassFilter]);
+  }, [accessibleSantriList, isSuperAdmin, genderFilter, santriSearch, selectedClassFilter]);
 
   const selectedSantri = useMemo(() => {
     if (selectedSantriId) {
@@ -552,22 +554,28 @@ export default function PengasuhanPenilaianPage() {
                 </div>
               )}
 
-              <div className="grid grid-cols-3 gap-1 p-1 rounded-2xl bg-[#EEF2F6]">
-                {(["Semua", "Putra", "Putri"] as const).map((g) => (
-                  <button
-                    key={g}
-                    type="button"
-                    onClick={() => setGenderFilter(g)}
-                    className={`py-1.5 rounded-xl text-[10px] font-bold transition-all ${
-                      genderFilter === g
-                        ? "bg-[#1B4D3E] text-white shadow-xs"
-                        : "text-[#64748B] hover:text-[#172033]"
-                    }`}
-                  >
-                    {g}
-                  </button>
-                ))}
-              </div>
+              {isSuperAdmin ? (
+                <div className="grid grid-cols-3 gap-1 p-1 rounded-2xl bg-[#EEF2F6]">
+                  {(["Semua", "Putra", "Putri"] as const).map((g) => (
+                    <button
+                      key={g}
+                      type="button"
+                      onClick={() => setGenderFilter(g)}
+                      className={`py-1.5 rounded-xl text-[10px] font-bold transition-all cursor-pointer ${
+                        genderFilter === g
+                          ? "bg-[#1B4D3E] text-white shadow-xs"
+                          : "text-[#64748B] hover:text-[#172033]"
+                      }`}
+                    >
+                      {g}
+                    </button>
+                  ))}
+                </div>
+              ) : (
+                <div className="px-3 py-1.5 rounded-xl bg-[#EEF2F6] text-[11px] font-bold text-[#1B4D3E] text-center">
+                  Santri {currentUser.gender || "Putra"}
+                </div>
+              )}
 
               <div className={`space-y-2.5 ${isMobileSantriExpanded ? "block" : "hidden lg:block"}`}>
                 <div className="flex items-center gap-1.5">
