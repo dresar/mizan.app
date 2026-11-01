@@ -9,7 +9,8 @@ import { Avatar } from "@/components/ui/Avatar";
 
 export default function Header() {
   const router = useRouter();
-  const { currentUser, logoutUser, activeRole } = useMizan();
+  const { currentUser, logoutUser, activeRole, settings } = useMizan();
+  const appLogo = settings?.appLogoUrl || "/logo.png";
 
   const handleLogout = () => {
     logoutUser();
@@ -30,9 +31,9 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-40 w-full bg-white/95 backdrop-blur-md border-b border-[#E2EBF4] shadow-xs">
       <div className="w-full px-3 sm:px-6 h-14 flex items-center justify-between gap-3 max-w-6xl mx-auto">
-        <Link href={dashboardHref} className="flex items-center gap-2 group">
-          <div className="w-10 h-10 rounded-2xl mizan-card bg-[#1B4D3E] text-[#C5A059] flex items-center justify-center font-bold shadow-xs group-hover:scale-105 transition-transform">
-            <Scale className="w-5 h-5 text-[#C5A059]" />
+        <Link href={dashboardHref} className="flex items-center gap-2.5 group">
+          <div className="w-9 h-9 rounded-2xl mizan-card bg-[#1B4D3E] p-1 flex items-center justify-center shadow-xs group-hover:scale-105 transition-transform overflow-hidden">
+            <img src={appLogo} alt="Mizan Logo" className="w-full h-full object-contain" />
           </div>
           <span className="font-serif font-black tracking-wide text-[#1B4D3E] text-lg sm:text-xl">
             MIZAN

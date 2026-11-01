@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
-  Scale,
   ShieldCheck,
   BookOpen,
   HeartHandshake,
@@ -16,7 +15,8 @@ import {
   Check,
   Smartphone,
   Download,
-  X
+  X,
+  Sparkles
 } from "lucide-react";
 import { useMizan } from "@/lib/mizan-context";
 
@@ -31,7 +31,7 @@ interface DevAccount {
 
 export default function LoginPage() {
   const router = useRouter();
-  const { loginUser } = useMizan();
+  const { loginUser, settings } = useMizan();
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -40,6 +40,8 @@ export default function LoginPage() {
   const [selectedDevUser, setSelectedDevUser] = useState("");
   const [showAppModal, setShowAppModal] = useState(false);
   const [appTab, setAppTab] = useState<"android" | "ios">("android");
+
+  const appLogo = settings?.appLogoUrl || "/logo.png";
 
   const devAccounts: DevAccount[] = [
     {
@@ -130,22 +132,37 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F4F6F8] flex flex-col justify-center items-center px-3 sm:px-6 py-6 sm:py-10">
-      <div className="w-full max-w-lg space-y-4">
-        <div className="text-center space-y-1.5">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl mizan-card bg-white text-[#1B4D3E] mx-auto shadow-sm">
-            <Scale className="w-6 h-6 text-[#1B4D3E]" />
+    <div className="min-h-screen bg-[#F4F7FA] relative flex flex-col justify-center items-center px-3 sm:px-6 py-6 sm:py-10 overflow-hidden">
+      <div className="absolute -top-32 -left-32 w-80 h-80 rounded-full bg-[#1B4D3E]/10 blur-3xl pointer-events-none animate-blob" />
+      <div className="absolute top-1/3 -right-28 w-72 h-72 rounded-full bg-[#C5A059]/15 blur-3xl pointer-events-none animate-blob" />
+      <div className="absolute -bottom-32 left-1/4 w-96 h-96 rounded-full bg-[#065F46]/10 blur-3xl pointer-events-none animate-blob" />
+
+      <div className="w-full max-w-lg space-y-4 relative z-10">
+        <div className="text-center space-y-2">
+          <div className="relative inline-block mx-auto mb-1">
+            <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-3xl mizan-card bg-gradient-to-b from-[#1B4D3E] to-[#12362B] p-2 flex items-center justify-center mx-auto shadow-xl border border-[#C5A059]/40 animate-glow">
+              <div className="w-full h-full rounded-2xl flex items-center justify-center animate-float overflow-hidden">
+                <img
+                  src={appLogo}
+                  alt="MIZAN"
+                  className="w-full h-full object-contain filter drop-shadow-md"
+                />
+              </div>
+            </div>
+            <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-[#FAF7EE] border border-[#C5A059] flex items-center justify-center text-[#A8833E] shadow-sm">
+              <Sparkles className="w-3.5 h-3.5 text-[#C5A059]" />
+            </div>
           </div>
 
-          <h1 className="text-xl sm:text-2xl font-serif font-black tracking-tight text-[#172033]">
-            Masuk MIZAN
+          <h1 className="text-xl sm:text-2xl font-serif font-black tracking-wide text-[#172033]">
+            MIZAN
           </h1>
           <p className="text-xs font-semibold text-[#64748B]">
             Sistem Penilaian Sikap & Absensi Sholat Santri
           </p>
         </div>
 
-        <div className="mizan-card p-5 sm:p-6 space-y-4 bg-white">
+        <div className="mizan-card p-5 sm:p-6 space-y-4 bg-white/95 backdrop-blur-md shadow-xl border border-[#E2EBF4]">
           <div className="flex items-center gap-2 pb-2 border-b border-[#E2E8F0]">
             <Lock className="w-4 h-4 text-[#1B4D3E]" />
             <h2 className="text-xs font-bold text-[#172033] uppercase tracking-wider">
@@ -165,7 +182,7 @@ export default function LoginPage() {
                 Username
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#94A3B8]">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#94A3B8]">
                   <User className="w-4 h-4" />
                 </div>
                 <input
@@ -176,7 +193,7 @@ export default function LoginPage() {
                     setSelectedDevUser("");
                   }}
                   placeholder="Masukkan username"
-                  className="w-full pl-9 pr-3 py-2.5 rounded-xl text-xs font-medium bg-[#EEF2F6] border border-transparent focus:bg-white focus:border-[#1B4D3E] focus:outline-none transition-all"
+                  className="w-full pl-10 pr-3.5 py-2.5 rounded-xl text-xs font-medium bg-[#EEF2F6] border border-transparent focus:bg-white focus:border-[#1B4D3E] focus:ring-2 focus:ring-[#1B4D3E]/10 focus:outline-none transition-all"
                   required
                 />
               </div>
@@ -187,7 +204,7 @@ export default function LoginPage() {
                 Kata Sandi
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#94A3B8]">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#94A3B8]">
                   <KeyRound className="w-4 h-4" />
                 </div>
                 <input
@@ -195,7 +212,7 @@ export default function LoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Masukkan kata sandi"
-                  className="w-full pl-9 pr-3 py-2.5 rounded-xl text-xs font-medium bg-[#EEF2F6] border border-transparent focus:bg-white focus:border-[#1B4D3E] focus:outline-none transition-all"
+                  className="w-full pl-10 pr-3.5 py-2.5 rounded-xl text-xs font-medium bg-[#EEF2F6] border border-transparent focus:bg-white focus:border-[#1B4D3E] focus:ring-2 focus:ring-[#1B4D3E]/10 focus:outline-none transition-all"
                   required
                 />
               </div>
@@ -204,7 +221,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full py-3 rounded-2xl bg-[#1B4D3E] text-white font-bold text-xs flex items-center justify-center gap-2 shadow-md hover:bg-[#153e32] active:scale-[0.99] transition-all disabled:opacity-60 cursor-pointer"
+              className="w-full py-3 rounded-2xl bg-gradient-to-r from-[#1B4D3E] via-[#236350] to-[#1B4D3E] text-white font-bold text-xs flex items-center justify-center gap-2 shadow-md hover:shadow-lg active:scale-[0.99] transition-all disabled:opacity-60 cursor-pointer"
             >
               {isLoading ? (
                 <>
@@ -224,7 +241,7 @@ export default function LoginPage() {
             <div className="relative flex items-center justify-center">
               <div className="border-t border-[#E2E8F0] w-full" />
               <span className="bg-white px-2.5 text-[10px] font-bold uppercase tracking-wider text-[#94A3B8] shrink-0">
-                Pilih Akun Cepat (Isi Form)
+                Pilih Akun Cepat
               </span>
             </div>
 
@@ -237,13 +254,13 @@ export default function LoginPage() {
                     key={acc.username}
                     type="button"
                     onClick={() => handleFillForm(acc.username)}
-                    className={`p-2 rounded-xl text-center transition-all cursor-pointer border ${
+                    className={`p-2.5 rounded-2xl text-center transition-all cursor-pointer border ${
                       isSelected
-                        ? "border-[#1B4D3E] bg-[#ECFDF5] shadow-xs"
-                        : "border-[#E2EBF4] bg-[#F8FAFC] hover:bg-white hover:border-[#CBD5E1]"
+                        ? "border-[#1B4D3E] bg-[#ECFDF5] shadow-xs scale-[1.02]"
+                        : "border-[#E2EBF4] bg-[#F8FAFC] hover:bg-white hover:border-[#CBD5E1] hover:-translate-y-0.5"
                     }`}
                   >
-                    <div className={`w-6 h-6 mx-auto rounded-lg ${acc.bg} ${acc.text} flex items-center justify-center mb-1`}>
+                    <div className={`w-7 h-7 mx-auto rounded-xl ${acc.bg} ${acc.text} flex items-center justify-center mb-1`}>
                       {acc.icon}
                     </div>
                     <p className="text-[10px] font-bold text-[#172033] leading-tight truncate">
@@ -256,9 +273,6 @@ export default function LoginPage() {
                 );
               })}
             </div>
-            <p className="text-[10px] text-center text-[#94A3B8] mt-2">
-              Pilih akun untuk mengisi formulir secara otomatis, lalu tekan tombol Masuk.
-            </p>
           </div>
         </div>
 
@@ -284,7 +298,7 @@ export default function LoginPage() {
                 <div className="flex items-center gap-2">
                   <Smartphone className="w-4 h-4 text-[#1B4D3E]" />
                   <h3 className="text-xs font-bold text-[#172033] uppercase tracking-wider">
-                    Aplikasi Mobile MIZAN
+                    Aplikasi Mobile
                   </h3>
                 </div>
                 <button
@@ -325,7 +339,7 @@ export default function LoginPage() {
                 <div className="space-y-3">
                   <div className="p-3 rounded-2xl bg-[#ECFDF5] border border-[#A7F3D0] space-y-1 text-center">
                     <p className="text-xs font-bold text-[#065F46]">
-                      Format APK Resmi Android (2,4 MB)
+                      Format APK Resmi Android (2,6 MB)
                     </p>
                     <p className="text-[10px] text-[#047857]">
                       Penyimpanan lokal aktif, cache offline, serta pembaruan antarmuka otomatis langsung dari server.
@@ -348,7 +362,7 @@ export default function LoginPage() {
                       Petunjuk Apple iPhone / iPad:
                     </p>
                     <ol className="list-decimal pl-4 space-y-1 text-[11px] text-[#64748B]">
-                      <li>Buka website ini di peramban <strong>Safari</strong>.</li>
+                      <li>Buka tautan ini di peramban <strong>Safari</strong>.</li>
                       <li>Ketuk ikon <strong>Bagikan</strong> (tombol kotak panah atas).</li>
                       <li>Pilih menu <strong>Tambahkan ke Layar Utama</strong>.</li>
                     </ol>

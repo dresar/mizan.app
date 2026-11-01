@@ -9,7 +9,9 @@ import {
   TrendingDown,
   TrendingUp,
   Award,
-  Loader2
+  Loader2,
+  Camera,
+  Upload
 } from "lucide-react";
 import { useMizan } from "@/lib/mizan-context";
 import { RoleShell } from "@/components/RoleShell";
@@ -22,6 +24,8 @@ export default function AdminPengaturanNilaiPage() {
   const [applyToSantri, setApplyToSantri] = useState(false);
   const [applyToIndicators, setApplyToIndicators] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [logoPreview, setLogoPreview] = useState<string>(settings?.appLogoUrl || "/logo.png");
+  const [isUploadingLogo, setIsUploadingLogo] = useState(false);
 
   useEffect(() => {
     if (settings) {
@@ -29,8 +33,42 @@ export default function AdminPengaturanNilaiPage() {
         ...DEFAULT_SETTINGS,
         ...settings
       });
+      if (settings.appLogoUrl) {
+        setLogoPreview(settings.appLogoUrl);
+      }
     }
   }, [settings]);
+
+  const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      setLogoPreview(URL.createObjectURL(file));
+      setIsUploadingLogo(true);
+      try {
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("userId", "app-logo");
+
+        const res = await fetch("/api/upload-avatar", {
+          method: "POST",
+          body: formData
+        });
+        const data = await res.json();
+        if (data.success && data.avatarUrl) {
+          setFormState((prev) => ({ ...prev, appLogoUrl: data.avatarUrl }));
+          setLogoPreview(data.avatarUrl);
+          await updateSettings({ ...formState, appLogoUrl: data.avatarUrl });
+          showToast("Logo berhasil diunggah", "success");
+        } else {
+          showToast(data.message || "Gagal mengunggah logo", "error");
+        }
+      } catch {
+        showToast("Gagal mengunggah logo", "error");
+      } finally {
+        setIsUploadingLogo(false);
+      }
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -59,7 +97,7 @@ export default function AdminPengaturanNilaiPage() {
 
   return (
     <RoleShell>
-      <div className="space-y-6 max-w-4xl mx-auto pb-12">
+      <div className="space-y-6 max-w-4xl mx-auto pb-36">
         <div className="mizan-card p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
             <div className="flex items-center gap-2">
@@ -85,6 +123,63 @@ export default function AdminPengaturanNilaiPage() {
             <span>Reset</span>
           </button>
         </div>
+
+        <Card className="p-4 sm:p-5 bg-white space-y-4">
+          <div className="flex items-center justify-between pb-2 border-b border-[#E2E8F0]">
+            <div>
+              <h2 className="text-xs sm:text-sm font-bold text-[#172033] uppercase tracking-wider">
+                Identitas Logo & Ikon Aplikasi
+              </h2>
+              <p className="text-[11px] text-[#64748B] mt-0.5">
+                Ikon resmi di header, kartu login, favicon, serta aplikasi mobile
+              </p>
+            </div>
+            <span className="text-[10px] font-bold text-[#065F46] bg-[#ECFDF5] px-2 py-0.5 rounded-full">
+              Utama
+            </span>
+          </div>
+
+          <div className="flex flex-col sm:flex-row items-center gap-4">
+            <div className="w-20 h-20 rounded-3xl mizan-card bg-[#1B4D3E] p-2 flex items-center justify-center shrink-0 shadow-md overflow-hidden">
+              <img
+                src={logoPreview || formState.appLogoUrl || "/logo.png"}
+                alt="Logo Preview"
+                className="w-full h-full object-contain"
+              />
+            </div>
+
+            <div className="flex-1 space-y-2.5 w-full">
+              <div>
+                <label className="block text-[11px] font-bold text-[#475569] mb-1">
+                  Pilih Berkas Logo Baru
+                </label>
+                <input
+                  type="file"
+                  accept="image/png,image/jpeg,image/webp"
+                  onChange={handleLogoUpload}
+                  disabled={isUploadingLogo}
+                  className="block w-full text-xs text-[#64748B] file:mr-2.5 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-[11px] file:font-bold file:bg-[#1B4D3E] file:text-white hover:file:bg-[#153e32] cursor-pointer disabled:opacity-50"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-bold text-[#475569] mb-1">
+                  Tautan Berkas Logo (URL)
+                </label>
+                <input
+                  type="text"
+                  value={formState.appLogoUrl || "/logo.png"}
+                  onChange={(e) => {
+                    setFormState({ ...formState, appLogoUrl: e.target.value });
+                    setLogoPreview(e.target.value);
+                  }}
+                  placeholder="/logo.png"
+                  className="w-full px-3 py-2 text-xs bg-[#EEF2F6] border border-transparent rounded-xl focus:bg-white focus:border-[#1B4D3E] focus:outline-none"
+                />
+              </div>
+            </div>
+          </div>
+        </Card>
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <Card className="p-4 sm:p-5 bg-white space-y-4">

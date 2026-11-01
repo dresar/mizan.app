@@ -1,333 +1,290 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import Link from "next/link";
 import {
-  Plus,
-  Edit2,
-  Trash2,
-  Filter,
-  Sliders,
-  Layers,
   FolderPlus,
-  ChevronLeft,
-  ChevronRight
+  Layers,
+  Plus,
+  Search,
+  ChevronRight,
+  Sparkles,
+  Sliders
 } from "lucide-react";
 import { useMizan } from "@/lib/mizan-context";
 import { RoleShell } from "@/components/RoleShell";
 import { Card } from "@/components/ui/Card";
-import { Badge } from "@/components/ui/Badge";
-import {
-  KategoriUtama,
-  Indikator
-} from "@/lib/mock-data";
+
+const CATEGORY_COLORS: Record<string, { bg: string; text: string; border: string; lightBg: string }> = {
+  A: { bg: "bg-[#1B4D3E]", text: "text-[#1B4D3E]", border: "border-[#1B4D3E]/30", lightBg: "bg-[#ECFDF5]" },
+  B: { bg: "bg-[#C5A059]", text: "text-[#A8833E]", border: "border-[#C5A059]/40", lightBg: "bg-[#FAF7EE]" },
+  C: { bg: "bg-blue-600", text: "text-blue-700", border: "border-blue-200", lightBg: "bg-blue-50" },
+  D: { bg: "bg-violet-600", text: "text-violet-700", border: "border-violet-200", lightBg: "bg-violet-50" },
+  E: { bg: "bg-orange-600", text: "text-orange-700", border: "border-orange-200", lightBg: "bg-orange-50" }
+};
 
 export default function AdminKategoriPelanggaranPage() {
-  const {
-    categories,
-    deleteIndikatorItem
-  } = useMizan();
+  const { categories } = useMizan();
+  const [searchQuery, setSearchQuery] = useState("");
 
-  const [selectedKategoriFilter, setSelectedKategoriFilter] = useState<string>("ALL");
-  const [selectedTypeFilter, setSelectedTypeFilter] = useState<string>("ALL");
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const ITEMS_PER_PAGE = 20;
+  const categoriesOverview = useMemo(() => {
+    return categories.map((cat) => {
+      const unsursCount = cat.unsurs.length;
+      let totalIndicators = 0;
+      let hasanahCount = 0;
+      let sayyiahCount = 0;
 
-  const flatList: {
-    indikator: Indikator;
-    unsurId: string;
-    unsurName: string;
-    kategoriName: KategoriUtama;
-  }[] = [];
-
-  categories.forEach((cat) => {
-    cat.unsurs.forEach((uns) => {
-      uns.indicators.forEach((ind) => {
-        flatList.push({
-          indikator: ind,
-          unsurId: uns.id,
-          unsurName: uns.name,
-          kategoriName: cat.name
+      cat.unsurs.forEach((u) => {
+        u.indicators.forEach((ind) => {
+          totalIndicators++;
+          if (ind.type === "HASANAH") {
+            hasanahCount++;
+          } else {
+            sayyiahCount++;
+          }
         });
       });
+
+      const topUnsurs = cat.unsurs.slice(0, 3).map((u) => u.name);
+
+      const colorScheme =
+        CATEGORY_COLORS[cat.code] || {
+          bg: "bg-[#1B4D3E]",
+          text: "text-[#1B4D3E]",
+          border: "border-[#1B4D3E]/30",
+          lightBg: "bg-[#ECFDF5]"
+        };
+
+      return {
+        code: cat.code,
+        name: cat.name,
+        unsursCount,
+        totalIndicators,
+        hasanahCount,
+        sayyiahCount,
+        topUnsurs,
+        colorScheme
+      };
     });
-  });
+  }, [categories]);
 
-  const filteredList = flatList.filter((item) => {
-    const matchCat =
-      selectedKategoriFilter === "ALL" ||
-      item.kategoriName === selectedKategoriFilter;
-    const matchType =
-      selectedTypeFilter === "ALL" || item.indikator.type === selectedTypeFilter;
-    return matchCat && matchType;
-  });
+  const filteredCategories = useMemo(() => {
+    const q = searchQuery.toLowerCase().trim();
+    if (!q) return categoriesOverview;
+    return categoriesOverview.filter(
+      (cat) =>
+        cat.name.toLowerCase().includes(q) ||
+        cat.code.toLowerCase().includes(q) ||
+        cat.topUnsurs.some((u) => u.toLowerCase().includes(q))
+    );
+  }, [categoriesOverview, searchQuery]);
 
-  const totalPages = Math.max(1, Math.ceil(filteredList.length / ITEMS_PER_PAGE));
-  const safeCurrentPage = Math.min(Math.max(1, currentPage), totalPages);
-  const startIndex = (safeCurrentPage - 1) * ITEMS_PER_PAGE;
-  const endIndex = Math.min(startIndex + ITEMS_PER_PAGE, filteredList.length);
-  const paginatedList = filteredList.slice(startIndex, endIndex);
+  const totalAllUnsurs = useMemo(() => {
+    return categories.reduce((sum, c) => sum + c.unsurs.length, 0);
+  }, [categories]);
 
-  const getPageNumbers = () => {
-    if (totalPages <= 5) {
-      return Array.from({ length: totalPages }, (_, i) => i + 1);
-    }
-    if (safeCurrentPage <= 3) {
-      return [1, 2, 3, 4, "...", totalPages];
-    }
-    if (safeCurrentPage >= totalPages - 2) {
-      return [1, "...", totalPages - 3, totalPages - 2, totalPages - 1, totalPages];
-    }
-    return [
-      1,
-      "...",
-      safeCurrentPage - 1,
-      safeCurrentPage,
-      safeCurrentPage + 1,
-      "...",
-      totalPages
-    ];
-  };
-
-  const handleDelete = (indId: string, indText: string) => {
-    if (confirm(`Hapus indikator "${indText}"?`)) {
-      deleteIndikatorItem(indId);
-    }
-  };
-
-  const formatScore = (score: number) => {
-    const formatted = Math.abs(score).toFixed(3);
-    return score > 0 ? `+${formatted}` : `-${formatted}`;
-  };
+  const totalAllIndicators = useMemo(() => {
+    return categories.reduce((sum, c) => {
+      return sum + c.unsurs.reduce((uSum, u) => uSum + u.indicators.length, 0);
+    }, 0);
+  }, [categories]);
 
   return (
     <RoleShell>
-      <div className="space-y-6">
+      <div className="space-y-6 max-w-6xl mx-auto pb-20">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <h1 className="text-2xl font-bold font-serif text-[#1B4D3E]">
+            <div className="flex items-center gap-2">
+              <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-[#FAF7EE] text-[#A8833E] border border-[#C5A059]/30 flex items-center gap-1.5">
+                <Sliders className="w-3.5 h-3.5" />
+                <span>Pusat Konfigurasi Indikator</span>
+              </span>
+              <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-[#EEF2F6] text-[#64748B]">
+                {categories.length} Kategori Utama
+              </span>
+            </div>
+            <h1 className="text-xl sm:text-2xl font-serif font-black text-[#172033] tracking-tight mt-1.5">
               Master Kategori & Indikator Penilaian
             </h1>
-            <p className="text-xs text-[#5C6B64] mt-0.5">
-              Kelola master data kategori, unsur penilaian, dan bobot skor desimal (0.xxx). Semua nilai dikonfigurasi di sini sehingga guru di lapangan tidak perlu memasukkan skor manual.
+            <p className="text-xs text-[#64748B]">
+              Pilih salah satu kategori utama di bawah untuk mengelola unsur dan rincian indikator penilaian santri
             </p>
           </div>
 
           <div className="flex flex-wrap items-center gap-2 shrink-0">
             <Link
               href="/admin/kategori-pelanggaran/kategori"
-              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-white border border-[#D4C9B5] text-[#1C2826] text-xs font-bold hover:bg-[#FAF7F2] transition-colors shadow-xs"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-2xl bg-white border border-[#E2EBF4] text-[#172033] text-xs font-bold hover:bg-[#FAF7EE] transition-colors shadow-2xs"
             >
               <FolderPlus className="w-3.5 h-3.5 text-[#C5A059]" />
-              <span>Kategori</span>
+              <span>+ Kategori Baru</span>
             </Link>
 
             <Link
               href="/admin/kategori-pelanggaran/unsur"
-              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-white border border-[#D4C9B5] text-[#1C2826] text-xs font-bold hover:bg-[#FAF7F2] transition-colors shadow-xs"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-2xl bg-white border border-[#E2EBF4] text-[#172033] text-xs font-bold hover:bg-[#FAF7EE] transition-colors shadow-2xs"
             >
               <Layers className="w-3.5 h-3.5 text-[#1B4D3E]" />
-              <span>Unsur</span>
+              <span>+ Unsur Baru</span>
             </Link>
 
             <Link
               href="/admin/kategori-pelanggaran/indikator"
-              className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-2xl bg-[#1B4D3E] text-white text-xs font-bold hover:bg-[#143B2F] shadow-xs transition-colors"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-2xl bg-[#1B4D3E] text-white text-xs font-bold hover:bg-[#153e32] transition-colors shadow-xs"
             >
               <Plus className="w-4 h-4" />
-              <span>Indikator</span>
+              <span>+ Indikator Baru</span>
             </Link>
           </div>
         </div>
 
-        <Card className="p-3 sm:p-4">
-          <div className="flex flex-col sm:flex-row items-center gap-3">
-            <div className="w-full sm:flex-1 flex items-center gap-2">
-              <Sliders className="w-4 h-4 text-[#5C6B64] shrink-0" />
-              <select
-                aria-label="Filter kategori utama"
-                value={selectedKategoriFilter}
-                onChange={(e) => {
-                  setSelectedKategoriFilter(e.target.value);
-                  setCurrentPage(1);
-                }}
-                className="w-full px-3 py-2 text-xs bg-[#FAF7F2] border border-[#D4C9B5] rounded-lg focus:outline-none focus:ring-1 focus:ring-[#1B4D3E] text-[#1C2826]"
-              >
-                <option value="ALL">Semua Kategori Utama</option>
-                {categories.map((c) => (
-                  <option key={c.code} value={c.name}>
-                    {c.code}. {c.name}
-                  </option>
-                ))}
-              </select>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div className="p-3.5 rounded-2xl bg-white border border-[#E2EBF4] shadow-2xs">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-[#94A3B8] block">
+              Total Kategori
+            </span>
+            <div className="text-xl font-black font-mono text-[#172033] mt-0.5">
+              {categories.length} <span className="text-xs font-normal text-[#94A3B8]">Kategori</span>
             </div>
+          </div>
 
-            <div className="w-full sm:w-auto flex items-center gap-2">
-              <Filter className="w-4 h-4 text-[#5C6B64] shrink-0" />
-              <select
-                aria-label="Filter jenis penilaian"
-                value={selectedTypeFilter}
-                onChange={(e) => {
-                  setSelectedTypeFilter(e.target.value);
-                  setCurrentPage(1);
-                }}
-                className="w-full sm:w-44 px-3 py-2 text-xs bg-[#FAF7F2] border border-[#D4C9B5] rounded-lg focus:outline-none focus:ring-1 focus:ring-[#1B4D3E] text-[#1C2826]"
-              >
-                <option value="ALL">Semua Jenis</option>
-                <option value="HASANAH">Hasanah (Prestasi)</option>
-                <option value="SAYYIAH">Sayyi&apos;ah (Pelanggaran)</option>
-              </select>
+          <div className="p-3.5 rounded-2xl bg-white border border-[#E2EBF4] shadow-2xs">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-[#1B4D3E] block">
+              Total Unsur Penilaian
+            </span>
+            <div className="text-xl font-black font-mono text-[#1B4D3E] mt-0.5">
+              {totalAllUnsurs} <span className="text-xs font-normal text-[#94A3B8]">Unsur</span>
             </div>
+          </div>
+
+          <div className="p-3.5 rounded-2xl bg-white border border-[#E2EBF4] shadow-2xs">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-[#A8833E] block">
+              Total Indikator Skor
+            </span>
+            <div className="text-xl font-black font-mono text-[#A8833E] mt-0.5">
+              {totalAllIndicators} <span className="text-xs font-normal text-[#94A3B8]">Indikator</span>
+            </div>
+          </div>
+
+          <div className="p-3.5 rounded-2xl bg-white border border-[#E2EBF4] shadow-2xs">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-[#065F46] block">
+              Mode Penilaian
+            </span>
+            <div className="text-xs font-bold text-[#065F46] mt-1.5 flex items-center gap-1.5">
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>Hasanah & Sayyi&apos;ah</span>
+            </div>
+          </div>
+        </div>
+
+        <Card className="p-3 sm:p-4 bg-white">
+          <div className="relative">
+            <Search className="w-4 h-4 absolute left-3.5 top-3 text-[#94A3B8]" />
+            <input
+              type="text"
+              placeholder="Cari kategori atau unsur penilaian..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-10 pr-4 py-2 text-xs font-semibold bg-[#EEF2F6] border border-transparent rounded-xl text-[#172033] focus:bg-white focus:border-[#1B4D3E] focus:outline-none transition-colors"
+            />
           </div>
         </Card>
 
-        <Card className="overflow-hidden p-0">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse text-xs">
-              <thead>
-                <tr className="border-b border-[#E5DECE] bg-[#FAF7F2] text-[#5C6B64] font-bold">
-                  <th className="py-3 px-4 w-12 text-center">No</th>
-                  <th className="py-3 px-4 w-40">Kategori</th>
-                  <th className="py-3 px-4 w-48">Unsur</th>
-                  <th className="py-3 px-4">Teks Indikator</th>
-                  <th className="py-3 px-4 w-28 text-center">Tingkat</th>
-                  <th className="py-3 px-4 w-28 text-right">Dampak Skor</th>
-                  <th className="py-3 px-4 w-24 text-right">Aksi</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-[#E5DECE]/60">
-                {paginatedList.length === 0 ? (
-                  <tr>
-                    <td colSpan={7} className="text-center py-8 text-[#5C6B64]">
-                      Tidak ada indikator yang sesuai dengan filter.
-                    </td>
-                  </tr>
-                ) : (
-                  paginatedList.map((item, idx) => (
-                    <tr
-                      key={item.indikator.id}
-                      className="hover:bg-[#FAF7F2]/40 transition-colors"
-                    >
-                      <td className="py-3.5 px-4 text-center font-mono text-[#5C6B64]">
-                        {startIndex + idx + 1}
-                      </td>
-                      <td className="py-3.5 px-4 font-semibold text-[#1C2826]">
-                        {item.kategoriName}
-                      </td>
-                      <td className="py-3.5 px-4 text-[#5C6B64]">
-                        {item.unsurName}
-                      </td>
-                      <td className="py-3.5 px-4">
-                        <div className="font-medium text-[#1C2826]">
-                          {item.indikator.text}
-                        </div>
-                      </td>
-                      <td className="py-3.5 px-4 text-center">
-                        <Badge
-                          variant={
-                            item.indikator.type === "HASANAH" ? "hasanah" : "sayyiah"
-                          }
-                          size="sm"
-                        >
-                          {item.indikator.tingkat || (item.indikator.type === "HASANAH" ? "Hasanah" : "Sayyi'ah")}
-                        </Badge>
-                      </td>
-                      <td className="py-3.5 px-4 text-right">
-                        <span
-                          className={
-                            item.indikator.type === "HASANAH"
-                              ? "text-[#1B4D3E] font-bold font-mono"
-                              : "text-[#9B2C2C] font-bold font-mono"
-                          }
-                        >
-                          {formatScore(item.indikator.defaultScore)}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
+          {filteredCategories.map((cat) => {
+            return (
+              <Link
+                key={cat.code}
+                href={`/admin/kategori-pelanggaran/${cat.code}`}
+                className="group p-5 rounded-2xl bg-white border border-[#E2EBF4] hover:border-[#1B4D3E] hover:shadow-md transition-all flex flex-col justify-between"
+              >
+                <div>
+                  <div className="flex items-start justify-between gap-3 pb-3 border-b border-[#F1F5F9]">
+                    <div className="flex items-center gap-3">
+                      <div className={`w-11 h-11 rounded-2xl ${cat.colorScheme.bg} text-white flex items-center justify-center font-mono font-black text-lg shadow-sm shrink-0`}>
+                        {cat.code}
+                      </div>
+                      <div>
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-[#94A3B8] block">
+                          Kategori Utama {cat.code}
                         </span>
-                      </td>
-                      <td className="py-3.5 px-4 text-right">
-                        <div className="inline-flex items-center gap-1.5">
-                          <Link
-                            href={`/admin/kategori-pelanggaran/indikator?id=${item.indikator.id}`}
-                            className="p-1.5 rounded-lg text-[#5C6B64] hover:text-[#1B4D3E] hover:bg-[#E8F0EC] transition-colors"
-                            title="Edit indikator"
-                            aria-label={`Ubah indikator ${item.indikator.text}`}
+                        <h2 className="text-base font-bold text-[#172033] group-hover:text-[#1B4D3E] transition-colors">
+                          {cat.name}
+                        </h2>
+                      </div>
+                    </div>
+
+                    <div className="p-2 rounded-xl bg-[#EEF2F6] group-hover:bg-[#1B4D3E] text-[#64748B] group-hover:text-white transition-all">
+                      <ChevronRight className="w-4 h-4" />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-3 gap-2 my-3 text-center">
+                    <div className="p-2 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0]">
+                      <span className="text-[9px] font-bold uppercase tracking-wider text-[#94A3B8] block">
+                        Unsur
+                      </span>
+                      <span className="text-sm font-black font-mono text-[#172033]">
+                        {cat.unsursCount}
+                      </span>
+                    </div>
+
+                    <div className="p-2 rounded-xl bg-[#ECFDF5] border border-[#A7F3D0]">
+                      <span className="text-[9px] font-bold uppercase tracking-wider text-[#065F46] block">
+                        Hasanah
+                      </span>
+                      <span className="text-sm font-black font-mono text-[#065F46]">
+                        {cat.hasanahCount}
+                      </span>
+                    </div>
+
+                    <div className="p-2 rounded-xl bg-[#FEF2F2] border border-[#FECACA]">
+                      <span className="text-[9px] font-bold uppercase tracking-wider text-red-600 block">
+                        Sayyi&apos;ah
+                      </span>
+                      <span className="text-sm font-black font-mono text-red-600">
+                        {cat.sayyiahCount}
+                      </span>
+                    </div>
+                  </div>
+
+                  {cat.topUnsurs.length > 0 && (
+                    <div className="space-y-1 pt-1">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-[#94A3B8] block">
+                        Contoh Unsur Penilaian:
+                      </span>
+                      <ul className="space-y-1">
+                        {cat.topUnsurs.map((u, idx) => (
+                          <li
+                            key={idx}
+                            className="text-xs text-[#64748B] line-clamp-1 flex items-center gap-1.5"
                           >
-                            <Edit2 className="w-3.5 h-3.5" />
-                          </Link>
-                          <button
-                            type="button"
-                            onClick={() => handleDelete(item.indikator.id, item.indikator.text)}
-                            className="p-1.5 rounded-lg text-[#5C6B64] hover:text-[#9B2C2C] hover:bg-[#FDF2F2] transition-colors"
-                            title="Hapus indikator"
-                            aria-label={`Hapus indikator ${item.indikator.text}`}
-                          >
-                            <Trash2 className="w-3.5 h-3.5" />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#CBD5E1]" />
+                            <span>{u}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
 
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-4 py-3 border-t border-[#E5DECE] bg-[#FAF7F2]/50 text-xs text-[#5C6B64]">
-            <div>
-              Menampilkan <span className="font-semibold text-[#1C2826]">{filteredList.length === 0 ? 0 : startIndex + 1}</span> - <span className="font-semibold text-[#1C2826]">{endIndex}</span> dari <span className="font-semibold text-[#1C2826]">{filteredList.length}</span> data
+                <div className="pt-4 mt-3 border-t border-[#F1F5F9] flex items-center justify-between text-xs font-bold text-[#1B4D3E]">
+                  <span>Kelola Unsur & Indikator</span>
+                  <span className="inline-flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                    <span>Lihat Rincian</span>
+                    <ChevronRight className="w-3.5 h-3.5" />
+                  </span>
+                </div>
+              </Link>
+            );
+          })}
+
+          {filteredCategories.length === 0 && (
+            <div className="col-span-full py-12 text-center text-xs text-[#94A3B8] bg-white rounded-2xl border border-[#E2EBF4]">
+              Tidak ada kategori yang sesuai dengan kata kunci pencarian
             </div>
-
-            <div className="flex items-center gap-1.5">
-              <button
-                type="button"
-                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                disabled={safeCurrentPage <= 1}
-                className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg border border-[#D4C9B5] bg-white text-[#1C2826] font-semibold hover:bg-[#FAF7F2] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-                aria-label="Sebelumnya"
-              >
-                <ChevronLeft className="w-3.5 h-3.5" />
-                <span>Sebelumnya</span>
-              </button>
-
-              <span className="sm:hidden px-2 font-medium text-[#1C2826]">
-                {safeCurrentPage} / {totalPages}
-              </span>
-
-              <div className="hidden sm:flex items-center gap-1">
-                {getPageNumbers().map((p, idx) =>
-                  p === "..." ? (
-                    <span key={`dots-${idx}`} className="px-1.5 text-[#8A968F]">
-                      ...
-                    </span>
-                  ) : (
-                    <button
-                      key={`page-${p}`}
-                      type="button"
-                      onClick={() => setCurrentPage(Number(p))}
-                      className={`min-w-[32px] h-8 px-2 rounded-lg font-semibold text-xs transition-colors ${
-                        safeCurrentPage === p
-                          ? "bg-[#1B4D3E] text-white shadow-xs"
-                          : "border border-[#D4C9B5] bg-white text-[#1C2826] hover:bg-[#FAF7F2]"
-                      }`}
-                    >
-                      {p}
-                    </button>
-                  )
-                )}
-              </div>
-
-              <button
-                type="button"
-                onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-                disabled={safeCurrentPage >= totalPages}
-                className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg border border-[#D4C9B5] bg-white text-[#1C2826] font-semibold hover:bg-[#FAF7F2] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-                aria-label="Berikutnya"
-              >
-                <span>Berikutnya</span>
-                <ChevronRight className="w-3.5 h-3.5" />
-              </button>
-            </div>
-          </div>
-        </Card>
+          )}
+        </div>
       </div>
     </RoleShell>
   );

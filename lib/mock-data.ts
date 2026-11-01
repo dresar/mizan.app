@@ -153,6 +153,7 @@ export interface AppSettings {
   bonusBesar: number;
   notifyParents: boolean;
   realtimeSimulation: boolean;
+  appLogoUrl?: string;
 }
 
 export const DEFAULT_SETTINGS: AppSettings = {
@@ -167,7 +168,8 @@ export const DEFAULT_SETTINGS: AppSettings = {
   bonusSedang: 0.1,
   bonusBesar: 0.234,
   notifyParents: true,
-  realtimeSimulation: true
+  realtimeSimulation: true,
+  appLogoUrl: "/logo.png"
 };
 
 export const INITIAL_CLASSES: string[] = [];
