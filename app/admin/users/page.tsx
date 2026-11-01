@@ -15,7 +15,9 @@ import {
   CheckCircle2,
   X,
   Save,
-  Loader2
+  Loader2,
+  Smartphone,
+  Apple
 } from "lucide-react";
 import { useMizan } from "@/lib/mizan-context";
 import { RoleShell } from "@/components/RoleShell";
@@ -103,7 +105,7 @@ export default function AdminUsersPage() {
 
   return (
     <RoleShell>
-      <div className="space-y-5 max-w-5xl mx-auto overflow-x-hidden">
+      <div className="space-y-5 max-w-5xl mx-auto overflow-x-hidden pb-36">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
             <div className="flex items-center gap-2">
@@ -112,7 +114,7 @@ export default function AdminUsersPage() {
                 className="text-xs font-bold text-[#1B4D3E] hover:underline flex items-center gap-1"
               >
                 <ArrowLeft className="w-3.5 h-3.5" />
-                <span>Kembali ke Dashboard</span>
+                <span>Dashboard</span>
               </Link>
             </div>
             <h1 className="text-xl sm:text-2xl font-serif font-black text-[#172033] tracking-tight mt-1">
@@ -311,6 +313,62 @@ export default function AdminUsersPage() {
             </form>
           </Card>
         )}
+
+        <Card className="p-4 sm:p-5 space-y-3 bg-white">
+          <div className="flex items-center justify-between pb-1 border-b border-[#E2E8F0]">
+            <div className="flex items-center gap-2">
+              <Smartphone className="w-4 h-4 text-[#1B4D3E]" />
+              <h2 className="text-xs font-bold text-[#172033] uppercase tracking-wider">
+                Aplikasi Mobile
+              </h2>
+            </div>
+            <span className="text-[10px] font-bold text-[#065F46] bg-[#ECFDF5] px-2 py-0.5 rounded-full">
+              Pilihan
+            </span>
+          </div>
+
+          <div className="grid grid-cols-2 gap-2.5">
+            <div className="p-3 rounded-2xl mizan-card-sub flex flex-col justify-between gap-2.5">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-xl mizan-inset flex items-center justify-center text-[#1B4D3E] shrink-0">
+                  <Smartphone className="w-4 h-4" />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-xs font-bold text-[#172033] truncate">Android</p>
+                  <p className="text-[10px] text-[#64748B] truncate">.apk (2,4 MB)</p>
+                </div>
+              </div>
+
+              <a
+                href="/downloads/mizan.apk"
+                download="mizan.apk"
+                className="w-full py-2 rounded-xl bg-[#1B4D3E] hover:bg-[#153e32] text-white text-xs font-bold text-center transition-colors block"
+              >
+                Unduh
+              </a>
+            </div>
+
+            <div className="p-3 rounded-2xl mizan-card-sub flex flex-col justify-between gap-2.5">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-xl mizan-inset flex items-center justify-center text-[#A8833E] shrink-0">
+                  <Apple className="w-4 h-4" />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-xs font-bold text-[#172033] truncate">Apple</p>
+                  <p className="text-[10px] text-[#64748B] truncate">.ios WebClip</p>
+                </div>
+              </div>
+
+              <a
+                href="/downloads/mizan.mobileconfig"
+                download="mizan.mobileconfig"
+                className="w-full py-2 rounded-xl bg-[#FAF7EE] hover:bg-[#F5EED9] text-[#A8833E] border border-[#C5A059]/40 text-xs font-bold text-center transition-colors block"
+              >
+                Pasang
+              </a>
+            </div>
+          </div>
+        </Card>
 
         <Card className="p-4 sm:p-5 space-y-3 bg-white">
           <div className="flex items-center justify-between pb-2 border-b border-[#E2E8F0]">

@@ -10,7 +10,9 @@ import {
   Heart,
   BookOpen,
   CheckCircle2,
-  Share2
+  Share2,
+  Smartphone,
+  Apple
 } from "lucide-react";
 import { useMizan } from "@/lib/mizan-context";
 import { Santri } from "@/lib/mock-data";
@@ -64,7 +66,7 @@ export default function SantriProfilPage() {
 
   return (
     <RoleShell>
-      <div className="space-y-6 max-w-2xl mx-auto">
+      <div className="space-y-4 max-w-2xl mx-auto pb-36">
         <div className="bg-[#1B4D3E] text-white p-6 rounded-2xl shadow-sm text-center relative overflow-hidden">
           <div className="relative z-10 flex flex-col items-center">
             <Avatar
@@ -226,6 +228,62 @@ export default function SantriProfilPage() {
               ))}
             </div>
           )}
+        </Card>
+
+        <Card className="p-4 sm:p-5 space-y-3 bg-white">
+          <div className="flex items-center justify-between pb-1 border-b border-[#E2E8F0]">
+            <div className="flex items-center gap-2">
+              <Smartphone className="w-4 h-4 text-[#1B4D3E]" />
+              <h2 className="text-xs font-bold text-[#172033] uppercase tracking-wider">
+                Aplikasi Mobile
+              </h2>
+            </div>
+            <span className="text-[10px] font-bold text-[#065F46] bg-[#ECFDF5] px-2 py-0.5 rounded-full">
+              Pilihan
+            </span>
+          </div>
+
+          <div className="grid grid-cols-2 gap-2.5">
+            <div className="p-3 rounded-2xl mizan-card-sub flex flex-col justify-between gap-2.5">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-xl mizan-inset flex items-center justify-center text-[#1B4D3E] shrink-0">
+                  <Smartphone className="w-4 h-4" />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-xs font-bold text-[#172033] truncate">Android</p>
+                  <p className="text-[10px] text-[#64748B] truncate">.apk (2,4 MB)</p>
+                </div>
+              </div>
+
+              <a
+                href="/downloads/mizan.apk"
+                download="mizan.apk"
+                className="w-full py-2 rounded-xl bg-[#1B4D3E] hover:bg-[#153e32] text-white text-xs font-bold text-center transition-colors block"
+              >
+                Unduh
+              </a>
+            </div>
+
+            <div className="p-3 rounded-2xl mizan-card-sub flex flex-col justify-between gap-2.5">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-xl mizan-inset flex items-center justify-center text-[#A8833E] shrink-0">
+                  <Apple className="w-4 h-4" />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-xs font-bold text-[#172033] truncate">Apple</p>
+                  <p className="text-[10px] text-[#64748B] truncate">.ios WebClip</p>
+                </div>
+              </div>
+
+              <a
+                href="/downloads/mizan.mobileconfig"
+                download="mizan.mobileconfig"
+                className="w-full py-2 rounded-xl bg-[#FAF7EE] hover:bg-[#F5EED9] text-[#A8833E] border border-[#C5A059]/40 text-xs font-bold text-center transition-colors block"
+              >
+                Pasang
+              </a>
+            </div>
+          </div>
         </Card>
 
         <div className="p-4 rounded-2xl bg-[#FAF7EE] border border-[#C5A059]/40 text-xs text-center text-[#1C2826] space-y-1">

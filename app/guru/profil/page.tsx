@@ -14,7 +14,9 @@ import {
   Camera,
   Save,
   Loader2,
-  Share2
+  Share2,
+  Smartphone,
+  Apple
 } from "lucide-react";
 import { useMizan } from "@/lib/mizan-context";
 import { RoleShell } from "@/components/RoleShell";
