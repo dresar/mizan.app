@@ -1,28 +1,27 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import Link from "next/link";
 import {
   Users,
   UserPlus,
-  ShieldCheck,
-  BookOpen,
-  HeartHandshake,
   KeyRound,
   Trash2,
   Lock,
   ArrowLeft,
-  CheckCircle2,
   Check,
   X,
   Save,
   Loader2,
   Smartphone,
-  Apple
+  Apple,
+  List,
+  LayoutGrid,
+  Search
 } from "lucide-react";
 import { useMizan } from "@/lib/mizan-context";
 import { RoleShell } from "@/components/RoleShell";
-import { Card, CardHeader, CardSub, CardInset } from "@/components/ui/Card";
+import { Card, CardSub } from "@/components/ui/Card";
 import { Avatar } from "@/components/ui/Avatar";
 import { DeleteModal } from "@/components/ui/DeleteModal";
 import { Role } from "@/lib/mock-data";
@@ -30,6 +29,8 @@ import { Role } from "@/lib/mock-data";
 export default function AdminUsersPage() {
   const { userList, kelasList, addUser, updateUser, deleteUser, deleteUserBulk, showToast } = useMizan();
 
+  const [viewMode, setViewMode] = useState<"list" | "grid">("list");
+  const [searchQuery, setSearchQuery] = useState("");
   const [selectedUserIds, setSelectedUserIds] = useState<string[]>([]);
   const [deleteModalState, setDeleteModalState] = useState<{
     isOpen: boolean;
@@ -60,6 +61,17 @@ export default function AdminUsersPage() {
   const totalTeachersPutra = userList.filter((u) => u.role === "GURU" && u.gender === "Putra").length;
   const totalTeachersPutri = userList.filter((u) => u.role === "GURU" && u.gender === "Putri").length;
   const totalAdmins = userList.filter((u) => u.role === "SUPER_ADMIN").length;
+
+  const filteredUsers = useMemo(() => {
+    const q = searchQuery.toLowerCase().trim();
+    if (!q) return userList;
+    return userList.filter(
+      (u) =>
+        u.name.toLowerCase().includes(q) ||
+        (u.username && u.username.toLowerCase().includes(q)) ||
+        (u.assignedClass && u.assignedClass.toLowerCase().includes(q))
+    );
+  }, [userList, searchQuery]);
 
   const handleCreateUser = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -118,10 +130,10 @@ export default function AdminUsersPage() {
   };
 
   const handleSelectAllUsers = () => {
-    if (selectedUserIds.length === userList.length) {
+    if (selectedUserIds.length === filteredUsers.length) {
       setSelectedUserIds([]);
     } else {
-      setSelectedUserIds(userList.map((u) => u.id));
+      setSelectedUserIds(filteredUsers.map((u) => u.id));
     }
   };
 
@@ -438,25 +450,52 @@ export default function AdminUsersPage() {
           <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-2 border-b border-[#E2E8F0] gap-2">
             <div>
               <h2 className="text-xs font-bold text-[#172033] uppercase tracking-wider">
-                Daftar Semua Akun Terdaftar ({userList.length})
+                Daftar Semua Akun Terdaftar ({filteredUsers.length})
               </h2>
               <span className="text-[10px] text-[#64748B]">
                 Username bersifat tetap, kata sandi dapat diatur ulang
               </span>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
+              <div className="flex items-center gap-1 bg-[#EEF2F6] p-1 rounded-xl">
+                <button
+                  type="button"
+                  onClick={() => setViewMode("list")}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                    viewMode === "list"
+                      ? "bg-white text-[#1B4D3E] shadow-2xs"
+                      : "text-[#64748B] hover:text-[#172033]"
+                  }`}
+                >
+                  <List className="w-3.5 h-3.5" />
+                  <span>Daftar</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setViewMode("grid")}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                    viewMode === "grid"
+                      ? "bg-white text-[#1B4D3E] shadow-2xs"
+                      : "text-[#64748B] hover:text-[#172033]"
+                  }`}
+                >
+                  <LayoutGrid className="w-3.5 h-3.5" />
+                  <span>Kotak</span>
+                </button>
+              </div>
+
               <button
                 type="button"
                 onClick={handleSelectAllUsers}
                 className={`px-3 py-1.5 rounded-xl text-xs font-bold border transition-colors flex items-center gap-1.5 ${
-                  selectedUserIds.length > 0 && selectedUserIds.length === userList.length
+                  selectedUserIds.length > 0 && selectedUserIds.length === filteredUsers.length
                     ? "bg-[#1B4D3E] text-white border-[#1B4D3E]"
                     : "bg-white text-gray-700 border-gray-200 hover:bg-gray-50"
                 }`}
               >
                 <Check className="w-3.5 h-3.5" />
-                <span>{selectedUserIds.length === userList.length && userList.length > 0 ? "Batal" : "Pilih Semua"}</span>
+                <span>{selectedUserIds.length === filteredUsers.length && filteredUsers.length > 0 ? "Batal" : "Pilih"}</span>
               </button>
 
               {selectedUserIds.length > 0 && (
@@ -466,50 +505,86 @@ export default function AdminUsersPage() {
                   className="px-3.5 py-1.5 rounded-xl bg-red-600 text-white text-xs font-bold hover:bg-red-700 transition-colors flex items-center gap-1.5 shadow-xs"
                 >
                   <Trash2 className="w-3.5 h-3.5" />
-                  <span>Hapus ({selectedUserIds.length})</span>
+                  <span>Hapus</span>
                 </button>
               )}
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {userList.map((user) => {
-              const isSuper = user.role === "SUPER_ADMIN";
-              const isPutri = user.gender === "Putri";
-              const isEditingThisPwd = editingPasswordUserId === user.id;
-              const isSelected = selectedUserIds.includes(user.id);
+          <div className="relative">
+            <Search className="w-4 h-4 absolute left-3.5 top-3 text-[#94A3B8]" />
+            <input
+              type="text"
+              placeholder="Cari pengguna berdasarkan nama, username, atau kelas..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-10 pr-4 py-2 text-xs font-semibold bg-[#EEF2F6] border border-transparent rounded-xl text-[#172033] focus:bg-white focus:border-[#1B4D3E] focus:outline-none transition-colors"
+            />
+          </div>
 
-              return (
-                <div
-                  key={user.id}
-                  className={`p-3.5 rounded-2xl mizan-card-sub space-y-3 hover:border-[#1B4D3E]/40 transition-all ${
-                    isSelected ? "ring-2 ring-red-400 bg-red-50/20" : ""
-                  }`}
-                >
-                  <div className="flex items-start justify-between gap-2.5">
-                    <div className="flex items-start gap-2.5 min-w-0">
-                      <input
-                        type="checkbox"
-                        checked={isSelected}
-                        onChange={() => toggleSelectUser(user.id)}
-                        className="w-4 h-4 rounded text-[#1B4D3E] accent-[#1B4D3E] cursor-pointer shrink-0 mt-1"
-                        aria-label={`Pilih ${user.name}`}
-                      />
-                      <Avatar
-                        initials={user.avatarInitials}
-                        size="md"
-                        variant={isSuper ? "gold" : isPutri ? "neutral" : "primary"}
-                      />
-                      <div className="min-w-0">
-                        <p className="text-xs font-bold text-[#172033] truncate">
-                          {user.name}
-                        </p>
-                        <p className="text-[10px] font-mono text-[#64748B]">
+          {viewMode === "list" ? (
+            <div className="overflow-x-auto -mx-4 sm:mx-0">
+              <table className="w-full text-left text-xs border-collapse">
+                <thead>
+                  <tr className="border-b border-[#E2E8F0] bg-[#F8FAFC] text-[#64748B] font-bold text-[10px] uppercase tracking-wider">
+                    <th className="py-3 px-3 w-10 text-center">
+                      <span className="sr-only">Pilih</span>
+                    </th>
+                    <th className="py-3 px-3.5">Pengguna</th>
+                    <th className="py-3 px-3.5">Username</th>
+                    <th className="py-3 px-3.5">Peran</th>
+                    <th className="py-3 px-3.5">Kelas</th>
+                    <th className="py-3 px-3.5 text-right w-44">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-[#E2E8F0]">
+                  {filteredUsers.map((user) => {
+                    const isSuper = user.role === "SUPER_ADMIN";
+                    const isPutri = user.gender === "Putri";
+                    const isEditingThisPwd = editingPasswordUserId === user.id;
+                    const isSelected = selectedUserIds.includes(user.id);
+
+                    return (
+                      <tr
+                        key={user.id}
+                        className={`hover:bg-[#FAF7EE]/60 transition-colors ${
+                          isSelected ? "bg-red-50/20" : ""
+                        }`}
+                      >
+                        <td className="py-3 px-3 text-center">
+                          <input
+                            type="checkbox"
+                            checked={isSelected}
+                            onChange={() => toggleSelectUser(user.id)}
+                            className="w-4 h-4 rounded text-[#1B4D3E] accent-[#1B4D3E] cursor-pointer"
+                            aria-label={`Pilih ${user.name}`}
+                          />
+                        </td>
+                        <td className="py-3 px-3.5">
+                          <div className="flex items-center gap-3">
+                            <Avatar
+                              src={user.avatarUrl}
+                              initials={user.avatarInitials}
+                              size="md"
+                              variant={isSuper ? "gold" : isPutri ? "neutral" : "primary"}
+                              className="w-12 h-12 shadow-2xs"
+                            />
+                            <div className="min-w-0">
+                              <p className="font-bold text-[#172033] text-sm truncate">
+                                {user.name}
+                              </p>
+                              <p className="text-[11px] text-[#64748B]">
+                                {user.roleTitle || "Pembina"}
+                              </p>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="py-3 px-3.5 font-mono text-[#475569]">
                           @{user.username || "user"}
-                        </p>
-                        <div className="flex items-center gap-1.5 mt-1 flex-wrap">
+                        </td>
+                        <td className="py-3 px-3.5">
                           <span
-                            className={`text-[9px] font-bold px-2 py-0.5 rounded-full ${
+                            className={`text-[10px] font-bold px-2.5 py-1 rounded-full ${
                               isSuper
                                 ? "bg-[#FEF3C7] text-[#92400E]"
                                 : isPutri
@@ -519,78 +594,209 @@ export default function AdminUsersPage() {
                           >
                             {isSuper ? "Super Admin" : isPutri ? "Ustadzah (Putri)" : "Ustadz (Putra)"}
                           </span>
-                          {!isSuper && user.assignedClass && (
-                            <span className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-[#EEF2F6] text-[#475569]">
+                        </td>
+                        <td className="py-3 px-3.5 font-bold text-[#172033]">
+                          {!isSuper && user.assignedClass ? (
+                            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#EEF2F6] text-[#475569]">
                               Kelas {user.assignedClass}
                             </span>
+                          ) : (
+                            <span className="text-[#94A3B8]">-</span>
                           )}
+                        </td>
+                        <td className="py-3 px-3.5 text-right">
+                          {isEditingThisPwd ? (
+                            <div className="flex items-center justify-end gap-1.5">
+                              <input
+                                type="password"
+                                value={newPasswordVal}
+                                onChange={(e) => setNewPasswordVal(e.target.value)}
+                                placeholder="Sandi baru..."
+                                className="w-28 px-2 py-1 text-xs bg-[#EEF2F6] border border-transparent rounded-lg focus:bg-white focus:border-[#1B4D3E] focus:outline-none"
+                              />
+                              <button
+                                type="button"
+                                onClick={() => handleSavePassword(user.id)}
+                                className="px-2.5 py-1 rounded-lg bg-[#1B4D3E] text-white text-xs font-bold"
+                              >
+                                Simpan
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setEditingPasswordUserId(null);
+                                  setNewPasswordVal("");
+                                }}
+                                className="px-2 py-1 rounded-lg text-[#64748B] hover:bg-[#EEF2F6] text-xs font-bold"
+                              >
+                                Batal
+                              </button>
+                            </div>
+                          ) : (
+                            <div className="flex items-center justify-end gap-1.5">
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setEditingPasswordUserId(user.id);
+                                  setNewPasswordVal("");
+                                }}
+                                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#FAF7EE] text-[#A8833E] border border-[#C5A059]/30 hover:bg-[#C5A059] hover:text-white text-xs font-bold transition-colors"
+                              >
+                                <KeyRound className="w-3 h-3" />
+                                <span>Sandi</span>
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => handleOpenDeleteSingle(user)}
+                                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-red-50 text-red-600 border border-red-200 hover:bg-red-600 hover:text-white text-xs font-bold transition-colors"
+                              >
+                                <Trash2 className="w-3 h-3" />
+                                <span>Hapus</span>
+                              </button>
+                            </div>
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                  {filteredUsers.length === 0 && (
+                    <tr>
+                      <td colSpan={6} className="py-12 text-center text-xs text-[#94A3B8]">
+                        Tidak ada pengguna yang cocok dengan pencarian
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {filteredUsers.map((user) => {
+                const isSuper = user.role === "SUPER_ADMIN";
+                const isPutri = user.gender === "Putri";
+                const isEditingThisPwd = editingPasswordUserId === user.id;
+                const isSelected = selectedUserIds.includes(user.id);
+
+                return (
+                  <div
+                    key={user.id}
+                    className={`p-3.5 rounded-2xl mizan-card-sub space-y-3 hover:border-[#1B4D3E]/40 transition-all ${
+                      isSelected ? "ring-2 ring-red-400 bg-red-50/20" : ""
+                    }`}
+                  >
+                    <div className="flex items-start justify-between gap-2.5">
+                      <div className="flex items-start gap-3 min-w-0">
+                        <input
+                          type="checkbox"
+                          checked={isSelected}
+                          onChange={() => toggleSelectUser(user.id)}
+                          className="w-4 h-4 rounded text-[#1B4D3E] accent-[#1B4D3E] cursor-pointer shrink-0 mt-3"
+                          aria-label={`Pilih ${user.name}`}
+                        />
+                        <Avatar
+                          src={user.avatarUrl}
+                          initials={user.avatarInitials}
+                          size="md"
+                          variant={isSuper ? "gold" : isPutri ? "neutral" : "primary"}
+                          className="w-12 h-12 shadow-2xs shrink-0"
+                        />
+                        <div className="min-w-0">
+                          <p className="text-xs font-bold text-[#172033] truncate">
+                            {user.name}
+                          </p>
+                          <p className="text-[10px] font-mono text-[#64748B]">
+                            @{user.username || "user"}
+                          </p>
+                          <div className="flex items-center gap-1.5 mt-1 flex-wrap">
+                            <span
+                              className={`text-[9px] font-bold px-2 py-0.5 rounded-full ${
+                                isSuper
+                                  ? "bg-[#FEF3C7] text-[#92400E]"
+                                  : isPutri
+                                  ? "bg-[#FDF2F8] text-[#BE185D]"
+                                  : "bg-[#ECFDF5] text-[#065F46]"
+                              }`}
+                            >
+                              {isSuper ? "Super Admin" : isPutri ? "Ustadzah (Putri)" : "Ustadz (Putra)"}
+                            </span>
+                            {!isSuper && user.assignedClass && (
+                              <span className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-[#EEF2F6] text-[#475569]">
+                                Kelas {user.assignedClass}
+                              </span>
+                            )}
+                          </div>
                         </div>
                       </div>
+
+                      <button
+                        type="button"
+                        onClick={() => handleOpenDeleteSingle(user)}
+                        className="p-1.5 rounded-lg text-[#94A3B8] hover:text-red-600 hover:bg-red-50 transition-colors"
+                        title="Hapus"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
                     </div>
 
-                    <button
-                      type="button"
-                      onClick={() => handleOpenDeleteSingle(user)}
-                      className="p-1.5 rounded-lg text-[#94A3B8] hover:text-red-600 hover:bg-red-50 transition-colors"
-                      title="Hapus Pengguna"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
+                    <div className="pt-2 border-t border-[#E2E8F0] flex items-center justify-between text-xs">
+                      {isEditingThisPwd ? (
+                        <div className="w-full flex items-center gap-2">
+                          <input
+                            type="password"
+                            value={newPasswordVal}
+                            onChange={(e) => setNewPasswordVal(e.target.value)}
+                            placeholder="Sandi baru..."
+                            className="w-full px-2.5 py-1 text-[11px] bg-[#EEF2F6] border border-transparent rounded-lg focus:bg-white focus:border-[#1B4D3E] focus:outline-none"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => handleSavePassword(user.id)}
+                            className="px-2.5 py-1 rounded-lg bg-[#1B4D3E] text-white text-[11px] font-bold shrink-0"
+                          >
+                            Simpan
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setEditingPasswordUserId(null);
+                              setNewPasswordVal("");
+                            }}
+                            className="p-1 rounded-lg text-[#64748B] hover:text-[#172033] text-xs font-bold"
+                          >
+                            Batal
+                          </button>
+                        </div>
+                      ) : (
+                        <>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setEditingPasswordUserId(user.id);
+                              setNewPasswordVal("");
+                            }}
+                            className="inline-flex items-center gap-1 text-[11px] font-bold text-[#1B4D3E] hover:underline"
+                          >
+                            <KeyRound className="w-3 h-3" />
+                            <span>Sandi</span>
+                          </button>
 
-                  <div className="pt-2 border-t border-[#E2E8F0] flex items-center justify-between text-xs">
-                    {isEditingThisPwd ? (
-                      <div className="w-full flex items-center gap-2">
-                        <input
-                          type="password"
-                          value={newPasswordVal}
-                          onChange={(e) => setNewPasswordVal(e.target.value)}
-                          placeholder="Sandi baru..."
-                          className="w-full px-2.5 py-1 text-[11px] bg-[#EEF2F6] border border-transparent rounded-lg focus:bg-white focus:border-[#1B4D3E] focus:outline-none"
-                        />
-                        <button
-                          type="button"
-                          onClick={() => handleSavePassword(user.id)}
-                          className="px-2.5 py-1 rounded-lg bg-[#1B4D3E] text-white text-[11px] font-bold shrink-0"
-                        >
-                          Simpan
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setEditingPasswordUserId(null);
-                            setNewPasswordVal("");
-                          }}
-                          className="p-1 rounded-lg text-[#94A3B8] hover:text-[#172033]"
-                        >
-                          <X className="w-3.5 h-3.5" />
-                        </button>
-                      </div>
-                    ) : (
-                      <>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setEditingPasswordUserId(user.id);
-                            setNewPasswordVal("");
-                          }}
-                          className="inline-flex items-center gap-1 text-[11px] font-bold text-[#1B4D3E] hover:underline"
-                        >
-                          <KeyRound className="w-3 h-3" />
-                          <span>Reset</span>
-                        </button>
-
-                        <span className="text-[10px] text-[#94A3B8] flex items-center gap-1 font-bold">
-                          <Lock className="w-3 h-3" />
-                          Username Terkunci
-                        </span>
-                      </>
-                    )}
+                          <span className="text-[10px] text-[#94A3B8] flex items-center gap-1 font-bold">
+                            <Lock className="w-3 h-3" />
+                            <span>Terkunci</span>
+                          </span>
+                        </>
+                      )}
+                    </div>
                   </div>
+                );
+              })}
+              {filteredUsers.length === 0 && (
+                <div className="col-span-full py-12 text-center text-xs text-[#94A3B8]">
+                  Tidak ada pengguna yang cocok dengan pencarian
                 </div>
-              );
-            })}
-          </div>
+              )}
+            </div>
+          )}
         </Card>
       </div>
 

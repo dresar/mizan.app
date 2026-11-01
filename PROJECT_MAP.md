@@ -21,13 +21,13 @@ mizan.apps/
 │   ├── admin/                 # Admin Master
 │   │   ├── dashboard/         # Dashboard ringkasan pondok
 │   │   ├── santri/            # Manajemen santri, tambah, filter gender/status
-│   │   ├── kelas/             # CRUD kelas: edit nama & gender, ubah wali kelas instan, hapus modal, detail santri & log
+│   │   ├── kelas/             # Modern List/Grid view, Action Menu (3-dots), Modal Detail/Ubah/Wali/Hapus, avatar besar
 │   │   ├── wali-kelas/        # Penugasan wali kelas, paginasi max 20 (grid & tabel), & share statistik publik
 │   │   ├── absensi/           # Rekap absensi sholat 7 waktu & kegiatan
-│   │   ├── rapor/             # Rapor terpadu santri & santriwati (1 halaman tabel lengkap, cetak PDF massal)
+│   │   ├── rapor/             # Modern List/Grid view rapor santri, kartu skor adab & cetak PDF massal/per santri
 │   │   ├── pengaturan-nilai/  # Bobot nilai & batas skor adab dinamis dari DB
-│   │   ├── kategori-pelanggaran/ # Kategori, unsur, dan indikator pelanggaran (paginasi 20)
-│   │   └── users/             # Manajemen user akun (Admin, Guru, BK, Ortu)
+│   │   ├── kategori-pelanggaran/ # Modern List/Grid view kategori, unsur, dan indikator penilaian
+│   │   └── users/             # Modern List/Grid view pengguna, tabel rapi, avatar w-12 h-12, sandi & hapus modal
 │   ├── guru/                  # Modul Ustadz / Pembina
 │   │   ├── dashboard/         # Ringkasan santri binaan & grafik laporan
 │   │   ├── absen/             # Presensi sholat berjamaah 7 waktu santri

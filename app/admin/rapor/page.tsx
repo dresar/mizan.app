@@ -13,7 +13,9 @@ import {
   AlertTriangle,
   TrendingUp,
   RefreshCw,
-  Bell
+  Bell,
+  List,
+  LayoutGrid
 } from "lucide-react";
 import { useMizan } from "@/lib/mizan-context";
 import { RoleShell } from "@/components/RoleShell";
@@ -63,6 +65,7 @@ export default function AdminRaporPage() {
     refreshData
   } = useMizan();
 
+  const [viewMode, setViewMode] = useState<"list" | "grid">("list");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedGender, setSelectedGender] = useState<"ALL" | "Putra" | "Putri">("ALL");
   const [selectedClass, setSelectedClass] = useState<string>("ALL");
@@ -261,7 +264,7 @@ export default function AdminRaporPage() {
               type="button"
               onClick={() => setIsAlertBannerVisible(false)}
               className="p-1 rounded-lg text-[#64748B] hover:text-[#172033] hover:bg-black/5 shrink-0 transition-colors"
-              aria-label="Tutup Notifikasi"
+              aria-label="Tutup"
             >
               <X className="w-4 h-4" />
             </button>
@@ -344,6 +347,33 @@ export default function AdminRaporPage() {
             </div>
 
             <div className="flex flex-wrap items-center gap-2">
+              <div className="flex items-center gap-1 bg-[#EEF2F6] p-1 rounded-2xl">
+                <button
+                  type="button"
+                  onClick={() => setViewMode("list")}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                    viewMode === "list"
+                      ? "bg-white text-[#1B4D3E] shadow-2xs"
+                      : "text-[#64748B] hover:text-[#172033]"
+                  }`}
+                >
+                  <List className="w-3.5 h-3.5" />
+                  <span>Daftar</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setViewMode("grid")}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                    viewMode === "grid"
+                      ? "bg-white text-[#1B4D3E] shadow-2xs"
+                      : "text-[#64748B] hover:text-[#172033]"
+                  }`}
+                >
+                  <LayoutGrid className="w-3.5 h-3.5" />
+                  <span>Kotak</span>
+                </button>
+              </div>
+
               <div className="inline-flex rounded-2xl p-0.5 bg-[#FAF7EE] border border-[#E2EBF4] shrink-0">
                 {(["ALL", "Putra", "Putri"] as const).map((g) => (
                   <button
@@ -409,180 +439,282 @@ export default function AdminRaporPage() {
           </div>
         </div>
 
-        <div className="mizan-card overflow-hidden bg-white border border-[#E2EBF4]">
-          <div className="px-4 py-3 bg-[#FAF7EE] border-b border-[#E2EBF4] flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <FileText className="w-4 h-4 text-[#1B4D3E]" />
-              <span className="text-xs font-bold text-[#172033]">
-                Lembar Data Rapor Terpadu ({filteredItems.length} Santri)
+        {viewMode === "list" ? (
+          <div className="mizan-card overflow-hidden bg-white border border-[#E2EBF4]">
+            <div className="px-4 py-3 bg-[#FAF7EE] border-b border-[#E2EBF4] flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <FileText className="w-4 h-4 text-[#1B4D3E]" />
+                <span className="text-xs font-bold text-[#172033]">
+                  Lembar Data Rapor Terpadu ({filteredItems.length} Santri)
+                </span>
+              </div>
+              <span className="text-[10px] text-[#64748B] font-semibold">
+                Tahun Ajaran 2026/2027 • Semester Ganjil
               </span>
             </div>
-            <span className="text-[10px] text-[#64748B] font-semibold">
-              Tahun Ajaran 2026/2027 • Semester Ganjil
-            </span>
-          </div>
 
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse text-xs">
-              <thead>
-                <tr className="border-b border-[#E2EBF4] bg-[#F8FAFC] text-[#64748B] font-bold text-[10px] uppercase tracking-wider">
-                  <th className="py-3 px-3.5 w-12 text-center">No</th>
-                  <th className="py-3 px-3.5">Santri / Santriwati</th>
-                  <th className="py-3 px-3 text-center">Skor Awal</th>
-                  <th className="py-3 px-3 text-center">Prestasi (Hasanah)</th>
-                  <th className="py-3 px-3 text-center">Pelanggaran (Sayyi&apos;ah)</th>
-                  <th className="py-3 px-3 text-center">Sholat 7 Waktu</th>
-                  <th className="py-3 px-3 text-center">Skor Akhir Adab</th>
-                  <th className="py-3 px-3 text-center">Predikat Kelulusan</th>
-                  <th className="py-3 px-3.5 text-center w-28">Aksi</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-[#E2EBF4]">
-                {filteredItems.map((item, index) => {
-                  const s = item.santri;
-                  return (
-                    <tr
-                      key={s.id}
-                      className="hover:bg-[#FAF7EE]/60 transition-colors group"
-                    >
-                      <td className="py-3 px-3.5 text-center font-mono font-bold text-[#64748B]">
-                        {index + 1}
-                      </td>
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse text-xs">
+                <thead>
+                  <tr className="border-b border-[#E2EBF4] bg-[#F8FAFC] text-[#64748B] font-bold text-[10px] uppercase tracking-wider">
+                    <th className="py-3 px-3.5 w-12 text-center">No</th>
+                    <th className="py-3 px-3.5">Santri / Santriwati</th>
+                    <th className="py-3 px-3 text-center">Skor Awal</th>
+                    <th className="py-3 px-3 text-center">Prestasi (Hasanah)</th>
+                    <th className="py-3 px-3 text-center">Pelanggaran (Sayyi&apos;ah)</th>
+                    <th className="py-3 px-3 text-center">Sholat 7 Waktu</th>
+                    <th className="py-3 px-3 text-center">Skor Akhir Adab</th>
+                    <th className="py-3 px-3 text-center">Predikat Kelulusan</th>
+                    <th className="py-3 px-3.5 text-center w-28">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-[#E2EBF4]">
+                  {filteredItems.map((item, index) => {
+                    const s = item.santri;
+                    return (
+                      <tr
+                        key={s.id}
+                        className="hover:bg-[#FAF7EE]/60 transition-colors group"
+                      >
+                        <td className="py-3 px-3.5 text-center font-mono font-bold text-[#64748B]">
+                          {index + 1}
+                        </td>
 
-                      <td className="py-3 px-3.5">
-                        <div className="flex items-center gap-2.5">
-                          <Avatar
-                            src={s.avatar}
-                            initials={s.name.slice(0, 2).toUpperCase()}
-                            size="md"
-                            variant={s.gender === "Putri" ? "gold" : "primary"}
-                          />
-                          <div className="min-w-0">
-                            <p className="font-bold text-[#172033] truncate max-w-[200px]">
-                              {s.name}
-                            </p>
-                            <div className="flex items-center gap-1.5 mt-0.5">
-                              <span className="font-mono text-[10px] text-[#64748B]">
-                                NIS: {s.nis}
-                              </span>
-                              <span className="text-[10px] text-[#64748B]">•</span>
-                              <span className="text-[10px] font-bold px-1.5 py-0.2 rounded bg-[#EEF2F6] text-[#172033]">
-                                Kelas {s.class}
-                              </span>
-                              <span
-                                className={`text-[9px] font-bold px-1.5 py-0.2 rounded ${
-                                  s.gender === "Putra"
-                                    ? "bg-[#EFF6FF] text-[#1D4ED8]"
-                                    : "bg-[#FDF2F8] text-[#BE185D]"
-                                }`}
-                              >
-                                {s.gender}
-                              </span>
+                        <td className="py-3 px-3.5">
+                          <div className="flex items-center gap-3">
+                            <Avatar
+                              src={s.avatar}
+                              initials={s.name.slice(0, 2).toUpperCase()}
+                              size="md"
+                              variant={s.gender === "Putri" ? "gold" : "primary"}
+                              className="w-12 h-12 shadow-2xs"
+                            />
+                            <div className="min-w-0">
+                              <p className="font-bold text-[#172033] truncate max-w-[200px]">
+                                {s.name}
+                              </p>
+                              <div className="flex items-center gap-1.5 mt-0.5">
+                                <span className="font-mono text-[10px] text-[#64748B]">
+                                  NIS: {s.nis}
+                                </span>
+                                <span className="text-[10px] text-[#64748B]">•</span>
+                                <span className="text-[10px] font-bold px-1.5 py-0.2 rounded bg-[#EEF2F6] text-[#172033]">
+                                  Kelas {s.class}
+                                </span>
+                                <span
+                                  className={`text-[9px] font-bold px-1.5 py-0.2 rounded ${
+                                    s.gender === "Putra"
+                                      ? "bg-[#EFF6FF] text-[#1D4ED8]"
+                                      : "bg-[#FDF2F8] text-[#BE185D]"
+                                  }`}
+                                >
+                                  {s.gender}
+                                </span>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      </td>
+                        </td>
 
-                      <td className="py-3 px-3 text-center font-mono font-semibold text-[#64748B]">
-                        {formatScore(s.baseScore)}
-                      </td>
+                        <td className="py-3 px-3 text-center font-mono font-semibold text-[#64748B]">
+                          {formatScore(s.baseScore)}
+                        </td>
 
-                      <td className="py-3 px-3 text-center">
-                        <span className="font-mono font-bold text-[#065F46] block">
-                          +{formatScore(item.hasanahScore)}
-                        </span>
-                        <span className="text-[10px] text-[#64748B] font-medium block mt-0.5">
-                          {item.hasanahCount} Catatan
-                        </span>
-                      </td>
-
-                      <td className="py-3 px-3 text-center">
-                        <span className="font-mono font-bold text-[#B91C1C] block">
-                          {item.sayyiahScore !== 0 ? formatScoreWithSign(item.sayyiahScore) : "0,000"}
-                        </span>
-                        <span className="text-[10px] text-[#64748B] font-medium block mt-0.5">
-                          {item.sayyiahCount} Catatan
-                        </span>
-                      </td>
-
-                      <td className="py-3 px-3 text-center">
-                        <span className="font-mono font-bold text-[#172033] block">
-                          {item.attendancePercent}%
-                        </span>
-                        <span className="text-[10px] text-[#065F46] font-semibold block mt-0.5">
-                          {item.effectiveHadir}/{item.effectiveTotal} Hadir
-                        </span>
-                      </td>
-
-                      <td className="py-3 px-3 text-center">
-                        <span
-                          className={`font-mono text-sm font-black px-2.5 py-1 rounded-xl inline-block ${
-                            s.currentScore >= 80
-                              ? "bg-[#ECFDF5] text-[#065F46] border border-[#A7F3D0]"
-                              : s.currentScore >= 61
-                              ? "bg-white text-[#172033] border border-[#E2EBF4]"
-                              : "bg-[#FEF2F2] text-[#B91C1C] border border-[#FECACA]"
-                          }`}
-                        >
-                          {formatScore(s.currentScore)}
-                        </span>
-                      </td>
-
-                      <td className="py-3 px-3 text-center">
-                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full inline-block ${item.predikat.badgeCls}`}>
-                          {item.predikat.label}
-                        </span>
-                        {s.status && s.status !== "Aman" && (
-                          <span className="block text-[9px] font-black text-red-600 mt-0.5 uppercase">
-                            {s.status}
+                        <td className="py-3 px-3 text-center">
+                          <span className="font-mono font-bold text-[#065F46] block">
+                            +{formatScore(item.hasanahScore)}
                           </span>
-                        )}
-                      </td>
+                          <span className="text-[10px] text-[#64748B] font-medium block mt-0.5">
+                            {item.hasanahCount} Catatan
+                          </span>
+                        </td>
 
-                      <td className="py-3 px-3.5 text-center">
-                        <div className="flex items-center justify-center gap-1.5">
-                          <button
-                            type="button"
-                            onClick={() => setSelectedDetailSantri(s)}
-                            className="px-2.5 py-1 rounded-lg bg-[#FAF7EE] text-[#A8833E] hover:bg-[#C5A059] hover:text-white text-[11px] font-bold border border-[#C5A059]/30 transition-colors"
-                          >
-                            Detail
-                          </button>
+                        <td className="py-3 px-3 text-center">
+                          <span className="font-mono font-bold text-[#B91C1C] block">
+                            {item.sayyiahScore !== 0 ? formatScoreWithSign(item.sayyiahScore) : "0,000"}
+                          </span>
+                          <span className="text-[10px] text-[#64748B] font-medium block mt-0.5">
+                            {item.sayyiahCount} Catatan
+                          </span>
+                        </td>
 
-                          <button
-                            type="button"
-                            onClick={() => handlePrintSingle(item)}
-                            className="px-2.5 py-1 rounded-lg bg-[#1B4D3E] text-white hover:bg-[#153e32] text-[11px] font-bold transition-colors inline-flex items-center gap-1"
+                        <td className="py-3 px-3 text-center">
+                          <span className="font-mono font-bold text-[#172033] block">
+                            {item.attendancePercent}%
+                          </span>
+                          <span className="text-[10px] text-[#065F46] font-semibold block mt-0.5">
+                            {item.effectiveHadir}/{item.effectiveTotal} Hadir
+                          </span>
+                        </td>
+
+                        <td className="py-3 px-3 text-center">
+                          <span
+                            className={`font-mono text-sm font-black px-2.5 py-1 rounded-xl inline-block ${
+                              s.currentScore >= 80
+                                ? "bg-[#ECFDF5] text-[#065F46] border border-[#A7F3D0]"
+                                : s.currentScore >= 61
+                                ? "bg-white text-[#172033] border border-[#E2EBF4]"
+                                : "bg-[#FEF2F2] text-[#B91C1C] border border-[#FECACA]"
+                            }`}
                           >
-                            <Download className="w-3 h-3" />
-                            <span>Unduh</span>
-                          </button>
-                        </div>
+                            {formatScore(s.currentScore)}
+                          </span>
+                        </td>
+
+                        <td className="py-3 px-3 text-center">
+                          <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full inline-block ${item.predikat.badgeCls}`}>
+                            {item.predikat.label}
+                          </span>
+                          {s.status && s.status !== "Aman" && (
+                            <span className="block text-[9px] font-black text-red-600 mt-0.5 uppercase">
+                              {s.status}
+                            </span>
+                          )}
+                        </td>
+
+                        <td className="py-3 px-3.5 text-center">
+                          <div className="flex items-center justify-center gap-1.5">
+                            <button
+                              type="button"
+                              onClick={() => setSelectedDetailSantri(s)}
+                              className="px-2.5 py-1 rounded-lg bg-[#FAF7EE] text-[#A8833E] hover:bg-[#C5A059] hover:text-white text-[11px] font-bold border border-[#C5A059]/30 transition-colors"
+                            >
+                              Detail
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={() => handlePrintSingle(item)}
+                              className="px-2.5 py-1 rounded-lg bg-[#1B4D3E] text-white hover:bg-[#153e32] text-[11px] font-bold transition-colors inline-flex items-center gap-1"
+                            >
+                              <Printer className="w-3 h-3" />
+                              <span>Cetak</span>
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
+
+                  {filteredItems.length === 0 && (
+                    <tr>
+                      <td colSpan={9} className="py-12 text-center text-xs text-[#94A3B8]">
+                        Tidak ada santri atau santriwati yang sesuai dengan filter pencarian rapor
                       </td>
                     </tr>
-                  );
-                })}
+                  )}
+                </tbody>
+              </table>
+            </div>
 
-                {filteredItems.length === 0 && (
-                  <tr>
-                    <td colSpan={9} className="py-12 text-center text-xs text-[#94A3B8]">
-                      Tidak ada santri atau santriwati yang sesuai dengan filter pencarian rapor
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-
-          <div className="p-3 bg-[#FAF7EE]/60 border-t border-[#E2EBF4] flex flex-col sm:flex-row items-center justify-between gap-2 text-[11px] text-[#64748B]">
-            <span>
-              Menampilkan <strong className="text-[#172033]">{filteredItems.length}</strong> dari <strong className="text-[#172033]">{santriAnalytics.length}</strong> seluruh data santri
-            </span>
-            <div className="flex items-center gap-2">
-              <span className="font-semibold">Skor Kelulusan: Mumtaz (≥85) • Jayyid (≥65) • Perhatian (&lt;65)</span>
+            <div className="p-3 bg-[#FAF7EE]/60 border-t border-[#E2EBF4] flex flex-col sm:flex-row items-center justify-between gap-2 text-[11px] text-[#64748B]">
+              <span>
+                Menampilkan <strong className="text-[#172033]">{filteredItems.length}</strong> dari <strong className="text-[#172033]">{santriAnalytics.length}</strong> seluruh data santri
+              </span>
+              <div className="flex items-center gap-2">
+                <span className="font-semibold">Skor Kelulusan: Mumtaz (≥85) • Jayyid (≥65) • Perhatian (&lt;65)</span>
+              </div>
             </div>
           </div>
-        </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
+            {filteredItems.map((item) => {
+              const s = item.santri;
+              return (
+                <div
+                  key={s.id}
+                  className="p-4 rounded-2xl bg-white border border-[#E2EBF4] hover:border-[#1B4D3E]/40 hover:shadow-md transition-all flex flex-col justify-between space-y-3"
+                >
+                  <div>
+                    <div className="flex items-start gap-3">
+                      <Avatar
+                        src={s.avatar}
+                        initials={s.name.slice(0, 2).toUpperCase()}
+                        size="md"
+                        variant={s.gender === "Putri" ? "gold" : "primary"}
+                        className="w-12 h-12 shadow-2xs shrink-0"
+                      />
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center justify-between gap-1">
+                          <p className="font-bold text-[#172033] text-sm truncate">
+                            {s.name}
+                          </p>
+                          <span
+                            className={`text-[9px] font-bold px-1.5 py-0.5 rounded-full shrink-0 ${
+                              s.gender === "Putra"
+                                ? "bg-[#EFF6FF] text-[#1D4ED8]"
+                                : "bg-[#FDF2F8] text-[#BE185D]"
+                            }`}
+                          >
+                            {s.gender}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-1.5 mt-0.5">
+                          <span className="font-mono text-[10px] text-[#64748B]">
+                            NIS: {s.nis}
+                          </span>
+                          <span className="text-[10px] text-[#64748B]">•</span>
+                          <span className="text-[10px] font-bold px-1.5 py-0.2 rounded bg-[#EEF2F6] text-[#172033]">
+                            Kelas {s.class}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-3 gap-2 mt-3 p-2.5 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] text-center">
+                      <div>
+                        <span className="text-[9px] font-bold text-[#64748B] uppercase block">
+                          Skor
+                        </span>
+                        <span className="text-sm font-black font-mono text-[#1B4D3E] block mt-0.5">
+                          {formatScore(s.currentScore)}
+                        </span>
+                      </div>
+                      <div>
+                        <span className="text-[9px] font-bold text-[#64748B] uppercase block">
+                          Predikat
+                        </span>
+                        <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-full inline-block mt-0.5 ${item.predikat.badgeCls}`}>
+                          {item.predikat.label}
+                        </span>
+                      </div>
+                      <div>
+                        <span className="text-[9px] font-bold text-[#64748B] uppercase block">
+                          Sholat
+                        </span>
+                        <span className="text-xs font-black font-mono text-[#065F46] block mt-0.5">
+                          {item.attendancePercent}%
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="pt-2 border-t border-[#F1F5F9] flex items-center justify-between gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setSelectedDetailSantri(s)}
+                      className="flex-1 py-1.5 px-3 rounded-xl bg-[#FAF7EE] text-[#A8833E] hover:bg-[#C5A059] hover:text-white text-xs font-bold border border-[#C5A059]/30 transition-colors text-center"
+                    >
+                      Detail
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handlePrintSingle(item)}
+                      className="flex-1 py-1.5 px-3 rounded-xl bg-[#1B4D3E] text-white hover:bg-[#153e32] text-xs font-bold transition-colors inline-flex items-center justify-center gap-1.5 shadow-2xs"
+                    >
+                      <Printer className="w-3.5 h-3.5" />
+                      <span>Cetak</span>
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+            {filteredItems.length === 0 && (
+              <div className="col-span-full py-12 text-center text-xs text-[#94A3B8] bg-white rounded-2xl border border-[#E2EBF4]">
+                Tidak ada santri atau santriwati yang sesuai dengan filter pencarian rapor
+              </div>
+            )}
+          </div>
+        )}
 
         {selectedDetailSantri && activeDetailData && (
           <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4">
@@ -614,6 +746,7 @@ export default function AdminRaporPage() {
                   type="button"
                   onClick={() => setSelectedDetailSantri(null)}
                   className="p-1.5 rounded-xl hover:bg-black/5 text-[#64748B] hover:text-[#172033]"
+                  aria-label="Tutup"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -652,7 +785,7 @@ export default function AdminRaporPage() {
                 <div className="space-y-2">
                   <h4 className="text-xs font-bold text-[#172033] uppercase tracking-wider flex items-center gap-1.5">
                     <Clock className="w-3.5 h-3.5 text-[#A8833E]" />
-                    Presensi Sholat 7 Waktu Santri
+                    <span>Presensi Sholat 7 Waktu Santri</span>
                   </h4>
                   <div className="p-3 rounded-2xl bg-[#F8FAFC] border border-[#E2EBF4] flex items-center justify-between text-xs">
                     <div>
@@ -672,7 +805,7 @@ export default function AdminRaporPage() {
                 <div className="space-y-2">
                   <h4 className="text-xs font-bold text-[#172033] uppercase tracking-wider flex items-center gap-1.5">
                     <Award className="w-3.5 h-3.5 text-[#065F46]" />
-                    Catatan Hasanah Terakhir ({activeDetailData.hasanahCount})
+                    <span>Catatan Hasanah Terakhir ({activeDetailData.hasanahCount})</span>
                   </h4>
                   <div className="space-y-1.5 max-h-36 overflow-y-auto">
                     {activeDetailData.studentPenilaian
@@ -702,7 +835,7 @@ export default function AdminRaporPage() {
                 <div className="space-y-2">
                   <h4 className="text-xs font-bold text-[#172033] uppercase tracking-wider flex items-center gap-1.5">
                     <AlertTriangle className="w-3.5 h-3.5 text-[#B91C1C]" />
-                    Catatan Sayyi&apos;ah Terakhir ({activeDetailData.sayyiahCount})
+                    <span>Catatan Sayyi&apos;ah Terakhir ({activeDetailData.sayyiahCount})</span>
                   </h4>
                   <div className="space-y-1.5 max-h-36 overflow-y-auto">
                     {activeDetailData.studentPenilaian
@@ -743,8 +876,8 @@ export default function AdminRaporPage() {
                   onClick={() => handlePrintSingle(activeDetailData)}
                   className="px-4 py-2 rounded-full bg-[#1B4D3E] text-white text-xs font-bold hover:bg-[#153e32] inline-flex items-center gap-1.5"
                 >
-                  <Download className="w-3.5 h-3.5" />
-                  <span>Unduh</span>
+                  <Printer className="w-3.5 h-3.5" />
+                  <span>Cetak</span>
                 </button>
               </div>
             </div>

@@ -8,7 +8,9 @@ import {
   Search,
   ChevronRight,
   Sparkles,
-  Sliders
+  Sliders,
+  List,
+  LayoutGrid
 } from "lucide-react";
 import { useMizan } from "@/lib/mizan-context";
 import { RoleShell } from "@/components/RoleShell";
@@ -25,6 +27,7 @@ const CATEGORY_COLORS: Record<string, { bg: string; text: string; border: string
 export default function AdminKategoriPelanggaranPage() {
   const { categories } = useMizan();
   const [searchQuery, setSearchQuery] = useState("");
+  const [viewMode, setViewMode] = useState<"list" | "grid">("list");
 
   const categoriesOverview = useMemo(() => {
     return categories.map((cat) => {
@@ -176,21 +179,120 @@ export default function AdminKategoriPelanggaranPage() {
         </div>
 
         <Card className="p-3 sm:p-4 bg-white">
-          <div className="relative">
-            <Search className="w-4 h-4 absolute left-3.5 top-3 text-[#94A3B8]" />
-            <input
-              type="text"
-              placeholder="Cari kategori atau unsur penilaian..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 text-xs font-semibold bg-[#EEF2F6] border border-transparent rounded-xl text-[#172033] focus:bg-white focus:border-[#1B4D3E] focus:outline-none transition-colors"
-            />
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+            <div className="relative flex-1">
+              <Search className="w-4 h-4 absolute left-3.5 top-3 text-[#94A3B8]" />
+              <input
+                type="text"
+                placeholder="Cari kategori atau unsur penilaian..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 text-xs font-semibold bg-[#EEF2F6] border border-transparent rounded-xl text-[#172033] focus:bg-white focus:border-[#1B4D3E] focus:outline-none transition-colors"
+              />
+            </div>
+
+            <div className="flex items-center gap-1 bg-[#EEF2F6] p-1 rounded-xl self-start sm:self-auto shrink-0">
+              <button
+                type="button"
+                onClick={() => setViewMode("list")}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                  viewMode === "list"
+                    ? "bg-white text-[#1B4D3E] shadow-2xs"
+                    : "text-[#64748B] hover:text-[#172033]"
+                }`}
+              >
+                <List className="w-3.5 h-3.5" />
+                <span>Daftar</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setViewMode("grid")}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                  viewMode === "grid"
+                    ? "bg-white text-[#1B4D3E] shadow-2xs"
+                    : "text-[#64748B] hover:text-[#172033]"
+                }`}
+              >
+                <LayoutGrid className="w-3.5 h-3.5" />
+                <span>Kotak</span>
+              </button>
+            </div>
           </div>
         </Card>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
-          {filteredCategories.map((cat) => {
-            return (
+        {viewMode === "list" ? (
+          <div className="mizan-card overflow-hidden bg-white border border-[#E2EBF4]">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse text-xs">
+                <thead>
+                  <tr className="border-b border-[#E2EBF4] bg-[#F8FAFC] text-[#64748B] font-bold text-[10px] uppercase tracking-wider">
+                    <th className="py-3 px-3.5 text-center w-14">Kode</th>
+                    <th className="py-3 px-3.5">Nama Kategori</th>
+                    <th className="py-3 px-3.5 text-center">Unsur</th>
+                    <th className="py-3 px-3.5 text-center">Hasanah</th>
+                    <th className="py-3 px-3.5 text-center">Sayyi&apos;ah</th>
+                    <th className="py-3 px-3.5">Contoh Unsur</th>
+                    <th className="py-3 px-3.5 text-center w-24">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-[#E2EBF4]">
+                  {filteredCategories.map((cat) => (
+                    <tr key={cat.code} className="hover:bg-[#FAF7EE]/60 transition-colors">
+                      <td className="py-3.5 px-3.5 text-center">
+                        <span className={`inline-flex items-center justify-center w-8 h-8 rounded-xl font-mono font-black text-sm text-white ${cat.colorScheme.bg}`}>
+                          {cat.code}
+                        </span>
+                      </td>
+                      <td className="py-3.5 px-3.5">
+                        <span className="font-bold text-[#172033] block text-sm">
+                          {cat.name}
+                        </span>
+                        <span className="text-[10px] text-[#94A3B8]">
+                          Kategori Utama {cat.code}
+                        </span>
+                      </td>
+                      <td className="py-3.5 px-3.5 text-center font-mono font-bold text-[#172033]">
+                        {cat.unsursCount}
+                      </td>
+                      <td className="py-3.5 px-3.5 text-center">
+                        <span className="font-mono font-bold text-[#065F46] bg-[#ECFDF5] px-2 py-0.5 rounded-full">
+                          {cat.hasanahCount}
+                        </span>
+                      </td>
+                      <td className="py-3.5 px-3.5 text-center">
+                        <span className="font-mono font-bold text-red-600 bg-[#FEF2F2] px-2 py-0.5 rounded-full">
+                          {cat.sayyiahCount}
+                        </span>
+                      </td>
+                      <td className="py-3.5 px-3.5">
+                        <span className="text-[11px] text-[#64748B] line-clamp-1">
+                          {cat.topUnsurs.join(", ") || "-"}
+                        </span>
+                      </td>
+                      <td className="py-3.5 px-3.5 text-center">
+                        <Link
+                          href={`/admin/kategori-pelanggaran/${cat.code}`}
+                          className="inline-flex items-center justify-center px-3 py-1.5 rounded-xl bg-[#1B4D3E] text-white hover:bg-[#153e32] text-xs font-bold transition-colors"
+                        >
+                          Detail
+                        </Link>
+                      </td>
+                    </tr>
+                  ))}
+                  {filteredCategories.length === 0 && (
+                    <tr>
+                      <td colSpan={7} className="py-12 text-center text-xs text-[#94A3B8]">
+                        Tidak ada kategori yang sesuai dengan kata kunci pencarian
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
+            {filteredCategories.map((cat) => (
               <Link
                 key={cat.code}
                 href={`/admin/kategori-pelanggaran/${cat.code}`}
@@ -269,20 +371,20 @@ export default function AdminKategoriPelanggaranPage() {
                 <div className="pt-4 mt-3 border-t border-[#F1F5F9] flex items-center justify-between text-xs font-bold text-[#1B4D3E]">
                   <span>Kelola Unsur & Indikator</span>
                   <span className="inline-flex items-center gap-1 group-hover:translate-x-1 transition-transform">
-                    <span>Lihat Rincian</span>
+                    <span>Detail</span>
                     <ChevronRight className="w-3.5 h-3.5" />
                   </span>
                 </div>
               </Link>
-            );
-          })}
+            ))}
 
-          {filteredCategories.length === 0 && (
-            <div className="col-span-full py-12 text-center text-xs text-[#94A3B8] bg-white rounded-2xl border border-[#E2EBF4]">
-              Tidak ada kategori yang sesuai dengan kata kunci pencarian
-            </div>
-          )}
-        </div>
+            {filteredCategories.length === 0 && (
+              <div className="col-span-full py-12 text-center text-xs text-[#94A3B8] bg-white rounded-2xl border border-[#E2EBF4]">
+                Tidak ada kategori yang sesuai dengan kata kunci pencarian
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </RoleShell>
   );
