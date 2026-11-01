@@ -125,7 +125,7 @@ export default function AdminWaliKelasPage() {
           <div>
             <div className="flex items-center gap-2">
               <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-[#FAF7EE] text-[#A8833E] border border-[#C5A059]/30">
-                Pusat Pembinaan & Mudabbir
+                Pusat Pembinaan Ustadz & Ustadzah
               </span>
             </div>
             <h1 className="text-lg sm:text-2xl font-serif font-black text-[#172033] tracking-tight mt-1">
@@ -166,7 +166,7 @@ export default function AdminWaliKelasPage() {
               <div className="flex items-center gap-2">
                 <UserCheck className="w-4 h-4 text-[#1B4D3E]" />
                 <h2 className="text-xs font-bold text-[#172033] uppercase tracking-wider">
-                  Penugasan Wali Kelas & Mudabbir
+                  Penugasan Wali Kelas & Ustadz/Ustadzah
                 </h2>
               </div>
               <button

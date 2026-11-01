@@ -2,14 +2,14 @@
 
 import React from "react";
 import {
-  Sparkles,
   ShieldCheck,
   TrendingUp,
   Award,
-  CalendarCheck,
   CheckCircle2,
   Clock,
-  HeartHandshake
+  BookOpen,
+  Users,
+  GraduationCap
 } from "lucide-react";
 
 export interface ShareCardData {
@@ -30,6 +30,67 @@ export interface ShareCardData {
   items?: { label: string; value: string | number; icon?: string }[];
 }
 
+function getCardItemIcon(label: string, compact: boolean) {
+  const iconCls = compact ? "w-3 h-3 text-[#1B4D3E]" : "w-3.5 h-3.5 text-[#1B4D3E]";
+  const lower = label.toLowerCase();
+  if (["sen", "sel", "rab", "kam", "jum", "sab", "min"].includes(lower)) {
+    return <CheckCircle2 className={`${compact ? "w-3 h-3" : "w-3.5 h-3.5"} text-[#065F46]`} />;
+  }
+  if (
+    lower.includes("subuh") ||
+    lower.includes("dhuha") ||
+    lower.includes("dzuhur") ||
+    lower.includes("ashar") ||
+    lower.includes("maghrib") ||
+    lower.includes("isya") ||
+    lower.includes("tahajjud") ||
+    lower.includes("sholat") ||
+    lower.includes("ibadah")
+  ) {
+    return <Clock className={iconCls} />;
+  }
+  if (lower.includes("tahfidz") || lower.includes("kajian") || lower.includes("bahasa")) {
+    return <BookOpen className={iconCls} />;
+  }
+  if (lower.includes("juara") || lower.includes("prestasi") || lower.includes("adab") || lower.includes("khidmat")) {
+    return <Award className={`${compact ? "w-3 h-3" : "w-3.5 h-3.5"} text-[#C5A059]`} />;
+  }
+  if (
+    lower.includes("piket") ||
+    lower.includes("kamar") ||
+    lower.includes("kerapian") ||
+    lower.includes("tertib") ||
+    lower.includes("ketertiban") ||
+    lower.includes("disiplin")
+  ) {
+    return <ShieldCheck className={iconCls} />;
+  }
+  if (lower.includes("sosial") || lower.includes("binaan")) {
+    return <Users className={iconCls} />;
+  }
+  if (/^\d+[a-z]?$/i.test(label)) {
+    return <GraduationCap className={iconCls} />;
+  }
+  return <CheckCircle2 className={`${compact ? "w-3 h-3" : "w-3.5 h-3.5"} text-[#065F46]`} />;
+}
+
+function getCardBadgeIcon(type?: string) {
+  switch (type) {
+    case "SHOLAT":
+      return <Clock className="w-3.5 h-3.5 text-[#065F46]" />;
+    case "PELANGGARAN":
+      return <ShieldCheck className="w-3.5 h-3.5 text-[#991B1B]" />;
+    case "PRESTASI":
+      return <Award className="w-3.5 h-3.5 text-[#C5A059]" />;
+    case "KELAS":
+      return <GraduationCap className="w-3.5 h-3.5 text-[#1B4D3E]" />;
+    case "USTADZ":
+      return <Award className="w-3.5 h-3.5 text-[#1B4D3E]" />;
+    default:
+      return <TrendingUp className="w-3.5 h-3.5 text-[#065F46]" />;
+  }
+}
+
 interface ShareCardProps {
   cardData: ShareCardData;
   cardRef?: React.RefObject<HTMLDivElement | null>;
@@ -44,7 +105,6 @@ export function ShareCard({ cardData, cardRef, compact = false }: ShareCardProps
     periodLabel,
     scopeLabel,
     badgeLabel = "Terverifikasi",
-    badgeIcon = "📈",
     mainStatValue,
     mainStatLabel,
     secondaryStatValue,
@@ -73,7 +133,7 @@ export function ShareCard({ cardData, cardRef, compact = false }: ShareCardProps
         </div>
 
         <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-[#E2E8F0] shadow-xs shrink-0">
-          <span className="text-xs">{badgeIcon}</span>
+          <span className="shrink-0">{getCardBadgeIcon(cardData.type)}</span>
           <span className="text-[11px] font-bold text-[#475569]">{badgeLabel}</span>
         </div>
       </div>
@@ -83,7 +143,7 @@ export function ShareCard({ cardData, cardRef, compact = false }: ShareCardProps
           {items.slice(0, 7).map((item, idx) => (
             <div key={idx} className="flex flex-col items-center gap-1">
               <span className={`flex items-center justify-center rounded-full bg-white shadow-xs ${compact ? "w-6 h-6 text-xs" : "w-8 h-8 text-sm"}`}>
-                {item.icon || "✨"}
+                {getCardItemIcon(item.label, compact)}
               </span>
               <span className="text-[9px] font-bold text-[#64748B] tracking-tight truncate w-full">
                 {item.label}
@@ -118,7 +178,7 @@ export function ShareCard({ cardData, cardRef, compact = false }: ShareCardProps
 
       <div className={`bg-white rounded-[20px] border border-[#E2E8F0] shadow-xs flex items-center gap-3 ${compact ? "p-2.5" : "p-3.5"}`}>
         <div className="w-9 h-9 rounded-full bg-[#FAF7EE] border border-[#C5A059]/40 flex items-center justify-center shrink-0 text-base">
-          🌿
+          <Award className="w-4 h-4 text-[#C5A059]" />
         </div>
         <div className="min-w-0 flex-1">
           <span className="text-[11px] font-bold text-[#1E293B] block truncate">

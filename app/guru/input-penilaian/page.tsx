@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import {
   Award,
@@ -9,12 +9,13 @@ import {
   User,
   Check,
   ChevronDown,
-  ChevronUp,
-  FileText
+  X,
+  SlidersHorizontal,
+  Layers
 } from "lucide-react";
 import { useMizan } from "@/lib/mizan-context";
 import { RoleShell } from "@/components/RoleShell";
-import { Card, CardSub, CardInset } from "@/components/ui/Card";
+import { Card, CardSub } from "@/components/ui/Card";
 import { Avatar } from "@/components/ui/Avatar";
 import { FileUploadMock } from "@/components/ui/FileUploadMock";
 import categoriesMasterData from "@/lib/categories-master.json";
@@ -42,6 +43,19 @@ interface CategoryItem {
   unsurs: UnsurItem[];
 }
 
+interface MasterFlatItem {
+  unsurId: string;
+  unsurName: string;
+  cleanName: string;
+  categoryCode: string;
+  categoryName: string;
+  type: "HASANAH" | "SAYYIAH";
+  indicatorsCount: number;
+  totalScore: number;
+  indicators: IndicatorItem[];
+  searchText: string;
+}
+
 export default function InputPenilaianPage() {
   const router = useRouter();
   const {
@@ -56,21 +70,81 @@ export default function InputPenilaianPage() {
   const [penilaianType, setPenilaianType] = useState<"HASANAH" | "SAYYIAH">("HASANAH");
   const [selectedCategoryName, setSelectedCategoryName] = useState<string>("");
   const [selectedUnsurId, setSelectedUnsurId] = useState<string>("");
-  const [unsurSearch, setUnsurSearch] = useState("");
   const [santriSearch, setSantriSearch] = useState("");
   const [selectedClassFilter, setSelectedClassFilter] = useState("ALL");
   const [isMobileSantriExpanded, setIsMobileSantriExpanded] = useState(false);
   const [notes, setNotes] = useState("");
   const [attachedFile, setAttachedFile] = useState<{ name: string; size: number } | null>(null);
 
+  const [liveSearchQuery, setLiveSearchQuery] = useState("");
+  const [isLiveSearchOpen, setIsLiveSearchOpen] = useState(false);
+  const [isCatalogModalOpen, setIsCatalogModalOpen] = useState(false);
+  const [modalSearchQuery, setModalSearchQuery] = useState("");
+  const [modalTypeFilter, setModalTypeFilter] = useState<"ALL" | "HASANAH" | "SAYYIAH">("ALL");
+  const [modalCategoryFilter, setModalCategoryFilter] = useState("ALL");
+
+  const [isUnsurDropdownOpen, setIsUnsurDropdownOpen] = useState(false);
+  const [unsurDropdownSearch, setUnsurDropdownSearch] = useState("");
+
+  const searchBoxRef = useRef<HTMLDivElement>(null);
+  const unsurDropdownRef = useRef<HTMLDivElement>(null);
+
   const cleanUnsurName = (name: string) => name.replace(/^\d+\.\s*/, "");
+
+  const allMasterItems: MasterFlatItem[] = useMemo(() => {
+    const list: MasterFlatItem[] = [];
+    (categoriesMasterData as unknown as CategoryItem[]).forEach((cat) => {
+      (cat.unsurs || []).forEach((u) => {
+        const uType = (u.type || "HASANAH") as "HASANAH" | "SAYYIAH";
+        const cName = cleanUnsurName(u.name);
+        const indScores = (u.indicators || []).reduce((acc, ind) => acc + (ind.defaultScore || 0), 0);
+        const allIndTexts = (u.indicators || []).map((i) => i.text).join(" ");
+        const searchBlob = `${cName} ${u.name} ${cat.name} ${allIndTexts} ${uType === "HASANAH" ? "prestasi kebaikan" : "pelanggaran sayyiah"}`.toLowerCase();
+
+        list.push({
+          unsurId: u.id,
+          unsurName: u.name,
+          cleanName: cName,
+          categoryCode: cat.code,
+          categoryName: cat.name,
+          type: uType,
+          indicatorsCount: (u.indicators || []).length,
+          totalScore: indScores,
+          indicators: u.indicators || [],
+          searchText: searchBlob
+        });
+      });
+    });
+    return list;
+  }, []);
+
+  const liveSearchResults = useMemo(() => {
+    const q = liveSearchQuery.trim().toLowerCase();
+    if (!q) return [];
+    const words = q.split(/\s+/).filter(Boolean);
+    return allMasterItems.filter((item) =>
+      words.every((w) => item.searchText.includes(w))
+    );
+  }, [liveSearchQuery, allMasterItems]);
+
+  const modalFilteredItems = useMemo(() => {
+    const q = modalSearchQuery.trim().toLowerCase();
+    const words = q ? q.split(/\s+/).filter(Boolean) : [];
+
+    return allMasterItems.filter((item) => {
+      const matchType = modalTypeFilter === "ALL" || item.type === modalTypeFilter;
+      const matchCat = modalCategoryFilter === "ALL" || item.categoryName === modalCategoryFilter;
+      const matchQuery = words.length === 0 || words.every((w) => item.searchText.includes(w));
+      return matchType && matchCat && matchQuery;
+    });
+  }, [allMasterItems, modalSearchQuery, modalTypeFilter, modalCategoryFilter]);
 
   const categoriesForType: CategoryItem[] = useMemo(() => {
     return (categoriesMasterData as unknown as CategoryItem[])
       .map((cat) => ({
         code: cat.code,
         name: cat.name,
-        unsurs: (cat.unsurs || []).filter((u: any) => u.type === penilaianType)
+        unsurs: (cat.unsurs || []).filter((u: UnsurItem) => u.type === penilaianType)
       }))
       .filter((cat) => cat.unsurs.length > 0);
   }, [penilaianType]);
@@ -92,44 +166,35 @@ export default function InputPenilaianPage() {
     return activeCategory?.unsurs || [];
   }, [activeCategory]);
 
-  const filteredUnsurs = useMemo(() => {
-    const q = unsurSearch.trim().toLowerCase();
-    if (!q) {
-      return availableUnsurs;
-    }
-    return allUnsursForType.filter((u) =>
-      u.name.toLowerCase().includes(q) ||
-      u.categoryName?.toLowerCase().includes(q) ||
-      u.indicators.some((ind) => ind.text.toLowerCase().includes(q))
-    );
-  }, [unsurSearch, availableUnsurs, allUnsursForType]);
-
   const activeUnsur = useMemo(() => {
     return (
       allUnsursForType.find((uns) => uns.id === selectedUnsurId) ||
-      filteredUnsurs[0] ||
+      availableUnsurs[0] ||
       null
     );
-  }, [allUnsursForType, filteredUnsurs, selectedUnsurId]);
+  }, [allUnsursForType, availableUnsurs, selectedUnsurId]);
+
+  const filteredUnsursForDropdown = useMemo(() => {
+    const q = unsurDropdownSearch.trim().toLowerCase();
+    if (!q) return availableUnsurs;
+    return availableUnsurs.filter((u) =>
+      u.name.toLowerCase().includes(q) ||
+      u.indicators.some((ind) => ind.text.toLowerCase().includes(q))
+    );
+  }, [availableUnsurs, unsurDropdownSearch]);
 
   useEffect(() => {
-    if (categoriesForType.length > 0) {
-      if (!selectedCategoryName || !categoriesForType.some((c) => c.name === selectedCategoryName)) {
-        setSelectedCategoryName(categoriesForType[0].name);
+    function handleClickOutside(event: MouseEvent) {
+      if (searchBoxRef.current && !searchBoxRef.current.contains(event.target as Node)) {
+        setIsLiveSearchOpen(false);
+      }
+      if (unsurDropdownRef.current && !unsurDropdownRef.current.contains(event.target as Node)) {
+        setIsUnsurDropdownOpen(false);
       }
     }
-  }, [categoriesForType, selectedCategoryName]);
-
-  useEffect(() => {
-    if (filteredUnsurs.length > 0) {
-      const exists = filteredUnsurs.some((u) => u.id === selectedUnsurId);
-      if (!exists) {
-        setSelectedUnsurId(filteredUnsurs[0].id);
-      }
-    } else {
-      setSelectedUnsurId("");
-    }
-  }, [filteredUnsurs, selectedUnsurId]);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const currentIndicators = useMemo(() => {
     return activeUnsur?.indicators || [];
@@ -139,9 +204,19 @@ export default function InputPenilaianPage() {
     return currentIndicators.reduce((acc, ind) => acc + (ind.defaultScore || 0), 0);
   }, [currentIndicators]);
 
+  const handleSelectMasterItem = (item: MasterFlatItem) => {
+    setPenilaianType(item.type);
+    setSelectedCategoryName(item.categoryName);
+    setSelectedUnsurId(item.unsurId);
+    setLiveSearchQuery("");
+    setIsLiveSearchOpen(false);
+    setIsCatalogModalOpen(false);
+    setIsUnsurDropdownOpen(false);
+    showToast(`Memilih: ${item.cleanName}`);
+  };
+
   const handleCategoryChange = (catName: string) => {
     setSelectedCategoryName(catName);
-    setUnsurSearch("");
     const targetCat = categoriesForType.find((c) => c.name === catName);
     if (targetCat && targetCat.unsurs.length > 0) {
       setSelectedUnsurId(targetCat.unsurs[0].id);
@@ -152,6 +227,7 @@ export default function InputPenilaianPage() {
 
   const handleUnsurSelect = (unsurId: string) => {
     setSelectedUnsurId(unsurId);
+    setIsUnsurDropdownOpen(false);
     const target = allUnsursForType.find((u) => u.id === unsurId);
     if (target && target.categoryName && target.categoryName !== selectedCategoryName) {
       setSelectedCategoryName(target.categoryName);
@@ -160,7 +236,20 @@ export default function InputPenilaianPage() {
 
   const handleSwitchPenilaianType = (type: "HASANAH" | "SAYYIAH") => {
     setPenilaianType(type);
-    setUnsurSearch("");
+    setLiveSearchQuery("");
+    const cats = (categoriesMasterData as unknown as CategoryItem[])
+      .map((cat) => ({
+        code: cat.code,
+        name: cat.name,
+        unsurs: (cat.unsurs || []).filter((u: UnsurItem) => u.type === type)
+      }))
+      .filter((cat) => cat.unsurs.length > 0);
+    if (cats.length > 0) {
+      setSelectedCategoryName(cats[0].name);
+      if (cats[0].unsurs.length > 0) {
+        setSelectedUnsurId(cats[0].unsurs[0].id);
+      }
+    }
   };
 
   const classList = useMemo(() => {
@@ -250,7 +339,7 @@ export default function InputPenilaianPage() {
       santriClass: selectedSantri.class,
       guruId: currentUser.id,
       guruName: currentUser.name,
-      category: selectedCategoryName,
+      category: activeCategory?.name || selectedCategoryName || "",
       unsurName: finalUnsurName,
       indicatorText: `${finalUnsurName} (${currentIndicators.length} Butir Baku)`,
       score: totalUnsurScore,
@@ -298,74 +387,73 @@ export default function InputPenilaianPage() {
                   onClick={() => setIsMobileSantriExpanded(!isMobileSantriExpanded)}
                   className="lg:hidden text-[10px] font-bold text-[#1B4D3E] flex items-center gap-1 px-2.5 py-1 rounded-full mizan-pill bg-white"
                 >
-                  <span>{isMobileSantriExpanded ? "Tutup" : "Ganti"}</span>
-                  {isMobileSantriExpanded ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+                  <span>{isMobileSantriExpanded ? "Tutup" : "Pilih Santri"}</span>
+                  <ChevronDown className={`w-3.5 h-3.5 transition-transform ${isMobileSantriExpanded ? "rotate-180" : ""}`} />
                 </button>
               </div>
 
-              {selectedSantri && (
-                <CardInset className="p-3 flex items-center justify-between gap-2.5">
-                  <div className="flex items-center gap-2 min-w-0">
-                    <Avatar
-                      initials={selectedSantri.avatar}
-                      size="md"
-                      variant={selectedSantri.gender === "Putra" ? "primary" : "gold"}
-                    />
-                    <div className="min-w-0">
-                      <p className="text-xs font-bold text-[#172033] truncate">
-                        {selectedSantri.name}
-                      </p>
-                      <p className="text-[10px] text-[#64748B] truncate">
-                        Kelas {selectedSantri.class} • {selectedSantri.gender === "Putra" ? "Putra" : "Putri"}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="text-right shrink-0">
-                    <span className="text-[9px] text-[#94A3B8] block font-bold uppercase">Skor</span>
-                    <span className="text-xs font-black font-mono text-[#1B4D3E]">
-                      {formatScore(selectedSantri.currentScore)}
+              <div className="p-2.5 rounded-2xl bg-[#FAF7EE] border border-[#C5A059]/20 flex items-center gap-3">
+                <Avatar
+                  initials={selectedSantri?.avatar || "SN"}
+                  size="md"
+                  variant={selectedSantri?.gender === "Putri" ? "gold" : "primary"}
+                />
+                <div className="min-w-0 flex-1">
+                  <p className="text-xs font-bold text-[#172033] truncate">
+                    {selectedSantri?.name}
+                  </p>
+                  <p className="text-[10px] text-[#64748B] truncate">
+                    NIS: {selectedSantri?.nis} • Kelas {selectedSantri?.class}
+                  </p>
+                  <div className="flex items-center gap-2 mt-1">
+                    <span className="text-[10px] font-bold text-[#065F46] font-mono">
+                      Skor: {formatScore(selectedSantri?.currentScore || 80)}
+                    </span>
+                    <span className="text-[9px] px-1.5 py-0.2 rounded bg-white text-[#64748B] border border-[#E2EBF4]">
+                      {selectedSantri?.gender}
                     </span>
                   </div>
-                </CardInset>
-              )}
+                </div>
+              </div>
 
-              <div className={`${isMobileSantriExpanded ? "block" : "hidden"} lg:block space-y-2.5 pt-1 border-t border-[#E2EBF4]`}>
-                <div className="w-full">
+              <div className={`space-y-2.5 ${isMobileSantriExpanded ? "block" : "hidden lg:block"}`}>
+                <div className="flex items-center gap-1.5">
+                  <div className="relative flex-1">
+                    <Search className="w-3.5 h-3.5 absolute left-3 top-2.5 text-[#94A3B8]" />
+                    <input
+                      type="text"
+                      placeholder="Cari nama / NIS..."
+                      value={santriSearch}
+                      onChange={(e) => setSantriSearch(e.target.value)}
+                      className="w-full pl-8 pr-2.5 py-1.5 text-xs bg-[#F8FAFC] border border-[#E2EBF4] rounded-xl focus:outline-none focus:border-[#1B4D3E]"
+                    />
+                  </div>
+
                   <select
                     aria-label="Filter Kelas"
                     value={selectedClassFilter}
                     onChange={(e) => setSelectedClassFilter(e.target.value)}
-                    className="w-full px-3 py-2 text-xs bg-white border border-[#E2EBF4] rounded-2xl text-[#172033] font-bold"
+                    className="px-2 py-1.5 text-xs bg-[#F8FAFC] border border-[#E2EBF4] rounded-xl font-bold focus:outline-none"
                   >
-                    <option value="ALL">Semua Kelas</option>
-                    {classList.filter((c) => c !== "ALL").map((cls) => (
-                      <option key={cls} value={cls}>Kelas {cls}</option>
+                    {classList.map((c) => (
+                      <option key={c} value={c}>
+                        {c === "ALL" ? "Semua" : `Kls ${c}`}
+                      </option>
                     ))}
                   </select>
                 </div>
 
-                <div className="relative">
-                  <Search className="w-3.5 h-3.5 text-[#94A3B8] absolute left-3 top-1/2 -translate-y-1/2" />
-                  <input
-                    type="text"
-                    placeholder="Cari santri..."
-                    value={santriSearch}
-                    onChange={(e) => setSantriSearch(e.target.value)}
-                    className="w-full pl-8 pr-3 py-2 text-xs bg-white border border-[#E2EBF4] rounded-xl text-[#172033] focus:outline-none focus:border-[#1B4D3E]"
-                  />
-                </div>
-
-                <div className="max-h-52 overflow-y-auto grid grid-cols-1 sm:grid-cols-2 gap-1.5 p-1 rounded-2xl mizan-inset bg-[#F1F5F9]/60">
+                <div className="max-h-56 overflow-y-auto space-y-1 pr-0.5">
                   {filteredSantriList.map((santri) => {
-                    const isSelected = selectedSantri?.id === santri.id;
+                    const isSelected = santri.id === selectedSantri?.id;
                     return (
                       <div
                         key={santri.id}
                         onClick={() => handleSelectSantri(santri.id)}
-                        className={`flex items-center justify-between p-2 rounded-xl cursor-pointer text-xs transition-all ${
+                        className={`p-2 rounded-xl flex items-center justify-between gap-2 cursor-pointer transition-all ${
                           isSelected
-                            ? "bg-white border border-[#1B4D3E] shadow-sm font-bold text-[#1B4D3E]"
-                            : "bg-white/80 hover:bg-white border border-transparent text-[#172033]"
+                            ? "bg-[#1B4D3E] text-white shadow-xs"
+                            : "bg-[#F8FAFC] hover:bg-[#EEF2F6] text-[#172033]"
                         }`}
                       >
                         <div className="flex items-center gap-2 min-w-0">
@@ -451,19 +539,119 @@ export default function InputPenilaianPage() {
                 </button>
               </div>
 
-              <div className="relative pt-1">
-                <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[#94A3B8]" />
-                <input
-                  type="text"
-                  value={unsurSearch}
-                  onChange={(e) => setUnsurSearch(e.target.value)}
-                  placeholder={
-                    penilaianType === "HASANAH"
-                      ? "Cari prestasi atau kata kunci..."
-                      : "Cari pelanggaran atau kata kunci..."
-                  }
-                  className="w-full pl-9 pr-3.5 py-2.5 text-xs bg-[#F8FAFC] focus:bg-white border border-[#E2EBF4] rounded-2xl text-[#172033] font-medium focus:outline-none focus:border-[#1B4D3E] transition-colors"
-                />
+              <div className="relative pt-1" ref={searchBoxRef}>
+                <div className="flex items-center gap-2">
+                  <div className="relative flex-1">
+                    <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[#94A3B8]" />
+                    <input
+                      type="text"
+                      value={liveSearchQuery}
+                      onFocus={() => setIsLiveSearchOpen(true)}
+                      onChange={(e) => {
+                        setLiveSearchQuery(e.target.value);
+                        setIsLiveSearchOpen(true);
+                      }}
+                      placeholder="Cari cepat (contoh: tidur, sholat, sandal, bicara, kabur)..."
+                      className="w-full pl-9 pr-8 py-2.5 text-xs bg-[#F8FAFC] focus:bg-white border border-[#E2EBF4] rounded-2xl text-[#172033] font-semibold focus:outline-none focus:border-[#1B4D3E] shadow-2xs transition-colors"
+                    />
+                    {liveSearchQuery && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setLiveSearchQuery("");
+                          setIsLiveSearchOpen(false);
+                        }}
+                        className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#94A3B8] hover:text-[#172033]"
+                      >
+                        <X className="w-3.5 h-3.5" />
+                      </button>
+                    )}
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setModalSearchQuery(liveSearchQuery);
+                      setIsCatalogModalOpen(true);
+                    }}
+                    title="Buka Katalog Lengkap Indikator"
+                    className="p-2.5 rounded-2xl bg-white border border-[#E2EBF4] text-[#1B4D3E] hover:bg-[#FAF7EE] shadow-2xs transition-colors flex items-center gap-1 text-xs font-bold shrink-0"
+                  >
+                    <Layers className="w-4 h-4 text-[#C5A059]" />
+                    <span className="hidden sm:inline">Katalog</span>
+                  </button>
+                </div>
+
+                {isLiveSearchOpen && liveSearchQuery.trim() && (
+                  <div className="absolute left-0 right-0 top-full mt-1.5 bg-white rounded-2xl shadow-xl border border-[#E2EBF4] z-50 p-2 space-y-1.5">
+                    <div className="flex items-center justify-between px-2 py-1 text-[10px] font-bold text-[#64748B] border-b border-[#F1F5F9]">
+                      <span>
+                        Ditemukan {liveSearchResults.length} hasil (5 ditampilkan di awal, gulir untuk melihat lainnya):
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => setIsLiveSearchOpen(false)}
+                        className="text-[#94A3B8] hover:text-[#172033]"
+                      >
+                        Tutup ✕
+                      </button>
+                    </div>
+
+                    <div className="max-h-[265px] overflow-y-auto space-y-1.5 pr-1">
+                      {liveSearchResults.slice(0, 50).map((item) => (
+                        <div
+                          key={item.unsurId}
+                          onClick={() => handleSelectMasterItem(item)}
+                          className="p-2.5 rounded-xl border border-[#E2EBF4] hover:border-[#1B4D3E] hover:bg-[#FAF7EE]/60 cursor-pointer transition-all flex items-center justify-between gap-3 text-xs"
+                        >
+                          <div className="min-w-0 flex-1">
+                            <div className="flex items-center gap-2 mb-1">
+                              <span
+                                className={`text-[9px] font-bold px-1.5 py-0.5 rounded ${
+                                  item.type === "HASANAH"
+                                    ? "bg-[#ECFDF5] text-[#065F46] border border-[#A7F3D0]"
+                                    : "bg-red-50 text-red-700 border border-red-200"
+                                }`}
+                              >
+                                {item.type === "HASANAH" ? "Prestasi" : "Pelanggaran"}
+                              </span>
+                              <span className="text-[10px] font-semibold text-[#64748B] truncate">
+                                Kat. {item.categoryCode}: {item.categoryName}
+                              </span>
+                            </div>
+                            <p className="font-bold text-[#172033] leading-snug">
+                              {item.cleanName}
+                            </p>
+                            <span className="text-[10px] text-[#94A3B8] block truncate mt-0.5">
+                              {item.indicators.map((i) => i.text).slice(0, 2).join(", ")}
+                            </span>
+                          </div>
+
+                          <div className="text-right shrink-0">
+                            <span
+                              className={`text-xs font-mono font-bold px-2 py-1 rounded-lg block ${
+                                item.totalScore >= 0
+                                  ? "bg-emerald-50 text-[#065F46] border border-emerald-200"
+                                  : "bg-red-50 text-[#991B1B] border border-red-200"
+                              }`}
+                            >
+                              {formatScoreWithSign(item.totalScore)}
+                            </span>
+                            <span className="text-[9px] text-[#94A3B8] mt-0.5 block">
+                              {item.indicatorsCount} Butir
+                            </span>
+                          </div>
+                        </div>
+                      ))}
+
+                      {liveSearchResults.length === 0 && (
+                        <div className="py-6 text-center text-xs text-[#94A3B8]">
+                          Tidak ada kalimat atau kata kunci yang cocok dengan &quot;{liveSearchQuery}&quot;
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
@@ -473,44 +661,98 @@ export default function InputPenilaianPage() {
                   </label>
                   <select
                     aria-label="Pilih Kategori Utama"
-                    value={selectedCategoryName}
+                    value={activeCategory?.name || selectedCategoryName || ""}
                     onChange={(e) => handleCategoryChange(e.target.value)}
                     className="w-full px-3.5 py-2.5 text-xs bg-white border border-[#E2EBF4] rounded-2xl text-[#172033] font-bold focus:outline-none focus:border-[#1B4D3E]"
                   >
                     {categoriesForType.map((cat) => (
                       <option key={cat.code} value={cat.name}>
-                        {cat.name}
+                        {cat.code}. {cat.name}
                       </option>
                     ))}
                   </select>
                 </div>
 
-                <div className="space-y-1.5">
-                  <label className="block text-[11px] font-bold text-[#64748B] uppercase">
-                    {penilaianType === "HASANAH" ? "Jenis Prestasi" : "Jenis Pelanggaran"} ({filteredUnsurs.length})
-                  </label>
-                  <select
-                    aria-label={penilaianType === "HASANAH" ? "Pilih Jenis Prestasi" : "Pilih Jenis Pelanggaran"}
-                    value={activeUnsur?.id || ""}
-                    onChange={(e) => handleUnsurSelect(e.target.value)}
-                    className="w-full px-3.5 py-2.5 text-xs bg-white border border-[#E2EBF4] rounded-2xl text-[#172033] font-bold focus:outline-none focus:border-[#1B4D3E]"
+                <div className="space-y-1.5 relative" ref={unsurDropdownRef}>
+                  <div className="flex items-center justify-between">
+                    <label className="block text-[11px] font-bold text-[#64748B] uppercase">
+                      {penilaianType === "HASANAH" ? "Jenis Prestasi" : "Jenis Pelanggaran"} ({availableUnsurs.length})
+                    </label>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => setIsUnsurDropdownOpen(!isUnsurDropdownOpen)}
+                    className="w-full px-3.5 py-2.5 text-xs bg-white border border-[#E2EBF4] hover:border-[#1B4D3E] rounded-2xl text-[#172033] font-bold text-left flex items-center justify-between gap-2 shadow-2xs transition-colors"
                   >
-                    {filteredUnsurs.length === 0 ? (
-                      <option value="">Tidak ditemukan hasil yang cocok</option>
-                    ) : (
-                      filteredUnsurs.map((uns) => {
-                        const unsScore = uns.indicators.reduce(
-                          (acc, ind) => acc + (ind.defaultScore || 0),
-                          0
-                        );
-                        return (
-                          <option key={uns.id} value={uns.id}>
-                            {cleanUnsurName(uns.name)} ({formatScoreWithSign(unsScore)})
-                          </option>
-                        );
-                      })
-                    )}
-                  </select>
+                    <span className="truncate">
+                      {activeUnsur ? cleanUnsurName(activeUnsur.name) : "Pilih jenis..."}
+                    </span>
+                    <div className="flex items-center gap-1.5 shrink-0">
+                      <span
+                        className={`text-[10px] font-mono font-bold px-1.5 py-0.5 rounded ${
+                          totalUnsurScore >= 0
+                            ? "bg-emerald-50 text-[#065F46]"
+                            : "bg-red-50 text-[#991B1B]"
+                        }`}
+                      >
+                        {formatScoreWithSign(totalUnsurScore)}
+                      </span>
+                      <ChevronDown className={`w-3.5 h-3.5 text-[#64748B] transition-transform ${isUnsurDropdownOpen ? "rotate-180" : ""}`} />
+                    </div>
+                  </button>
+
+                  {isUnsurDropdownOpen && (
+                    <div className="absolute left-0 right-0 top-full mt-1.5 bg-white rounded-2xl shadow-xl border border-[#E2EBF4] z-40 p-2 space-y-1.5">
+                      <input
+                        type="text"
+                        placeholder="Filter pilihan dalam kategori ini..."
+                        value={unsurDropdownSearch}
+                        onChange={(e) => setUnsurDropdownSearch(e.target.value)}
+                        className="w-full px-3 py-1.5 text-xs bg-[#F8FAFC] border border-[#E2EBF4] rounded-xl focus:outline-none focus:border-[#1B4D3E]"
+                      />
+
+                      <div className="max-h-56 overflow-y-auto space-y-1 pr-0.5">
+                        {filteredUnsursForDropdown.map((uns) => {
+                          const unsScore = uns.indicators.reduce((acc, ind) => acc + (ind.defaultScore || 0), 0);
+                          const isSelected = uns.id === activeUnsur?.id;
+
+                          return (
+                            <div
+                              key={uns.id}
+                              onClick={() => handleUnsurSelect(uns.id)}
+                              className={`p-2 rounded-xl text-xs cursor-pointer flex items-center justify-between gap-2 transition-colors ${
+                                isSelected
+                                  ? "bg-[#1B4D3E] text-white font-bold"
+                                  : "hover:bg-[#FAF7EE] text-[#172033]"
+                              }`}
+                            >
+                              <span className="truncate flex-1">
+                                {cleanUnsurName(uns.name)}
+                              </span>
+                              <span
+                                className={`text-[10px] font-mono font-bold shrink-0 px-1.5 py-0.5 rounded ${
+                                  isSelected
+                                    ? "bg-white/20 text-white"
+                                    : unsScore >= 0
+                                    ? "bg-emerald-50 text-[#065F46]"
+                                    : "bg-red-50 text-[#991B1B]"
+                                }`}
+                              >
+                                {formatScoreWithSign(unsScore)}
+                              </span>
+                            </div>
+                          );
+                        })}
+
+                        {filteredUnsursForDropdown.length === 0 && (
+                          <div className="py-4 text-center text-xs text-[#94A3B8]">
+                            Tidak ada pilihan yang cocok
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -668,6 +910,143 @@ export default function InputPenilaianPage() {
             <span>Simpan</span>
           </button>
         </div>
+
+        {isCatalogModalOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-black/50 backdrop-blur-xs">
+            <div className="w-full max-w-2xl bg-white rounded-3xl p-4 sm:p-5 shadow-2xl border border-[#E2EBF4] space-y-3 max-h-[88vh] flex flex-col">
+              <div className="flex items-center justify-between pb-2 border-b border-[#E2EBF4] shrink-0">
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-xl bg-[#FAF7EE] text-[#A8833E] flex items-center justify-center">
+                    <SlidersHorizontal className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <h2 className="text-sm font-bold text-[#172033]">
+                      Katalog Indikator Penilaian Santri
+                    </h2>
+                    <p className="text-[10px] text-[#64748B]">
+                      Pilih dari 686 indikator sikap, prestasi, atau pelanggaran
+                    </p>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => setIsCatalogModalOpen(false)}
+                  className="p-1.5 rounded-xl hover:bg-[#EEF2F6] text-[#64748B] hover:text-[#172033]"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+
+              <div className="space-y-2 shrink-0">
+                <div className="relative">
+                  <Search className="w-3.5 h-3.5 absolute left-3 top-2.5 text-[#94A3B8]" />
+                  <input
+                    type="text"
+                    value={modalSearchQuery}
+                    onChange={(e) => setModalSearchQuery(e.target.value)}
+                    placeholder="Ketik kata kunci untuk mencari (contoh: kabur, sholat, tidur, adab)..."
+                    className="w-full pl-8 pr-3 py-1.5 text-xs bg-[#F8FAFC] border border-[#E2EBF4] rounded-xl focus:outline-none focus:border-[#1B4D3E] font-semibold"
+                  />
+                </div>
+
+                <div className="flex items-center justify-between gap-2 overflow-x-auto pb-1 text-xs">
+                  <div className="inline-flex rounded-xl p-0.5 bg-[#EEF2F6] shrink-0">
+                    {(["ALL", "HASANAH", "SAYYIAH"] as const).map((t) => (
+                      <button
+                        key={t}
+                        type="button"
+                        onClick={() => setModalTypeFilter(t)}
+                        className={`px-2.5 py-1 rounded-lg text-[10px] font-bold transition-all ${
+                          modalTypeFilter === t
+                            ? "bg-white text-[#1B4D3E] shadow-2xs"
+                            : "text-[#64748B] hover:text-[#172033]"
+                        }`}
+                      >
+                        {t === "ALL" ? "Semua" : t === "HASANAH" ? "Prestasi" : "Pelanggaran"}
+                      </button>
+                    ))}
+                  </div>
+
+                  <select
+                    aria-label="Filter Kategori"
+                    value={modalCategoryFilter}
+                    onChange={(e) => setModalCategoryFilter(e.target.value)}
+                    className="px-2.5 py-1 text-[11px] font-bold bg-[#EEF2F6] border border-transparent rounded-xl text-[#172033] focus:outline-none shrink-0"
+                  >
+                    <option value="ALL">Semua Kategori</option>
+                    {(categoriesMasterData as unknown as CategoryItem[]).map((c) => (
+                      <option key={c.code} value={c.name}>
+                        {c.code}. {c.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              <div className="flex-1 overflow-y-auto space-y-2 pr-1 min-h-[220px]">
+                {modalFilteredItems.map((item) => (
+                  <div
+                    key={item.unsurId}
+                    onClick={() => handleSelectMasterItem(item)}
+                    className="p-3 rounded-2xl border border-[#E2EBF4] hover:border-[#1B4D3E] hover:bg-[#FAF7EE]/50 cursor-pointer transition-all flex items-start justify-between gap-3 text-xs"
+                  >
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span
+                          className={`text-[9px] font-bold px-1.5 py-0.5 rounded ${
+                            item.type === "HASANAH"
+                              ? "bg-[#ECFDF5] text-[#065F46] border border-[#A7F3D0]"
+                              : "bg-red-50 text-red-700 border border-red-200"
+                          }`}
+                        >
+                          {item.type === "HASANAH" ? "Prestasi" : "Pelanggaran"}
+                        </span>
+                        <span className="text-[10px] font-semibold text-[#64748B]">
+                          Kat. {item.categoryCode}: {item.categoryName}
+                        </span>
+                      </div>
+                      <p className="font-bold text-[#172033]">
+                        {item.cleanName}
+                      </p>
+                      <div className="mt-1 flex flex-wrap gap-1">
+                        {item.indicators.map((ind) => (
+                          <span
+                            key={ind.id}
+                            className="text-[9px] px-1.5 py-0.5 rounded bg-[#F8FAFC] text-[#64748B] border border-[#E2EBF4]"
+                          >
+                            {ind.text}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="text-right shrink-0">
+                      <span
+                        className={`text-xs font-mono font-bold px-2 py-1 rounded-lg block ${
+                          item.totalScore >= 0
+                            ? "bg-emerald-50 text-[#065F46] border border-emerald-200"
+                            : "bg-red-50 text-[#991B1B] border border-red-200"
+                        }`}
+                      >
+                        {formatScoreWithSign(item.totalScore)}
+                      </span>
+                      <span className="text-[9px] text-[#94A3B8] mt-1 block font-semibold">
+                        Pilih →
+                      </span>
+                    </div>
+                  </div>
+                ))}
+
+                {modalFilteredItems.length === 0 && (
+                  <div className="py-12 text-center text-xs text-[#94A3B8]">
+                    Tidak ada indikator yang sesuai dengan filter pencarian
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </RoleShell>
   );

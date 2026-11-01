@@ -359,23 +359,30 @@ export default function LoginPage() {
                 <div className="space-y-3">
                   <div className="p-3 rounded-2xl bg-[#FAF7EE] border border-[#C5A059]/40 space-y-1.5 text-xs text-[#172033]">
                     <p className="font-bold text-[#A8833E]">
-                      Petunjuk Apple iPhone / iPad:
+                      Petunjuk Apple iPhone & iPad:
                     </p>
-                    <ol className="list-decimal pl-4 space-y-1 text-[11px] text-[#64748B]">
-                      <li>Buka tautan ini di peramban <strong>Safari</strong>.</li>
-                      <li>Ketuk ikon <strong>Bagikan</strong> (tombol kotak panah atas).</li>
-                      <li>Pilih menu <strong>Tambahkan ke Layar Utama</strong>.</li>
-                    </ol>
+                    <p className="text-[11px] text-[#64748B] leading-relaxed">
+                      Pilih <strong>Pasang</strong> untuk instalasi langsung via Safari (Profil Resmi), atau pilih <strong>Unduh</strong> untuk berkas aplikasi (.ipa) sideload.
+                    </p>
                   </div>
 
-                  <a
-                    href="/downloads/mizan.mobileconfig"
-                    download="mizan.mobileconfig"
-                    className="w-full py-2.5 rounded-2xl bg-[#172033] text-white font-bold text-xs flex items-center justify-center gap-2 shadow-sm hover:bg-black transition-colors"
-                  >
-                    <Download className="w-4 h-4" />
-                    <span>Pasang</span>
-                  </a>
+                  <div className="grid grid-cols-2 gap-2">
+                    <a
+                      href="/api/download/ios-profile"
+                      className="w-full py-2.5 rounded-2xl bg-[#A8833E] text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-sm hover:bg-[#8f6d2f] transition-colors"
+                    >
+                      <Download className="w-4 h-4" />
+                      <span>Pasang</span>
+                    </a>
+                    <a
+                      href="/downloads/mizan.ipa"
+                      download="mizan.ipa"
+                      className="w-full py-2.5 rounded-2xl bg-[#172033] text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-sm hover:bg-black transition-colors"
+                    >
+                      <Download className="w-4 h-4" />
+                      <span>Unduh</span>
+                    </a>
+                  </div>
                 </div>
               )}
 

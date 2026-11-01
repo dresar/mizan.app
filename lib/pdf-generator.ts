@@ -207,7 +207,7 @@ export function generateSantriPdf(
   const leftSignX = margin + 10;
   const rightSignX = pageWidth - margin - 50;
 
-  doc.text("Wali Kelas / Mudabbir Pembina,", leftSignX, signY + 5);
+  doc.text("Wali Kelas / Ustadz Pembina,", leftSignX, signY + 5);
   doc.text("Kepala Bagian Pengasuhan Pondok,", rightSignX, signY + 5);
 
   doc.setFont("helvetica", "bold");

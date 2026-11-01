@@ -80,13 +80,13 @@ function ShareContent() {
 
     if (shareData.type === "PRESTASI") {
       const items = [
-        { label: "Tahfidz", value: shareData.data?.besarCount || 0, icon: "📖" },
-        { label: "Adab", value: shareData.data?.sedangCount || 0, icon: "🌿" },
-        { label: "Sholat", value: shareData.data?.ringanCount || 0, icon: "🕌" },
-        { label: "Bahasa", value: shareData.data?.sedangCount || 0, icon: "🎙️" },
-        { label: "Piket", value: shareData.data?.ringanCount || 0, icon: "🧹" },
-        { label: "Juara", value: shareData.data?.besarCount || 0, icon: "🏆" },
-        { label: "Khidmat", value: shareData.data?.sedangCount || 0, icon: "🌟" }
+        { label: "Tahfidz", value: shareData.data?.besarCount || 0 },
+        { label: "Adab", value: shareData.data?.sedangCount || 0 },
+        { label: "Sholat", value: shareData.data?.ringanCount || 0 },
+        { label: "Bahasa", value: shareData.data?.sedangCount || 0 },
+        { label: "Piket", value: shareData.data?.ringanCount || 0 },
+        { label: "Juara", value: shareData.data?.besarCount || 0 },
+        { label: "Khidmat", value: shareData.data?.sedangCount || 0 }
       ];
 
       return {
@@ -96,7 +96,6 @@ function ShareContent() {
         periodLabel,
         scopeLabel,
         badgeLabel: "Mumtaz",
-        badgeIcon: "⭐",
         mainStatValue: String(shareData.data?.totalCount ?? 0),
         mainStatLabel: "Total Capaian",
         secondaryStatValue: `+${shareData.data?.totalBonus || "0"}`,
@@ -109,13 +108,13 @@ function ShareContent() {
 
     if (shareData.type === "PELANGGARAN") {
       const items = [
-        { label: "Ibadah", value: shareData.data?.ringanCount || 0, icon: "🕌" },
-        { label: "Adab", value: shareData.data?.sedangCount || 0, icon: "🤝" },
-        { label: "Kerapian", value: shareData.data?.ringanCount || 0, icon: "✨" },
-        { label: "Bahasa", value: shareData.data?.sedangCount || 0, icon: "🗣️" },
-        { label: "Kamar", value: shareData.data?.ringanCount || 0, icon: "🛏️" },
-        { label: "Disiplin", value: shareData.data?.beratCount || 0, icon: "⏰" },
-        { label: "Ketertiban", value: shareData.data?.ringanCount || 0, icon: "📜" }
+        { label: "Ibadah", value: shareData.data?.ringanCount || 0 },
+        { label: "Adab", value: shareData.data?.sedangCount || 0 },
+        { label: "Kerapian", value: shareData.data?.ringanCount || 0 },
+        { label: "Bahasa", value: shareData.data?.sedangCount || 0 },
+        { label: "Kamar", value: shareData.data?.ringanCount || 0 },
+        { label: "Disiplin", value: shareData.data?.beratCount || 0 },
+        { label: "Ketertiban", value: shareData.data?.ringanCount || 0 }
       ];
 
       return {
@@ -125,7 +124,6 @@ function ShareContent() {
         periodLabel,
         scopeLabel,
         badgeLabel: "Evaluasi",
-        badgeIcon: "🛡️",
         mainStatValue: String(shareData.data?.totalCount ?? 0),
         mainStatLabel: "Total Pelanggaran",
         secondaryStatValue: `${shareData.data?.totalPenalty || "0"}`,
@@ -144,7 +142,6 @@ function ShareContent() {
         periodLabel,
         scopeLabel,
         badgeLabel: "Akademik",
-        badgeIcon: "📊",
         mainStatValue: String(shareData.data?.averageScore || "78,500"),
         mainStatLabel: "Rata-Rata Seluruh Santri",
         secondaryStatValue: `${shareData.data?.baikCount || 0} Santri`,
@@ -152,13 +149,13 @@ function ShareContent() {
         highlightText: "Standar Kelulusan Adab",
         highlightSub: "Seluruh kelas memenuhi batas capaian minimum pondok",
         items: [
-          { label: "1A", value: "82,5", icon: "🏫" },
-          { label: "1B", value: "81,0", icon: "🏫" },
-          { label: "2A", value: "79,8", icon: "🏫" },
-          { label: "2B", value: "83,2", icon: "🏫" },
-          { label: "3A", value: "84,0", icon: "🏫" },
-          { label: "3B", value: "80,5", icon: "🏫" },
-          { label: "4", value: "85,1", icon: "🏫" }
+          { label: "1A", value: "82,5" },
+          { label: "1B", value: "81,0" },
+          { label: "2A", value: "79,8" },
+          { label: "2B", value: "83,2" },
+          { label: "3A", value: "84,0" },
+          { label: "3B", value: "80,5" },
+          { label: "4", value: "85,1" }
         ]
       };
     }
@@ -170,7 +167,6 @@ function ShareContent() {
       periodLabel,
       scopeLabel,
       badgeLabel: "Istiqamah",
-      badgeIcon: "🕌",
       mainStatValue: shareData.data?.attendanceRate ? `${shareData.data.attendanceRate}%` : "98.5%",
       mainStatLabel: "Kehadiran Berjamaah",
       secondaryStatValue: `${shareData.data?.hadirCount || 118} Kali`,
@@ -178,13 +174,13 @@ function ShareContent() {
       highlightText: "Sholat 7 Waktu Santri",
       highlightSub: "Menjaga waktu sholat fardhu dan sunnah berjamaah tepat waktu",
       items: [
-        { label: "Subuh", value: "Hadir", icon: "🕌" },
-        { label: "Dhuha", value: "Hadir", icon: "☀️" },
-        { label: "Dzuhur", value: "Hadir", icon: "⛅" },
-        { label: "Ashar", value: "Hadir", icon: "🌤️" },
-        { label: "Maghrib", value: "Hadir", icon: "🌙" },
-        { label: "Isya", value: "Hadir", icon: "🌌" },
-        { label: "Tahajjud", value: "Aktif", icon: "🌟" }
+        { label: "Subuh", value: "Hadir" },
+        { label: "Dhuha", value: "Hadir" },
+        { label: "Dzuhur", value: "Hadir" },
+        { label: "Ashar", value: "Hadir" },
+        { label: "Maghrib", value: "Hadir" },
+        { label: "Isya", value: "Hadir" },
+        { label: "Tahajjud", value: "Aktif" }
       ]
     };
   }, [shareData]);

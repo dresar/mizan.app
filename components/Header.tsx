@@ -4,7 +4,7 @@ import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { LogOut, User, Smartphone, ChevronDown, ShieldCheck, Download } from "lucide-react";
+import { LogOut, User, Smartphone, ChevronDown, ShieldCheck, Download, Apple } from "lucide-react";
 import { useMizan } from "@/lib/mizan-context";
 import { Avatar } from "@/components/ui/Avatar";
 
@@ -118,7 +118,19 @@ export default function Header() {
                 >
                   <div className="flex items-center gap-2.5">
                     <Smartphone className="w-4 h-4 text-[#A8833E]" />
-                    <span>Download APK Android</span>
+                    <span>Download APK (Android)</span>
+                  </div>
+                  <Download className="w-3.5 h-3.5 text-[#94A3B8]" />
+                </a>
+
+                <a
+                  href="/api/download/ios-profile"
+                  onClick={() => setIsOpen(false)}
+                  className="w-full px-3 py-2 rounded-xl text-[#172033] hover:bg-[#EEF2F6] font-semibold flex items-center justify-between transition-colors"
+                >
+                  <div className="flex items-center gap-2.5">
+                    <Apple className="w-4 h-4 text-[#A8833E]" />
+                    <span>Pasang App (Apple iOS)</span>
                   </div>
                   <Download className="w-3.5 h-3.5 text-[#94A3B8]" />
                 </a>

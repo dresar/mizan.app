@@ -114,7 +114,7 @@ export default function AdminDashboardPage() {
 
           <CardSub className="p-4">
             <div className="flex items-center justify-between text-[#64748B] mb-2">
-              <span className="text-[11px] font-bold uppercase tracking-wider">Guru / Mudabbir</span>
+              <span className="text-[11px] font-bold uppercase tracking-wider">Ustadz & Ustadzah</span>
               <div className="w-8 h-8 rounded-xl mizan-inset text-[#A8833E] flex items-center justify-center">
                 <GraduationCap className="w-4 h-4" />
               </div>

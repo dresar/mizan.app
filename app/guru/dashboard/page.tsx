@@ -60,13 +60,13 @@ export default function GuruDashboardPage() {
   const totalSantriBinaan = accessibleSantriList.length;
 
   const daysOfWeek = [
-    { label: "Sen", emoji: "😊" },
-    { label: "Sel", emoji: "😃" },
-    { label: "Rab", emoji: "😐" },
-    { label: "Kam", emoji: "😊" },
-    { label: "Jum", emoji: "🥰" },
-    { label: "Sab", emoji: "😊" },
-    { label: "Min", emoji: "✨" }
+    { label: "Sen", isToday: false },
+    { label: "Sel", isToday: false },
+    { label: "Rab", isToday: false },
+    { label: "Kam", isToday: false },
+    { label: "Jum", isToday: false },
+    { label: "Sab", isToday: false },
+    { label: "Min", isToday: true }
   ];
 
   return (
@@ -89,11 +89,34 @@ export default function GuruDashboardPage() {
             </div>
           </div>
 
-          <div className="mizan-inset p-3 rounded-2xl flex items-center justify-between gap-1 text-center">
-            {daysOfWeek.map((d, i) => (
-              <div key={d.label} className="flex-1 flex flex-col items-center">
-                <span className="text-base sm:text-lg mb-0.5">{d.emoji}</span>
-                <span className="text-[10px] sm:text-xs font-bold text-[#64748B]">
+          <div className="mizan-inset p-2.5 rounded-2xl grid grid-cols-7 gap-1 text-center">
+            {daysOfWeek.map((d) => (
+              <div
+                key={d.label}
+                className={`flex flex-col items-center py-2 px-1 rounded-xl transition-all ${
+                  d.isToday
+                    ? "bg-[#1B4D3E] text-white shadow-xs font-bold"
+                    : "bg-white/70 text-[#172033]"
+                }`}
+              >
+                <div
+                  className={`w-6 h-6 rounded-full flex items-center justify-center mb-1 ${
+                    d.isToday
+                      ? "bg-white/20 text-[#FAF7EE]"
+                      : "bg-[#ECFDF5] text-[#065F46]"
+                  }`}
+                >
+                  {d.isToday ? (
+                    <Clock className="w-3.5 h-3.5" />
+                  ) : (
+                    <CheckCircle2 className="w-3.5 h-3.5" />
+                  )}
+                </div>
+                <span
+                  className={`text-[10px] font-bold ${
+                    d.isToday ? "text-white" : "text-[#64748B]"
+                  }`}
+                >
                   {d.label}
                 </span>
               </div>
@@ -122,7 +145,9 @@ export default function GuruDashboardPage() {
 
           <div className="mizan-card-sub p-3 sm:p-3.5 flex items-center justify-between gap-3">
             <div className="flex items-center gap-2.5 min-w-0">
-              <span className="text-xl">🌟</span>
+              <div className="w-8 h-8 rounded-xl bg-[#FAF7EE] border border-[#C5A059]/40 flex items-center justify-center text-[#A8833E]">
+                <FileCheck className="w-4 h-4" />
+              </div>
               <div className="min-w-0">
                 <p className="text-xs font-bold text-[#172033] truncate">
                   Status Pembina

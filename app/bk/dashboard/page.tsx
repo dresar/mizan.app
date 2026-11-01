@@ -7,7 +7,11 @@ import {
   Clock,
   CheckCircle2,
   TrendingUp,
-  Users
+  Users,
+  Sun,
+  Sunrise,
+  Sunset,
+  Moon
 } from "lucide-react";
 import { useMizan } from "@/lib/mizan-context";
 import { RoleShell } from "@/components/RoleShell";
@@ -49,13 +53,13 @@ export default function PengasuhanDashboardPage() {
   }, [todayAbsensi]);
 
   const prayers = [
-    { name: "Subuh", emoji: "🌅" },
-    { name: "Dhuha", emoji: "☀️" },
-    { name: "Dzuhur", emoji: "🌤️" },
-    { name: "Ashar", emoji: "⛅" },
-    { name: "Maghrib", emoji: "🌇" },
-    { name: "Isya", emoji: "🌙" },
-    { name: "Tahajjud", emoji: "✨" }
+    { name: "Subuh", icon: Sunrise },
+    { name: "Dhuha", icon: Sun },
+    { name: "Dzuhur", icon: Sun },
+    { name: "Ashar", icon: Sun },
+    { name: "Maghrib", icon: Sunset },
+    { name: "Isya", icon: Moon },
+    { name: "Tahajjud", icon: Clock }
   ];
 
   return (
@@ -78,15 +82,20 @@ export default function PengasuhanDashboardPage() {
             </div>
           </div>
 
-          <div className="mizan-inset p-3 rounded-2xl flex items-center justify-between gap-1 text-center">
-            {prayers.map((p) => (
-              <div key={p.name} className="flex-1 flex flex-col items-center">
-                <span className="text-base sm:text-lg mb-0.5">{p.emoji}</span>
-                <span className="text-[9px] sm:text-xs font-bold text-[#64748B] truncate max-w-full">
-                  {p.name}
-                </span>
-              </div>
-            ))}
+          <div className="mizan-inset p-2.5 rounded-2xl grid grid-cols-7 gap-1 text-center">
+            {prayers.map((p) => {
+              const IconComp = p.icon;
+              return (
+                <div key={p.name} className="flex flex-col items-center py-2 px-1 rounded-xl bg-white/70">
+                  <div className="w-6 h-6 rounded-full bg-[#FAF7EE] border border-[#C5A059]/30 text-[#A8833E] flex items-center justify-center mb-1">
+                    <IconComp className="w-3.5 h-3.5" />
+                  </div>
+                  <span className="text-[9px] sm:text-[10px] font-bold text-[#64748B] truncate max-w-full">
+                    {p.name}
+                  </span>
+                </div>
+              );
+            })}
           </div>
 
           <div className="grid grid-cols-2 gap-2.5 sm:gap-3.5">
@@ -111,7 +120,9 @@ export default function PengasuhanDashboardPage() {
 
           <div className="mizan-card-sub p-3 sm:p-3.5 flex items-center justify-between gap-3">
             <div className="flex items-center gap-2.5 min-w-0">
-              <span className="text-xl">🕌</span>
+              <div className="w-8 h-8 rounded-xl bg-[#FAF7EE] border border-[#C5A059]/40 flex items-center justify-center text-[#A8833E]">
+                <Clock className="w-4 h-4" />
+              </div>
               <div className="min-w-0">
                 <p className="text-xs font-bold text-[#172033] truncate">
                   Presensi 7 Waktu

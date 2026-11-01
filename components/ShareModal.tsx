@@ -71,13 +71,13 @@ export function ShareModal({
       const sayyiahCount = studentPenilaian.filter((p) => p.type === "SAYYIAH").length;
 
       const items = [
-        { label: "Subuh", value: "Hadir", icon: "🕌" },
-        { label: "Dhuha", value: "Hadir", icon: "☀️" },
-        { label: "Dzuhur", value: "Hadir", icon: "⛅" },
-        { label: "Ashar", value: "Hadir", icon: "🌤️" },
-        { label: "Maghrib", value: "Hadir", icon: "🌙" },
-        { label: "Isya", value: "Hadir", icon: "🌌" },
-        { label: "Tahajjud", value: "Aktif", icon: "🌟" }
+        { label: "Subuh", value: "Hadir" },
+        { label: "Dhuha", value: "Hadir" },
+        { label: "Dzuhur", value: "Hadir" },
+        { label: "Ashar", value: "Hadir" },
+        { label: "Maghrib", value: "Hadir" },
+        { label: "Isya", value: "Hadir" },
+        { label: "Tahajjud", value: "Aktif" }
       ];
 
       return {
@@ -87,7 +87,6 @@ export function ShareModal({
         periodLabel: `Kelas ${targetSantri.class}`,
         scopeLabel: `NIS ${targetSantri.nis}`,
         badgeLabel: targetSantri.status === "Baik" ? "Mumtaz" : targetSantri.status,
-        badgeIcon: targetSantri.status === "Baik" ? "🌟" : "📈",
         mainStatValue: targetSantri.currentScore.toFixed(3).replace(".", ","),
         mainStatLabel: "Skor Akhlak Adab",
         secondaryStatValue: `${targetSantri.totalHadir || 28} Hari`,
@@ -107,13 +106,13 @@ export function ShareModal({
       );
 
       const items = [
-        { label: "Sen", value: "Aktif", icon: "😊" },
-        { label: "Sel", value: "Aktif", icon: "😊" },
-        { label: "Rab", value: "Aktif", icon: "😊" },
-        { label: "Kam", value: "Aktif", icon: "😊" },
-        { label: "Jum", value: "Piket", icon: "🕌" },
-        { label: "Sab", value: "Aktif", icon: "😊" },
-        { label: "Min", value: "Kajian", icon: "📖" }
+        { label: "Sen", value: "Aktif" },
+        { label: "Sel", value: "Aktif" },
+        { label: "Rab", value: "Aktif" },
+        { label: "Kam", value: "Aktif" },
+        { label: "Jum", value: "Piket" },
+        { label: "Sab", value: "Aktif" },
+        { label: "Min", value: "Kajian" }
       ];
 
       return {
@@ -122,8 +121,7 @@ export function ShareModal({
         title: targetUstadz.name,
         periodLabel: `Pembina Santri ${targetUstadz.gender}`,
         scopeLabel: `Kelas ${targetUstadz.assignedClass || "Binaan"}`,
-        badgeLabel: "Mudabbir",
-        badgeIcon: "👔",
+        badgeLabel: targetUstadz.gender === "Putri" ? "Ustadzah" : "Ustadz",
         mainStatValue: `${classStudents.length} Santri`,
         mainStatLabel: "Binaan Terdaftar",
         secondaryStatValue: `${reportsCount} Laporan`,
@@ -142,13 +140,13 @@ export function ShareModal({
       const totalPenalty = records.reduce((acc, p) => acc + (p.score || 0), 0);
 
       const items = [
-        { label: "Ibadah", value: ringan, icon: "🕌" },
-        { label: "Adab", value: sedang, icon: "🤝" },
-        { label: "Kerapian", value: ringan, icon: "✨" },
-        { label: "Bahasa", value: sedang, icon: "🗣️" },
-        { label: "Kamar", value: ringan, icon: "🛏️" },
-        { label: "Disiplin", value: berat, icon: "⏰" },
-        { label: "Ketertiban", value: ringan, icon: "📜" }
+        { label: "Ibadah", value: ringan },
+        { label: "Adab", value: sedang },
+        { label: "Kerapian", value: ringan },
+        { label: "Bahasa", value: sedang },
+        { label: "Kamar", value: ringan },
+        { label: "Disiplin", value: berat },
+        { label: "Ketertiban", value: ringan }
       ];
 
       return {
@@ -158,7 +156,6 @@ export function ShareModal({
         periodLabel,
         scopeLabel,
         badgeLabel: "Evaluasi",
-        badgeIcon: "🛡️",
         mainStatValue: String(records.length),
         mainStatLabel: "Total Pelanggaran",
         secondaryStatValue: `${totalPenalty.toFixed(3).replace(".", ",")}`,
@@ -177,13 +174,13 @@ export function ShareModal({
       const totalBonus = records.reduce((acc, p) => acc + (p.score || 0), 0);
 
       const items = [
-        { label: "Tahfidz", value: besar, icon: "📖" },
-        { label: "Adab", value: sedang, icon: "🌿" },
-        { label: "Sholat", value: ringan, icon: "🕌" },
-        { label: "Bahasa", value: sedang, icon: "🎙️" },
-        { label: "Piket", value: ringan, icon: "🧹" },
-        { label: "Juara", value: besar, icon: "🏆" },
-        { label: "Khidmat", value: sedang, icon: "🌟" }
+        { label: "Tahfidz", value: besar },
+        { label: "Adab", value: sedang },
+        { label: "Sholat", value: ringan },
+        { label: "Bahasa", value: sedang },
+        { label: "Piket", value: ringan },
+        { label: "Juara", value: besar },
+        { label: "Khidmat", value: sedang }
       ];
 
       return {
@@ -193,7 +190,6 @@ export function ShareModal({
         periodLabel,
         scopeLabel,
         badgeLabel: "Mumtaz",
-        badgeIcon: "⭐",
         mainStatValue: String(records.length),
         mainStatLabel: "Total Capaian",
         secondaryStatValue: `+${totalBonus.toFixed(3).replace(".", ",")}`,
@@ -218,8 +214,7 @@ export function ShareModal({
             : 70;
         return {
           label: cls,
-          value: avg.toFixed(1).replace(".", ","),
-          icon: "🏫"
+          value: avg.toFixed(1).replace(".", ",")
         };
       });
 
@@ -230,7 +225,6 @@ export function ShareModal({
         periodLabel,
         scopeLabel: `${kelasList.length} Kelas Aktif`,
         badgeLabel: "Akademik",
-        badgeIcon: "📊",
         mainStatValue: avgScore.toFixed(3).replace(".", ","),
         mainStatLabel: "Rata-Rata Seluruh Santri",
         secondaryStatValue: `${baik} Santri`,
@@ -249,13 +243,11 @@ export function ShareModal({
     const rate = ((hadir / total) * 100).toFixed(1);
 
     const prayers = ["Subuh", "Dhuha", "Dzuhur", "Ashar", "Maghrib", "Isya", "Tahajjud"];
-    const prayerIcons = ["🕌", "☀️", "⛅", "🌤️", "🌙", "🌌", "🌟"];
-    const items = prayers.map((p, idx) => {
+    const items = prayers.map((p) => {
       const count = records.filter((r) => r.waktuSholat === p && r.status === "Hadir").length;
       return {
         label: p,
-        value: count,
-        icon: prayerIcons[idx]
+        value: count
       };
     });
 
@@ -266,7 +258,6 @@ export function ShareModal({
       periodLabel,
       scopeLabel,
       badgeLabel: "Istiqamah",
-      badgeIcon: "🕌",
       mainStatValue: `${rate}%`,
       mainStatLabel: "Kehadiran Berjamaah",
       secondaryStatValue: `${hadir} Kali`,

@@ -9,7 +9,7 @@
 - **Styling**: Tailwind CSS v4 (`@tailwindcss/turbopack`), Lucide React icons, Palet Mizan (Deep Green `#1B4D3E`, Gold `#C5A059`, Cream `#FAF7EE`).
 - **Database**: PostgreSQL (direct via `pg` connection pool with SSL in `lib/db.ts`).
 - **Reports & PDF**: `jspdf` (`lib/pdf-generator.ts`).
-- **PWA & Mobile**: Service Worker (`public/sw.js`, `components/ServiceWorkerRegister.tsx`), Bottom Nav (`components/BottomNav.tsx`), APK di `public/downloads/mizan.apk`.
+- **PWA & Mobile**: Service Worker (`public/sw.js`, `components/ServiceWorkerRegister.tsx`), Bottom Nav (`components/BottomNav.tsx`), APK di `public/downloads/mizan.apk`, iOS IPA di `public/downloads/mizan.ipa`, Profile installer di `/api/download/ios-profile`.
 - **State & Context**: `lib/mizan-context.tsx` (Single Source of Truth, sinkronisasi DB).
 
 ---

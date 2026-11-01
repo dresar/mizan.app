@@ -354,18 +354,26 @@ export default function AdminUsersPage() {
                   <Apple className="w-4 h-4" />
                 </div>
                 <div className="min-w-0">
-                  <p className="text-xs font-bold text-[#172033] truncate">Apple</p>
-                  <p className="text-[10px] text-[#64748B] truncate">.ios WebClip</p>
+                  <p className="text-xs font-bold text-[#172033] truncate">Apple iOS</p>
+                  <p className="text-[10px] text-[#64748B] truncate">.ipa & Profil</p>
                 </div>
               </div>
 
-              <a
-                href="/downloads/mizan.mobileconfig"
-                download="mizan.mobileconfig"
-                className="w-full py-2 rounded-xl bg-[#FAF7EE] hover:bg-[#F5EED9] text-[#A8833E] border border-[#C5A059]/40 text-xs font-bold text-center transition-colors block"
-              >
-                Pasang
-              </a>
+              <div className="grid grid-cols-2 gap-1.5">
+                <a
+                  href="/api/download/ios-profile"
+                  className="py-1.5 px-2 rounded-xl bg-[#FAF7EE] hover:bg-[#F5EED9] text-[#A8833E] border border-[#C5A059]/40 text-xs font-bold text-center transition-colors block"
+                >
+                  Pasang
+                </a>
+                <a
+                  href="/downloads/mizan.ipa"
+                  download="mizan.ipa"
+                  className="py-1.5 px-2 rounded-xl bg-[#172033] hover:bg-black text-white text-xs font-bold text-center transition-colors block"
+                >
+                  Unduh
+                </a>
+              </div>
             </div>
           </div>
         </Card>
