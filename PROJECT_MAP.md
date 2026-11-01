@@ -36,7 +36,7 @@ mizan.apps/
 │   │   ├── santri/ & [id]/    # Profil lengkap santri & tombol Cetak/Unduh PDF/Bagikan
 │   │   └── profil/            # Profil ustadz, ganti password, avatar VPS, share profil
 │   ├── bk/                    # Modul Pengasuhan BK (dashboard, absen, history, profil, penilaian, santri/ & [id]/ profil & rapor)
-│   ├── ortu/dashboard/        # Dashboard wali santri / orang tua
+│   ├── ortu/ & dashboard/     # Portal Wali Santri (pencarian ananda, skor akhlak, sholat 7 waktu, riwayat hasanah/sayyiah, unduh rapor PDF & kontak pengasuhan)
 │   ├── santri/profil/         # Profil mandiri santri, skor adab & tombol Bagikan
 │   ├── share/[id]/            # Halaman publik kartu share (stat-*) tanpa perlu login
 │   ├── login/                 # Autentikasi multi-role (login cepat 92 akun Ustadz/Ustadzah & BK dengan pemisahan gender)

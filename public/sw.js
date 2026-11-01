@@ -1,4 +1,4 @@
-const CACHE_NAME = "mizan-pwa-v1.0.5";
+const CACHE_NAME = "mizan-pwa-v1.0.6";
 const PRECACHE_ASSETS = [
   "/",
   "/login",
@@ -40,9 +40,18 @@ self.addEventListener("message", (event) => {
 });
 
 self.addEventListener("fetch", (event) => {
-  const url = new URL(event.request.url);
-
   if (event.request.method !== "GET") {
+    return;
+  }
+
+  let url;
+  try {
+    url = new URL(event.request.url);
+  } catch {
+    return;
+  }
+
+  if (url.protocol !== "http:" && url.protocol !== "https:") {
     return;
   }
 
@@ -60,8 +69,8 @@ self.addEventListener("fetch", (event) => {
           if (response && response.status === 200) {
             const clone = response.clone();
             caches.open(CACHE_NAME).then((cache) => {
-              cache.put(event.request, clone);
-            });
+              cache.put(event.request, clone).catch(() => void 0);
+            }).catch(() => void 0);
           }
           return response;
         })
@@ -81,8 +90,8 @@ self.addEventListener("fetch", (event) => {
           if (response && response.status === 200) {
             const clone = response.clone();
             caches.open(CACHE_NAME).then((cache) => {
-              cache.put(event.request, clone);
-            });
+              cache.put(event.request, clone).catch(() => void 0);
+            }).catch(() => void 0);
           }
           return response;
         })
@@ -102,8 +111,8 @@ self.addEventListener("fetch", (event) => {
           if (networkResponse && networkResponse.status === 200) {
             const clone = networkResponse.clone();
             caches.open(CACHE_NAME).then((cache) => {
-              cache.put(event.request, clone);
-            });
+              cache.put(event.request, clone).catch(() => void 0);
+            }).catch(() => void 0);
           }
           return networkResponse;
         })

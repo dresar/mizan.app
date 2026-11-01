@@ -48,9 +48,18 @@ export async function GET() {
 
     const guruRows = await query(`
       SELECT 
-        id, name, gender, assigned_class as "assignedClass", asrama, 
-        last_login as "lastLogin", report_count_today as "reportCountToday", status
-      FROM guru_monitoring ORDER BY name ASC
+        COALESCE(gm.id, 'guru-' || u.id) as id,
+        u.name,
+        u.gender,
+        COALESCE(gm.assigned_class, u.assigned_class, '1A') as "assignedClass",
+        COALESCE(gm.asrama, CASE WHEN u.gender = 'Putri' THEN 'Asrama Khadijah' ELSE 'Asrama Salman Al-Farisi' END) as asrama,
+        COALESCE(gm.last_login, 'Aktif') as "lastLogin",
+        COALESCE(gm.report_count_today, 0) as "reportCountToday",
+        COALESCE(gm.status, 'Belum Lapor') as status
+      FROM users u
+      LEFT JOIN guru_monitoring gm ON (gm.name = u.name OR gm.id = u.id OR gm.id = 'guru-' || u.id)
+      WHERE u.role IN ('GURU', 'PENGASUHAN') AND u.is_active = true
+      ORDER BY u.name ASC
     `);
 
     const catRows = await query(`SELECT id, code, name FROM categories ORDER BY code ASC`);
