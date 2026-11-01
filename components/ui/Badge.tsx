@@ -15,7 +15,13 @@ export type BadgeVariant =
   | "laporan-nihil"
   | "belum-lapor"
   | "neutral"
-  | "gold";
+  | "gold"
+  | "aman"
+  | "lisan"
+  | "sp1"
+  | "sp2"
+  | "sp3"
+  | "pengembalian";
 
 interface BadgeProps {
   children: React.ReactNode;
@@ -38,22 +44,32 @@ export function Badge({
   switch (variant) {
     case "hasanah":
     case "baik":
+    case "aman":
     case "sudah-lapor":
       colorClasses = "bg-[#ECFDF5] text-[#065F46] border border-[#A7F3D0]";
       break;
     case "sayyiah":
     case "berat":
+    case "sp3":
     case "pembinaan":
     case "belum-lapor":
       colorClasses = "bg-[#FEF2F2] text-[#991B1B] border border-[#FECACA]";
       break;
+    case "sp2":
+      colorClasses = "bg-[#FFF1F2] text-[#BE123C] border border-[#FECDD3]";
+      break;
     case "sedang":
     case "perhatian":
+    case "sp1":
       colorClasses = "bg-[#FFF7ED] text-[#C2410C] border border-[#FED7AA]";
       break;
     case "ringan":
+    case "lisan":
     case "laporan-nihil":
       colorClasses = "bg-[#FEFCE8] text-[#854D0E] border border-[#FEF08A]";
+      break;
+    case "pengembalian":
+      colorClasses = "bg-[#450A0A] text-white border border-[#7F1D1D]";
       break;
     case "gold":
       colorClasses = "bg-[#FAF7EE] text-[#A8833E] border border-[#C5A059]/40";

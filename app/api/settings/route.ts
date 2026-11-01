@@ -46,20 +46,25 @@ export async function PUT(req: Request) {
     `, [JSON.stringify(mergedSettings)]);
 
     if (applyToSantri) {
-      const minBaik = mergedSettings.minScoreBaik ?? 80.0;
-      const minPerhatian = mergedSettings.minScorePerhatian ?? 70.0;
-      const base = mergedSettings.defaultBaseScore ?? 70.0;
+      const base = mergedSettings.defaultBaseScore ?? 80.0;
+      const lisanMin = mergedSettings.lisanMin ?? 61.0;
+      const sp1Min = mergedSettings.sp1Min ?? 46.0;
+      const sp2Min = mergedSettings.sp2Min ?? 31.0;
+      const sp3Min = mergedSettings.sp3Min ?? 16.0;
 
       await query(`
         UPDATE santri
         SET
           base_score = $1,
           status = CASE
-            WHEN current_score >= $2 THEN 'Baik'
-            WHEN current_score >= $3 THEN 'Perhatian'
-            ELSE 'Perlu Pembinaan'
+            WHEN current_score >= $1 THEN 'Aman'
+            WHEN current_score >= $2 THEN 'Peringatan Lisan'
+            WHEN current_score >= $3 THEN 'SP 1'
+            WHEN current_score >= $4 THEN 'SP 2'
+            WHEN current_score >= $5 THEN 'SP 3'
+            ELSE 'Pengembalian'
           END
-      `, [base, minBaik, minPerhatian]);
+      `, [base, lisanMin, sp1Min, sp2Min, sp3Min]);
     }
 
     if (applyToIndicators) {

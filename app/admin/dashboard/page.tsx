@@ -33,7 +33,7 @@ export default function AdminDashboardPage() {
   const totalGuru = guruList.length;
 
   const avgScore = useMemo(() => {
-    if (totalSantri === 0) return "70,000";
+    if (totalSantri === 0) return "80,000";
     const sum = santriList.reduce((acc, s) => acc + s.currentScore, 0);
     return (sum / totalSantri).toFixed(3).replace(".", ",");
   }, [santriList, totalSantri]);
@@ -48,7 +48,7 @@ export default function AdminDashboardPage() {
 
   const needAttentionSantri = useMemo(() => {
     return [...santriList]
-      .filter((s) => s.currentScore < 70 || s.status !== "Baik")
+      .filter((s) => s.currentScore < 80 || (s.status !== "Aman" && s.status !== "Baik"))
       .sort((a, b) => a.currentScore - b.currentScore);
   }, [santriList]);
 

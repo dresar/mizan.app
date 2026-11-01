@@ -15,7 +15,9 @@ import {
   Clock,
   Phone,
   User,
-  Scale
+  Scale,
+  FileText,
+  MessageSquare
 } from "lucide-react";
 import { useMizan } from "@/lib/mizan-context";
 import { RoleShell } from "@/components/RoleShell";
@@ -23,15 +25,16 @@ import { Card, CardSub, CardInset } from "@/components/ui/Card";
 import { Avatar } from "@/components/ui/Avatar";
 import { Badge } from "@/components/ui/Badge";
 import { Pagination } from "@/components/ui/Pagination";
-import { generateSantriPdf } from "@/lib/pdf-generator";
+import { generateSantriPdf, generateNotaPoinPdf, generateSuratPeringatanPdf } from "@/lib/pdf-generator";
 import { ShareModal } from "@/components/ShareModal";
+import { getSantriDisciplineStatus } from "@/lib/mock-data";
 
 function BkSantriDetailContent() {
   const router = useRouter();
   const params = useParams();
   const santriId = (params?.id as string) || "";
 
-  const { accessibleSantriList, penilaianList, absensiList, showToast, currentUser } = useMizan();
+  const { accessibleSantriList, penilaianList, absensiList, showToast, currentUser, settings, resolveSanggahan } = useMizan();
   const isSuperAdmin = currentUser?.role === "SUPER_ADMIN";
   const [printDate, setPrintDate] = useState("1 November 2026");
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
@@ -62,6 +65,56 @@ function BkSantriDetailContent() {
       router.replace("/bk/santri");
     }
   }, [santri, isSuperAdmin, currentUser?.gender, router, showToast]);
+
+  const discipline = useMemo(() => {
+    if (!santri) return { status: "Aman", level: 0, label: "Aman", action: "", pic: "", badgeVariant: "baik" as const, color: "#065F46", bg: "bg-[#ECFDF5]" };
+    return getSantriDisciplineStatus(santri.currentScore, settings);
+  }, [santri, settings]);
+
+  const handleSendWhatsApp = () => {
+    if (!santri?.waliPhone) {
+      showToast("Nomor WhatsApp wali santri belum terdaftar", "error");
+      return;
+    }
+    const cleanPhone = santri.waliPhone.replace(/[^0-9]/g, "");
+    const formattedPhone = cleanPhone.startsWith("0") ? "62" + cleanPhone.substring(1) : cleanPhone;
+    const msg = 
+`Assalamu'alaikum Warahmatullahi Wabarakatuh.
+Yth. Bapak/Ibu Wali dari ${santri.name} (Kelas ${santri.class}),
+Pondok Pesantren Modern Raudhatussalam Mahato menginformasikan bahwa akumulasi poin adab ananda saat ini adalah ${santri.currentScore.toFixed(3)} Poin dengan status: ${discipline.label}.
+
+Tindakan resmi pondok:
+${discipline.action}
+
+Mohon kerja sama Bapak/Ibu demi pembinaan adab dan akhlak karimah ananda. Terima kasih.
+Wassalamu'alaikum Warahmatullahi Wabarakatuh.
+-- Bagian Pengasuhan Santri Raudhatussalam Mahato`;
+
+    const url = `https://wa.me/${formattedPhone}?text=${encodeURIComponent(msg)}`;
+    window.open(url, "_blank");
+  };
+
+  const handleCetakSP = async () => {
+    if (!santri) return;
+    try {
+      showToast(`Menyiapkan dokumen ${discipline.status}...`, "info");
+      await generateSuratPeringatanPdf(santri, discipline.status as any, currentUser?.name);
+      showToast(`Dokumen ${discipline.status} siap`, "success");
+    } catch {
+      showToast("Gagal mencetak surat peringatan", "error");
+    }
+  };
+
+  const handleCetakNota = async (record: any) => {
+    if (!santri) return;
+    try {
+      showToast("Menyiapkan nota pengesahan poin...", "info");
+      await generateNotaPoinPdf(santri, record, currentUser?.name);
+      showToast("Nota poin siap dicetak", "success");
+    } catch {
+      showToast("Gagal mencetak nota poin", "error");
+    }
+  };
 
   const studentPenilaian = penilaianList.filter((p) => p.santriId === santri?.id);
   const studentAbsensi = absensiList.filter((a) => a.santriId === santri?.id);
@@ -227,11 +280,55 @@ function BkSantriDetailContent() {
                 </span>
               </div>
               <span className="text-[10px] text-[#64748B] mt-0.5 block">
-                Skor Dasar: 70,000
+                Skor Dasar: {formatScore(santri.baseScore || settings.defaultBaseScore || 80)}
               </span>
             </div>
           </div>
         </Card>
+
+        {discipline.level >= 1 && (
+          <div className={`p-4 rounded-2xl border flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs ${discipline.bg} ${
+            discipline.level >= 4 ? "border-red-300" : discipline.level >= 2 ? "border-orange-300" : "border-yellow-300"
+          }`}>
+            <div className="space-y-1">
+              <div className="flex items-center gap-2">
+                <ShieldAlert className="w-4 h-4 text-[#991B1B]" />
+                <span className="text-xs font-bold uppercase tracking-wider text-[#172033]">
+                  Status Ambang Batas: {discipline.label}
+                </span>
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-white text-[#172033] border border-[#CBD5E1]">
+                  P. Jawab: {discipline.pic}
+                </span>
+              </div>
+              <p className="text-xs text-[#475569]">
+                <strong className="text-[#172033]">Tindakan:</strong> {discipline.action}
+              </p>
+            </div>
+
+            <div className="flex items-center gap-2 shrink-0">
+              {discipline.level >= 2 && (
+                <button
+                  type="button"
+                  onClick={handleCetakSP}
+                  className="px-3 py-1.5 rounded-xl bg-[#1B4D3E] text-white text-xs font-bold hover:bg-[#153e32] flex items-center gap-1.5 shadow-2xs"
+                >
+                  <FileText className="w-3.5 h-3.5" />
+                  <span>Surat</span>
+                </button>
+              )}
+              {santri.waliPhone && (
+                <button
+                  type="button"
+                  onClick={handleSendWhatsApp}
+                  className="px-3 py-1.5 rounded-xl bg-[#065F46] text-white text-xs font-bold hover:bg-[#047857] flex items-center gap-1.5 shadow-2xs"
+                >
+                  <MessageSquare className="w-3.5 h-3.5" />
+                  <span>WhatsApp</span>
+                </button>
+              )}
+            </div>
+          </div>
+        )}
 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3.5">
           <CardSub className="p-3 sm:p-4 text-center">
@@ -239,7 +336,7 @@ function BkSantriDetailContent() {
               Skor Dasar
             </span>
             <span className="font-mono text-base sm:text-lg font-black text-[#172033]">
-              {formatScore(santri.baseScore || 70)}
+              {formatScore(santri.baseScore || settings.defaultBaseScore || 80)}
             </span>
             <span className="text-[9px] text-[#94A3B8] block mt-0.5">Standar Baku</span>
           </CardSub>
@@ -315,23 +412,76 @@ function BkSantriDetailContent() {
                           <span className="text-[10px] font-bold text-[#172033]">
                             {p.category}
                           </span>
+                          {p.dueProcessStatus === "SANGGAHAN" && (
+                            <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-amber-100 text-amber-800">
+                              Sanggahan
+                            </span>
+                          )}
+                          {p.dueProcessStatus === "DIBATALKAN" && (
+                            <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-gray-100 text-gray-500 line-through">
+                              Dibatalkan
+                            </span>
+                          )}
                         </div>
                         <p className="text-xs font-semibold text-[#172033] mt-1">
                           {p.unsurName || p.indicatorText}
                         </p>
+                        {p.location && (
+                          <p className="text-[9px] text-[#64748B] mt-0.5">
+                            Tempat: {p.location} {p.witnessName ? `• Saksi: ${p.witnessName}` : ""}
+                          </p>
+                        )}
                         {p.notes && (
                           <p className="text-[11px] text-[#64748B] mt-0.5 italic">
                             "{p.notes}"
                           </p>
                         )}
-                        <p className="text-[9px] text-[#94A3B8] mt-1">
-                          Dicatat oleh {p.guruName} • {p.createdAt}
-                        </p>
+                        {p.dueProcessStatus === "SANGGAHAN" && p.sanggahanReason && (
+                          <div className="mt-1.5 p-2 rounded-xl bg-amber-50 border border-amber-200 text-xs">
+                            <span className="text-[10px] font-bold text-amber-900 block">
+                              Alasan Sanggah Santri (1x24 Jam):
+                            </span>
+                            <p className="text-[11px] text-amber-800 italic mt-0.5">
+                              "{p.sanggahanReason}"
+                            </p>
+                            <div className="flex items-center gap-2 mt-2">
+                              <button
+                                type="button"
+                                onClick={() => resolveSanggahan(p.id, "TERIMA", currentUser?.name)}
+                                className="px-2.5 py-1 rounded-lg bg-emerald-600 text-white text-[10px] font-bold hover:bg-emerald-700"
+                              >
+                                Terima
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => resolveSanggahan(p.id, "TOLAK", currentUser?.name)}
+                                className="px-2.5 py-1 rounded-lg bg-red-600 text-white text-[10px] font-bold hover:bg-red-700"
+                              >
+                                Tolak
+                              </button>
+                            </div>
+                          </div>
+                        )}
+                        <div className="flex items-center justify-between gap-2 mt-1">
+                          <p className="text-[9px] text-[#94A3B8]">
+                            Dicatat oleh {p.guruName} • {p.createdAt}
+                          </p>
+                          <button
+                            type="button"
+                            onClick={() => handleCetakNota(p)}
+                            className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-[10px] font-bold text-[#1B4D3E] bg-[#EEF2F6] hover:bg-[#E2EBF4] transition-colors"
+                          >
+                            <FileText className="w-3 h-3" />
+                            <span>Nota</span>
+                          </button>
+                        </div>
                       </div>
 
                       <span
                         className={`font-mono text-xs font-black shrink-0 ${
-                          isHasanah ? "text-emerald-700" : "text-red-700"
+                          p.dueProcessStatus === "DIBATALKAN"
+                            ? "text-gray-400 line-through"
+                            : isHasanah ? "text-emerald-700" : "text-red-700"
                         }`}
                       >
                         {formatScoreWithSign(p.score)}

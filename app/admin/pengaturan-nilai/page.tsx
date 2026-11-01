@@ -379,66 +379,210 @@ export default function AdminPengaturanNilaiPage() {
               </div>
             </div>
 
-            <div className="p-4 rounded-2xl bg-[#FAF7F2] border border-[#E5DECE] space-y-3">
-              <span className="text-xs font-bold text-[#1C2826] block">
-                Konfigurasi Ambang Batas Kategori Akhlak (Dinamis)
-              </span>
+            <div className="p-4 rounded-2xl bg-[#FAF7F2] border border-[#E5DECE] space-y-4">
+              <div>
+                <span className="text-xs font-bold text-[#1C2826] block">
+                  Jenjang Ambang Batas Sanksi Disiplin Santri (Dinamis)
+                </span>
+                <p className="text-[11px] text-[#64748B] mt-0.5">
+                  Buku Catatan Penilaian Sikap dan Perilaku Perorangan Pesantren Modern Raudhatussalam Mahato
+                </p>
+              </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div className="p-3 rounded-xl bg-white border border-[#D4C9B5] space-y-1.5">
-                  <span className="text-xs font-bold text-[#065F46] block">
-                    Batas Minimum Kategori Baik
-                  </span>
-                  <div className="flex items-center gap-2">
-                    <input
-                      type="number"
-                      step="0.001"
-                      min="0"
-                      max="100"
-                      value={formState.minScoreBaik || 80.0}
-                      onChange={(e) =>
-                        setFormState({
-                          ...formState,
-                          minScoreBaik: parseFloat(e.target.value) || 0
-                        })
-                      }
-                      className="w-28 px-2.5 py-1.5 text-xs font-bold font-mono bg-[#FAF7F2] border border-[#D4C9B5] rounded-lg text-[#065F46] focus:outline-none focus:border-[#1B4D3E]"
-                    />
-                    <span className="text-[11px] text-[#5C6B64]">
-                      Skor ≥ {formatDecimal(formState.minScoreBaik || 80.0)}
+              <div className="space-y-3">
+                <div className="p-3 rounded-xl bg-white border border-[#D4C9B5] space-y-2">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                    <span className="text-xs font-bold text-[#854D0E]">
+                      Tingkat 1: Peringatan Lisan
                     </span>
+                    <div className="flex items-center gap-1.5 text-xs font-mono">
+                      <span className="text-[#64748B]">Rentang:</span>
+                      <input
+                        type="number"
+                        step="0.1"
+                        value={formState.lisanMin ?? 61.0}
+                        onChange={(e) => setFormState({ ...formState, lisanMin: parseFloat(e.target.value) || 0 })}
+                        className="w-16 px-1.5 py-1 text-xs font-bold font-mono bg-[#FAF7F2] border border-[#D4C9B5] rounded-md text-[#854D0E] text-center"
+                      />
+                      <span>s/d</span>
+                      <input
+                        type="number"
+                        step="0.1"
+                        value={formState.lisanThreshold ?? 79.0}
+                        onChange={(e) => setFormState({ ...formState, lisanThreshold: parseFloat(e.target.value) || 0 })}
+                        className="w-16 px-1.5 py-1 text-xs font-bold font-mono bg-[#FAF7F2] border border-[#D4C9B5] rounded-md text-[#854D0E] text-center"
+                      />
+                      <span className="text-[#64748B]">Poin</span>
+                    </div>
                   </div>
-                  <p className="text-[10px] text-[#64748B]">
-                    Santri berstatus Baik jika nilai mencapai atau melampaui batas ini.
+                  <p className="text-[11px] text-[#64748B]">
+                    Tindakan: Konseling ringan & peneguran langsung oleh staf pengasuhan santri.
                   </p>
                 </div>
 
-                <div className="p-3 rounded-xl bg-white border border-[#D4C9B5] space-y-1.5">
-                  <span className="text-xs font-bold text-[#854D0E] block">
-                    Batas Minimum Kategori Perhatian
-                  </span>
-                  <div className="flex items-center gap-2">
-                    <input
-                      type="number"
-                      step="0.001"
-                      min="0"
-                      max="100"
-                      value={formState.minScorePerhatian || 70.0}
-                      onChange={(e) =>
-                        setFormState({
-                          ...formState,
-                          minScorePerhatian: parseFloat(e.target.value) || 0
-                        })
-                      }
-                      className="w-28 px-2.5 py-1.5 text-xs font-bold font-mono bg-[#FAF7F2] border border-[#D4C9B5] rounded-lg text-[#854D0E] focus:outline-none focus:border-[#1B4D3E]"
-                    />
-                    <span className="text-[11px] text-[#5C6B64]">
-                      Skor ≥ {formatDecimal(formState.minScorePerhatian || 70.0)}
+                <div className="p-3 rounded-xl bg-white border border-[#D4C9B5] space-y-2">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                    <span className="text-xs font-bold text-[#C2410C]">
+                      Tingkat 2: Surat Peringatan 1 (SP 1)
                     </span>
+                    <div className="flex items-center gap-1.5 text-xs font-mono">
+                      <span className="text-[#64748B]">Rentang:</span>
+                      <input
+                        type="number"
+                        step="0.1"
+                        value={formState.sp1Min ?? 46.0}
+                        onChange={(e) => setFormState({ ...formState, sp1Min: parseFloat(e.target.value) || 0 })}
+                        className="w-16 px-1.5 py-1 text-xs font-bold font-mono bg-[#FAF7F2] border border-[#D4C9B5] rounded-md text-[#C2410C] text-center"
+                      />
+                      <span>s/d</span>
+                      <input
+                        type="number"
+                        step="0.1"
+                        value={formState.sp1Threshold ?? 60.0}
+                        onChange={(e) => setFormState({ ...formState, sp1Threshold: parseFloat(e.target.value) || 0 })}
+                        className="w-16 px-1.5 py-1 text-xs font-bold font-mono bg-[#FAF7F2] border border-[#D4C9B5] rounded-md text-[#C2410C] text-center"
+                      />
+                      <span className="text-[#64748B]">Poin</span>
+                    </div>
                   </div>
-                  <p className="text-[10px] text-[#64748B]">
-                    Santri di bawah {formatDecimal(formState.minScorePerhatian || 70.0)} otomatis masuk kategori Perlu Pembinaan.
-                  </p>
+                  <input
+                    type="text"
+                    value={formState.sp1Action || "Pemanggilan santri, penulisan surat pengakuan & surat perjanjian, wali santri diinformasikan via WA"}
+                    onChange={(e) => setFormState({ ...formState, sp1Action: e.target.value })}
+                    className="w-full px-2.5 py-1.5 text-xs bg-[#FAF7F2] border border-[#D4C9B5] rounded-lg text-[#172033]"
+                  />
+                </div>
+
+                <div className="p-3 rounded-xl bg-white border border-[#D4C9B5] space-y-2">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                    <span className="text-xs font-bold text-[#BE123C]">
+                      Tingkat 3: Surat Peringatan 2 (SP 2)
+                    </span>
+                    <div className="flex items-center gap-1.5 text-xs font-mono">
+                      <span className="text-[#64748B]">Rentang:</span>
+                      <input
+                        type="number"
+                        step="0.1"
+                        value={formState.sp2Min ?? 31.0}
+                        onChange={(e) => setFormState({ ...formState, sp2Min: parseFloat(e.target.value) || 0 })}
+                        className="w-16 px-1.5 py-1 text-xs font-bold font-mono bg-[#FAF7F2] border border-[#D4C9B5] rounded-md text-[#BE123C] text-center"
+                      />
+                      <span>s/d</span>
+                      <input
+                        type="number"
+                        step="0.1"
+                        value={formState.sp2Threshold ?? 45.0}
+                        onChange={(e) => setFormState({ ...formState, sp2Threshold: parseFloat(e.target.value) || 0 })}
+                        className="w-16 px-1.5 py-1 text-xs font-bold font-mono bg-[#FAF7F2] border border-[#D4C9B5] rounded-md text-[#BE123C] text-center"
+                      />
+                      <span className="text-[#64748B]">Poin</span>
+                    </div>
+                  </div>
+                  <input
+                    type="text"
+                    value={formState.sp2Action || "Pemanggilan orangtua/wali ke pesantren, hukuman khidmat/kebersihan khusus 3 hari"}
+                    onChange={(e) => setFormState({ ...formState, sp2Action: e.target.value })}
+                    className="w-full px-2.5 py-1.5 text-xs bg-[#FAF7F2] border border-[#D4C9B5] rounded-lg text-[#172033]"
+                  />
+                </div>
+
+                <div className="p-3 rounded-xl bg-white border border-[#D4C9B5] space-y-2">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                    <span className="text-xs font-bold text-[#991B1B]">
+                      Tingkat 4: Surat Peringatan 3 Terakhir (SP 3)
+                    </span>
+                    <div className="flex items-center gap-1.5 text-xs font-mono">
+                      <span className="text-[#64748B]">Rentang:</span>
+                      <input
+                        type="number"
+                        step="0.1"
+                        value={formState.sp3Min ?? 16.0}
+                        onChange={(e) => setFormState({ ...formState, sp3Min: parseFloat(e.target.value) || 0 })}
+                        className="w-16 px-1.5 py-1 text-xs font-bold font-mono bg-[#FAF7F2] border border-[#D4C9B5] rounded-md text-[#991B1B] text-center"
+                      />
+                      <span>s/d</span>
+                      <input
+                        type="number"
+                        step="0.1"
+                        value={formState.sp3Threshold ?? 30.0}
+                        onChange={(e) => setFormState({ ...formState, sp3Threshold: parseFloat(e.target.value) || 0 })}
+                        className="w-16 px-1.5 py-1 text-xs font-bold font-mono bg-[#FAF7F2] border border-[#D4C9B5] rounded-md text-[#991B1B] text-center"
+                      />
+                      <span className="text-[#64748B]">Poin</span>
+                    </div>
+                  </div>
+                  <input
+                    type="text"
+                    value={formState.sp3Action || "Surat peringatan terakhir, sanksi botak (putra)/khimar (putri), hafalan Yasin, Al-Waqiah, Ar-Rahman, perjanjian bermaterai"}
+                    onChange={(e) => setFormState({ ...formState, sp3Action: e.target.value })}
+                    className="w-full px-2.5 py-1.5 text-xs bg-[#FAF7F2] border border-[#D4C9B5] rounded-lg text-[#172033]"
+                  />
+                </div>
+
+                <div className="p-3 rounded-xl bg-white border border-[#D4C9B5] space-y-2">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                    <span className="text-xs font-bold text-[#450A0A]">
+                      Tingkat 5: Pengembalian Santri
+                    </span>
+                    <div className="flex items-center gap-1.5 text-xs font-mono">
+                      <span className="text-[#64748B]">Batas Poin:</span>
+                      <span className="font-bold">0.0 s/d</span>
+                      <input
+                        type="number"
+                        step="0.1"
+                        value={formState.pengembalianThreshold ?? 15.0}
+                        onChange={(e) => setFormState({ ...formState, pengembalianThreshold: parseFloat(e.target.value) || 0 })}
+                        className="w-16 px-1.5 py-1 text-xs font-bold font-mono bg-[#FAF7F2] border border-[#D4C9B5] rounded-md text-[#7F1D1D] text-center"
+                      />
+                      <span className="text-[#64748B]">Poin</span>
+                    </div>
+                  </div>
+                  <input
+                    type="text"
+                    value={formState.pengembalianAction || "Santri dikembalikan secara resmi kepada orangtua (dikeluarkan dari pesantren)"}
+                    onChange={(e) => setFormState({ ...formState, pengembalianAction: e.target.value })}
+                    className="w-full px-2.5 py-1.5 text-xs bg-[#FAF7F2] border border-[#D4C9B5] rounded-lg text-[#172033]"
+                  />
+                </div>
+              </div>
+
+              <div className="p-3 rounded-xl bg-white border border-[#D4C9B5] space-y-3">
+                <span className="text-xs font-bold text-[#1C2826] block">
+                  Aturan Validasi & Hak Sanggah (Due Process)
+                </span>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-[11px] font-bold text-[#64748B] mb-1">
+                      Batas Waktu Pelaporan Pelanggaran / Prestasi (Jam)
+                    </label>
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="number"
+                        min="1"
+                        max="168"
+                        value={formState.inputTimeLimitHours ?? 48}
+                        onChange={(e) => setFormState({ ...formState, inputTimeLimitHours: parseInt(e.target.value, 10) || 48 })}
+                        className="w-24 px-2.5 py-1.5 text-xs font-bold font-mono bg-[#FAF7F2] border border-[#D4C9B5] rounded-lg text-[#1B4D3E]"
+                      />
+                      <span className="text-xs text-[#64748B]">Jam (Standar: 2 x 24 Jam)</span>
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-[11px] font-bold text-[#64748B] mb-1">
+                      Tenggat Hak Sanggah Santri (Jam)
+                    </label>
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="number"
+                        min="1"
+                        max="72"
+                        value={formState.sanggahanTimeLimitHours ?? 24}
+                        onChange={(e) => setFormState({ ...formState, sanggahanTimeLimitHours: parseInt(e.target.value, 10) || 24 })}
+                        className="w-24 px-2.5 py-1.5 text-xs font-bold font-mono bg-[#FAF7F2] border border-[#D4C9B5] rounded-lg text-[#1B4D3E]"
+                      />
+                      <span className="text-xs text-[#64748B]">Jam (Standar: 1 x 24 Jam)</span>
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -450,7 +594,7 @@ export default function AdminPengaturanNilaiPage() {
                     onChange={(e) => setApplyToSantri(e.target.checked)}
                     className="h-4 w-4 rounded border-[#D4C9B5] text-[#1B4D3E] focus:ring-[#1B4D3E]"
                   />
-                  <span>Terapkan ambang batas dan perbarui status santri saat disimpan</span>
+                  <span>Terapkan ambang batas dan perbarui status 249 santri saat disimpan</span>
                 </label>
               </div>
             </div>

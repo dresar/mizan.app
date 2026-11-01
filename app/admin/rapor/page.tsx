@@ -23,32 +23,32 @@ import { Santri, formatScore, formatScoreWithSign } from "@/lib/mock-data";
 import { generateSantriPdf } from "@/lib/pdf-generator";
 
 function getPredikatAdab(score: number): { label: string; badgeCls: string } {
-  if (score >= 85) {
+  if (score >= 90) {
     return {
       label: "Mumtaz",
       badgeCls: "bg-[#ECFDF5] text-[#065F46] border border-[#A7F3D0]"
     };
   }
-  if (score >= 75) {
+  if (score >= 80) {
     return {
       label: "Jayyid Jiddan",
-      badgeCls: "bg-[#EFF6FF] text-[#1D4ED8] border border-[#BFDBFE]"
+      badgeCls: "bg-[#E8F0EC] text-[#1B4D3E] border border-[#1B4D3E]/30"
     };
   }
-  if (score >= 65) {
+  if (score >= 70) {
     return {
       label: "Jayyid",
-      badgeCls: "bg-[#F0FDF4] text-[#15803D] border border-[#BBF7D0]"
+      badgeCls: "bg-[#FEFCE8] text-[#854D0E] border border-[#FEF08A]"
     };
   }
-  if (score >= 55) {
+  if (score >= 60) {
     return {
-      label: "Perhatian",
-      badgeCls: "bg-[#FFFBEB] text-[#B45309] border border-[#FDE68A]"
+      label: "Maqbul",
+      badgeCls: "bg-[#FFF7ED] text-[#C2410C] border border-[#FED7AA]"
     };
   }
   return {
-    label: "Perlu Pembinaan",
+    label: "Pembinaan",
     badgeCls: "bg-[#FEF2F2] text-[#B91C1C] border border-[#FECACA]"
   };
 }
@@ -517,9 +517,9 @@ export default function AdminRaporPage() {
                       <td className="py-3 px-3 text-center">
                         <span
                           className={`font-mono text-sm font-black px-2.5 py-1 rounded-xl inline-block ${
-                            s.currentScore >= 85
+                            s.currentScore >= 80
                               ? "bg-[#ECFDF5] text-[#065F46] border border-[#A7F3D0]"
-                              : s.currentScore >= 65
+                              : s.currentScore >= 61
                               ? "bg-white text-[#172033] border border-[#E2EBF4]"
                               : "bg-[#FEF2F2] text-[#B91C1C] border border-[#FECACA]"
                           }`}
@@ -532,6 +532,11 @@ export default function AdminRaporPage() {
                         <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full inline-block ${item.predikat.badgeCls}`}>
                           {item.predikat.label}
                         </span>
+                        {s.status && s.status !== "Aman" && (
+                          <span className="block text-[9px] font-black text-red-600 mt-0.5 uppercase">
+                            {s.status}
+                          </span>
+                        )}
                       </td>
 
                       <td className="py-3 px-3.5 text-center">

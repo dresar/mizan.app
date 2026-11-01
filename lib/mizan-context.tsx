@@ -15,7 +15,8 @@ import {
   StatusGuru,
   StatusSantri,
   StatusAbsensi,
-  DEFAULT_SETTINGS
+  DEFAULT_SETTINGS,
+  getSantriDisciplineStatus
 } from "./mock-data";
 
 export type { UserProfile } from "./mock-data";
@@ -59,6 +60,8 @@ interface MizanContextType {
   penilaianList: PenilaianRecord[];
   addPenilaian: (record: Omit<PenilaianRecord, "id" | "createdAt" | "dateKey"> & { createdAt?: string; dateKey?: string }) => void;
   deletePenilaian: (id: string) => void;
+  submitSanggahan: (penilaianId: string, reason: string) => Promise<{ success: boolean; message: string }>;
+  resolveSanggahan: (penilaianId: string, decision: "TERIMA" | "TOLAK", staffName?: string, notes?: string) => Promise<{ success: boolean; message: string }>;
   absensiList: AbsensiRecord[];
   batchAddAbsensi: (records: Omit<AbsensiRecord, "id" | "createdAt">[]) => void;
   updateAbsensi: (id: string, status: StatusAbsensi, notes?: string) => Promise<{ success: boolean; message: string }>;
@@ -262,18 +265,56 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
         if (s.id !== id) return s;
         const maxVal = settings.maxScore || 100;
         const newScore = Math.max(0, Math.min(maxVal, Number((s.currentScore + delta).toFixed(3))));
-        const minBaik = settings.minScoreBaik ?? 80;
-        const minPerhatian = settings.minScorePerhatian ?? 70;
-        let newStatus: StatusSantri = "Baik";
-        if (newScore < minPerhatian) newStatus = "Perlu Pembinaan";
-        else if (newScore < minBaik) newStatus = "Perhatian";
+        const disc = getSantriDisciplineStatus(newScore, settings);
         return {
           ...s,
           currentScore: newScore,
-          status: newStatus
+          status: disc.status
         };
       })
     );
+  };
+
+  const submitSanggahan = async (penilaianId: string, reason: string) => {
+    try {
+      const res = await fetch("/api/penilaian", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: penilaianId, action: "sanggah", reason })
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast("Sanggahan berhasil diajukan", "success");
+        await refreshData();
+        return { success: true, message: data.message };
+      }
+      showToast(data.message || "Gagal mengajukan sanggahan", "error");
+      return { success: false, message: data.message };
+    } catch {
+      showToast("Terjadi kendala jaringan", "error");
+      return { success: false, message: "Kendala jaringan" };
+    }
+  };
+
+  const resolveSanggahan = async (penilaianId: string, decision: "TERIMA" | "TOLAK", staffName?: string, notes?: string) => {
+    try {
+      const res = await fetch("/api/penilaian", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: penilaianId, action: "resolve_sanggahan", decision, staffName: staffName || currentUser.name, notes })
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast(decision === "TERIMA" ? "Sanggahan diterima, poin dipulihkan" : "Sanggahan ditolak, sanksi disahkan", "success");
+        await refreshData();
+        return { success: true, message: data.message };
+      }
+      showToast(data.message || "Gagal memproses sanggahan", "error");
+      return { success: false, message: data.message };
+    } catch {
+      showToast("Terjadi kendala jaringan", "error");
+      return { success: false, message: "Kendala jaringan" };
+    }
   };
 
   const addPenilaian = (record: Omit<PenilaianRecord, "id" | "createdAt" | "dateKey"> & { createdAt?: string; dateKey?: string }) => {
@@ -769,6 +810,8 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
         penilaianList,
         addPenilaian,
         deletePenilaian,
+        submitSanggahan,
+        resolveSanggahan,
         absensiList,
         batchAddAbsensi,
         updateAbsensi,

@@ -3,9 +3,8 @@
 import React, { useState, useMemo } from "react";
 import Link from "next/link";
 import {
-  FolderPlus,
+  Folder,
   Layers,
-  Plus,
   Search,
   ChevronRight,
   Sparkles,
@@ -116,7 +115,7 @@ export default function AdminKategoriPelanggaranPage() {
               href="/admin/kategori-pelanggaran/kategori"
               className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-2xl bg-white border border-[#E2EBF4] text-[#172033] text-xs font-bold hover:bg-[#FAF7EE] transition-colors shadow-2xs"
             >
-              <FolderPlus className="w-3.5 h-3.5 text-[#C5A059]" />
+              <Folder className="w-3.5 h-3.5 text-[#C5A059]" />
               <span>Kategori</span>
             </Link>
 

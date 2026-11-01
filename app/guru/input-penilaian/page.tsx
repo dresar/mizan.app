@@ -63,7 +63,8 @@ export default function InputPenilaianPage() {
     currentUser,
     addPenilaian,
     showToast,
-    penilaianList
+    penilaianList,
+    settings
   } = useMizan();
 
   const [selectedSantriId, setSelectedSantriId] = useState<string>(accessibleSantriList[0]?.id || "santri-1");
@@ -75,6 +76,35 @@ export default function InputPenilaianPage() {
   const [isMobileSantriExpanded, setIsMobileSantriExpanded] = useState(false);
   const [notes, setNotes] = useState("");
   const [attachedFile, setAttachedFile] = useState<{ name: string; size: number } | null>(null);
+  const [incidentDate, setIncidentDate] = useState("");
+  const [incidentTime, setIncidentTime] = useState("");
+  const [location, setLocation] = useState("Lingkungan Pondok");
+  const [witnessName, setWitnessName] = useState("");
+  const [isDueProcessConfirmed, setIsDueProcessConfirmed] = useState(true);
+
+  useEffect(() => {
+    const now = new Date();
+    setIncidentDate(now.toISOString().split("T")[0]);
+    setIncidentTime(`${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`);
+  }, []);
+
+  const [isOverdueReport, setIsOverdueReport] = useState(false);
+
+  useEffect(() => {
+    if (!incidentDate || !incidentTime) {
+      setIsOverdueReport(false);
+      return;
+    }
+    try {
+      const incDateTime = new Date(`${incidentDate}T${incidentTime}:00`);
+      const now = new Date();
+      const diffHours = (now.getTime() - incDateTime.getTime()) / (1000 * 60 * 60);
+      const limitHours = settings?.inputTimeLimitHours || 48;
+      setIsOverdueReport(diffHours > limitHours);
+    } catch {
+      setIsOverdueReport(false);
+    }
+  }, [incidentDate, incidentTime, settings?.inputTimeLimitHours]);
 
   const [liveSearchQuery, setLiveSearchQuery] = useState("");
   const [isLiveSearchOpen, setIsLiveSearchOpen] = useState(false);
@@ -163,16 +193,16 @@ export default function InputPenilaianPage() {
   }, [categoriesForType, selectedCategoryName]);
 
   const availableUnsurs = useMemo(() => {
-    return activeCategory?.unsurs || [];
-  }, [activeCategory]);
+    return allUnsursForType;
+  }, [allUnsursForType]);
 
   const activeUnsur = useMemo(() => {
     return (
       allUnsursForType.find((uns) => uns.id === selectedUnsurId) ||
-      availableUnsurs[0] ||
+      allUnsursForType[0] ||
       null
     );
-  }, [allUnsursForType, availableUnsurs, selectedUnsurId]);
+  }, [allUnsursForType, selectedUnsurId]);
 
   const filteredUnsursForDropdown = useMemo(() => {
     const q = unsurDropdownSearch.trim().toLowerCase();
@@ -346,7 +376,12 @@ export default function InputPenilaianPage() {
       type: penilaianType,
       notes: notes || "",
       proofFileName: attachedFile?.name,
-      proofFileSize: attachedFile?.size
+      proofFileSize: attachedFile?.size,
+      incidentDate,
+      incidentTime,
+      location,
+      witnessName: witnessName || undefined,
+      dueProcessStatus: isDueProcessConfirmed ? "DISAHKAN" : "MENUNGGU_KONFIRMASI"
     });
 
     showToast(`Penilaian ${finalUnsurName} (${formatScoreWithSign(totalUnsurScore)}) tersimpan`, "success");
@@ -654,25 +689,7 @@ export default function InputPenilaianPage() {
                 )}
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
-                <div className="space-y-1.5">
-                  <label className="block text-[11px] font-bold text-[#64748B] uppercase">
-                    Kategori Utama
-                  </label>
-                  <select
-                    aria-label="Pilih Kategori Utama"
-                    value={activeCategory?.name || selectedCategoryName || ""}
-                    onChange={(e) => handleCategoryChange(e.target.value)}
-                    className="w-full px-3.5 py-2.5 text-xs bg-white border border-[#E2EBF4] rounded-2xl text-[#172033] font-bold focus:outline-none focus:border-[#1B4D3E]"
-                  >
-                    {categoriesForType.map((cat) => (
-                      <option key={cat.code} value={cat.name}>
-                        {cat.code}. {cat.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
+              <div className="w-full pt-1">
                 <div className="space-y-1.5 relative" ref={unsurDropdownRef}>
                   <div className="flex items-center justify-between">
                     <label className="block text-[11px] font-bold text-[#64748B] uppercase">
@@ -706,13 +723,14 @@ export default function InputPenilaianPage() {
                     <div className="absolute left-0 right-0 top-full mt-1.5 bg-white rounded-2xl shadow-xl border border-[#E2EBF4] z-40 p-2 space-y-1.5">
                       <input
                         type="text"
-                        placeholder="Filter pilihan dalam kategori ini..."
+                        placeholder="Cari jenis pelanggaran atau prestasi..."
                         value={unsurDropdownSearch}
                         onChange={(e) => setUnsurDropdownSearch(e.target.value)}
                         className="w-full px-3 py-1.5 text-xs bg-[#F8FAFC] border border-[#E2EBF4] rounded-xl focus:outline-none focus:border-[#1B4D3E]"
+                        autoFocus
                       />
 
-                      <div className="max-h-56 overflow-y-auto space-y-1 pr-0.5">
+                      <div className="max-h-64 overflow-y-auto space-y-1 pr-0.5">
                         {filteredUnsursForDropdown.map((uns) => {
                           const unsScore = uns.indicators.reduce((acc, ind) => acc + (ind.defaultScore || 0), 0);
                           const isSelected = uns.id === activeUnsur?.id;
@@ -844,6 +862,84 @@ export default function InputPenilaianPage() {
                     {predikat.label}
                   </span>
                 </CardSub>
+              </div>
+
+              <div className="p-3 rounded-2xl bg-[#FAF7EE] border border-[#C5A059]/30 space-y-2.5">
+                <span className="text-[11px] font-bold text-[#172033] uppercase tracking-wider block">
+                  Data Kejadian & Validasi Pelaporan
+                </span>
+
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <label className="block text-[10px] font-bold text-[#64748B] mb-0.5">
+                      Tanggal Kejadian
+                    </label>
+                    <input
+                      type="date"
+                      value={incidentDate}
+                      onChange={(e) => setIncidentDate(e.target.value)}
+                      className="w-full px-2 py-1.5 text-xs bg-white border border-[#E2EBF4] rounded-xl text-[#172033] focus:outline-none focus:border-[#1B4D3E]"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[10px] font-bold text-[#64748B] mb-0.5">
+                      Jam Kejadian
+                    </label>
+                    <input
+                      type="time"
+                      value={incidentTime}
+                      onChange={(e) => setIncidentTime(e.target.value)}
+                      className="w-full px-2 py-1.5 text-xs bg-white border border-[#E2EBF4] rounded-xl text-[#172033] focus:outline-none focus:border-[#1B4D3E]"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <label className="block text-[10px] font-bold text-[#64748B] mb-0.5">
+                      Lokasi Kejadian
+                    </label>
+                    <input
+                      type="text"
+                      value={location}
+                      onChange={(e) => setLocation(e.target.value)}
+                      placeholder="Contoh: Masjid / Asrama"
+                      className="w-full px-2 py-1.5 text-xs bg-white border border-[#E2EBF4] rounded-xl text-[#172033] focus:outline-none focus:border-[#1B4D3E]"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[10px] font-bold text-[#64748B] mb-0.5">
+                      Saksi Kejadian
+                    </label>
+                    <input
+                      type="text"
+                      value={witnessName}
+                      onChange={(e) => setWitnessName(e.target.value)}
+                      placeholder="Nama saksi / pembina"
+                      className="w-full px-2 py-1.5 text-xs bg-white border border-[#E2EBF4] rounded-xl text-[#172033] focus:outline-none focus:border-[#1B4D3E]"
+                    />
+                  </div>
+                </div>
+
+                {isOverdueReport && (
+                  <div className="p-2 rounded-xl bg-[#FEF2F2] border border-[#FECACA] text-[10px] font-bold text-[#991B1B]">
+                    Peringatan: Waktu pelaporan melebihi batas standar 2 x 24 jam dari waktu kejadian.
+                  </div>
+                )}
+
+                <label className="flex items-center gap-2 cursor-pointer pt-1">
+                  <input
+                    type="checkbox"
+                    checked={isDueProcessConfirmed}
+                    onChange={(e) => setIsDueProcessConfirmed(e.target.checked)}
+                    className="h-3.5 w-3.5 rounded border-[#C5A059] text-[#1B4D3E] focus:ring-[#1B4D3E]"
+                  />
+                  <span className="text-[10px] text-[#172033] font-semibold">
+                    Telah dikonfirmasi langsung ke santri (Due Process)
+                  </span>
+                </label>
               </div>
 
               <div>

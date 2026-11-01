@@ -21,7 +21,16 @@ export type Tingkat = "Ringan" | "Sedang" | "Berat";
 
 export type IndikatorType = "HASANAH" | "SAYYIAH";
 
-export type StatusSantri = "Baik" | "Perhatian" | "Perlu Pembinaan";
+export type StatusSantri =
+  | "Aman"
+  | "Peringatan Lisan"
+  | "SP 1"
+  | "SP 2"
+  | "SP 3"
+  | "Pengembalian"
+  | "Baik"
+  | "Perhatian"
+  | "Perlu Pembinaan";
 
 export type StatusGuru = "Sudah Lapor" | "Laporan Nihil" | "Belum Lapor";
 
@@ -140,6 +149,16 @@ export interface PenilaianRecord {
   dateKey: string;
   date?: string;
   rawCreatedAt?: string;
+  incidentDate?: string;
+  incidentTime?: string;
+  location?: string;
+  witnessName?: string;
+  dueProcessStatus?: "TERKONFIRMASI" | "MENUNGGU_KONFIRMASI" | "SANGGAHAN" | "DISAHKAN" | "DIBATALKAN";
+  sanggahanReason?: string;
+  sanggahanAt?: string;
+  sanggahanDecision?: "TERIMA" | "TOLAK" | null;
+  sanggahanDecisionBy?: string;
+  sanggahanNotes?: string;
 }
 
 export interface AppSettings {
@@ -167,12 +186,27 @@ export interface AppSettings {
   popupType?: "Pengumuman" | "Nasihat" | "Tausiyah" | "Penting";
   popupTarget?: "Semua" | "GURU" | "PENGASUHAN";
   popupUpdatedAt?: string;
+  lisanThreshold?: number;
+  lisanMin?: number;
+  sp1Threshold?: number;
+  sp1Min?: number;
+  sp2Threshold?: number;
+  sp2Min?: number;
+  sp3Threshold?: number;
+  sp3Min?: number;
+  pengembalianThreshold?: number;
+  inputTimeLimitHours?: number;
+  sanggahanTimeLimitHours?: number;
+  sp1Action?: string;
+  sp2Action?: string;
+  sp3Action?: string;
+  pengembalianAction?: string;
 }
 
 export const DEFAULT_SETTINGS: AppSettings = {
-  defaultBaseScore: 70.0,
+  defaultBaseScore: 80.0,
   minScoreBaik: 80.0,
-  minScorePerhatian: 70.0,
+  minScorePerhatian: 61.0,
   maxScore: 100.0,
   penaltyRingan: -0.05,
   penaltySedang: -0.1,
@@ -193,8 +227,102 @@ export const DEFAULT_SETTINGS: AppSettings = {
   popupSender: "Pimpinan Pesantren",
   popupType: "Nasihat",
   popupTarget: "Semua",
-  popupUpdatedAt: ""
+  popupUpdatedAt: "",
+  lisanThreshold: 79.0,
+  lisanMin: 61.0,
+  sp1Threshold: 60.0,
+  sp1Min: 46.0,
+  sp2Threshold: 45.0,
+  sp2Min: 31.0,
+  sp3Threshold: 30.0,
+  sp3Min: 16.0,
+  pengembalianThreshold: 15.0,
+  inputTimeLimitHours: 48,
+  sanggahanTimeLimitHours: 24,
+  sp1Action: "Pemanggilan santri, penulisan surat pengakuan & surat perjanjian, wali santri diinformasikan via WA",
+  sp2Action: "Pemanggilan orangtua/wali ke pesantren, hukuman khidmat/kebersihan khusus 3 hari",
+  sp3Action: "Surat peringatan terakhir, sanksi botak (putra)/khimar (putri), hafalan Yasin, Al-Waqiah, Ar-Rahman, perjanjian bermaterai",
+  pengembalianAction: "Santri dikembalikan secara resmi kepada orangtua (dikeluarkan dari pesantren)"
 };
+
+export function getSantriDisciplineStatus(score: number, settings?: AppSettings) {
+  const lisanMin = settings?.lisanMin ?? 61.0;
+  const sp1Min = settings?.sp1Min ?? 46.0;
+  const sp2Min = settings?.sp2Min ?? 31.0;
+  const sp3Min = settings?.sp3Min ?? 16.0;
+  const base = settings?.defaultBaseScore ?? 80.0;
+
+  if (score >= base) {
+    return {
+      status: "Aman" as StatusSantri,
+      level: 0,
+      label: "Aman / Terpuji",
+      action: "Adab dan perilaku terjaga dengan baik",
+      pic: "Staf Pengasuhan",
+      badgeVariant: "baik" as const,
+      color: "#065F46",
+      bg: "bg-[#ECFDF5]"
+    };
+  }
+  if (score >= lisanMin) {
+    return {
+      status: "Peringatan Lisan" as StatusSantri,
+      level: 1,
+      label: "Peringatan Lisan",
+      action: "Konseling ringan & peneguran langsung oleh staf pengasuhan",
+      pic: "Pengasuhan Santri",
+      badgeVariant: "ringan" as const,
+      color: "#854D0E",
+      bg: "bg-[#FEFCE8]"
+    };
+  }
+  if (score >= sp1Min) {
+    return {
+      status: "SP 1" as StatusSantri,
+      level: 2,
+      label: "Surat Peringatan 1 (SP 1)",
+      action: settings?.sp1Action || "Pemanggilan santri, surat pengakuan & perjanjian, notifikasi ortu",
+      pic: "Pengasuhan Santri",
+      badgeVariant: "perhatian" as const,
+      color: "#C2410C",
+      bg: "bg-[#FFF7ED]"
+    };
+  }
+  if (score >= sp2Min) {
+    return {
+      status: "SP 2" as StatusSantri,
+      level: 3,
+      label: "Surat Peringatan 2 (SP 2)",
+      action: settings?.sp2Action || "Pemanggilan orangtua/wali ke pesantren, penugasan khidmat 3 hari",
+      pic: "Pengasuhan Santri",
+      badgeVariant: "sedang" as const,
+      color: "#BE123C",
+      bg: "bg-[#FFF1F2]"
+    };
+  }
+  if (score >= sp3Min) {
+    return {
+      status: "SP 3" as StatusSantri,
+      level: 4,
+      label: "Surat Peringatan 3 (SP 3)",
+      action: settings?.sp3Action || "Surat peringatan terakhir, botak/khimar, setoran hafalan Yasin/Waqiah/Rahman, materai",
+      pic: "Pimpinan & Pengasuhan",
+      badgeVariant: "berat" as const,
+      color: "#991B1B",
+      bg: "bg-[#FEF2F2]"
+    };
+  }
+  return {
+    status: "Pengembalian" as StatusSantri,
+    level: 5,
+    label: "Pengembalian Santri",
+    action: settings?.pengembalianAction || "Santri dikembalikan secara resmi kepada orangtua (dikeluarkan dari pesantren)",
+    pic: "Pimpinan Pesantren",
+    badgeVariant: "pembinaan" as const,
+    color: "#7F1D1D",
+    bg: "bg-[#450A0A]/10"
+  };
+}
 
 export const INITIAL_CLASSES: string[] = [];
 export const INITIAL_USERS: UserProfile[] = [];

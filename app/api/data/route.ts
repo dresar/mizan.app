@@ -92,8 +92,18 @@ export async function GET() {
         unsur_name as "unsurName", indicator_text as "indicatorText",
         tingkat, score, notes, proof_file_name as "proofFileName",
         proof_file_size as "proofFileSize", created_at as "createdAt",
-        date_key as "dateKey"
-      FROM penilaian ORDER BY created_at DESC LIMIT 200
+        date_key as "dateKey",
+        incident_date as "incidentDate",
+        incident_time as "incidentTime",
+        location,
+        witness_name as "witnessName",
+        due_process_status as "dueProcessStatus",
+        sanggahan_reason as "sanggahanReason",
+        sanggahan_at as "sanggahanAt",
+        sanggahan_decision as "sanggahanDecision",
+        sanggahan_decision_by as "sanggahanDecisionBy",
+        sanggahan_notes as "sanggahanNotes"
+      FROM penilaian ORDER BY created_at DESC LIMIT 300
     `);
 
     const absRows = await query(`

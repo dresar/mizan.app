@@ -57,7 +57,7 @@ export default function AdminSantriPage() {
   const [formName, setFormName] = useState("");
   const [formGender, setFormGender] = useState<"Putra" | "Putri">("Putra");
   const [formClass, setFormClass] = useState("1A");
-  const [formBaseScore, setFormBaseScore] = useState("70.000");
+  const [formBaseScore, setFormBaseScore] = useState("80.000");
   const [formWaliName, setFormWaliName] = useState("");
   const [formWaliPhone, setFormWaliPhone] = useState("");
   const [formStatus, setFormStatus] = useState<Santri["status"]>("Baik");
@@ -836,9 +836,12 @@ export default function AdminSantriPage() {
                       onChange={(e) => setFormStatus(e.target.value as Santri["status"])}
                       className="w-full p-2 text-xs bg-[#EEF2F6] border border-transparent rounded-xl text-[#172033]"
                     >
-                      <option value="Baik">Baik</option>
-                      <option value="Perhatian">Perhatian</option>
-                      <option value="Perlu Pembinaan">Perlu Pembinaan</option>
+                      <option value="Aman">Aman / Terpuji (80-100)</option>
+                      <option value="Peringatan Lisan">Peringatan Lisan (61-79)</option>
+                      <option value="SP 1">Surat Peringatan 1 (46-60)</option>
+                      <option value="SP 2">Surat Peringatan 2 (31-45)</option>
+                      <option value="SP 3">Surat Peringatan 3 (16-30)</option>
+                      <option value="Pengembalian">Pengembalian (0-15)</option>
                     </select>
                   </div>
                 </div>
