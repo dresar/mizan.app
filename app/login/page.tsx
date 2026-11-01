@@ -16,19 +16,11 @@ import {
   Smartphone,
   Download,
   X,
-  Sparkles
+  Sparkles,
+  Search
 } from "lucide-react";
 import { useMizan } from "@/lib/mizan-context";
-
-interface DevAccount {
-  username: string;
-  label: string;
-  sub: string;
-  icon: React.ReactNode;
-  bg: string;
-  text: string;
-  category: "Admin" | "BK Putra" | "BK Putri" | "Guru";
-}
+import { QUICK_ACCOUNTS, QuickAccount } from "@/lib/quick-accounts";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -41,164 +33,71 @@ export default function LoginPage() {
   const [selectedDevUser, setSelectedDevUser] = useState("");
   const [showAppModal, setShowAppModal] = useState(false);
   const [appTab, setAppTab] = useState<"android" | "ios">("android");
-  const [devCategory, setDevCategory] = useState<"Semua" | "BK Putra" | "BK Putri" | "Admin" | "Guru">("Semua");
+  const [devCategory, setDevCategory] = useState<"Semua" | "BK Putra" | "BK Putri" | "Guru Putra" | "Guru Putri" | "Admin">("Semua");
+  const [quickSearch, setQuickSearch] = useState("");
 
   const appLogo = settings?.appLogoUrl || "/logo.png";
 
-  const devAccounts: DevAccount[] = [
-    {
-      username: "admin",
-      label: "Super Admin",
-      sub: "Ust. H. Syukri",
-      icon: <ShieldCheck className="w-3.5 h-3.5" />,
-      bg: "bg-[#FEF3C7]",
-      text: "text-[#92400E]",
-      category: "Admin"
-    },
-    {
-      username: "doli",
-      label: "Ust. Doli, Lc",
-      sub: "BK Putra",
-      icon: <CalendarCheck className="w-3.5 h-3.5" />,
-      bg: "bg-[#EFF6FF]",
-      text: "text-[#1D4ED8]",
-      category: "BK Putra"
-    },
-    {
-      username: "fatihuddin",
-      label: "Ust. Fatihuddin",
-      sub: "BK Putra",
-      icon: <CalendarCheck className="w-3.5 h-3.5" />,
-      bg: "bg-[#EFF6FF]",
-      text: "text-[#1D4ED8]",
-      category: "BK Putra"
-    },
-    {
-      username: "syeikhul",
-      label: "Ust. Syeikhul",
-      sub: "BK Putra",
-      icon: <CalendarCheck className="w-3.5 h-3.5" />,
-      bg: "bg-[#EFF6FF]",
-      text: "text-[#1D4ED8]",
-      category: "BK Putra"
-    },
-    {
-      username: "willy",
-      label: "Ust. Willy",
-      sub: "BK Putra",
-      icon: <CalendarCheck className="w-3.5 h-3.5" />,
-      bg: "bg-[#EFF6FF]",
-      text: "text-[#1D4ED8]",
-      category: "BK Putra"
-    },
-    {
-      username: "ramadhani",
-      label: "Ust. Ramadhani",
-      sub: "BK Putra",
-      icon: <CalendarCheck className="w-3.5 h-3.5" />,
-      bg: "bg-[#EFF6FF]",
-      text: "text-[#1D4ED8]",
-      category: "BK Putra"
-    },
-    {
-      username: "salmah",
-      label: "Usth. Salmah, S.Pd",
-      sub: "BK Putri",
-      icon: <HeartHandshake className="w-3.5 h-3.5" />,
-      bg: "bg-[#FDF2F8]",
-      text: "text-[#BE185D]",
-      category: "BK Putri"
-    },
-    {
-      username: "nuriyana",
-      label: "Usth. Nuriyana",
-      sub: "BK Putri",
-      icon: <HeartHandshake className="w-3.5 h-3.5" />,
-      bg: "bg-[#FDF2F8]",
-      text: "text-[#BE185D]",
-      category: "BK Putri"
-    },
-    {
-      username: "suci",
-      label: "Usth. Suci Ayu",
-      sub: "BK Putri",
-      icon: <HeartHandshake className="w-3.5 h-3.5" />,
-      bg: "bg-[#FDF2F8]",
-      text: "text-[#BE185D]",
-      category: "BK Putri"
-    },
-    {
-      username: "sindih",
-      label: "Usth. Sindih",
-      sub: "BK Putri",
-      icon: <HeartHandshake className="w-3.5 h-3.5" />,
-      bg: "bg-[#FDF2F8]",
-      text: "text-[#BE185D]",
-      category: "BK Putri"
-    },
-    {
-      username: "salwa",
-      label: "Usth. Salwa",
-      sub: "BK Putri",
-      icon: <HeartHandshake className="w-3.5 h-3.5" />,
-      bg: "bg-[#FDF2F8]",
-      text: "text-[#BE185D]",
-      category: "BK Putri"
-    },
-    {
-      username: "puspita",
-      label: "Usth. Puspita",
-      sub: "BK Putri",
-      icon: <HeartHandshake className="w-3.5 h-3.5" />,
-      bg: "bg-[#FDF2F8]",
-      text: "text-[#BE185D]",
-      category: "BK Putri"
-    },
-    {
-      username: "ustadz",
-      label: "Ustadz",
-      sub: "Guru Putra",
-      icon: <BookOpen className="w-3.5 h-3.5" />,
-      bg: "bg-[#ECFDF5]",
-      text: "text-[#065F46]",
-      category: "Guru"
-    },
-    {
-      username: "ustadzah",
-      label: "Ustadzah",
-      sub: "Guru Putri",
-      icon: <HeartHandshake className="w-3.5 h-3.5" />,
-      bg: "bg-[#F5F3FF]",
-      text: "text-[#6D28D9]",
-      category: "Guru"
+  const counts = useMemo(() => {
+    const res: Record<string, number> = {
+      "Semua": QUICK_ACCOUNTS.length,
+      "BK Putra": 0,
+      "BK Putri": 0,
+      "Guru Putra": 0,
+      "Guru Putri": 0,
+      "Admin": 0
+    };
+    for (const a of QUICK_ACCOUNTS) {
+      if (res[a.category] !== undefined) res[a.category]++;
     }
-  ];
-
-  const BK_PASSWORDS: Record<string, string> = {
-    doli: "RDS123",
-    fatihuddin: "RDS123",
-    syeikhul: "RDS123",
-    willy: "RDS123",
-    ramadhani: "RDS123",
-    salmah: "RDS123",
-    nuriyana: "RDS123",
-    suci: "RDS123",
-    sindih: "RDS123",
-    salwa: "RDS123",
-    puspita: "RDS123"
-  };
-
-  const handleFillForm = (targetUsername: string) => {
-    setUsername(targetUsername);
-    setPassword(BK_PASSWORDS[targetUsername] || "password123");
-    setSelectedDevUser(targetUsername);
-    setErrorMessage("");
-  };
+    return res;
+  }, []);
 
   const filteredDevAccounts = useMemo(() => {
-    if (devCategory === "Semua") return devAccounts;
-    return devAccounts.filter((a) => a.category === devCategory);
-  }, [devAccounts, devCategory]);
+    return QUICK_ACCOUNTS.filter((a) => {
+      const matchCat = devCategory === "Semua" || a.category === devCategory;
+      const q = quickSearch.trim().toLowerCase();
+      const matchSearch = !q || a.name.toLowerCase().includes(q) || a.username.toLowerCase().includes(q);
+      return matchCat && matchSearch;
+    });
+  }, [devCategory, quickSearch]);
+
+  const handleQuickLogin = async (acc: QuickAccount) => {
+    const pwd = acc.password || "RDS123";
+    setUsername(acc.username);
+    setPassword(pwd);
+    setSelectedDevUser(acc.username);
+    setErrorMessage("");
+    setIsLoading(true);
+
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username: acc.username, password: pwd })
+      });
+
+      const data = await res.json();
+
+      if (data.success && data.user) {
+        loginUser(data.user);
+        const u = encodeURIComponent(data.user.username);
+        if (data.user.role === "SUPER_ADMIN") {
+          router.push(`/admin/dashboard?u=${u}`);
+        } else if (data.user.role === "PENGASUHAN") {
+          router.push(`/bk/dashboard?u=${u}`);
+        } else {
+          router.push(`/guru/dashboard?u=${u}`);
+        }
+      } else {
+        setErrorMessage(data.message || "Gagal masuk.");
+      }
+    } catch {
+      setErrorMessage("Terjadi kendala koneksi.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleFormLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -353,50 +252,91 @@ export default function LoginPage() {
               </span>
             </div>
 
-            <div className="flex items-center justify-center gap-1 mt-2.5 overflow-x-auto pb-1">
-              {(["Semua", "BK Putra", "BK Putri", "Admin", "Guru"] as const).map((cat) => (
+            <div className="flex items-center justify-start gap-1 mt-2.5 overflow-x-auto pb-1 no-scrollbar">
+              {(["Semua", "BK Putra", "BK Putri", "Guru Putra", "Guru Putri", "Admin"] as const).map((cat) => (
                 <button
                   key={cat}
                   type="button"
                   onClick={() => setDevCategory(cat)}
-                  className={`px-2 py-1 rounded-xl text-[10px] font-bold transition-all shrink-0 ${
+                  className={`px-2.5 py-1 rounded-xl text-[10px] font-bold transition-all shrink-0 flex items-center gap-1 cursor-pointer ${
                     devCategory === cat
                       ? "bg-[#1B4D3E] text-white shadow-2xs"
                       : "bg-[#F1F5F9] text-[#64748B] hover:text-[#172033]"
                   }`}
                 >
-                  {cat}
+                  <span>{cat}</span>
+                  <span className={`text-[9px] px-1 py-0.2 rounded-full ${devCategory === cat ? "bg-white/20 text-white" : "bg-[#E2E8F0] text-[#475569]"}`}>
+                    {counts[cat]}
+                  </span>
                 </button>
               ))}
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 mt-2.5">
+            <div className="relative mt-2">
+              <Search className="w-3.5 h-3.5 absolute left-3 top-2.5 text-[#94A3B8]" />
+              <input
+                type="text"
+                value={quickSearch}
+                onChange={(e) => setQuickSearch(e.target.value)}
+                placeholder="Cari nama Ustadz / Ustadzah..."
+                className="w-full pl-8 pr-3 py-1.5 rounded-xl text-xs bg-[#F8FAFC] border border-[#E2EBF4] text-[#172033] placeholder-[#94A3B8] focus:bg-white focus:border-[#1B4D3E] focus:outline-none"
+              />
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 mt-2 max-h-64 overflow-y-auto pr-1">
               {filteredDevAccounts.map((acc) => {
                 const isSelected = selectedDevUser === acc.username;
+                const getTheme = () => {
+                  if (acc.category === "Admin") return { bg: "bg-[#FEF3C7]", text: "text-[#92400E]", icon: <ShieldCheck className="w-3.5 h-3.5" /> };
+                  if (acc.category === "BK Putra") return { bg: "bg-[#EFF6FF]", text: "text-[#1D4ED8]", icon: <CalendarCheck className="w-3.5 h-3.5" /> };
+                  if (acc.category === "BK Putri") return { bg: "bg-[#FDF2F8]", text: "text-[#BE185D]", icon: <HeartHandshake className="w-3.5 h-3.5" /> };
+                  if (acc.category === "Guru Putra") return { bg: "bg-[#ECFDF5]", text: "text-[#065F46]", icon: <BookOpen className="w-3.5 h-3.5" /> };
+                  return { bg: "bg-[#F5F3FF]", text: "text-[#6D28D9]", icon: <HeartHandshake className="w-3.5 h-3.5" /> };
+                };
+                const theme = getTheme();
 
                 return (
-                  <button
+                  <div
                     key={acc.username}
-                    type="button"
-                    onClick={() => handleFillForm(acc.username)}
-                    className={`p-2.5 rounded-2xl text-center transition-all cursor-pointer border ${
+                    onClick={() => handleQuickLogin(acc)}
+                    className={`p-2 rounded-xl text-left transition-all cursor-pointer border flex items-center justify-between gap-2 ${
                       isSelected
-                        ? "border-[#1B4D3E] bg-[#ECFDF5] shadow-xs scale-[1.02]"
-                        : "border-[#E2EBF4] bg-[#F8FAFC] hover:bg-white hover:border-[#CBD5E1] hover:-translate-y-0.5"
+                        ? "border-[#1B4D3E] bg-[#ECFDF5] shadow-xs"
+                        : "border-[#E2EBF4] bg-[#F8FAFC] hover:bg-white hover:border-[#CBD5E1]"
                     }`}
                   >
-                    <div className={`w-7 h-7 mx-auto rounded-xl ${acc.bg} ${acc.text} flex items-center justify-center mb-1`}>
-                      {acc.icon}
+                    <div className="flex items-center gap-2 min-w-0">
+                      <div className={`w-7 h-7 shrink-0 rounded-lg ${theme.bg} ${theme.text} flex items-center justify-center`}>
+                        {theme.icon}
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-[11px] font-bold text-[#172033] leading-tight truncate">
+                          {acc.name}
+                        </p>
+                        <p className="text-[9px] text-[#64748B] truncate">
+                          {acc.category}
+                        </p>
+                      </div>
                     </div>
-                    <p className="text-[10px] font-bold text-[#172033] leading-tight truncate">
-                      {acc.label}
-                    </p>
-                    <p className="text-[9px] text-[#64748B] truncate mt-0.5">
-                      {acc.sub}
-                    </p>
-                  </button>
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleQuickLogin(acc);
+                      }}
+                      disabled={isLoading}
+                      className="px-2.5 py-1 rounded-lg bg-[#1B4D3E] text-white text-[10px] font-bold shrink-0 hover:bg-[#153e32] transition-colors cursor-pointer"
+                    >
+                      Masuk
+                    </button>
+                  </div>
                 );
               })}
+              {filteredDevAccounts.length === 0 && (
+                <div className="col-span-full py-4 text-center text-xs text-[#94A3B8]">
+                  Tidak ada akun ditemukan
+                </div>
+              )}
             </div>
           </div>
         </div>

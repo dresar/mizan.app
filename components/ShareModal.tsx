@@ -5,7 +5,9 @@ import Link from "next/link";
 import {
   Share2,
   Check,
-  X
+  X,
+  Download,
+  Printer
 } from "lucide-react";
 import { useMizan } from "@/lib/mizan-context";
 import { Santri, UserProfile } from "@/lib/mock-data";
@@ -41,6 +43,8 @@ export function ShareModal({
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedShare, setGeneratedShare] = useState<{ id: string; url: string } | null>(null);
   const [copied, setCopied] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
+  const cardContainerRef = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
     if (isOpen) {
@@ -318,6 +322,35 @@ export function ShareModal({
     setTimeout(() => setCopied(false), 2000);
   };
 
+  const handleDownloadCard = async () => {
+    if (!cardContainerRef.current || isDownloading) return;
+    try {
+      setIsDownloading(true);
+      showToast("Menyiapkan berkas gambar kartu...", "info");
+      const html2canvas = (await import("html2canvas")).default;
+      const canvas = await html2canvas(cardContainerRef.current, {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: "#F4F7FB"
+      });
+      const dataUrl = canvas.toDataURL("image/png");
+      const anchor = document.createElement("a");
+      anchor.href = dataUrl;
+      const cleanTitle = (cardData.title || "Kartu-Statistik-Mizan")
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-");
+      anchor.download = `${cleanTitle}-${Date.now()}.png`;
+      document.body.appendChild(anchor);
+      anchor.click();
+      document.body.removeChild(anchor);
+      showToast("Kartu berhasil diunduh", "success");
+    } catch {
+      showToast("Gagal mengunduh kartu", "error");
+    } finally {
+      setIsDownloading(false);
+    }
+  };
+
   const handlePrint = () => {
     window.print();
   };
@@ -404,7 +437,7 @@ export function ShareModal({
           </div>
 
           <div className="pt-1">
-            <ShareCard cardData={cardData} compact={true} />
+            <ShareCard cardData={cardData} cardRef={cardContainerRef} compact={true} />
           </div>
 
           {generatedShare && (
@@ -433,14 +466,27 @@ export function ShareModal({
           )}
         </div>
 
-        <div className="flex items-center justify-end gap-2 pt-2 border-t border-[#F1F5F9]">
-          <button
-            type="button"
-            onClick={handlePrint}
-            className="px-3.5 py-1.5 rounded-full border border-[#D4C9B5] bg-white text-[#172033] text-xs font-bold hover:bg-[#FAF7F2] transition-colors"
-          >
-            Unduh
-          </button>
+        <div className="flex items-center justify-between gap-2 pt-2 border-t border-[#F1F5F9]">
+          <div className="flex items-center gap-1.5">
+            <button
+              type="button"
+              onClick={handleDownloadCard}
+              disabled={isDownloading}
+              className="inline-flex items-center gap-1 px-3.5 py-1.5 rounded-full border border-[#D4C9B5] bg-white text-[#172033] text-xs font-bold hover:bg-[#FAF7F2] transition-colors shadow-2xs disabled:opacity-50"
+            >
+              <Download className="w-3.5 h-3.5 text-[#1B4D3E]" />
+              <span>{isDownloading ? "Proses" : "Unduh"}</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={handlePrint}
+              className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full border border-[#CBD5E1] bg-white text-[#64748B] hover:text-[#172033] text-xs font-bold hover:bg-[#F8FAFC] transition-colors shadow-2xs"
+            >
+              <Printer className="w-3.5 h-3.5" />
+              <span>Cetak</span>
+            </button>
+          </div>
 
           {!generatedShare ? (
             <button
@@ -449,7 +495,7 @@ export function ShareModal({
               disabled={isGenerating}
               className="px-4 py-1.5 rounded-full bg-[#1B4D3E] text-white text-xs font-bold hover:bg-[#143B2F] transition-colors shadow-xs disabled:opacity-50"
             >
-              {isGenerating ? "Memproses" : "Bagikan"}
+              {isGenerating ? "Proses" : "Bagikan"}
             </button>
           ) : (
             <button

@@ -6,7 +6,8 @@ import {
   Download,
   Share2,
   Check,
-  AlertTriangle
+  AlertTriangle,
+  Printer
 } from "lucide-react";
 import { ShareCard, ShareCardData } from "@/components/ShareCard";
 
@@ -27,6 +28,7 @@ function ShareContent() {
   const [shareData, setShareData] = useState<ShareRecord | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [copied, setCopied] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -49,7 +51,34 @@ function ShareContent() {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const handleDownload = () => {
+  const handleDownload = async () => {
+    if (!cardRef.current || isDownloading) return;
+    try {
+      setIsDownloading(true);
+      const html2canvas = (await import("html2canvas")).default;
+      const canvas = await html2canvas(cardRef.current, {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: "#F4F7FB"
+      });
+      const dataUrl = canvas.toDataURL("image/png");
+      const anchor = document.createElement("a");
+      anchor.href = dataUrl;
+      const safeTitle = (formattedCardData?.title || "Kartu-Statistik-Mizan")
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-");
+      anchor.download = `${safeTitle}-${Date.now()}.png`;
+      document.body.appendChild(anchor);
+      anchor.click();
+      document.body.removeChild(anchor);
+    } catch {
+      void 0;
+    } finally {
+      setIsDownloading(false);
+    }
+  };
+
+  const handlePrint = () => {
     window.print();
   };
 
@@ -230,10 +259,20 @@ function ShareContent() {
             <button
               type="button"
               onClick={handleDownload}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#1B4D3E] text-white text-xs font-bold hover:bg-[#143B2F] transition-colors shadow-xs"
+              disabled={isDownloading}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#1B4D3E] text-white text-xs font-bold hover:bg-[#143B2F] transition-colors shadow-xs disabled:opacity-50"
             >
               <Download className="w-3.5 h-3.5" />
-              <span>Unduh</span>
+              <span>{isDownloading ? "Proses" : "Unduh"}</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={handlePrint}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-[#CBD5E1] text-[#172033] text-xs font-bold hover:bg-[#F8FAFC] transition-colors shadow-xs"
+            >
+              <Printer className="w-3.5 h-3.5" />
+              <span>Cetak</span>
             </button>
           </div>
         </div>

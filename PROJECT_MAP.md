@@ -39,7 +39,7 @@ mizan.apps/
 │   ├── ortu/dashboard/        # Dashboard wali santri / orang tua
 │   ├── santri/profil/         # Profil mandiri santri, skor adab & tombol Bagikan
 │   ├── share/[id]/            # Halaman publik kartu share (stat-*) tanpa perlu login
-│   ├── login/                 # Autentikasi multi-role
+│   ├── login/                 # Autentikasi multi-role (login cepat 92 akun Ustadz/Ustadzah & BK dengan pemisahan gender)
 │   └── api/                   # REST API routes (auth, absensi, backup, data, penilaian, settings, share, santri, classes, users)
 ├── components/                # UI Components
 │   ├── ShareCard.tsx          # Komponen kartu statistik soft-UI neumorphic (7-item recessed, dual-stat, verified)
@@ -48,7 +48,7 @@ mizan.apps/
 │   ├── PembinaReportChart.tsx # Grafik laporan pembina
 │   ├── Header.tsx, Sidebar.tsx, BottomNav.tsx, RoleShell.tsx, AnnouncementPopup.tsx
 │   └── ui/                    # Atomik (Card, Badge, Avatar, ScoreBar, Toast, Modal)
-├── lib/                       # db.ts, mizan-context.tsx, mock-data.ts, pdf-generator.ts
+├── lib/                       # db.ts, mizan-context.tsx, mock-data.ts, pdf-generator.ts, quick-accounts.ts
 └── public/                    # manifest.json, sw.js, favicon, icons, downloads/ (APK/iOS config)
 ```
 

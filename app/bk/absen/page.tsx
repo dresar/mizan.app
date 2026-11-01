@@ -35,23 +35,32 @@ const PRAYER_TIMES: WaktuSholat[] = [
 
 export default function PengasuhanAbsenPage() {
   const router = useRouter();
-  const { santriList, kelasList, currentUser, batchAddAbsensi, showToast, settings } = useMizan();
+  const { accessibleSantriList, kelasList, currentUser, batchAddAbsensi, showToast, settings } = useMizan();
 
   const [selectedPrayer, setSelectedPrayer] = useState<WaktuSholat>("Subuh");
   const isSuperAdmin = currentUser.role === "SUPER_ADMIN";
-  const isPengasuhan = currentUser.role === "PENGASUHAN";
-  const canToggleGender = isSuperAdmin || isPengasuhan;
-  const userGender = currentUser.gender || "Putra";
-  const [selectedGender, setSelectedGender] = useState<"Putra" | "Putri">(
-    currentUser.gender === "Putri" ? "Putri" : "Putra"
-  );
+  const canToggleGender = isSuperAdmin;
+  const userGender = (currentUser.gender === "Putri" ? "Putri" : "Putra") as "Putra" | "Putri";
+  const [selectedGender, setSelectedGender] = useState<"Putra" | "Putri">(userGender);
 
   useEffect(() => {
-    if (currentUser?.gender) {
+    if (currentUser?.gender && !isSuperAdmin) {
       setSelectedGender(currentUser.gender === "Putri" ? "Putri" : "Putra");
     }
-  }, [currentUser?.gender]);
-  const [selectedClass, setSelectedClass] = useState<string>("1A");
+  }, [currentUser?.gender, isSuperAdmin]);
+
+  const availableClasses = useMemo(() => {
+    const list = kelasList.length > 0 ? kelasList : ["1A", "1B", "2A", "2B", "3A", "3B", "4A", "4B", "5A", "5B", "6A", "6B"];
+    if (isSuperAdmin) return list;
+    if (userGender === "Putri") {
+      return list.filter((c) => c.endsWith("B"));
+    }
+    return list.filter((c) => c.endsWith("A"));
+  }, [kelasList, isSuperAdmin, userGender]);
+
+  const [selectedClass, setSelectedClass] = useState<string>(
+    userGender === "Putri" ? "1B" : "1A"
+  );
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedDate, setSelectedDate] = useState<string>("2026-10-31");
   const [currentTimeStr, setCurrentTimeStr] = useState<string>("04:30 WIB");
@@ -74,10 +83,6 @@ export default function PengasuhanAbsenPage() {
     }
   }, []);
 
-  const availableClasses = useMemo(() => {
-    return kelasList.length > 0 ? kelasList : ["1A", "1B", "1C", "1D", "2A", "2B"];
-  }, [kelasList]);
-
   useEffect(() => {
     if (!availableClasses.includes(selectedClass) && availableClasses.length > 0) {
       setSelectedClass(availableClasses[0]);
@@ -85,16 +90,17 @@ export default function PengasuhanAbsenPage() {
   }, [availableClasses, selectedClass]);
 
   const studentsInClass = useMemo(() => {
-    return santriList.filter((s) => {
+    return accessibleSantriList.filter((s) => {
       const matchClass = s.class === selectedClass;
-      const matchGender = s.gender === selectedGender;
+      const targetGender = isSuperAdmin ? selectedGender : userGender;
+      const matchGender = s.gender === targetGender;
       const matchSearch =
         searchQuery.trim() === "" ||
         s.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         s.nis.includes(searchQuery);
       return matchClass && matchGender && matchSearch;
     });
-  }, [santriList, selectedClass, selectedGender, searchQuery]);
+  }, [accessibleSantriList, selectedClass, isSuperAdmin, selectedGender, userGender, searchQuery]);
 
   const getAttendanceStatus = (santriId: string): StatusAbsensi => {
     return attendanceMap[santriId] || "Hadir";

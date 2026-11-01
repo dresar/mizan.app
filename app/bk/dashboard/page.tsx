@@ -17,7 +17,8 @@ import { RoleShell } from "@/components/RoleShell";
 import { Card, CardSub } from "@/components/ui/Card";
 
 export default function PengasuhanDashboardPage() {
-  const { santriList, absensiList, penilaianList, currentUser } = useMizan();
+  const { accessibleSantriList, absensiList, penilaianList, currentUser } = useMizan();
+  const isSuperAdmin = currentUser.role === "SUPER_ADMIN";
   const uParam = currentUser?.username ? `?u=${encodeURIComponent(currentUser.username)}` : "";
   const [todayDate, setTodayDate] = useState<string>("");
   const [todayFormatted, setTodayFormatted] = useState<string>("Minggu, 1 November 2026");
@@ -49,9 +50,11 @@ export default function PengasuhanDashboardPage() {
   }, []);
 
   const filteredSantri = useMemo(() => {
-    if (genderFilter === "Semua") return santriList;
-    return santriList.filter((s) => s.gender === genderFilter);
-  }, [santriList, genderFilter]);
+    if (isSuperAdmin && genderFilter !== "Semua") {
+      return accessibleSantriList.filter((s) => s.gender === genderFilter);
+    }
+    return accessibleSantriList;
+  }, [accessibleSantriList, isSuperAdmin, genderFilter]);
 
   const todayAbsensi = useMemo(() => {
     if (!todayDate) return [];
@@ -82,22 +85,28 @@ export default function PengasuhanDashboardPage() {
               </p>
             </div>
 
-            <div className="flex items-center gap-1.5 p-1 rounded-2xl bg-[#EEF2F6]">
-              {(["Semua", "Putra", "Putri"] as const).map((g) => (
-                <button
-                  key={g}
-                  type="button"
-                  onClick={() => setGenderFilter(g)}
-                  className={`px-3 py-1 rounded-xl text-xs font-bold transition-all ${
-                    genderFilter === g
-                      ? "bg-[#1B4D3E] text-white shadow-xs"
-                      : "text-[#64748B] hover:text-[#172033]"
-                  }`}
-                >
-                  {g}
-                </button>
-              ))}
-            </div>
+            {isSuperAdmin ? (
+              <div className="flex items-center gap-1.5 p-1 rounded-2xl bg-[#EEF2F6]">
+                {(["Semua", "Putra", "Putri"] as const).map((g) => (
+                  <button
+                    key={g}
+                    type="button"
+                    onClick={() => setGenderFilter(g)}
+                    className={`px-3 py-1 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                      genderFilter === g
+                        ? "bg-[#1B4D3E] text-white shadow-xs"
+                        : "text-[#64748B] hover:text-[#172033]"
+                    }`}
+                  >
+                    {g}
+                  </button>
+                ))}
+              </div>
+            ) : (
+              <div className="px-3 py-1.5 rounded-2xl bg-[#EEF2F6] text-xs font-bold text-[#1B4D3E]">
+                Santri {currentUser.gender || "Putra"}
+              </div>
+            )}
           </div>
 
           <div className="mizan-inset p-2.5 rounded-2xl grid grid-cols-7 gap-1 text-center">

@@ -130,17 +130,27 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
         if (data.santri) setSantriList(data.santri);
         if (data.users && data.users.length > 0) {
           setUserList(data.users);
-          const savedUserId = typeof window !== "undefined" ? localStorage.getItem(STORAGE_KEY_USER) : null;
-          if (savedUserId) {
-            const matched = data.users.find((u: UserProfile) => u.id === savedUserId);
-            if (matched) {
-              setCurrentUser(matched);
-              setActiveRole(matched.role);
-              setIsAuthenticated(true);
-            } else {
-              setCurrentUser(GUEST_USER);
-              setActiveRole(null);
-              setIsAuthenticated(false);
+          const urlParams = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
+          const uParam = urlParams ? (urlParams.get("u") || urlParams.get("user")) : null;
+          let matched: UserProfile | undefined = undefined;
+          if (uParam) {
+            matched = data.users.find((u: UserProfile) => u.username && u.username.toLowerCase() === uParam.toLowerCase());
+          }
+          if (!matched) {
+            const savedUserId = typeof window !== "undefined" ? localStorage.getItem(STORAGE_KEY_USER) : null;
+            if (savedUserId) {
+              matched = data.users.find((u: UserProfile) => u.id === savedUserId);
+            }
+          }
+          if (matched) {
+            setCurrentUser(matched);
+            setActiveRole(matched.role);
+            setIsAuthenticated(true);
+            try {
+              localStorage.setItem(STORAGE_KEY_ROLE, matched.role);
+              localStorage.setItem(STORAGE_KEY_USER, matched.id);
+            } catch {
+              void 0;
             }
           } else {
             setCurrentUser(GUEST_USER);
@@ -168,14 +178,14 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const accessibleSantriList = useMemo(() => {
-    if (!isAuthenticated || !currentUser.id) return [];
-    if (activeRole === "SUPER_ADMIN" || activeRole === "PENGASUHAN") return santriList;
-    if (currentUser.gender === "Putra") {
+    if (activeRole === "SUPER_ADMIN" || currentUser?.role === "SUPER_ADMIN") return santriList;
+    if (currentUser?.gender === "Putra") {
       return santriList.filter((s) => s.gender === "Putra");
     }
-    if (currentUser.gender === "Putri") {
+    if (currentUser?.gender === "Putri") {
       return santriList.filter((s) => s.gender === "Putri");
     }
+    if (!isAuthenticated || !currentUser?.id) return [];
     return santriList;
   }, [activeRole, currentUser, isAuthenticated, santriList]);
 

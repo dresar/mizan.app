@@ -12,10 +12,11 @@ import { ShareModal } from "@/components/ShareModal";
 import { Santri } from "@/lib/mock-data";
 
 export default function BkSantriListPage() {
-  const { santriList, currentUser, penilaianList, absensiList, showToast } = useMizan();
+  const { accessibleSantriList, currentUser, penilaianList, absensiList, showToast } = useMizan();
+  const isSuperAdmin = currentUser.role === "SUPER_ADMIN";
   const [searchQuery, setSearchQuery] = useState("");
   const [genderFilter, setGenderFilter] = useState<"Semua" | "Putra" | "Putri">(
-    currentUser.gender === "Putri" ? "Putri" : "Semua"
+    currentUser.gender === "Putri" ? "Putri" : "Putra"
   );
   const [selectedClass, setSelectedClass] = useState("ALL");
   const [currentPage, setCurrentPage] = useState(1);
@@ -24,24 +25,24 @@ export default function BkSantriListPage() {
   const PAGE_SIZE = 20;
 
   const classes = useMemo(() => {
-    let list = santriList;
-    if (genderFilter !== "Semua") {
+    let list = accessibleSantriList;
+    if (isSuperAdmin && genderFilter !== "Semua") {
       list = list.filter((s) => s.gender === genderFilter);
     }
     const set = new Set(list.map((s) => s.class));
     return ["ALL", ...Array.from(set).sort()];
-  }, [santriList, genderFilter]);
+  }, [accessibleSantriList, isSuperAdmin, genderFilter]);
 
   const filteredSantri = useMemo(() => {
-    return santriList.filter((s) => {
-      const matchGender = genderFilter === "Semua" || s.gender === genderFilter;
+    return accessibleSantriList.filter((s) => {
+      const matchGender = isSuperAdmin ? (genderFilter === "Semua" || s.gender === genderFilter) : true;
       const matchSearch =
         s.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         s.nis.includes(searchQuery);
       const matchClass = selectedClass === "ALL" || s.class === selectedClass;
       return matchGender && matchSearch && matchClass;
     });
-  }, [santriList, genderFilter, searchQuery, selectedClass]);
+  }, [accessibleSantriList, isSuperAdmin, genderFilter, searchQuery, selectedClass]);
 
   const totalPages = Math.ceil(filteredSantri.length / PAGE_SIZE) || 1;
 
@@ -128,22 +129,28 @@ export default function BkSantriListPage() {
               />
             </div>
 
-            <div className="flex items-center gap-1.5 p-1 bg-white border border-[#E2EBF4] rounded-2xl shrink-0">
-              {(["Semua", "Putra", "Putri"] as const).map((g) => (
-                <button
-                  key={g}
-                  type="button"
-                  onClick={() => handleGenderChange(g)}
-                  className={`px-3 py-1.5 text-xs font-bold rounded-xl transition-all ${
-                    genderFilter === g
-                      ? "bg-[#1B4D3E] text-white shadow-2xs"
-                      : "text-[#64748B] hover:text-[#172033]"
-                  }`}
-                >
-                  {g}
-                </button>
-              ))}
-            </div>
+            {isSuperAdmin ? (
+              <div className="flex items-center gap-1.5 p-1 bg-white border border-[#E2EBF4] rounded-2xl shrink-0">
+                {(["Semua", "Putra", "Putri"] as const).map((g) => (
+                  <button
+                    key={g}
+                    type="button"
+                    onClick={() => handleGenderChange(g)}
+                    className={`px-3 py-1.5 text-xs font-bold rounded-xl transition-all cursor-pointer ${
+                      genderFilter === g
+                        ? "bg-[#1B4D3E] text-white shadow-2xs"
+                        : "text-[#64748B] hover:text-[#172033]"
+                    }`}
+                  >
+                    {g}
+                  </button>
+                ))}
+              </div>
+            ) : (
+              <div className="flex items-center px-3 py-2 bg-white border border-[#E2EBF4] rounded-2xl text-xs font-bold text-[#1B4D3E] shrink-0">
+                Santri {currentUser.gender || "Putra"}
+              </div>
+            )}
 
             <div className="flex gap-1.5 overflow-x-auto pb-1 shrink-0">
               {classes.map((cls) => {

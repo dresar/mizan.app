@@ -27,8 +27,9 @@ const PRAYER_TIMES: ("ALL" | WaktuSholat)[] = [
 ];
 
 export default function PengasuhanHistoryPage() {
-  const { absensiList, santriList, currentUser, kelasList, updateAbsensi, deleteAbsensi } = useMizan();
+  const { absensiList, accessibleSantriList, currentUser, kelasList, updateAbsensi, deleteAbsensi } = useMizan();
   const uParam = currentUser?.username ? `?u=${encodeURIComponent(currentUser.username)}` : "";
+  const isSuperAdmin = currentUser.role === "SUPER_ADMIN";
 
   const [selectedPrayer, setSelectedPrayer] = useState<"ALL" | WaktuSholat>("ALL");
   const [selectedStatus, setSelectedStatus] = useState<"ALL" | StatusAbsensi>("ALL");
@@ -38,6 +39,12 @@ export default function PengasuhanHistoryPage() {
   const [editingRecordId, setEditingRecordId] = useState<string | null>(null);
   const [editStatusVal, setEditStatusVal] = useState<StatusAbsensi>("Hadir");
   const PAGE_SIZE = 20;
+
+  const availableClasses = useMemo(() => {
+    if (isSuperAdmin) return kelasList;
+    const classes = Array.from(new Set(accessibleSantriList.map((s) => s.class))).sort();
+    return classes.length > 0 ? classes : kelasList.filter((c) => currentUser.gender === "Putri" ? c.endsWith("B") : c.endsWith("A"));
+  }, [isSuperAdmin, kelasList, accessibleSantriList, currentUser.gender]);
 
   const filteredHistory = useMemo(() => {
     return absensiList.filter((item) => {
@@ -52,15 +59,15 @@ export default function PengasuhanHistoryPage() {
         item.santriName.toLowerCase().includes(searchQuery.toLowerCase());
 
       const matchGender =
-        currentUser.role === "SUPER_ADMIN" ||
+        isSuperAdmin ||
         (() => {
-          const s = santriList.find((santri) => santri.id === item.santriId);
-          return !s || s.gender === currentUser.gender;
+          const s = accessibleSantriList.find((santri) => santri.id === item.santriId);
+          return !!s && s.gender === currentUser.gender;
         })();
 
       return matchPrayer && matchStatus && matchClass && matchSearch && matchGender;
     });
-  }, [absensiList, santriList, currentUser, selectedPrayer, selectedStatus, selectedClass, searchQuery]);
+  }, [absensiList, accessibleSantriList, isSuperAdmin, currentUser.gender, selectedPrayer, selectedStatus, selectedClass, searchQuery]);
 
   const totalPages = Math.ceil(filteredHistory.length / PAGE_SIZE) || 1;
 
@@ -186,7 +193,7 @@ export default function PengasuhanHistoryPage() {
                 className="w-full px-3 py-2 rounded-xl text-xs font-bold bg-[#EEF2F6] border border-transparent text-[#172033] focus:bg-white focus:border-[#1B4D3E] focus:outline-none"
               >
                 <option value="ALL">Semua Kelas</option>
-                {kelasList.map((cls) => (
+                {availableClasses.map((cls) => (
                   <option key={cls} value={cls}>Kelas {cls}</option>
                 ))}
               </select>

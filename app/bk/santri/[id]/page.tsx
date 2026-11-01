@@ -31,7 +31,8 @@ function BkSantriDetailContent() {
   const params = useParams();
   const santriId = (params?.id as string) || "";
 
-  const { santriList, penilaianList, absensiList, showToast } = useMizan();
+  const { accessibleSantriList, penilaianList, absensiList, showToast, currentUser } = useMizan();
+  const isSuperAdmin = currentUser?.role === "SUPER_ADMIN";
   const [printDate, setPrintDate] = useState("1 November 2026");
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [penilaianPage, setPenilaianPage] = useState(1);
@@ -53,7 +54,14 @@ function BkSantriDetailContent() {
     }
   }, []);
 
-  const santri = santriList.find((s) => s.id === santriId) || santriList[0];
+  const santri = accessibleSantriList.find((s) => s.id === santriId) || accessibleSantriList[0];
+
+  useEffect(() => {
+    if (santri && !isSuperAdmin && currentUser?.gender && santri.gender !== currentUser.gender) {
+      showToast("Akses dibatasi sesuai unit putra/putri", "error");
+      router.replace("/bk/santri");
+    }
+  }, [santri, isSuperAdmin, currentUser?.gender, router, showToast]);
 
   const studentPenilaian = penilaianList.filter((p) => p.santriId === santri?.id);
   const studentAbsensi = absensiList.filter((a) => a.santriId === santri?.id);

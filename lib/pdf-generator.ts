@@ -232,27 +232,6 @@ export async function generateSantriPdf(
   }
 
   const blob = doc.output("blob");
-  const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-
-  if (isMobile && typeof navigator.share === "function" && typeof File !== "undefined") {
-    try {
-      const file = new File([blob], filename, { type: "application/pdf" });
-      const canShareFiles = typeof navigator.canShare === "function" ? navigator.canShare({ files: [file] }) : true;
-      if (canShareFiles) {
-        await navigator.share({
-          files: [file],
-          title: filename,
-          text: `Rapor Santri ${santri.name || ""}`
-        });
-        return;
-      }
-    } catch (shareErr: unknown) {
-      if ((shareErr as Error)?.name === "AbortError") {
-        return;
-      }
-    }
-  }
-
   const blobUrl = URL.createObjectURL(blob);
   const anchor = document.createElement("a");
   anchor.href = blobUrl;
