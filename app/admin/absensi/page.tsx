@@ -307,17 +307,17 @@ export default function AdminAbsensiPage() {
             <div className="flex items-center gap-2">
               <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-[#FAF7EE] text-[#A8833E] border border-[#C5A059]/30 flex items-center gap-1.5">
                 <ShieldCheck className="w-3.5 h-3.5" />
-                <span>Pusat Kendali Super Admin</span>
+                <span>Super Admin</span>
               </span>
               <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-[#EEF2F6] text-[#64748B]">
-                Audit & Rekapitulasi Presensi Sholat
+                Audit Presensi
               </span>
             </div>
             <h1 className="text-xl sm:text-2xl font-serif font-black text-[#172033] tracking-tight mt-1.5">
-              Monitoring Absensi Sholat (BK)
+              Monitoring Absensi
             </h1>
             <p className="text-xs text-[#64748B]">
-              Pantau kepatuhan penginputan presensi oleh Petugas Pengasuhan (BK) per hari dan per sesi sholat
+              Rekapitulasi presensi sholat harian santri dan santriwati
             </p>
           </div>
 
@@ -329,7 +329,7 @@ export default function AdminAbsensiPage() {
               className="px-3.5 py-2 rounded-2xl bg-white border border-[#E2EBF4] text-[#172033] text-xs font-bold hover:bg-[#FAF7EE] transition-all flex items-center gap-1.5 shadow-xs"
             >
               <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? "animate-spin text-[#1B4D3E]" : "text-[#64748B]"}`} />
-              <span>Sinkron Data</span>
+              <span>Sinkron</span>
             </button>
             <Link
               href="/admin/dashboard"
@@ -355,7 +355,7 @@ export default function AdminAbsensiPage() {
               }`}
             >
               <CalendarCheck className="w-3.5 h-3.5" />
-              <span>Rekap Harian & Sesi BK</span>
+              <span>Sesi</span>
             </button>
             <button
               type="button"
@@ -367,7 +367,7 @@ export default function AdminAbsensiPage() {
               }`}
             >
               <FileSpreadsheet className="w-3.5 h-3.5" />
-              <span>Seluruh Log Presensi</span>
+              <span>Log</span>
             </button>
           </div>
 
@@ -383,7 +383,7 @@ export default function AdminAbsensiPage() {
                     : "text-[#64748B] hover:text-[#172033]"
                 }`}
               >
-                {g === "ALL" ? "Semua Santri" : g}
+                {g === "ALL" ? "Semua" : g}
               </button>
             ))}
           </div>
@@ -478,10 +478,10 @@ export default function AdminAbsensiPage() {
                     )}
                   </div>
                   <h2 className="text-base sm:text-lg font-serif font-black text-[#172033] mt-1">
-                    Rekapitulasi Sesi Sholat: {formatDateLabel(selectedDate)}
+                    Rekapitulasi Sesi: {formatDateLabel(selectedDate)}
                   </h2>
                   <p className="text-xs text-[#64748B]">
-                    Klik pada salah satu kartu sesi sholat di bawah untuk melihat rincian santri dan petugas BK
+                    Pilih sesi sholat untuk rincian
                   </p>
                 </div>
 
@@ -543,10 +543,10 @@ export default function AdminAbsensiPage() {
               <div className="flex items-center justify-between">
                 <h3 className="text-xs font-bold uppercase tracking-wider text-[#172033] flex items-center gap-1.5">
                   <Sparkles className="w-3.5 h-3.5 text-[#A8833E]" />
-                  <span>Daftar Sesi Sholat Santri ({selectedDayOverview.sessionsCount}/7 Diinput)</span>
+                  <span>Sesi Sholat ({selectedDayOverview.sessionsCount}/7)</span>
                 </h3>
                 <span className="text-[11px] text-[#64748B]">
-                  Pilih salah satu sesi (contoh: Sholat Ashar) untuk melihat rincian
+                  Pilih sesi untuk rincian
                 </span>
               </div>
 
@@ -587,11 +587,11 @@ export default function AdminAbsensiPage() {
                           {isComplete ? (
                             <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-[#ECFDF5] text-[#065F46] border border-[#A7F3D0] inline-flex items-center gap-1">
                               <Check className="w-3 h-3" />
-                              <span>Selesai Diabsen</span>
+                              <span>Selesai</span>
                             </span>
                           ) : (
                             <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-[#F1F5F9] text-[#64748B]">
-                              Belum Ada Laporan
+                              Belum Diabsen
                             </span>
                           )}
                         </div>
@@ -606,7 +606,7 @@ export default function AdminAbsensiPage() {
                               </div>
                               <div>
                                 <span className="text-[9px] font-bold uppercase tracking-wider text-[#94A3B8] block">
-                                  Petugas BK / Pengasuhan
+                                  Petugas Pengasuhan
                                 </span>
                                 <span className="text-xs font-bold text-[#172033] block truncate max-w-[200px] sm:max-w-[240px]">
                                   {session.bkStaff.join(", ") || "Tim Pengasuhan"}
@@ -661,7 +661,7 @@ export default function AdminAbsensiPage() {
                               }}
                               className="px-3 py-1.5 rounded-xl bg-[#1B4D3E] text-white font-bold hover:bg-[#153e32] transition-colors flex items-center gap-1 shadow-2xs"
                             >
-                              <span>Lihat Detail {session.prayer}</span>
+                              <span>Detail</span>
                               <ChevronRight className="w-3.5 h-3.5" />
                             </button>
                           </div>
@@ -669,13 +669,13 @@ export default function AdminAbsensiPage() {
                       ) : (
                         <div className="py-4 text-center">
                           <p className="text-xs text-[#94A3B8]">
-                            Sesi Sholat {session.prayer} belum diinput oleh Tim Pengasuhan BK
+                            Belum tercatat presensi
                           </p>
                           <Link
                             href="/bk/absen"
                             className="inline-flex items-center gap-1 text-[11px] font-bold text-[#1B4D3E] hover:underline mt-2"
                           >
-                            <span>Input Presensi Sekarang →</span>
+                            <span>Input</span>
                           </Link>
                         </div>
                       )}
@@ -696,11 +696,11 @@ export default function AdminAbsensiPage() {
                 className="px-3.5 py-2 rounded-2xl bg-white border border-[#E2EBF4] text-[#172033] text-xs font-bold hover:bg-[#FAF7EE] transition-all flex items-center gap-1.5 shadow-xs"
               >
                 <ArrowLeft className="w-4 h-4 text-[#1B4D3E]" />
-                <span>Kembali ke Rekap Sesi Harian</span>
+                <span>Kembali</span>
               </button>
 
               <div className="flex items-center gap-2">
-                <span className="text-xs text-[#64748B]">Tanggal Terpilih:</span>
+                <span className="text-xs text-[#64748B]">Tanggal:</span>
                 <span className="text-xs font-bold text-[#172033] bg-[#EEF2F6] px-2.5 py-1 rounded-xl">
                   {formatDateLabel(selectedDate)}
                 </span>
@@ -716,17 +716,17 @@ export default function AdminAbsensiPage() {
                   <div>
                     <div className="flex items-center gap-2">
                       <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-[#FAF7EE] text-[#A8833E] border border-[#C5A059]/30">
-                        Detail Presensi Sesi Sholat
+                        Detail Presensi
                       </span>
                       <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-md bg-[#EEF2F6] text-[#172033]">
                         {activeSessionDetail.schedule.time}
                       </span>
                     </div>
                     <h2 className="text-lg sm:text-xl font-serif font-black text-[#172033] mt-1">
-                      Sholat {activeSessionDetail.prayer} — {formatDateLabel(selectedDate)}
+                      Sholat {activeSessionDetail.prayer} • {formatDateLabel(selectedDate)}
                     </h2>
                     <p className="text-xs text-[#64748B]">
-                      {activeSessionDetail.schedule.period} • Tercatat {activeSessionDetail.total} santri
+                      {activeSessionDetail.schedule.period} • {activeSessionDetail.total} santri
                     </p>
                   </div>
                 </div>
@@ -954,7 +954,7 @@ export default function AdminAbsensiPage() {
                               type="button"
                               onClick={() => handleStartEdit(item)}
                               className="p-1.5 rounded-lg hover:bg-[#EEF2F6] text-[#64748B] hover:text-[#172033] transition-colors"
-                              title="Koreksi Catatan"
+                              title="Ubah"
                             >
                               <Edit2 className="w-3.5 h-3.5" />
                             </button>
@@ -975,7 +975,7 @@ export default function AdminAbsensiPage() {
 
                 {filteredSessionRecords.length === 0 && (
                   <div className="py-8 text-center text-xs text-[#94A3B8]">
-                    Tidak ada santri yang cocok dengan filter yang dipilih
+                    Data tidak ditemukan
                   </div>
                 )}
               </div>
@@ -1062,10 +1062,10 @@ export default function AdminAbsensiPage() {
               <div className="flex items-center justify-between pb-2 border-b border-[#E2E8F0]">
                 <div>
                   <h3 className="text-xs font-bold uppercase tracking-wider text-[#172033]">
-                    Seluruh Riwayat Presensi Sholat ({filteredLogRecords.length} Catatan)
+                    Riwayat Presensi ({filteredLogRecords.length})
                   </h3>
                   <p className="text-[11px] text-[#64748B]">
-                    Log komprehensif kehadiran santri yang tercatat di database pondok
+                    Riwayat presensi santri dan santriwati
                   </p>
                 </div>
               </div>
@@ -1173,7 +1173,7 @@ export default function AdminAbsensiPage() {
                               type="button"
                               onClick={() => handleStartEdit(item)}
                               className="p-1.5 rounded-lg hover:bg-[#EEF2F6] text-[#64748B] hover:text-[#172033] transition-colors"
-                              title="Koreksi"
+                              title="Ubah"
                             >
                               <Edit2 className="w-3.5 h-3.5" />
                             </button>
@@ -1194,7 +1194,7 @@ export default function AdminAbsensiPage() {
 
                 {filteredLogRecords.length === 0 && (
                   <div className="py-8 text-center text-xs text-[#94A3B8]">
-                    Tidak ada catatan yang sesuai dengan filter
+                    Data tidak ditemukan
                   </div>
                 )}
               </div>
