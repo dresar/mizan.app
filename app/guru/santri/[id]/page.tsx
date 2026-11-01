@@ -238,13 +238,20 @@ Wassalamu'alaikum Warahmatullahi Wabarakatuh.
           </div>
         </div>
 
-        <div className="hidden print:block text-center pb-4 border-b-2 border-[#1B4D3E] mb-4">
-          <h2 className="text-xl font-bold font-serif text-[#1B4D3E]">
-            PONDOK PESANTREN MODERN RAUDHATUSSALAM MAHATO
-          </h2>
-          <p className="text-xs text-gray-600">
-            LEMBAR REKAPITULASI SIKAP, ADAB, DAN KEDISIPLINAN SANTRI
-          </p>
+        <div className="hidden print:flex items-center justify-between pb-4 border-b-2 border-[#1B4D3E] mb-4 gap-4">
+          <img src="/logo-raport.png" alt="Logo Pondok" className="w-16 h-16 object-contain" />
+          <div className="text-center flex-1">
+            <h2 className="text-lg font-bold font-serif text-[#1B4D3E]">
+              PONDOK PESANTREN MODERN RAUDHATUSSALAM MAHATO
+            </h2>
+            <p className="text-xs text-gray-600">
+              LEMBAR REKAPITULASI SIKAP, ADAB, DAN KEDISIPLINAN SANTRI
+            </p>
+            <p className="text-[10px] text-gray-500 mt-0.5 font-mono">
+              Dokumen Dicetak Pada: {printDate}
+            </p>
+          </div>
+          <div className="w-16" />
         </div>
 
         <Card className="p-4 sm:p-6 bg-white">

@@ -232,16 +232,20 @@ Wassalamu'alaikum Warahmatullahi Wabarakatuh.
           </div>
         </div>
 
-        <div className="hidden print:block text-center border-b-2 border-[#1B4D3E] pb-4 mb-4">
-          <h1 className="text-xl font-bold uppercase tracking-wider text-[#1B4D3E]">
-            Pondok Pesantren Mizan
-          </h1>
-          <p className="text-xs text-[#64748B]">
-            Laporan Disiplin, Catatan Adab & Kehadiran Ibadah Santri
-          </p>
-          <p className="text-[10px] text-[#64748B] mt-1 font-mono">
-            Dokumen Dicetak Pada: {printDate}
-          </p>
+        <div className="hidden print:flex items-center justify-between border-b-2 border-[#1B4D3E] pb-4 mb-4 gap-4">
+          <img src="/logo-raport.png" alt="Logo Pondok" className="w-16 h-16 object-contain" />
+          <div className="text-center flex-1">
+            <h1 className="text-lg font-bold uppercase tracking-wider text-[#1B4D3E]">
+              PONDOK PESANTREN MODERN RAUDHATUSSALAM MAHATO
+            </h1>
+            <p className="text-xs text-[#64748B]">
+              Laporan Disiplin, Catatan Adab & Kehadiran Ibadah Santri
+            </p>
+            <p className="text-[10px] text-[#64748B] mt-1 font-mono">
+              Dokumen Dicetak Pada: {printDate}
+            </p>
+          </div>
+          <div className="w-16" />
         </div>
 
         <Card className="p-4 sm:p-5 relative overflow-hidden">

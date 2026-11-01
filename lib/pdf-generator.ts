@@ -1,5 +1,6 @@
 import { jsPDF } from "jspdf";
 import { Santri, PenilaianRecord, AbsensiRecord } from "./mock-data";
+import { LOGO_RAPORT_BASE64 } from "./logo-raport-base64";
 
 export async function generateSantriPdf(
   santri: Santri,
@@ -18,6 +19,12 @@ export async function generateSantriPdf(
   const margin = 14;
   const contentWidth = pageWidth - margin * 2;
 
+  try {
+    doc.addImage(LOGO_RAPORT_BASE64, "JPEG", margin, 7.5, 18, 18);
+  } catch {
+    void 0;
+  }
+
   doc.setDrawColor(27, 77, 62);
   doc.setLineWidth(0.8);
   doc.line(margin, 28, pageWidth - margin, 28);
@@ -26,14 +33,14 @@ export async function generateSantriPdf(
   doc.line(margin, 29.5, pageWidth - margin, 29.5);
 
   doc.setFont("times", "bold");
-  doc.setFontSize(14);
+  doc.setFontSize(13.5);
   doc.setTextColor(27, 77, 62);
-  doc.text("PONDOK PESANTREN MODERN RAUDHATUSSALAM MAHATO", pageWidth / 2, 16, { align: "center" });
+  doc.text("PONDOK PESANTREN MODERN RAUDHATUSSALAM MAHATO", 114, 16, { align: "center" });
 
   doc.setFont("helvetica", "normal");
   doc.setFontSize(8.5);
   doc.setTextColor(100, 116, 139);
-  doc.text("Kecamatan Tambusai Utara, Kabupaten Rokan Hulu, Riau | Kode Pos: 28558", pageWidth / 2, 21, { align: "center" });
+  doc.text("Kecamatan Tambusai Utara, Kabupaten Rokan Hulu, Riau | Kode Pos: 28558", 114, 21, { align: "center" });
 
   doc.setFont("helvetica", "bold");
   doc.setFontSize(10.5);
@@ -270,6 +277,12 @@ export async function generateNotaPoinPdf(
   const margin = 14;
   const contentWidth = pageWidth - margin * 2;
 
+  try {
+    doc.addImage(LOGO_RAPORT_BASE64, "JPEG", margin, 7.5, 18, 18);
+  } catch {
+    void 0;
+  }
+
   doc.setDrawColor(27, 77, 62);
   doc.setLineWidth(0.8);
   doc.line(margin, 28, pageWidth - margin, 28);
@@ -278,14 +291,14 @@ export async function generateNotaPoinPdf(
   doc.line(margin, 29.5, pageWidth - margin, 29.5);
 
   doc.setFont("times", "bold");
-  doc.setFontSize(14);
+  doc.setFontSize(13.5);
   doc.setTextColor(27, 77, 62);
-  doc.text("PONDOK PESANTREN MODERN RAUDHATUSSALAM MAHATO", pageWidth / 2, 16, { align: "center" });
+  doc.text("PONDOK PESANTREN MODERN RAUDHATUSSALAM MAHATO", 114, 16, { align: "center" });
 
   doc.setFont("helvetica", "normal");
   doc.setFontSize(8.5);
   doc.setTextColor(100, 116, 139);
-  doc.text("Kecamatan Tambusai Utara, Kabupaten Rokan Hulu, Riau | Kode Pos: 28558", pageWidth / 2, 21, { align: "center" });
+  doc.text("Kecamatan Tambusai Utara, Kabupaten Rokan Hulu, Riau | Kode Pos: 28558", 114, 21, { align: "center" });
 
   doc.setFont("helvetica", "bold");
   doc.setFontSize(11);
@@ -429,6 +442,12 @@ export async function generateSuratPeringatanPdf(
   const margin = 16;
   const contentWidth = pageWidth - margin * 2;
 
+  try {
+    doc.addImage(LOGO_RAPORT_BASE64, "JPEG", margin, 7.5, 18, 18);
+  } catch {
+    void 0;
+  }
+
   doc.setDrawColor(27, 77, 62);
   doc.setLineWidth(0.8);
   doc.line(margin, 28, pageWidth - margin, 28);
@@ -437,14 +456,14 @@ export async function generateSuratPeringatanPdf(
   doc.line(margin, 29.5, pageWidth - margin, 29.5);
 
   doc.setFont("times", "bold");
-  doc.setFontSize(14);
+  doc.setFontSize(13.5);
   doc.setTextColor(27, 77, 62);
-  doc.text("PONDOK PESANTREN MODERN RAUDHATUSSALAM MAHATO", pageWidth / 2, 16, { align: "center" });
+  doc.text("PONDOK PESANTREN MODERN RAUDHATUSSALAM MAHATO", 114, 16, { align: "center" });
 
   doc.setFont("helvetica", "normal");
   doc.setFontSize(8.5);
   doc.setTextColor(100, 116, 139);
-  doc.text("Kecamatan Tambusai Utara, Kabupaten Rokan Hulu, Riau | Kode Pos: 28558", pageWidth / 2, 21, { align: "center" });
+  doc.text("Kecamatan Tambusai Utara, Kabupaten Rokan Hulu, Riau | Kode Pos: 28558", 114, 21, { align: "center" });
 
   doc.setFont("helvetica", "normal");
   doc.setFontSize(8.5);

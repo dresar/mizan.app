@@ -242,6 +242,30 @@ export default function LoginPage() {
             </button>
           </form>
 
+          <div className="p-3.5 rounded-2xl bg-[#FAF7EE] border border-[#C5A059]/40 flex items-center justify-between gap-3 shadow-xs">
+            <div className="flex items-center gap-2.5 min-w-0">
+              <div className="w-9 h-9 rounded-xl bg-white border border-[#C5A059]/30 flex items-center justify-center text-[#A8833E] shrink-0">
+                <HeartHandshake className="w-5 h-5" />
+              </div>
+              <div className="min-w-0">
+                <p className="text-xs font-bold text-[#172033] truncate">
+                  Portal Orang Tua / Wali Santri
+                </p>
+                <p className="text-[10px] text-[#64748B] truncate">
+                  Pantau adab, sholat 7 waktu, dan rapor ananda
+                </p>
+              </div>
+            </div>
+
+            <Link
+              href="/ortu/dashboard"
+              className="px-3.5 py-1.5 rounded-xl bg-[#1B4D3E] text-white text-xs font-bold hover:bg-[#153e32] transition-colors flex items-center gap-1 shrink-0 shadow-2xs"
+            >
+              <span>Buka</span>
+              <ArrowRight className="w-3 h-3" />
+            </Link>
+          </div>
+
           <div className="pt-2">
             <div className="relative flex items-center justify-center">
               <div className="border-t border-[#E2E8F0] w-full" />
