@@ -138,6 +138,7 @@ export interface PenilaianRecord {
   proofFileSize?: number;
   createdAt: string;
   dateKey: string;
+  date?: string;
 }
 
 export interface AppSettings {
@@ -151,6 +152,10 @@ export interface AppSettings {
   bonusRingan: number;
   bonusSedang: number;
   bonusBesar: number;
+  absenHadirScore: number;
+  absenIzinScore: number;
+  absenSakitScore: number;
+  absenAlpaScore: number;
   notifyParents: boolean;
   realtimeSimulation: boolean;
   appLogoUrl?: string;
@@ -167,6 +172,10 @@ export const DEFAULT_SETTINGS: AppSettings = {
   bonusRingan: 0.05,
   bonusSedang: 0.1,
   bonusBesar: 0.234,
+  absenHadirScore: 0.050,
+  absenIzinScore: 0.000,
+  absenSakitScore: 0.000,
+  absenAlpaScore: -0.050,
   notifyParents: true,
   realtimeSimulation: true,
   appLogoUrl: "/logo.png"

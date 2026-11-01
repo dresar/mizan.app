@@ -10,13 +10,15 @@ import {
   Clock,
   User,
   Users,
-  Settings
+  Settings,
+  Award
 } from "lucide-react";
 import { useMizan } from "@/lib/mizan-context";
 
 export function BottomNav() {
   const pathname = usePathname();
-  const { activeRole } = useMizan();
+  const { activeRole, currentUser } = useMizan();
+  const uParam = currentUser?.username ? `?u=${encodeURIComponent(currentUser.username)}` : "";
 
   let navItems: { label: string; href: string; icon: React.ReactNode }[] = [];
 
@@ -31,6 +33,7 @@ export function BottomNav() {
   } else if (activeRole === "PENGASUHAN") {
     navItems = [
       { label: "Beranda", href: "/bk/dashboard", icon: <LayoutDashboard className="w-4 h-4" /> },
+      { label: "Nilai", href: "/bk/penilaian", icon: <Award className="w-4 h-4" /> },
       { label: "Absen", href: "/bk/absen", icon: <CalendarCheck className="w-4 h-4" /> },
       { label: "History", href: "/bk/history", icon: <Clock className="w-4 h-4" /> },
       { label: "Profil", href: "/bk/profil", icon: <User className="w-4 h-4" /> }
@@ -62,7 +65,7 @@ export function BottomNav() {
           return (
             <Link
               key={item.href}
-              href={item.href}
+              href={`${item.href}${uParam}`}
               className={`flex-1 flex flex-col items-center justify-center min-h-[42px] py-1 px-0.5 rounded-full transition-all text-center ${
                 isActive
                   ? "text-[#1B4D3E] font-black bg-[#ECFDF5]"

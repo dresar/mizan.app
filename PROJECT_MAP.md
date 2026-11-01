@@ -24,6 +24,7 @@ mizan.apps/
 │   │   ├── kelas/             # Detail kelas santri, rata-rata skor, prestasi/pelanggaran (tanpa modal)
 │   │   ├── wali-kelas/        # Penugasan wali kelas & fitur share statistik publik
 │   │   ├── absensi/           # Rekap absensi sholat 7 waktu & kegiatan
+│   │   ├── rapor/             # Rapor terpadu santri & santriwati (1 halaman tabel lengkap, cetak PDF massal)
 │   │   ├── pengaturan-nilai/  # Bobot nilai & batas skor adab dinamis dari DB
 │   │   ├── kategori-pelanggaran/ # Kategori, unsur, dan indikator pelanggaran (paginasi 20)
 │   │   └── users/             # Manajemen user akun (Admin, Guru, BK, Ortu)
@@ -34,7 +35,7 @@ mizan.apps/
 │   │   ├── riwayat/           # Riwayat input pembinaan
 │   │   ├── santri/ & [id]/    # Profil lengkap santri & tombol Cetak/Unduh PDF/Bagikan
 │   │   └── profil/            # Profil ustadz, ganti password, avatar VPS, share profil
-│   ├── bk/                    # Modul Konseling BK (dashboard, absen, history, profil)
+│   ├── bk/                    # Modul Pengasuhan BK (dashboard, absen dropdown realtime, penilaian santri & santriwati, history, profil)
 │   ├── ortu/dashboard/        # Dashboard wali santri / orang tua
 │   ├── santri/profil/         # Profil mandiri santri, skor adab & tombol Bagikan
 │   ├── share/[id]/            # Halaman publik kartu share (stat-*) tanpa perlu login
@@ -54,7 +55,7 @@ mizan.apps/
 ---
 
 ## 3. 🗄️ Skema Database PostgreSQL
-- `santri`: Data santri (id, nis, name, gender, class, base_score, current_score, status, avatar).
+- `santri`: Data 249 santri & santriwati resmi pondok (113 Putra, 136 Putri di 12 kelas 1A-6A & 1B-6B).
 - `guru_monitoring`: Status keaktifan dan pelaporan guru pembina.
 - `categories`, `unsurs`, `indicators`: Hierarki poin pelanggaran dan kebaikan.
 - `penilaian`: Catatan sikap hasanah/sayyiah (santri_id, guru_name, type, score, date, keterangan).

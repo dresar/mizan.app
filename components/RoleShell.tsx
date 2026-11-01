@@ -18,6 +18,24 @@ export function RoleShell({ children }: RoleShellProps) {
   const { currentUser, activeRole, isAuthenticated, isAuthLoading } = useMizan();
 
   useEffect(() => {
+    if (typeof window !== "undefined" && currentUser?.username) {
+      const url = new URL(window.location.href);
+      let changed = false;
+      if (url.searchParams.get("u") !== currentUser.username) {
+        url.searchParams.set("u", currentUser.username);
+        changed = true;
+      }
+      if (url.searchParams.get("user") !== currentUser.username) {
+        url.searchParams.set("user", currentUser.username);
+        changed = true;
+      }
+      if (changed) {
+        window.history.replaceState(null, "", url.toString());
+      }
+    }
+  }, [currentUser, pathname]);
+
+  useEffect(() => {
     if (isAuthLoading) return;
 
     if (!isAuthenticated || !currentUser?.id || !activeRole) {
@@ -25,23 +43,25 @@ export function RoleShell({ children }: RoleShellProps) {
       return;
     }
 
+    const u = encodeURIComponent(currentUser.username || "");
+
     if (pathname.startsWith("/admin")) {
       if (activeRole !== "SUPER_ADMIN") {
         if (activeRole === "PENGASUHAN") {
-          router.replace("/bk/dashboard");
+          router.replace(`/bk/dashboard?u=${u}`);
         } else {
-          router.replace("/guru/dashboard");
+          router.replace(`/guru/dashboard?u=${u}`);
         }
       }
     } else if (pathname.startsWith("/bk")) {
       if (activeRole === "SUPER_ADMIN") {
         if (pathname === "/bk/history") {
-          router.replace("/admin/absensi");
+          router.replace(`/admin/absensi?u=${u}`);
         } else {
-          router.replace("/admin/dashboard");
+          router.replace(`/admin/dashboard?u=${u}`);
         }
       } else if (activeRole !== "PENGASUHAN") {
-        router.replace("/guru/dashboard");
+        router.replace(`/guru/dashboard?u=${u}`);
       }
     } else if (pathname.startsWith("/guru")) {
       if (activeRole === "SUPER_ADMIN") {
@@ -50,7 +70,7 @@ export function RoleShell({ children }: RoleShellProps) {
           pathname === "/guru/dashboard" ||
           pathname === "/guru/profil"
         ) {
-          router.replace("/admin/dashboard");
+          router.replace(`/admin/dashboard?u=${u}`);
         }
       } else if (activeRole === "PENGASUHAN") {
         if (
@@ -58,7 +78,7 @@ export function RoleShell({ children }: RoleShellProps) {
           pathname === "/guru/dashboard" ||
           pathname === "/guru/profil"
         ) {
-          router.replace("/bk/dashboard");
+          router.replace(`/bk/dashboard?u=${u}`);
         }
       }
     }

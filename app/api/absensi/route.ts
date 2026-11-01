@@ -125,9 +125,18 @@ export async function PUT(req: Request) {
     const oldRecord = currentRows[0];
     const oldImpact = parseFloat(oldRecord.score_impact);
 
+    const settingRows = await query(`SELECT value FROM app_settings WHERE key = 'general' LIMIT 1`);
+    const generalSettings = settingRows[0]?.value || {};
+    const hadirScore = typeof generalSettings.absenHadirScore === "number" ? generalSettings.absenHadirScore : 0.050;
+    const izinScore = typeof generalSettings.absenIzinScore === "number" ? generalSettings.absenIzinScore : 0.000;
+    const sakitScore = typeof generalSettings.absenSakitScore === "number" ? generalSettings.absenSakitScore : 0.000;
+    const alpaScore = typeof generalSettings.absenAlpaScore === "number" ? generalSettings.absenAlpaScore : -0.050;
+
     let newImpact = 0.0;
-    if (status === "Hadir") newImpact = 0.050;
-    else if (status === "Alpa") newImpact = -0.050;
+    if (status === "Hadir") newImpact = hadirScore;
+    else if (status === "Alpa") newImpact = alpaScore;
+    else if (status === "Izin") newImpact = izinScore;
+    else if (status === "Sakit") newImpact = sakitScore;
 
     const delta = newImpact - oldImpact;
 

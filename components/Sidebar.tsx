@@ -14,13 +14,16 @@ import {
   Settings,
   Building2,
   GraduationCap,
-  UserCheck
+  UserCheck,
+  Award,
+  FileText
 } from "lucide-react";
 import { useMizan } from "@/lib/mizan-context";
 
 export function Sidebar() {
   const pathname = usePathname();
   const { activeRole, currentUser } = useMizan();
+  const uParam = currentUser?.username ? `?u=${encodeURIComponent(currentUser.username)}` : "";
 
   let navItems: { label: string; href: string; icon: React.ReactNode; description: string }[] = [];
 
@@ -31,6 +34,7 @@ export function Sidebar() {
       { label: "Data Kelas", href: "/admin/kelas", icon: <GraduationCap className="w-4 h-4" />, description: "Wali kelas & anggota" },
       { label: "Wali & Pembina", href: "/admin/wali-kelas", icon: <UserCheck className="w-4 h-4" />, description: "Kelola wali & pembina" },
       { label: "Data Absensi", href: "/admin/absensi", icon: <CalendarCheck className="w-4 h-4" />, description: "Rekap log sholat santri" },
+      { label: "Rapor Santri", href: "/admin/rapor", icon: <FileText className="w-4 h-4" />, description: "Rapor adab & sholat" },
       { label: "Kelola Pengguna", href: "/admin/users", icon: <User className="w-4 h-4" />, description: "Akun pembina & admin" },
       { label: "Master Kategori", href: "/admin/kategori-pelanggaran", icon: <Sliders className="w-4 h-4" />, description: "Hasanah & Sayyi'ah" },
       { label: "Pengaturan Nilai", href: "/admin/pengaturan-nilai", icon: <Settings className="w-4 h-4" />, description: "Konfigurasi bobot" }
@@ -38,6 +42,7 @@ export function Sidebar() {
   } else if (activeRole === "PENGASUHAN") {
     navItems = [
       { label: "Beranda Pengasuhan", href: "/bk/dashboard", icon: <LayoutDashboard className="w-4 h-4" />, description: "Pusat monitoring BK" },
+      { label: "Penilaian Santri", href: "/bk/penilaian", icon: <Award className="w-4 h-4" />, description: "Catat hasanah & sayyi'ah" },
       { label: "Absen Sholat", href: "/bk/absen", icon: <CalendarCheck className="w-4 h-4" />, description: "Presensi 7 waktu sholat" },
       { label: "Riwayat Absensi", href: "/bk/history", icon: <Clock className="w-4 h-4" />, description: "Log & kelola presensi" },
       { label: "Profil Pengasuhan", href: "/bk/profil", icon: <User className="w-4 h-4" />, description: "Data akun BK" }
@@ -88,7 +93,7 @@ export function Sidebar() {
           return (
             <Link
               key={item.href}
-              href={item.href}
+              href={`${item.href}${uParam}`}
               className={`flex items-center gap-3 px-3.5 py-2.5 rounded-2xl transition-all text-xs ${
                 isActive
                   ? "bg-[#1B4D3E] text-white font-bold shadow-sm"

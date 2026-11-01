@@ -166,7 +166,7 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
 
   const accessibleSantriList = useMemo(() => {
     if (!isAuthenticated || !currentUser.id) return [];
-    if (activeRole === "SUPER_ADMIN") return santriList;
+    if (activeRole === "SUPER_ADMIN" || activeRole === "PENGASUHAN") return santriList;
     if (currentUser.gender === "Putra") {
       return santriList.filter((s) => s.gender === "Putra");
     }

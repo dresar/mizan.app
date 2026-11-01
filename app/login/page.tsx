@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import {
   ShieldCheck,
@@ -27,6 +27,7 @@ interface DevAccount {
   icon: React.ReactNode;
   bg: string;
   text: string;
+  category: "Admin" | "BK Putra" | "BK Putri" | "Guru";
 }
 
 export default function LoginPage() {
@@ -40,58 +41,164 @@ export default function LoginPage() {
   const [selectedDevUser, setSelectedDevUser] = useState("");
   const [showAppModal, setShowAppModal] = useState(false);
   const [appTab, setAppTab] = useState<"android" | "ios">("android");
+  const [devCategory, setDevCategory] = useState<"Semua" | "BK Putra" | "BK Putri" | "Admin" | "Guru">("Semua");
 
   const appLogo = settings?.appLogoUrl || "/logo.png";
 
   const devAccounts: DevAccount[] = [
+    {
+      username: "admin",
+      label: "Super Admin",
+      sub: "Ust. H. Syukri",
+      icon: <ShieldCheck className="w-3.5 h-3.5" />,
+      bg: "bg-[#FEF3C7]",
+      text: "text-[#92400E]",
+      category: "Admin"
+    },
+    {
+      username: "doli",
+      label: "Ust. Doli, Lc",
+      sub: "BK Putra",
+      icon: <CalendarCheck className="w-3.5 h-3.5" />,
+      bg: "bg-[#EFF6FF]",
+      text: "text-[#1D4ED8]",
+      category: "BK Putra"
+    },
+    {
+      username: "fatihuddin",
+      label: "Ust. Fatihuddin",
+      sub: "BK Putra",
+      icon: <CalendarCheck className="w-3.5 h-3.5" />,
+      bg: "bg-[#EFF6FF]",
+      text: "text-[#1D4ED8]",
+      category: "BK Putra"
+    },
+    {
+      username: "syeikhul",
+      label: "Ust. Syeikhul",
+      sub: "BK Putra",
+      icon: <CalendarCheck className="w-3.5 h-3.5" />,
+      bg: "bg-[#EFF6FF]",
+      text: "text-[#1D4ED8]",
+      category: "BK Putra"
+    },
+    {
+      username: "willy",
+      label: "Ust. Willy",
+      sub: "BK Putra",
+      icon: <CalendarCheck className="w-3.5 h-3.5" />,
+      bg: "bg-[#EFF6FF]",
+      text: "text-[#1D4ED8]",
+      category: "BK Putra"
+    },
+    {
+      username: "ramadhani",
+      label: "Ust. Ramadhani",
+      sub: "BK Putra",
+      icon: <CalendarCheck className="w-3.5 h-3.5" />,
+      bg: "bg-[#EFF6FF]",
+      text: "text-[#1D4ED8]",
+      category: "BK Putra"
+    },
+    {
+      username: "salmah",
+      label: "Usth. Salmah, S.Pd",
+      sub: "BK Putri",
+      icon: <HeartHandshake className="w-3.5 h-3.5" />,
+      bg: "bg-[#FDF2F8]",
+      text: "text-[#BE185D]",
+      category: "BK Putri"
+    },
+    {
+      username: "nuriyana",
+      label: "Usth. Nuriyana",
+      sub: "BK Putri",
+      icon: <HeartHandshake className="w-3.5 h-3.5" />,
+      bg: "bg-[#FDF2F8]",
+      text: "text-[#BE185D]",
+      category: "BK Putri"
+    },
+    {
+      username: "suci",
+      label: "Usth. Suci Ayu",
+      sub: "BK Putri",
+      icon: <HeartHandshake className="w-3.5 h-3.5" />,
+      bg: "bg-[#FDF2F8]",
+      text: "text-[#BE185D]",
+      category: "BK Putri"
+    },
+    {
+      username: "sindih",
+      label: "Usth. Sindih",
+      sub: "BK Putri",
+      icon: <HeartHandshake className="w-3.5 h-3.5" />,
+      bg: "bg-[#FDF2F8]",
+      text: "text-[#BE185D]",
+      category: "BK Putri"
+    },
+    {
+      username: "salwa",
+      label: "Usth. Salwa",
+      sub: "BK Putri",
+      icon: <HeartHandshake className="w-3.5 h-3.5" />,
+      bg: "bg-[#FDF2F8]",
+      text: "text-[#BE185D]",
+      category: "BK Putri"
+    },
+    {
+      username: "puspita",
+      label: "Usth. Puspita",
+      sub: "BK Putri",
+      icon: <HeartHandshake className="w-3.5 h-3.5" />,
+      bg: "bg-[#FDF2F8]",
+      text: "text-[#BE185D]",
+      category: "BK Putri"
+    },
     {
       username: "ustadz",
       label: "Ustadz",
       sub: "Guru Putra",
       icon: <BookOpen className="w-3.5 h-3.5" />,
       bg: "bg-[#ECFDF5]",
-      text: "text-[#065F46]"
+      text: "text-[#065F46]",
+      category: "Guru"
     },
     {
       username: "ustadzah",
       label: "Ustadzah",
       sub: "Guru Putri",
       icon: <HeartHandshake className="w-3.5 h-3.5" />,
-      bg: "bg-[#FDF2F8]",
-      text: "text-[#BE185D]"
-    },
-    {
-      username: "pengasuhan",
-      label: "Pengasuhan (L)",
-      sub: "BK Putra",
-      icon: <CalendarCheck className="w-3.5 h-3.5" />,
-      bg: "bg-[#EFF6FF]",
-      text: "text-[#1D4ED8]"
-    },
-    {
-      username: "pengasuhan_putri",
-      label: "Pengasuhan (P)",
-      sub: "BK Putri",
-      icon: <CalendarCheck className="w-3.5 h-3.5" />,
       bg: "bg-[#F5F3FF]",
-      text: "text-[#6D28D9]"
-    },
-    {
-      username: "admin",
-      label: "Super Admin",
-      sub: "Pengasuhan",
-      icon: <ShieldCheck className="w-3.5 h-3.5" />,
-      bg: "bg-[#FEF3C7]",
-      text: "text-[#92400E]"
+      text: "text-[#6D28D9]",
+      category: "Guru"
     }
   ];
 
+  const BK_PASSWORDS: Record<string, string> = {
+    doli: "RDS123",
+    fatihuddin: "RDS123",
+    syeikhul: "RDS123",
+    willy: "RDS123",
+    ramadhani: "RDS123",
+    salmah: "RDS123",
+    nuriyana: "RDS123",
+    suci: "RDS123",
+    sindih: "RDS123",
+    salwa: "RDS123",
+    puspita: "RDS123"
+  };
+
   const handleFillForm = (targetUsername: string) => {
     setUsername(targetUsername);
-    setPassword("password123");
+    setPassword(BK_PASSWORDS[targetUsername] || "password123");
     setSelectedDevUser(targetUsername);
     setErrorMessage("");
   };
+
+  const filteredDevAccounts = useMemo(() => {
+    if (devCategory === "Semua") return devAccounts;
+    return devAccounts.filter((a) => a.category === devCategory);
+  }, [devAccounts, devCategory]);
 
   const handleFormLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -114,12 +221,13 @@ export default function LoginPage() {
 
       if (data.success && data.user) {
         loginUser(data.user);
+        const u = encodeURIComponent(data.user.username);
         if (data.user.role === "SUPER_ADMIN") {
-          router.push("/admin/dashboard");
+          router.push(`/admin/dashboard?u=${u}`);
         } else if (data.user.role === "PENGASUHAN") {
-          router.push("/bk/absen");
+          router.push(`/bk/dashboard?u=${u}`);
         } else {
-          router.push("/guru/dashboard");
+          router.push(`/guru/dashboard?u=${u}`);
         }
       } else {
         setErrorMessage(data.message || "Username atau kata sandi tidak cocok.");
@@ -245,8 +353,25 @@ export default function LoginPage() {
               </span>
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 mt-3">
-              {devAccounts.map((acc) => {
+            <div className="flex items-center justify-center gap-1 mt-2.5 overflow-x-auto pb-1">
+              {(["Semua", "BK Putra", "BK Putri", "Admin", "Guru"] as const).map((cat) => (
+                <button
+                  key={cat}
+                  type="button"
+                  onClick={() => setDevCategory(cat)}
+                  className={`px-2 py-1 rounded-xl text-[10px] font-bold transition-all shrink-0 ${
+                    devCategory === cat
+                      ? "bg-[#1B4D3E] text-white shadow-2xs"
+                      : "bg-[#F1F5F9] text-[#64748B] hover:text-[#172033]"
+                  }`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 mt-2.5">
+              {filteredDevAccounts.map((acc) => {
                 const isSelected = selectedDevUser === acc.username;
 
                 return (

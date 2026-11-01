@@ -499,6 +499,111 @@ export default function AdminPengaturanNilaiPage() {
 
           <Card className="p-4 sm:p-5 bg-white space-y-4">
             <CardHeader
+              title="Bobot Poin Presensi Sholat"
+              subtitle="Konfigurasi penambahan dan pengurangan skor adab santri berdasarkan kehadiran 7 waktu sholat"
+            />
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="space-y-1.5 p-3 rounded-2xl bg-[#ECFDF5] border border-[#A7F3D0]/60">
+                <label className="block text-xs font-bold text-[#065F46]">
+                  Poin Hadir (+)
+                </label>
+                <input
+                  type="number"
+                  step="0.001"
+                  value={formState.absenHadirScore ?? 0.05}
+                  onChange={(e) =>
+                    setFormState({
+                      ...formState,
+                      absenHadirScore: parseFloat(e.target.value) || 0
+                    })
+                  }
+                  className="w-full px-3 py-2 text-xs font-mono font-bold bg-white border border-[#A7F3D0] rounded-xl text-[#065F46] focus:outline-none"
+                />
+                <span className="text-[10px] text-[#047857] block font-medium">
+                  Default: +0,050 / sholat
+                </span>
+              </div>
+
+              <div className="space-y-1.5 p-3 rounded-2xl bg-[#FFFBEB] border border-[#FDE68A]/60">
+                <label className="block text-xs font-bold text-[#92400E]">
+                  Poin Izin
+                </label>
+                <input
+                  type="number"
+                  step="0.001"
+                  value={formState.absenIzinScore ?? 0}
+                  onChange={(e) =>
+                    setFormState({
+                      ...formState,
+                      absenIzinScore: parseFloat(e.target.value) || 0
+                    })
+                  }
+                  className="w-full px-3 py-2 text-xs font-mono font-bold bg-white border border-[#FDE68A] rounded-xl text-[#92400E] focus:outline-none"
+                />
+                <span className="text-[10px] text-[#B45309] block font-medium">
+                  Default: 0,000 (Netral)
+                </span>
+              </div>
+
+              <div className="space-y-1.5 p-3 rounded-2xl bg-[#EFF6FF] border border-[#BFDBFE]/60">
+                <label className="block text-xs font-bold text-[#1E40AF]">
+                  Poin Sakit
+                </label>
+                <input
+                  type="number"
+                  step="0.001"
+                  value={formState.absenSakitScore ?? 0}
+                  onChange={(e) =>
+                    setFormState({
+                      ...formState,
+                      absenSakitScore: parseFloat(e.target.value) || 0
+                    })
+                  }
+                  className="w-full px-3 py-2 text-xs font-mono font-bold bg-white border border-[#BFDBFE] rounded-xl text-[#1E40AF] focus:outline-none"
+                />
+                <span className="text-[10px] text-[#1D4ED8] block font-medium">
+                  Default: 0,000 (Netral)
+                </span>
+              </div>
+
+              <div className="space-y-1.5 p-3 rounded-2xl bg-[#FEF2F2] border border-[#FECACA]/60">
+                <label className="block text-xs font-bold text-[#991B1B]">
+                  Poin Alpa (-)
+                </label>
+                <input
+                  type="number"
+                  step="0.001"
+                  value={formState.absenAlpaScore ?? -0.05}
+                  onChange={(e) =>
+                    setFormState({
+                      ...formState,
+                      absenAlpaScore: parseFloat(e.target.value) || 0
+                    })
+                  }
+                  className="w-full px-3 py-2 text-xs font-mono font-bold bg-white border border-[#FECACA] rounded-xl text-[#991B1B] focus:outline-none"
+                />
+                <span className="text-[10px] text-[#B91C1C] block font-medium">
+                  Default: -0,050 / sholat
+                </span>
+              </div>
+            </div>
+
+            <div className="mizan-card-sub p-3 rounded-2xl flex items-center justify-between gap-3 text-xs">
+              <span className="text-[#64748B]">Simulasi 7 Waktu Sholat:</span>
+              <div className="flex items-center gap-3 font-mono font-bold">
+                <span className="text-[#065F46]">
+                  7x Hadir = +{((formState.absenHadirScore ?? 0.05) * 7).toFixed(3)}
+                </span>
+                <span className="text-[#991B1B]">
+                  1x Alpa = {(formState.absenAlpaScore ?? -0.05).toFixed(3)}
+                </span>
+              </div>
+            </div>
+          </Card>
+
+          <Card className="p-4 sm:p-5 bg-white space-y-4">
+            <CardHeader
               title="Pemberitahuan & Sinkronisasi"
               subtitle="Pengaturan alur informasi bagi asatidzah, santri, serta wali santri"
             />

@@ -27,6 +27,7 @@ const PRAYER_TIMES: ("ALL" | WaktuSholat)[] = [
 
 export default function PengasuhanHistoryPage() {
   const { absensiList, santriList, currentUser, kelasList, updateAbsensi, deleteAbsensi } = useMizan();
+  const uParam = currentUser?.username ? `?u=${encodeURIComponent(currentUser.username)}` : "";
 
   const [selectedPrayer, setSelectedPrayer] = useState<"ALL" | WaktuSholat>("ALL");
   const [selectedStatus, setSelectedStatus] = useState<"ALL" | StatusAbsensi>("ALL");
@@ -101,7 +102,7 @@ export default function PengasuhanHistoryPage() {
 
           <div className="flex items-center gap-2">
             <Link
-              href="/bk/absen"
+              href={`/bk/absen${uParam}`}
               className="px-4 py-2 rounded-2xl bg-[#1B4D3E] text-white text-xs font-bold hover:bg-[#153e32] transition-colors shadow-sm"
             >
               Input Absen Baru
