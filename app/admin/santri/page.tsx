@@ -18,7 +18,9 @@ import {
   Edit,
   X,
   Check,
-  GraduationCap
+  GraduationCap,
+  LayoutGrid,
+  List
 } from "lucide-react";
 import { useMizan } from "@/lib/mizan-context";
 import { RoleShell } from "@/components/RoleShell";
@@ -94,6 +96,7 @@ export default function AdminSantriPage() {
     });
   }, [santriList, searchQuery, selectedGender, selectedClass]);
 
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [currentPage, setCurrentPage] = useState(1);
   const PAGE_SIZE = 20;
 
@@ -589,19 +592,51 @@ export default function AdminSantriPage() {
                 )}
               </div>
 
-              {selectedSantriIds.length > 0 && (
-                <button
-                  type="button"
-                  onClick={handleOpenDeleteBulk}
-                  className="px-3.5 py-1.5 rounded-xl bg-red-600 text-white text-xs font-bold hover:bg-red-700 transition-colors flex items-center gap-1.5 shadow-xs"
-                >
-                  <Trash2 className="w-3.5 h-3.5" />
-                  <span>Hapus ({selectedSantriIds.length})</span>
-                </button>
-              )}
+              <div className="flex items-center gap-2">
+                {selectedSantriIds.length > 0 && (
+                  <button
+                    type="button"
+                    onClick={handleOpenDeleteBulk}
+                    className="px-3.5 py-1.5 rounded-xl bg-red-600 text-white text-xs font-bold hover:bg-red-700 transition-colors flex items-center gap-1.5 shadow-xs"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                    <span>Hapus ({selectedSantriIds.length})</span>
+                  </button>
+                )}
+
+                <div className="flex items-center p-0.5 rounded-xl bg-white border border-[#E2EBF4] shadow-2xs">
+                  <button
+                    type="button"
+                    onClick={() => setViewMode("grid")}
+                    className={`p-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1 ${
+                      viewMode === "grid"
+                        ? "bg-[#1B4D3E] text-white shadow-2xs"
+                        : "text-[#64748B] hover:text-[#172033]"
+                    }`}
+                    title="Tampilan Grid"
+                    aria-label="Grid"
+                  >
+                    <LayoutGrid className="w-4 h-4" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setViewMode("list")}
+                    className={`p-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1 ${
+                      viewMode === "list"
+                        ? "bg-[#1B4D3E] text-white shadow-2xs"
+                        : "text-[#64748B] hover:text-[#172033]"
+                    }`}
+                    title="Tampilan List"
+                    aria-label="List"
+                  >
+                    <List className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-3">
+            {viewMode === "grid" ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-3">
               {paginatedSantri.map((santri) => {
                 const isSelected = selectedSantriIds.includes(santri.id);
                 return (
@@ -702,6 +737,116 @@ export default function AdminSantriPage() {
                 );
               })}
             </div>
+            ) : (
+              <div className="space-y-2">
+                {paginatedSantri.map((santri) => {
+                  const isSelected = selectedSantriIds.includes(santri.id);
+                  return (
+                    <div
+                      key={santri.id}
+                      className={`p-3 sm:p-3.5 rounded-2xl bg-white border border-[#E2EBF4] hover:border-[#1B4D3E]/40 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs ${
+                        isSelected ? "ring-2 ring-red-400 bg-red-50/20" : ""
+                      }`}
+                    >
+                      <div className="flex items-center gap-3 min-w-0">
+                        <input
+                          type="checkbox"
+                          checked={isSelected}
+                          onChange={() => toggleSelectSantri(santri.id)}
+                          className="w-4 h-4 rounded text-[#1B4D3E] accent-[#1B4D3E] cursor-pointer shrink-0"
+                          aria-label={`Pilih ${santri.name}`}
+                        />
+                        <Avatar
+                          initials={santri.avatar}
+                          size="md"
+                          variant={santri.gender === "Putra" ? "primary" : "gold"}
+                        />
+                        <div className="min-w-0">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <h3 className="font-bold text-xs sm:text-sm text-[#172033] truncate">
+                              {santri.name}
+                            </h3>
+                            <span
+                              className={`text-[9px] font-bold px-2 py-0.5 rounded-full ${
+                                santri.gender === "Putra"
+                                  ? "bg-[#ECFDF5] text-[#065F46]"
+                                  : "bg-[#FAF7EE] text-[#A8833E]"
+                              }`}
+                            >
+                              {santri.gender}
+                            </span>
+                            <span className="text-[10px] font-bold px-1.5 py-0.2 rounded bg-[#EEF2F6] text-[#172033]">
+                              Kelas {santri.class}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-2 text-[10px] text-[#64748B] mt-0.5 flex-wrap">
+                            <span>NIS: <strong className="font-mono text-[#172033]">{santri.nis}</strong></span>
+                            {santri.waliName && (
+                              <>
+                                <span>•</span>
+                                <span className="truncate max-w-[140px]">Wali: {santri.waliName}</span>
+                              </>
+                            )}
+                            {santri.asrama && (
+                              <>
+                                <span>•</span>
+                                <span>{santri.asrama}</span>
+                              </>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center justify-between sm:justify-end gap-3 pt-2 sm:pt-0 border-t sm:border-0 border-[#F1F5F9]">
+                        <div className="flex items-center gap-3 text-right">
+                          <div>
+                            <span className="text-[9px] text-[#94A3B8] font-bold block uppercase">
+                              Skor Akhlak
+                            </span>
+                            <span className="text-xs sm:text-sm font-black font-mono text-[#1B4D3E]">
+                              {santri.currentScore.toFixed(3).replace(".", ",")}
+                            </span>
+                          </div>
+                          <div>
+                            <span className="text-[9px] text-[#94A3B8] font-bold block uppercase">
+                              Kehadiran
+                            </span>
+                            <span className="text-xs sm:text-sm font-black font-mono text-[#065F46]">
+                              {santri.totalHadir || 0} Hari
+                            </span>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-1.5 shrink-0">
+                          <button
+                            type="button"
+                            onClick={() => handleOpenEdit(santri)}
+                            className="px-2.5 py-1.5 rounded-xl text-[10px] font-bold bg-[#F1F5F9] text-[#475569] hover:bg-[#E2E8F0] transition-colors"
+                          >
+                            Edit
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={() => handleOpenDeleteSingle(santri)}
+                            className="px-2.5 py-1.5 rounded-xl text-[10px] font-bold bg-red-50 text-red-600 hover:bg-red-100 transition-colors"
+                          >
+                            Hapus
+                          </button>
+
+                          <Link
+                            href={`/guru/santri/${santri.id}`}
+                            className="px-3 py-1.5 rounded-xl text-[10px] font-bold bg-[#1B4D3E] text-white hover:bg-[#153e32] transition-colors shadow-2xs"
+                          >
+                            Profil
+                          </Link>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
 
             <Pagination
               currentPage={safePage}
