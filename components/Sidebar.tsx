@@ -13,7 +13,8 @@ import {
   Sliders,
   Settings,
   Building2,
-  ShieldCheck
+  GraduationCap,
+  UserCheck
 } from "lucide-react";
 import { useMizan } from "@/lib/mizan-context";
 
@@ -27,8 +28,10 @@ export function Sidebar() {
     navItems = [
       { label: "Dashboard", href: "/admin/dashboard", icon: <LayoutDashboard className="w-4 h-4" />, description: "Monitoring santri" },
       { label: "Data Santri", href: "/admin/santri", icon: <Users className="w-4 h-4" />, description: "Rekap santri putra & putri" },
+      { label: "Data Kelas", href: "/admin/kelas", icon: <GraduationCap className="w-4 h-4" />, description: "Wali kelas & anggota" },
+      { label: "Wali & Pembina", href: "/admin/wali-kelas", icon: <UserCheck className="w-4 h-4" />, description: "Kelola wali & pembina" },
+      { label: "Data Absensi", href: "/admin/absensi", icon: <CalendarCheck className="w-4 h-4" />, description: "Rekap log sholat santri" },
       { label: "Kelola Pengguna", href: "/admin/users", icon: <User className="w-4 h-4" />, description: "Akun pembina & admin" },
-      { label: "Riwayat Absensi BK", href: "/bk/history", icon: <CalendarCheck className="w-4 h-4" />, description: "Log sholat 7 waktu" },
       { label: "Master Kategori", href: "/admin/kategori-pelanggaran", icon: <Sliders className="w-4 h-4" />, description: "Hasanah & Sayyi'ah" },
       { label: "Pengaturan Nilai", href: "/admin/pengaturan-nilai", icon: <Settings className="w-4 h-4" />, description: "Konfigurasi bobot" }
     ];
@@ -57,13 +60,19 @@ export function Sidebar() {
       <div className="p-3 mb-3 rounded-2xl mizan-card-sub bg-white">
         <div className="flex items-center gap-1.5 text-[11px] font-bold text-[#A8833E]">
           <Building2 className="w-3.5 h-3.5 text-[#A8833E]" />
-          <span>Pengasuhan Pondok</span>
+          <span>
+            {activeRole === "SUPER_ADMIN"
+              ? "Administrator Pondok"
+              : activeRole === "PENGASUHAN"
+              ? "Pengasuhan Pondok (BK)"
+              : "Asatidzah / Pembina"}
+          </span>
         </div>
         <p className="text-xs font-bold text-[#172033] mt-0.5 truncate">
           {currentUser?.name || "Akun"}
         </p>
         <span className="inline-block text-[10px] text-[#94A3B8] font-medium">
-          {currentUser?.roleTitle || "Pengasuhan"}
+          {currentUser?.roleTitle || (activeRole === "SUPER_ADMIN" ? "Super Admin" : "Pengasuhan")}
         </span>
       </div>
 

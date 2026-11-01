@@ -116,6 +116,7 @@ export interface AbsensiRecord {
   scoreImpact: number;
   notes?: string;
   createdAt: string;
+  rawCreatedAt?: string;
 }
 
 export interface PenilaianRecord {
@@ -141,6 +142,9 @@ export interface PenilaianRecord {
 
 export interface AppSettings {
   defaultBaseScore: number;
+  minScoreBaik: number;
+  minScorePerhatian: number;
+  maxScore: number;
   penaltyRingan: number;
   penaltySedang: number;
   penaltyBerat: number;
@@ -153,12 +157,15 @@ export interface AppSettings {
 
 export const DEFAULT_SETTINGS: AppSettings = {
   defaultBaseScore: 70.0,
-  penaltyRingan: 0.5,
-  penaltySedang: 1.5,
-  penaltyBerat: 3.0,
-  bonusRingan: 0.5,
-  bonusSedang: 1.0,
-  bonusBesar: 2.0,
+  minScoreBaik: 80.0,
+  minScorePerhatian: 70.0,
+  maxScore: 100.0,
+  penaltyRingan: -0.05,
+  penaltySedang: -0.1,
+  penaltyBerat: -0.25,
+  bonusRingan: 0.05,
+  bonusSedang: 0.1,
+  bonusBesar: 0.234,
   notifyParents: true,
   realtimeSimulation: true
 };

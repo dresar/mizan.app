@@ -18,10 +18,22 @@ import {
   DEFAULT_SETTINGS
 } from "./mock-data";
 
+export type { UserProfile } from "./mock-data";
+
 export interface ToastItem {
   id: string;
   message: string;
   type: "success" | "error" | "info";
+}
+
+export interface ClassInfo {
+  id: string;
+  name: string;
+  gender: "Putra" | "Putri";
+  waliKelas: string;
+  guruId: string;
+  studentCount: number;
+  avgScore: number;
 }
 
 interface MizanContextType {
@@ -37,6 +49,10 @@ interface MizanContextType {
   santriList: Santri[];
   accessibleSantriList: Santri[];
   getSantri: (id: string) => Santri | undefined;
+  addSantri: (santriData: Partial<Santri>) => Promise<{ success: boolean; message: string }>;
+  importSantriBatch: (batch: Array<Partial<Santri>>) => Promise<{ success: boolean; message: string }>;
+  updateSantri: (id: string, santriData: Partial<Santri>) => Promise<{ success: boolean; message: string }>;
+  deleteSantri: (id: string) => Promise<{ success: boolean; message: string }>;
   categories: Kategori[];
   guruList: GuruMonitoring[];
   setGuruStatus: (guruId: string, status: StatusGuru) => void;
@@ -48,10 +64,12 @@ interface MizanContextType {
   updateAbsensi: (id: string, status: StatusAbsensi, notes?: string) => Promise<{ success: boolean; message: string }>;
   deleteAbsensi: (id: string) => Promise<{ success: boolean; message: string }>;
   kelasList: string[];
-  addClass: (newClass: string) => void;
+  classList: ClassInfo[];
+  addClass: (newClass: string, gender?: "Putra" | "Putri", waliKelas?: string, guruId?: string) => Promise<{ success: boolean; message: string }>;
+  updateClass: (name: string, data: { gender?: "Putra" | "Putri"; waliKelas?: string; guruId?: string }) => Promise<{ success: boolean; message: string }>;
   removeClass: (className: string) => void;
   settings: AppSettings;
-  updateSettings: (newSettings: Partial<AppSettings>) => void;
+  updateSettings: (newSettings: Partial<AppSettings>, options?: { applyToSantri?: boolean; applyToIndicators?: boolean }) => Promise<{ success: boolean; message: string }>;
   toasts: ToastItem[];
   showToast: (message: string, type?: "success" | "error" | "info") => void;
   dismissToast: (id: string) => void;
@@ -91,6 +109,7 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
   const [userList, setUserList] = useState<UserProfile[]>([]);
   const [santriList, setSantriList] = useState<Santri[]>([]);
   const [kelasList, setKelasList] = useState<string[]>(["1A", "1B", "1C", "1D", "2A", "2B"]);
+  const [classList, setClassList] = useState<ClassInfo[]>([]);
   const [categories, setCategories] = useState<Kategori[]>([]);
   const [guruList, setGuruList] = useState<GuruMonitoring[]>([]);
   const [penilaianList, setPenilaianList] = useState<PenilaianRecord[]>([]);
@@ -127,6 +146,7 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
           }
         }
         if (data.kelasList && data.kelasList.length > 0) setKelasList(data.kelasList);
+        if (data.classList) setClassList(data.classList);
         if (data.guruList) setGuruList(data.guruList);
         if (data.categories) setCategories(data.categories);
         if (data.penilaianList) setPenilaianList(data.penilaianList);
@@ -227,10 +247,13 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
     setSantriList((prev) =>
       prev.map((s) => {
         if (s.id !== id) return s;
-        const newScore = Math.max(0, Math.min(99, Number((s.currentScore + delta).toFixed(3))));
+        const maxVal = settings.maxScore || 100;
+        const newScore = Math.max(0, Math.min(maxVal, Number((s.currentScore + delta).toFixed(3))));
+        const minBaik = settings.minScoreBaik ?? 80;
+        const minPerhatian = settings.minScorePerhatian ?? 70;
         let newStatus: StatusSantri = "Baik";
-        if (newScore < 60) newStatus = "Perlu Pembinaan";
-        else if (newScore < 75) newStatus = "Perhatian";
+        if (newScore < minPerhatian) newStatus = "Perlu Pembinaan";
+        else if (newScore < minBaik) newStatus = "Perhatian";
         return {
           ...s,
           currentScore: newScore,
@@ -363,30 +386,138 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const addClass = (newClass: string) => {
+  const addSantri = async (santriData: Partial<Santri>): Promise<{ success: boolean; message: string }> => {
+    try {
+      const res = await fetch("/api/santri", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(santriData)
+      });
+      const data = await res.json();
+      if (data.success) {
+        await refreshData();
+        showToast(data.message, "success");
+        return { success: true, message: data.message };
+      }
+      showToast(data.message || "Gagal menambah santri", "error");
+      return { success: false, message: data.message || "Gagal menambah santri" };
+    } catch (err: any) {
+      showToast(err.message, "error");
+      return { success: false, message: err.message };
+    }
+  };
+
+  const importSantriBatch = async (batch: Array<Partial<Santri>>): Promise<{ success: boolean; message: string }> => {
+    try {
+      const res = await fetch("/api/santri", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(batch)
+      });
+      const data = await res.json();
+      if (data.success) {
+        await refreshData();
+        showToast(data.message, "success");
+        return { success: true, message: data.message };
+      }
+      showToast(data.message || "Gagal mengimpor data santri", "error");
+      return { success: false, message: data.message || "Gagal mengimpor data santri" };
+    } catch (err: any) {
+      showToast(err.message, "error");
+      return { success: false, message: err.message };
+    }
+  };
+
+  const updateSantri = async (id: string, santriData: Partial<Santri>): Promise<{ success: boolean; message: string }> => {
+    try {
+      const res = await fetch("/api/santri", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, ...santriData })
+      });
+      const data = await res.json();
+      if (data.success) {
+        await refreshData();
+        showToast(data.message, "success");
+        return { success: true, message: data.message };
+      }
+      showToast(data.message || "Gagal memperbarui santri", "error");
+      return { success: false, message: data.message || "Gagal memperbarui santri" };
+    } catch (err: any) {
+      showToast(err.message, "error");
+      return { success: false, message: err.message };
+    }
+  };
+
+  const deleteSantri = async (id: string): Promise<{ success: boolean; message: string }> => {
+    try {
+      const res = await fetch(`/api/santri?id=${id}`, { method: "DELETE" });
+      const data = await res.json();
+      if (data.success) {
+        await refreshData();
+        showToast(data.message, "info");
+        return { success: true, message: data.message };
+      }
+      showToast(data.message || "Gagal menghapus santri", "error");
+      return { success: false, message: data.message || "Gagal menghapus santri" };
+    } catch (err: any) {
+      showToast(err.message, "error");
+      return { success: false, message: err.message };
+    }
+  };
+
+  const addClass = async (newClass: string, gender: "Putra" | "Putri" = "Putra", waliKelas = "", guruId = ""): Promise<{ success: boolean; message: string }> => {
     const clean = newClass.trim().toUpperCase();
-    if (!clean) return;
+    if (!clean) return { success: false, message: "Nama kelas wajib diisi." };
     if (kelasList.includes(clean)) {
       showToast("Kelas sudah ada", "error");
-      return;
+      return { success: false, message: "Kelas sudah ada." };
     }
     setKelasList((prev) => [...prev, clean]);
 
-    fetch("/api/classes", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name: clean })
-    }).catch(() => void 0);
+    try {
+      const res = await fetch("/api/classes", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: clean, gender, waliKelas, guruId })
+      });
+      const data = await res.json();
+      await refreshData();
+      showToast(`Kelas ${clean} berhasil ditambahkan`, "success");
+      return { success: true, message: data.message || `Kelas ${clean} berhasil ditambahkan.` };
+    } catch (err: any) {
+      return { success: false, message: err.message };
+    }
+  };
 
-    showToast(`Kelas ${clean} berhasil ditambahkan`, "success");
+  const updateClass = async (name: string, data: { gender?: "Putra" | "Putri"; waliKelas?: string; guruId?: string }): Promise<{ success: boolean; message: string }> => {
+    try {
+      const res = await fetch("/api/classes", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, ...data })
+      });
+      const resData = await res.json();
+      if (resData.success) {
+        await refreshData();
+        showToast(resData.message, "success");
+        return { success: true, message: resData.message };
+      }
+      showToast(resData.message || "Gagal memperbarui kelas", "error");
+      return { success: false, message: resData.message || "Gagal memperbarui kelas" };
+    } catch (err: any) {
+      showToast(err.message, "error");
+      return { success: false, message: err.message };
+    }
   };
 
   const removeClass = (className: string) => {
     setKelasList((prev) => prev.filter((c) => c !== className));
+    setClassList((prev) => prev.filter((c) => c.name !== className));
 
     fetch(`/api/classes?name=${className}`, {
       method: "DELETE"
-    }).catch(() => void 0);
+    }).then(() => refreshData()).catch(() => void 0);
 
     showToast(`Kelas ${className} dihapus`, "info");
   };
@@ -395,9 +526,35 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
     setGuruList((prev) => prev.map((g) => (g.id === guruId ? { ...g, status } : g)));
   };
 
-  const updateSettings = (newSettings: Partial<AppSettings>) => {
-    setSettings((prev) => ({ ...prev, ...newSettings }));
-    showToast("Pengaturan disimpan", "success");
+  const updateSettings = async (
+    newSettings: Partial<AppSettings>,
+    options?: { applyToSantri?: boolean; applyToIndicators?: boolean }
+  ): Promise<{ success: boolean; message: string }> => {
+    const merged = { ...settings, ...newSettings };
+    setSettings(merged);
+
+    try {
+      const res = await fetch("/api/settings", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          settings: merged,
+          applyToSantri: options?.applyToSantri || false,
+          applyToIndicators: options?.applyToIndicators || false
+        })
+      });
+      const data = await res.json();
+      if (data.success) {
+        await refreshData();
+        showToast("Pengaturan berhasil disimpan", "success");
+        return { success: true, message: data.message };
+      }
+      showToast(data.message || "Gagal menyimpan pengaturan", "error");
+      return { success: false, message: data.message };
+    } catch {
+      showToast("Pengaturan disimpan", "success");
+      return { success: true, message: "Pengaturan disimpan" };
+    }
   };
 
   const addIndikatorToUnsur = (unsurId: string, ind: Omit<Indikator, "id">) => {
@@ -566,6 +723,10 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
         santriList,
         accessibleSantriList,
         getSantri,
+        addSantri,
+        importSantriBatch,
+        updateSantri,
+        deleteSantri,
         categories,
         guruList,
         setGuruStatus,
@@ -577,7 +738,9 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
         updateAbsensi,
         deleteAbsensi,
         kelasList,
+        classList,
         addClass,
+        updateClass,
         removeClass,
         settings,
         updateSettings,

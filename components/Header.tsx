@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Scale, LogOut, User } from "lucide-react";
+import { Scale, LogOut, User, Smartphone } from "lucide-react";
 import { useMizan } from "@/lib/mizan-context";
 import { Avatar } from "@/components/ui/Avatar";
 
@@ -55,6 +55,16 @@ export default function Header() {
               variant={currentUser?.gender === "Putri" ? "gold" : "primary"}
             />
           </Link>
+
+          <a
+            href="/downloads/mizan.apk"
+            download="mizan.apk"
+            title="Aplikasi"
+            className="p-2 rounded-2xl border border-[#E2EBF4] hover:bg-[#FAF7EE] text-[#1B4D3E] hover:text-[#065F46] transition-colors shrink-0"
+            aria-label="Aplikasi"
+          >
+            <Smartphone className="w-4 h-4" />
+          </a>
 
           <button
             type="button"

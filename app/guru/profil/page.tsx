@@ -13,17 +13,20 @@ import {
   CheckCircle2,
   Camera,
   Save,
-  Loader2
+  Loader2,
+  Share2
 } from "lucide-react";
 import { useMizan } from "@/lib/mizan-context";
 import { RoleShell } from "@/components/RoleShell";
 import { Card, CardSub, CardInset } from "@/components/ui/Card";
 import { Avatar } from "@/components/ui/Avatar";
+import { ShareModal } from "@/components/ShareModal";
 
 export default function GuruProfilPage() {
   const router = useRouter();
   const { currentUser, penilaianList, absensiList, logoutUser, showToast, refreshData, updateUserAvatar } = useMizan();
 
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [avatarUrl, setAvatarUrl] = useState(currentUser.avatarUrl || "");
@@ -160,9 +163,20 @@ export default function GuruProfilPage() {
             <p className="text-xs font-bold text-[#A8833E] mt-0.5">
               {currentUser.roleTitle}
             </p>
-            <div className="inline-flex items-center gap-1.5 mt-2 px-3 py-1 rounded-full mizan-pill bg-[#ECFDF5] text-[#065F46] text-[11px] font-bold">
-              <CheckCircle2 className="w-3.5 h-3.5" />
-              <span>Status Pembina Aktif ({currentUser.gender || "Putra"})</span>
+            <div className="flex flex-wrap items-center justify-center gap-2 mt-2">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full mizan-pill bg-[#ECFDF5] text-[#065F46] text-[11px] font-bold">
+                <CheckCircle2 className="w-3.5 h-3.5" />
+                <span>Status Pembina Aktif ({currentUser.gender || "Putra"})</span>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setIsShareModalOpen(true)}
+                className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-[#FAF7EE] text-[#A8833E] border border-[#C5A059]/40 hover:bg-[#F5EED9] text-xs font-bold transition-colors shadow-xs"
+              >
+                <Share2 className="w-3.5 h-3.5 text-[#C5A059]" />
+                <span>Bagikan</span>
+              </button>
             </div>
           </div>
         </Card>
@@ -361,6 +375,13 @@ export default function GuruProfilPage() {
             <span>Keluar</span>
           </button>
         </div>
+
+        <ShareModal
+          isOpen={isShareModalOpen}
+          onClose={() => setIsShareModalOpen(false)}
+          initialType="USTADZ"
+          targetUstadz={currentUser}
+        />
       </div>
     </RoleShell>
   );

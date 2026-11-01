@@ -34,7 +34,16 @@ export async function GET() {
     `);
 
     const classRows = await query(`
-      SELECT name FROM classes ORDER BY name ASC
+      SELECT 
+        c.id, c.name, COALESCE(c.gender, 'Putra') as gender,
+        COALESCE(c.wali_kelas, '') as "waliKelas",
+        COALESCE(c.guru_id, '') as "guruId",
+        COUNT(s.id)::int as "studentCount",
+        COALESCE(ROUND(AVG(s.current_score), 3), 70.000) as "avgScore"
+      FROM classes c
+      LEFT JOIN santri s ON UPPER(s.class) = UPPER(c.name)
+      GROUP BY c.id, c.name, c.gender, c.wali_kelas, c.guru_id
+      ORDER BY c.name ASC
     `);
 
     const guruRows = await query(`
@@ -94,7 +103,7 @@ export async function GET() {
         guru_name as "guruName", COALESCE(waktu_sholat, 'Subuh') as "waktuSholat",
         date, status, score_impact as "scoreImpact",
         notes, created_at as "createdAt"
-      FROM absensi ORDER BY created_at DESC LIMIT 200
+      FROM absensi ORDER BY created_at DESC LIMIT 2500
     `);
 
     const settingsRows = await query(`
@@ -141,14 +150,19 @@ export async function GET() {
       })
     }));
 
-    const formattedAbsensi: AbsensiRecord[] = absRows.map((a: any) => ({
-      ...a,
-      scoreImpact: parseFloat(a.scoreImpact),
-      createdAt: new Date(a.createdAt).toLocaleDateString("id-ID", {
-        day: "numeric",
-        month: "short"
-      })
-    }));
+    const formattedAbsensi: AbsensiRecord[] = absRows.map((a: any) => {
+      const dt = new Date(a.createdAt);
+      const isValid = !isNaN(dt.getTime());
+      const timeStr = isValid
+        ? dt.toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" }) + " WIB"
+        : "";
+      return {
+        ...a,
+        scoreImpact: parseFloat(a.scoreImpact),
+        createdAt: timeStr || "Baru saja",
+        rawCreatedAt: isValid ? dt.toISOString() : undefined
+      };
+    });
 
     const kelasList: string[] = classRows.map((c: any) => c.name);
     const settings: AppSettings = settingsRows.length > 0 ? settingsRows[0].value : DEFAULT_SETTINGS;
@@ -158,6 +172,7 @@ export async function GET() {
       santri: formattedSantri,
       users: formattedUsers,
       kelasList,
+      classList: classRows,
       guruList: guruRows,
       categories,
       penilaianList: formattedPenilaian,

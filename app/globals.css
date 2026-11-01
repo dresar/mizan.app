@@ -48,17 +48,17 @@ button, a, input, select, textarea {
 
 .mizan-card {
   background: #ffffff;
-  border-radius: 24px;
+  border-radius: 28px;
   border: 1px solid rgba(226, 235, 244, 0.85);
-  box-shadow: 8px 8px 24px rgba(160, 175, 195, 0.24), -8px -8px 24px rgba(255, 255, 255, 0.95);
+  box-shadow: 8px 8px 24px rgba(160, 175, 195, 0.22), -8px -8px 24px rgba(255, 255, 255, 0.95);
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .mizan-card-sub {
   background: #ffffff;
-  border-radius: 18px;
+  border-radius: 20px;
   border: 1px solid rgba(226, 235, 244, 0.75);
-  box-shadow: 4px 4px 12px rgba(160, 175, 195, 0.18), -4px -4px 12px rgba(255, 255, 255, 0.95);
+  box-shadow: 4px 4px 12px rgba(160, 175, 195, 0.16), -4px -4px 12px rgba(255, 255, 255, 0.95);
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -128,4 +128,27 @@ button, a, input, select, textarea {
 
 ::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
+}
+
+@media print {
+  body {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+  }
+  header, aside, nav, .print\:hidden {
+    display: none !important;
+  }
+  main {
+    padding: 0 !important;
+    margin: 0 !important;
+    background: transparent !important;
+  }
+  .mizan-card, .mizan-card-sub {
+    box-shadow: none !important;
+    border: 1px solid #e2e8f0 !important;
+  }
+  @page {
+    size: A4 portrait;
+    margin: 12mm 14mm;
+  }
 }

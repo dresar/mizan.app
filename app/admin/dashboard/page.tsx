@@ -8,33 +8,25 @@ import {
   TrendingUp,
   AlertTriangle,
   Award,
-  Clock,
-  ArrowRight,
   ShieldAlert,
   CheckCircle2,
   AlertCircle,
   HelpCircle,
-  BarChart3,
-  Trophy,
-  Medal,
-  Calendar,
-  UserCheck,
-  UserX,
-  ExternalLink,
-  ChevronRight
+  Trophy
 } from "lucide-react";
 import { useMizan } from "@/lib/mizan-context";
 import { RoleShell } from "@/components/RoleShell";
-import { Card, CardHeader, CardSub, CardInset } from "@/components/ui/Card";
+import { Card, CardHeader, CardSub } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { Avatar } from "@/components/ui/Avatar";
 import { StatusGuru } from "@/lib/mock-data";
+import { PembinaReportChart } from "@/components/PembinaReportChart";
+import { PrayerAttendanceChart } from "@/components/PrayerAttendanceChart";
 
 export default function AdminDashboardPage() {
-  const { santriList, guruList, penilaianList, setGuruStatus } = useMizan();
+  const { santriList, guruList, absensiList, setGuruStatus } = useMizan();
 
   const [leaderboardGender, setLeaderboardGender] = useState<"ALL" | "Putra" | "Putri">("ALL");
-  const [reportTimeframe, setReportTimeframe] = useState<"HARIAN" | "MINGGUAN" | "BULANAN">("HARIAN");
 
   const totalSantri = santriList.length;
   const totalGuru = guruList.length;
@@ -59,36 +51,6 @@ export default function AdminDashboardPage() {
       .sort((a, b) => a.currentScore - b.currentScore);
   }, [santriList]);
 
-  const teacherAnalytics = useMemo(() => {
-    return guruList.map((guru) => {
-      let count = guru.reportCountToday;
-      let target = 5;
-
-      if (reportTimeframe === "MINGGUAN") {
-        count = guru.reportCountToday * 6 + (guru.id === "guru-1" ? 18 : guru.id === "guru-4" ? 14 : 2);
-        target = 30;
-      } else if (reportTimeframe === "BULANAN") {
-        count = guru.reportCountToday * 24 + (guru.id === "guru-1" ? 68 : guru.id === "guru-4" ? 54 : 8);
-        target = 120;
-      }
-
-      const percentage = Math.min(100, Math.round((count / target) * 100));
-      const isRare = count <= (reportTimeframe === "HARIAN" ? 0 : reportTimeframe === "MINGGUAN" ? 5 : 20);
-
-      return {
-        ...guru,
-        periodCount: count,
-        target,
-        percentage,
-        isRare
-      };
-    });
-  }, [guruList, reportTimeframe]);
-
-  const teachersNeedingReminder = useMemo(() => {
-    return teacherAnalytics.filter((t) => t.isRare);
-  }, [teacherAnalytics]);
-
   const getGuruBadgeVariant = (status: StatusGuru) => {
     if (status === "Sudah Lapor") return "sudah-lapor";
     if (status === "Laporan Nihil") return "laporan-nihil";
@@ -107,7 +69,7 @@ export default function AdminDashboardPage() {
 
   return (
     <RoleShell>
-      <div className="space-y-5 max-w-5xl mx-auto overflow-x-hidden">
+      <div className="space-y-5 max-w-5xl mx-auto overflow-x-hidden pb-36">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
             <div className="flex items-center gap-2">
@@ -129,7 +91,7 @@ export default function AdminDashboardPage() {
               className="px-3.5 py-2 rounded-2xl bg-[#1B4D3E] text-white text-xs font-bold flex items-center gap-1.5 shadow-sm hover:bg-[#153e32] transition-colors"
             >
               <Users className="w-3.5 h-3.5" />
-              <span>Kelola Pengguna</span>
+              <span>Pengguna</span>
             </Link>
           </div>
         </div>
@@ -196,112 +158,9 @@ export default function AdminDashboardPage() {
           </CardSub>
         </div>
 
-        <Card className="p-4 sm:p-5 space-y-4 bg-white">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-2 border-b border-[#E2E8F0]">
-            <div>
-              <div className="flex items-center gap-2">
-                <BarChart3 className="w-4 h-4 text-[#1B4D3E]" />
-                <h2 className="text-xs sm:text-sm font-bold text-[#172033] uppercase tracking-wider">
-                  Analisis Intensitas Laporan Asatidzah
-                </h2>
-              </div>
-              <p className="text-[11px] text-[#64748B] mt-0.5">
-                Monitoring keaktifan pembina menginput catatan sikap santri harian, mingguan, dan bulanan
-              </p>
-            </div>
+        <PrayerAttendanceChart absensiList={absensiList} />
 
-            <div className="inline-flex rounded-xl p-1 bg-[#EEF2F6] self-start sm:self-auto">
-              {(["HARIAN", "MINGGUAN", "BULANAN"] as const).map((period) => (
-                <button
-                  key={period}
-                  type="button"
-                  onClick={() => setReportTimeframe(period)}
-                  className={`px-3 py-1 rounded-lg text-[10px] font-bold transition-all ${
-                    reportTimeframe === period
-                      ? "bg-white text-[#1B4D3E] shadow-xs"
-                      : "text-[#64748B] hover:text-[#172033]"
-                  }`}
-                >
-                  {period}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {teachersNeedingReminder.length > 0 && (
-            <div className="p-3.5 rounded-2xl bg-[#FEF2F2] border border-red-200 flex items-start gap-3">
-              <UserX className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
-              <div>
-                <p className="text-xs font-bold text-red-800">
-                  Perhatian: {teachersNeedingReminder.length} Pembina Jarang Lapor ({reportTimeframe.toLowerCase()})
-                </p>
-                <p className="text-[11px] text-red-700 mt-0.5">
-                  Pembina berikut belum rutin melakukan input laporan:{" "}
-                  <span className="font-semibold">
-                    {teachersNeedingReminder.map((t) => t.name).join(", ")}
-                  </span>
-                </p>
-              </div>
-            </div>
-          )}
-
-          <div className="space-y-3 pt-1">
-            {teacherAnalytics.map((teacher) => (
-              <div
-                key={teacher.id}
-                className="p-3 rounded-2xl mizan-card-sub space-y-2 hover:border-[#1B4D3E]/40 transition-all"
-              >
-                <div className="flex items-center justify-between gap-2">
-                  <div className="flex items-center gap-2 min-w-0">
-                    <div className="w-8 h-8 rounded-xl mizan-inset flex items-center justify-center font-bold text-xs text-[#1B4D3E] shrink-0">
-                      {teacher.name.split(" ").slice(0, 2).map((n) => n[0]).join("")}
-                    </div>
-                    <div className="min-w-0">
-                      <p className="text-xs font-bold text-[#172033] truncate">
-                        {teacher.name}
-                      </p>
-                      <p className="text-[10px] text-[#64748B]">
-                        Binaan Kelas {teacher.assignedClass} ({teacher.gender}) • Status: {teacher.status}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="text-right shrink-0">
-                    <span className="text-xs font-black font-mono text-[#1B4D3E]">
-                      {teacher.periodCount} Input
-                    </span>
-                    <span
-                      className={`block text-[9px] font-bold ${
-                        teacher.isRare ? "text-red-600" : "text-[#065F46]"
-                      }`}
-                    >
-                      {teacher.isRare ? "Jarang Lapor" : "Aktif Melapor"}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="space-y-1">
-                  <div className="w-full bg-[#E2E8F0] h-2 rounded-full overflow-hidden">
-                    <div
-                      className={`h-full rounded-full transition-all duration-500 ${
-                        teacher.isRare
-                          ? "bg-red-500"
-                          : teacher.percentage >= 80
-                          ? "bg-[#1B4D3E]"
-                          : "bg-[#A8833E]"
-                      }`}
-                      style={{ width: `${Math.max(5, teacher.percentage)}%` }}
-                    />
-                  </div>
-                  <div className="flex justify-between text-[9px] text-[#94A3B8] font-bold">
-                    <span>Aktivitas Terakhir: {teacher.lastLogin}</span>
-                    <span>{teacher.percentage}% dari target periode</span>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </Card>
+        <PembinaReportChart guruList={guruList} />
 
         <Card className="p-4 sm:p-5 space-y-4 bg-white">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-2 border-b border-[#E2E8F0]">
@@ -415,30 +274,30 @@ export default function AdminDashboardPage() {
             </span>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+          <div className="grid grid-cols-2 sm:grid-cols-2 gap-2.5">
             {needAttentionSantri.slice(0, 4).map((santri) => (
               <Link
                 key={santri.id}
                 href={`/guru/santri/${santri.id}`}
-                className="p-3 rounded-2xl border border-red-200 bg-[#FEF2F2]/60 flex items-center justify-between gap-2 hover:border-red-400 transition-all"
+                className="p-3 rounded-2xl border border-red-200 bg-[#FEF2F2]/60 flex flex-col justify-between gap-2 hover:border-red-400 transition-all"
               >
-                <div className="flex items-center gap-2.5 min-w-0">
+                <div className="flex items-center gap-2 min-w-0">
                   <Avatar initials={santri.avatar} size="sm" variant="primary" />
-                  <div className="min-w-0">
+                  <div className="min-w-0 flex-1">
                     <p className="text-xs font-bold text-[#172033] truncate">
                       {santri.name}
                     </p>
-                    <p className="text-[10px] text-red-700">
-                      Kelas {santri.class} • Status: {santri.status}
+                    <p className="text-[10px] text-red-700 truncate">
+                      {santri.class} • {santri.status}
                     </p>
                   </div>
                 </div>
 
-                <div className="text-right shrink-0">
+                <div className="flex items-center justify-between pt-1.5 border-t border-red-100">
                   <span className="text-xs font-black font-mono text-red-600 block">
                     {formatScore(santri.currentScore)}
                   </span>
-                  <span className="text-[9px] text-[#64748B]">Profil</span>
+                  <span className="text-[9px] text-[#64748B] font-bold">Profil</span>
                 </div>
               </Link>
             ))}

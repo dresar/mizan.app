@@ -24,6 +24,7 @@ export function BottomNav() {
     navItems = [
       { label: "Dashboard", href: "/admin/dashboard", icon: <LayoutDashboard className="w-4 h-4" /> },
       { label: "Santri", href: "/admin/santri", icon: <Users className="w-4 h-4" /> },
+      { label: "Absensi", href: "/admin/absensi", icon: <CalendarCheck className="w-4 h-4" /> },
       { label: "Pengguna", href: "/admin/users", icon: <User className="w-4 h-4" /> },
       { label: "Pengaturan", href: "/admin/pengaturan-nilai", icon: <Settings className="w-4 h-4" /> }
     ];

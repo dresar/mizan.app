@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import Link from "next/link";
 import {
   Search,
@@ -10,7 +10,14 @@ import {
   CalendarCheck,
   Award,
   ChevronRight,
-  ExternalLink
+  ExternalLink,
+  Download,
+  Upload,
+  FileSpreadsheet,
+  Edit,
+  X,
+  Check,
+  GraduationCap
 } from "lucide-react";
 import { useMizan } from "@/lib/mizan-context";
 import { RoleShell } from "@/components/RoleShell";
@@ -22,29 +29,56 @@ import { EmptyState } from "@/components/ui/EmptyState";
 import { Santri } from "@/lib/mock-data";
 
 export default function AdminSantriPage() {
-  const { santriList, kelasList, addClass, removeClass } = useMizan();
+  const {
+    santriList,
+    kelasList,
+    addClass,
+    removeClass,
+    addSantri,
+    importSantriBatch,
+    updateSantri,
+    deleteSantri
+  } = useMizan();
+
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedGender, setSelectedGender] = useState<"ALL" | "Putra" | "Putri">("ALL");
   const [selectedClass, setSelectedClass] = useState<string>("ALL");
-  const [newClassInput, setNewClassInput] = useState("");
   const [showClassModal, setShowClassModal] = useState(false);
+  const [newClassInput, setNewClassInput] = useState("");
 
-  const filteredSantri = santriList.filter((s) => {
-    const matchSearch =
-      s.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      s.nis.includes(searchQuery);
-    const matchGender =
-      selectedGender === "ALL" || s.gender === selectedGender;
-    const matchClass =
-      selectedClass === "ALL" || s.class === selectedClass;
-    return matchSearch && matchGender && matchClass;
-  });
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [showImportModal, setShowImportModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editingSantri, setEditingSantri] = useState<Santri | null>(null);
 
-  const getStatusBadgeVariant = (status: Santri["status"]) => {
-    if (status === "Baik") return "baik";
-    if (status === "Perhatian") return "perhatian";
-    return "pembinaan";
-  };
+  const [formNis, setFormNis] = useState("");
+  const [formName, setFormName] = useState("");
+  const [formGender, setFormGender] = useState<"Putra" | "Putri">("Putra");
+  const [formClass, setFormClass] = useState("1A");
+  const [formBaseScore, setFormBaseScore] = useState("70.000");
+  const [formWaliName, setFormWaliName] = useState("");
+  const [formWaliPhone, setFormWaliPhone] = useState("");
+  const [formStatus, setFormStatus] = useState<Santri["status"]>("Baik");
+
+  const [importCsvText, setImportCsvText] = useState("");
+  const [importPreview, setImportPreview] = useState<Array<Partial<Santri>>>([]);
+  const [importFileName, setImportFileName] = useState("");
+
+  const filteredSantri = useMemo(() => {
+    return santriList.filter((s) => {
+      const matchSearch =
+        s.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        s.nis.includes(searchQuery);
+      const matchGender =
+        selectedGender === "ALL" || s.gender === selectedGender;
+      const matchClass =
+        selectedClass === "ALL" || s.class === selectedClass;
+      return matchSearch && matchGender && matchClass;
+    });
+  }, [santriList, searchQuery, selectedGender, selectedClass]);
+
+  const putraCount = santriList.filter((s) => s.gender === "Putra").length;
+  const putriCount = santriList.filter((s) => s.gender === "Putri").length;
 
   const handleCreateClass = (e: React.FormEvent) => {
     e.preventDefault();
@@ -55,36 +89,227 @@ export default function AdminSantriPage() {
     }
   };
 
-  const putraCount = santriList.filter((s) => s.gender === "Putra").length;
-  const putriCount = santriList.filter((s) => s.gender === "Putri").length;
+  const handleDownloadTemplate = () => {
+    const csvContent =
+      "nis,name,gender,class,wali_name,wali_phone,base_score\n" +
+      "20240811,Ahmad Fatih Pratama,Putra,1A,H. Pratama,081234567801,70.000\n" +
+      "20240812,Nur Aisyah Azzahra,Putri,1C,H. Sulaiman,081234567802,70.000\n" +
+      "20240813,Muhammad Rayhan,Putra,1B,Drs. H. Mulyadi,081234567803,70.000\n" +
+      "20240814,Khadijah Zahra,Putri,1D,Hj. Siti Aminah,081234567804,70.000\n";
+
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", "template_import_santri.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const handleExportCsv = () => {
+    let csv = "NIS,Nama Santri,Gender,Kelas,Skor Akhlak,Status,Wali Santri,No HP Wali,Hadir,Alpa\n";
+    filteredSantri.forEach((s) => {
+      csv += `"${s.nis}","${s.name}","${s.gender}","${s.class}","${s.currentScore}","${s.status}","${s.waliName || ""}","${s.waliPhone || ""}","${s.totalHadir || 28}","${s.totalAlpa || 0}"\n`;
+    });
+
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", `data_santri_mizan_${new Date().toISOString().slice(0, 10)}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setImportFileName(file.name);
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const text = event.target?.result as string;
+      setImportCsvText(text);
+      parseCsvText(text);
+    };
+    reader.readAsText(file);
+  };
+
+  const parseCsvText = (text: string) => {
+    const lines = text.split(/\r?\n/).filter((line) => line.trim().length > 0);
+    if (lines.length === 0) return;
+
+    const parsed: Array<Partial<Santri>> = [];
+    const startIndex = lines[0].toLowerCase().includes("nis") ? 1 : 0;
+
+    for (let i = startIndex; i < lines.length; i++) {
+      const parts = lines[i].split(",").map((p) => p.trim().replace(/^"|"$/g, ""));
+      if (parts.length >= 2 && parts[0] && parts[1]) {
+        const nis = parts[0];
+        const name = parts[1];
+        const gender = parts[2] === "Putri" ? "Putri" : "Putra";
+        const cls = parts[3] || (gender === "Putra" ? "1A" : "1C");
+        const waliName = parts[4] || "";
+        const waliPhone = parts[5] || "";
+        const baseScore = parseFloat(parts[6]) || 70.0;
+
+        parsed.push({
+          nis,
+          name,
+          gender,
+          class: cls,
+          waliName,
+          waliPhone,
+          baseScore,
+          currentScore: baseScore,
+          status: "Baik"
+        });
+      }
+    }
+
+    setImportPreview(parsed);
+  };
+
+  const handleExecuteImport = async () => {
+    if (importPreview.length === 0) return;
+    await importSantriBatch(importPreview);
+    setShowImportModal(false);
+    setImportPreview([]);
+    setImportCsvText("");
+    setImportFileName("");
+  };
+
+  const handleSaveNewSantri = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!formNis.trim() || !formName.trim()) return;
+
+    await addSantri({
+      nis: formNis.trim(),
+      name: formName.trim(),
+      gender: formGender,
+      class: formClass,
+      baseScore: parseFloat(formBaseScore) || 70.0,
+      waliName: formWaliName.trim(),
+      waliPhone: formWaliPhone.trim()
+    });
+
+    setFormNis("");
+    setFormName("");
+    setFormWaliName("");
+    setFormWaliPhone("");
+    setShowAddModal(false);
+  };
+
+  const handleOpenEdit = (s: Santri) => {
+    setEditingSantri(s);
+    setFormNis(s.nis);
+    setFormName(s.name);
+    setFormGender(s.gender);
+    setFormClass(s.class);
+    setFormBaseScore(String(s.baseScore || 70.0));
+    setFormWaliName(s.waliName || "");
+    setFormWaliPhone(s.waliPhone || "");
+    setFormStatus(s.status || "Baik");
+    setShowEditModal(true);
+  };
+
+  const handleSaveEdit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingSantri) return;
+
+    await updateSantri(editingSantri.id, {
+      nis: formNis.trim(),
+      name: formName.trim(),
+      gender: formGender,
+      class: formClass,
+      baseScore: parseFloat(formBaseScore) || 70.0,
+      waliName: formWaliName.trim(),
+      waliPhone: formWaliPhone.trim(),
+      status: formStatus
+    });
+
+    setShowEditModal(false);
+    setEditingSantri(null);
+  };
+
+  const handleDelete = async (id: string) => {
+    if (confirm("Hapus data santri ini beserta riwayatnya?")) {
+      await deleteSantri(id);
+    }
+  };
 
   return (
     <RoleShell>
       <div className="space-y-4 max-w-5xl mx-auto overflow-x-hidden">
-        <div className="mizan-card p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="mizan-card p-4 sm:p-5 flex flex-col md:flex-row md:items-center justify-between gap-3">
           <div>
-            <h1 className="text-lg sm:text-2xl font-serif font-black text-[#172033] tracking-tight">
+            <div className="flex items-center gap-2">
+              <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-[#FAF7EE] text-[#A8833E] border border-[#C5A059]/30">
+                Pusat Data Siswa
+              </span>
+            </div>
+            <h1 className="text-lg sm:text-2xl font-serif font-black text-[#172033] tracking-tight mt-1">
               Data Santri & Santriwati
             </h1>
-            <p className="text-[11px] text-[#64748B] mt-0.5">
-              Kelola kelas, pemisahan gender santri putra dan santriwati putri
+            <p className="text-[11px] text-[#64748B]">
+              Kelola profil santri, pembagian kelas, impor berkas, serta ekspor rekapitulasi
             </p>
           </div>
 
-          <button
-            type="button"
-            onClick={() => setShowClassModal(!showClassModal)}
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full mizan-btn-primary text-xs font-bold shrink-0 shadow-sm"
-          >
-            <Plus className="w-3.5 h-3.5" />
-            <span>Kelas</span>
-          </button>
+          <div className="flex flex-wrap items-center gap-2">
+            <button
+              type="button"
+              onClick={handleDownloadTemplate}
+              title="Unduh format berkas CSV"
+              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-[#F8FAFC] border border-[#CBD5E1] text-[#172033] text-xs font-bold hover:bg-white transition-colors"
+            >
+              <FileSpreadsheet className="w-3.5 h-3.5 text-[#A8833E]" />
+              <span>Template</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setShowImportModal(true)}
+              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-[#EFF6FF] border border-[#BFDBFE] text-[#1D4ED8] text-xs font-bold hover:bg-[#DBEAFE] transition-colors"
+            >
+              <Upload className="w-3.5 h-3.5" />
+              <span>Import</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={handleExportCsv}
+              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-[#ECFDF5] border border-[#A7F3D0] text-[#065F46] text-xs font-bold hover:bg-[#D1FAE5] transition-colors"
+            >
+              <Download className="w-3.5 h-3.5" />
+              <span>Ekspor</span>
+            </button>
+
+            <Link
+              href="/admin/kelas"
+              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-[#FAF7EE] border border-[#C5A059]/30 text-[#A8833E] text-xs font-bold hover:bg-[#F5EED9] transition-colors"
+            >
+              <GraduationCap className="w-3.5 h-3.5" />
+              <span>Kelas</span>
+            </Link>
+
+            <button
+              type="button"
+              onClick={() => setShowAddModal(true)}
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-2xl bg-[#1B4D3E] text-white text-xs font-bold hover:bg-[#153e32] shadow-sm transition-colors"
+            >
+              <Plus className="w-3.5 h-3.5" />
+              <span>Tambah</span>
+            </button>
+          </div>
         </div>
 
         {showClassModal && (
           <Card className="p-4 space-y-3 bg-[#FAF7EE] border-[#C5A059]/40">
             <span className="text-xs font-bold text-[#172033] block">
-              Daftar Kelas Aktif (Contoh: 1A, 1B, 1C, 1D)
+              Daftar Kelas
             </span>
 
             <div className="flex flex-wrap gap-2">
@@ -162,7 +387,7 @@ export default function AdminSantriPage() {
           </button>
         </div>
 
-        <Card className="p-3 sm:p-4">
+        <Card className="p-3 sm:p-4 bg-white">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
             <div className="relative w-full">
               <Search className="w-4 h-4 text-[#94A3B8] absolute left-3 top-1/2 -translate-y-1/2" />
@@ -198,7 +423,7 @@ export default function AdminSantriPage() {
             title="Santri tidak ditemukan"
             description="Tidak ada data santri yang cocok dengan kriteria filter gender atau kelas."
             action={{
-              label: "Reset Filter",
+              label: "Reset",
               onClick: () => {
                 setSearchQuery("");
                 setSelectedGender("ALL");
@@ -209,9 +434,8 @@ export default function AdminSantriPage() {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-3">
             {filteredSantri.map((santri) => (
-              <Link
+              <div
                 key={santri.id}
-                href={`/guru/santri/${santri.id}`}
                 className="mizan-card p-4 flex flex-col justify-between hover:border-[#1B4D3E]/40 group transition-all"
               >
                 <div>
@@ -264,14 +488,406 @@ export default function AdminSantriPage() {
                   </CardInset>
                 </div>
 
-                <div className="pt-2 border-t border-[#E2EBF4] flex items-center justify-between text-[11px] text-[#64748B]">
-                  <span>Wali: {santri.waliName || "Bapak Santri"}</span>
-                  <span className="inline-flex items-center gap-1 font-bold text-[#1B4D3E] group-hover:translate-x-0.5 transition-transform">
-                    Rapor PDF <ExternalLink className="w-3 h-3" />
+                <div className="pt-2 border-t border-[#E2EBF4] flex items-center justify-between gap-2 text-[11px]">
+                  <span className="text-[#64748B] truncate max-w-[120px]">
+                    {santri.waliName || "Bapak Santri"}
                   </span>
+
+                  <div className="flex items-center gap-1.5 shrink-0">
+                    <button
+                      type="button"
+                      onClick={() => handleOpenEdit(santri)}
+                      className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-[#F1F5F9] text-[#475569] hover:bg-[#E2E8F0]"
+                    >
+                      Edit
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => handleDelete(santri.id)}
+                      className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-red-50 text-red-600 hover:bg-red-100"
+                    >
+                      Hapus
+                    </button>
+
+                    <Link
+                      href={`/guru/santri/${santri.id}`}
+                      className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-[#1B4D3E] text-white hover:bg-[#153e32]"
+                    >
+                      Profil
+                    </Link>
+                  </div>
                 </div>
-              </Link>
+              </div>
             ))}
+          </div>
+        )}
+
+        {showAddModal && (
+          <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
+            <div className="w-full max-w-md mizan-card p-5 bg-white space-y-4 shadow-2xl">
+              <div className="flex items-center justify-between pb-2 border-b border-[#E2E8F0]">
+                <h3 className="text-xs font-bold text-[#172033] uppercase tracking-wider">
+                  Tambah Santri Baru
+                </h3>
+                <button
+                  type="button"
+                  onClick={() => setShowAddModal(false)}
+                  className="p-1 rounded-lg text-[#94A3B8] hover:text-[#172033]"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+
+              <form onSubmit={handleSaveNewSantri} className="space-y-3">
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <label className="block text-[11px] font-bold text-[#475569] uppercase mb-1">
+                      Nomor Induk / NIS
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={formNis}
+                      onChange={(e) => setFormNis(e.target.value)}
+                      placeholder="202408xx"
+                      className="w-full p-2 text-xs bg-[#EEF2F6] border border-transparent rounded-xl text-[#172033] focus:bg-white focus:border-[#1B4D3E]"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-bold text-[#475569] uppercase mb-1">
+                      Skor Awal Baku
+                    </label>
+                    <input
+                      type="number"
+                      step="0.001"
+                      required
+                      value={formBaseScore}
+                      onChange={(e) => setFormBaseScore(e.target.value)}
+                      className="w-full p-2 text-xs bg-[#EEF2F6] border border-transparent rounded-xl text-[#172033] font-mono focus:bg-white focus:border-[#1B4D3E]"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-bold text-[#475569] uppercase mb-1">
+                    Nama Lengkap
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={formName}
+                    onChange={(e) => setFormName(e.target.value)}
+                    placeholder="Masukkan nama santri..."
+                    className="w-full p-2 text-xs bg-[#EEF2F6] border border-transparent rounded-xl text-[#172033] focus:bg-white focus:border-[#1B4D3E]"
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <label className="block text-[11px] font-bold text-[#475569] uppercase mb-1">
+                      Kategori Gender
+                    </label>
+                    <select
+                      value={formGender}
+                      onChange={(e) => setFormGender(e.target.value as "Putra" | "Putri")}
+                      className="w-full p-2 text-xs bg-[#EEF2F6] border border-transparent rounded-xl text-[#172033] focus:bg-white focus:border-[#1B4D3E]"
+                    >
+                      <option value="Putra">Santri Putra</option>
+                      <option value="Putri">Santriwati Putri</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-bold text-[#475569] uppercase mb-1">
+                      Pilihan Kelas
+                    </label>
+                    <select
+                      value={formClass}
+                      onChange={(e) => setFormClass(e.target.value)}
+                      className="w-full p-2 text-xs bg-[#EEF2F6] border border-transparent rounded-xl text-[#172033] focus:bg-white focus:border-[#1B4D3E]"
+                    >
+                      {kelasList.map((cls) => (
+                        <option key={cls} value={cls}>Kelas {cls}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <label className="block text-[11px] font-bold text-[#475569] uppercase mb-1">
+                      Nama Orang Tua / Wali
+                    </label>
+                    <input
+                      type="text"
+                      value={formWaliName}
+                      onChange={(e) => setFormWaliName(e.target.value)}
+                      placeholder="Bpk / Ibu..."
+                      className="w-full p-2 text-xs bg-[#EEF2F6] border border-transparent rounded-xl text-[#172033] focus:bg-white focus:border-[#1B4D3E]"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-bold text-[#475569] uppercase mb-1">
+                      Kontak Telepon
+                    </label>
+                    <input
+                      type="text"
+                      value={formWaliPhone}
+                      onChange={(e) => setFormWaliPhone(e.target.value)}
+                      placeholder="0812-xxxx-xxxx"
+                      className="w-full p-2 text-xs bg-[#EEF2F6] border border-transparent rounded-xl text-[#172033] focus:bg-white focus:border-[#1B4D3E]"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex gap-2 pt-2">
+                  <button
+                    type="button"
+                    onClick={() => setShowAddModal(false)}
+                    className="flex-1 py-2.5 rounded-xl text-xs font-bold text-[#64748B] bg-[#EEF2F6] hover:bg-[#E2E8F0]"
+                  >
+                    Batal
+                  </button>
+                  <button
+                    type="submit"
+                    className="flex-1 py-2.5 rounded-xl text-xs font-bold text-white bg-[#1B4D3E] hover:bg-[#153e32]"
+                  >
+                    Simpan
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+
+        {showEditModal && editingSantri && (
+          <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
+            <div className="w-full max-w-md mizan-card p-5 bg-white space-y-4 shadow-2xl">
+              <div className="flex items-center justify-between pb-2 border-b border-[#E2E8F0]">
+                <h3 className="text-xs font-bold text-[#172033] uppercase tracking-wider">
+                  Ubah Data Santri
+                </h3>
+                <button
+                  type="button"
+                  onClick={() => setShowEditModal(false)}
+                  className="p-1 rounded-lg text-[#94A3B8] hover:text-[#172033]"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+
+              <form onSubmit={handleSaveEdit} className="space-y-3">
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <label className="block text-[11px] font-bold text-[#475569] uppercase mb-1">
+                      NIS
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={formNis}
+                      onChange={(e) => setFormNis(e.target.value)}
+                      className="w-full p-2 text-xs bg-[#EEF2F6] border border-transparent rounded-xl text-[#172033]"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-bold text-[#475569] uppercase mb-1">
+                      Skor Awal
+                    </label>
+                    <input
+                      type="number"
+                      step="0.001"
+                      required
+                      value={formBaseScore}
+                      onChange={(e) => setFormBaseScore(e.target.value)}
+                      className="w-full p-2 text-xs bg-[#EEF2F6] border border-transparent rounded-xl text-[#172033] font-mono"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-bold text-[#475569] uppercase mb-1">
+                    Nama Lengkap
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={formName}
+                    onChange={(e) => setFormName(e.target.value)}
+                    className="w-full p-2 text-xs bg-[#EEF2F6] border border-transparent rounded-xl text-[#172033]"
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <label className="block text-[11px] font-bold text-[#475569] uppercase mb-1">
+                      Gender
+                    </label>
+                    <select
+                      value={formGender}
+                      onChange={(e) => setFormGender(e.target.value as "Putra" | "Putri")}
+                      className="w-full p-2 text-xs bg-[#EEF2F6] border border-transparent rounded-xl text-[#172033]"
+                    >
+                      <option value="Putra">Putra</option>
+                      <option value="Putri">Putri</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-bold text-[#475569] uppercase mb-1">
+                      Kelas
+                    </label>
+                    <select
+                      value={formClass}
+                      onChange={(e) => setFormClass(e.target.value)}
+                      className="w-full p-2 text-xs bg-[#EEF2F6] border border-transparent rounded-xl text-[#172033]"
+                    >
+                      {kelasList.map((cls) => (
+                        <option key={cls} value={cls}>Kelas {cls}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <label className="block text-[11px] font-bold text-[#475569] uppercase mb-1">
+                      Wali Santri
+                    </label>
+                    <input
+                      type="text"
+                      value={formWaliName}
+                      onChange={(e) => setFormWaliName(e.target.value)}
+                      className="w-full p-2 text-xs bg-[#EEF2F6] border border-transparent rounded-xl text-[#172033]"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-bold text-[#475569] uppercase mb-1">
+                      Status Santri
+                    </label>
+                    <select
+                      value={formStatus}
+                      onChange={(e) => setFormStatus(e.target.value as Santri["status"])}
+                      className="w-full p-2 text-xs bg-[#EEF2F6] border border-transparent rounded-xl text-[#172033]"
+                    >
+                      <option value="Baik">Baik</option>
+                      <option value="Perhatian">Perhatian</option>
+                      <option value="Perlu Pembinaan">Perlu Pembinaan</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="flex gap-2 pt-2">
+                  <button
+                    type="button"
+                    onClick={() => setShowEditModal(false)}
+                    className="flex-1 py-2.5 rounded-xl text-xs font-bold text-[#64748B] bg-[#EEF2F6] hover:bg-[#E2E8F0]"
+                  >
+                    Batal
+                  </button>
+                  <button
+                    type="submit"
+                    className="flex-1 py-2.5 rounded-xl text-xs font-bold text-white bg-[#1B4D3E] hover:bg-[#153e32]"
+                  >
+                    Simpan
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+
+        {showImportModal && (
+          <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
+            <div className="w-full max-w-lg mizan-card p-5 bg-white space-y-4 shadow-2xl">
+              <div className="flex items-center justify-between pb-2 border-b border-[#E2E8F0]">
+                <h3 className="text-xs font-bold text-[#172033] uppercase tracking-wider">
+                  Impor Berkas Data Santri (.csv)
+                </h3>
+                <button
+                  type="button"
+                  onClick={() => setShowImportModal(false)}
+                  className="p-1 rounded-lg text-[#94A3B8] hover:text-[#172033]"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+
+              <div className="p-3 rounded-2xl bg-[#F8FAFC] border border-dashed border-[#CBD5E1] text-center space-y-2">
+                <FileSpreadsheet className="w-8 h-8 text-[#A8833E] mx-auto" />
+                <p className="text-xs font-bold text-[#172033]">
+                  Pilih file CSV sesuai format template
+                </p>
+                <input
+                  type="file"
+                  accept=".csv,text/csv"
+                  onChange={handleFileChange}
+                  className="text-xs text-[#64748B] mx-auto block file:mr-2 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-[#1B4D3E] file:text-white hover:file:bg-[#153e32]"
+                />
+                {importFileName && (
+                  <p className="text-[10px] text-[#065F46] font-bold">
+                    Berkas terpilih: {importFileName}
+                  </p>
+                )}
+              </div>
+
+              {importPreview.length > 0 && (
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="font-bold text-[#172033]">
+                      Pratinjau Data ({importPreview.length} santri):
+                    </span>
+                    <span className="text-[10px] text-[#065F46] font-bold">
+                      Format Valid
+                    </span>
+                  </div>
+
+                  <div className="max-h-40 overflow-y-auto space-y-1 p-2 rounded-xl bg-[#F8FAFC] border border-[#E2EBF4]">
+                    {importPreview.slice(0, 10).map((item, idx) => (
+                      <div
+                        key={idx}
+                        className="text-[11px] p-1.5 rounded-lg bg-white flex items-center justify-between"
+                      >
+                        <span className="font-semibold text-[#172033]">
+                          {item.name} ({item.nis})
+                        </span>
+                        <span className="text-[#64748B]">
+                          Kelas {item.class} • {item.gender}
+                        </span>
+                      </div>
+                    ))}
+                    {importPreview.length > 10 && (
+                      <p className="text-[10px] text-center text-[#94A3B8] italic pt-1">
+                        ...dan {importPreview.length - 10} santri lainnya
+                      </p>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              <div className="flex gap-2 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setShowImportModal(false)}
+                  className="flex-1 py-2.5 rounded-xl text-xs font-bold text-[#64748B] bg-[#EEF2F6] hover:bg-[#E2E8F0]"
+                >
+                  Batal
+                </button>
+                <button
+                  type="button"
+                  disabled={importPreview.length === 0}
+                  onClick={handleExecuteImport}
+                  className="flex-1 py-2.5 rounded-xl text-xs font-bold text-white bg-[#1B4D3E] hover:bg-[#153e32] disabled:opacity-50"
+                >
+                  Simpan
+                </button>
+              </div>
+            </div>
           </div>
         )}
       </div>

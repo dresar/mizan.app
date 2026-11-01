@@ -7,6 +7,7 @@ import {
   ArrowLeft,
   Printer,
   Download,
+  Share2,
   Award,
   ShieldAlert,
   CalendarCheck,
@@ -21,6 +22,8 @@ import { RoleShell } from "@/components/RoleShell";
 import { Card, CardSub, CardInset } from "@/components/ui/Card";
 import { Avatar } from "@/components/ui/Avatar";
 import { Badge } from "@/components/ui/Badge";
+import { generateSantriPdf } from "@/lib/pdf-generator";
+import { ShareModal } from "@/components/ShareModal";
 
 function SantriDetailContent() {
   const router = useRouter();
@@ -29,6 +32,7 @@ function SantriDetailContent() {
 
   const { santriList, penilaianList, absensiList } = useMizan();
   const [printDate, setPrintDate] = useState("31 Oktober 2026");
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
 
   useEffect(() => {
     try {
@@ -120,20 +124,40 @@ function SantriDetailContent() {
           <button
             type="button"
             onClick={() => router.back()}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full mizan-btn-ghost text-xs font-bold"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full mizan-btn-ghost text-xs font-bold"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
             <span>Kembali</span>
           </button>
 
-          <button
-            type="button"
-            onClick={handlePrint}
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full mizan-btn-primary text-xs font-bold shadow-md hover:scale-105 transition-transform"
-          >
-            <Printer className="w-4 h-4" />
-            <span>Cetak</span>
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setIsShareModalOpen(true)}
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white text-[#1B4D3E] border border-[#A7F3D0] hover:bg-[#ECFDF5] text-xs font-bold shadow-xs transition-colors"
+            >
+              <Share2 className="w-4 h-4 text-[#C5A059]" />
+              <span>Bagikan</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => generateSantriPdf(santri, studentPenilaian, studentAbsensi, printDate)}
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#1B4D3E] text-white text-xs font-bold shadow-md hover:bg-[#153e32] transition-colors"
+            >
+              <Download className="w-4 h-4" />
+              <span>Unduh</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={handlePrint}
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full mizan-card bg-white text-[#172033] border border-[#CBD5E1] text-xs font-bold hover:bg-[#F8FAFC] transition-colors"
+            >
+              <Printer className="w-4 h-4" />
+              <span>Cetak</span>
+            </button>
+          </div>
         </div>
 
         <div className="hidden print:block text-center pb-4 border-b-2 border-[#1B4D3E] mb-4">
@@ -311,6 +335,13 @@ function SantriDetailContent() {
             <p className="text-[10px]">Super Admin Pengasuhan MIZAN</p>
           </div>
         </div>
+
+        <ShareModal
+          isOpen={isShareModalOpen}
+          onClose={() => setIsShareModalOpen(false)}
+          initialType="SANTRI"
+          targetSantri={santri}
+        />
       </div>
     </RoleShell>
   );

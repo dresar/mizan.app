@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import {
   Sparkles,
   Award,
@@ -9,7 +9,8 @@ import {
   Clock,
   Heart,
   BookOpen,
-  CheckCircle2
+  CheckCircle2,
+  Share2
 } from "lucide-react";
 import { useMizan } from "@/lib/mizan-context";
 import { Santri } from "@/lib/mock-data";
@@ -18,9 +19,11 @@ import { Card, CardHeader } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { Avatar } from "@/components/ui/Avatar";
 import { ScoreBar } from "@/components/ui/ScoreBar";
+import { ShareModal } from "@/components/ShareModal";
 
 export default function SantriProfilPage() {
   const { santriList, penilaianList } = useMizan();
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
 
   const fallbackSantri: Santri = {
     id: "santri-1",
@@ -80,9 +83,20 @@ export default function SantriProfilPage() {
               Santri {santri.gender} • Kelas {santri.class}
             </p>
 
-            <div className="mt-4 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 border border-white/20 text-xs font-semibold text-emerald-50">
-              <Sparkles className="w-3.5 h-3.5 text-[#C5A059]" />
-              <span>Predikat: {predikat.label}</span>
+            <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 border border-white/20 text-xs font-semibold text-emerald-50">
+                <Sparkles className="w-3.5 h-3.5 text-[#C5A059]" />
+                <span>Predikat: {predikat.label}</span>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setIsShareModalOpen(true)}
+                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white text-[#1B4D3E] text-xs font-bold hover:bg-emerald-50 transition-colors shadow-xs"
+              >
+                <Share2 className="w-3.5 h-3.5 text-[#C5A059]" />
+                <span>Bagikan</span>
+              </button>
             </div>
           </div>
         </div>
@@ -225,6 +239,13 @@ export default function SantriProfilPage() {
             (Imam Malik rahimahullah)
           </p>
         </div>
+
+        <ShareModal
+          isOpen={isShareModalOpen}
+          onClose={() => setIsShareModalOpen(false)}
+          initialType="SANTRI"
+          targetSantri={santri}
+        />
       </div>
     </RoleShell>
   );

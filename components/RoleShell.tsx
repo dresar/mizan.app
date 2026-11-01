@@ -35,7 +35,9 @@ export function RoleShell({ children }: RoleShellProps) {
       }
     } else if (pathname.startsWith("/bk")) {
       if (activeRole === "SUPER_ADMIN") {
-        if (pathname === "/bk/absen") {
+        if (pathname === "/bk/history") {
+          router.replace("/admin/absensi");
+        } else {
           router.replace("/admin/dashboard");
         }
       } else if (activeRole !== "PENGASUHAN") {

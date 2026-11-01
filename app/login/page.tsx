@@ -13,7 +13,10 @@ import {
   KeyRound,
   Loader2,
   CalendarCheck,
-  Check
+  Check,
+  Smartphone,
+  Download,
+  X
 } from "lucide-react";
 import { useMizan } from "@/lib/mizan-context";
 
@@ -35,6 +38,8 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [selectedDevUser, setSelectedDevUser] = useState("");
+  const [showAppModal, setShowAppModal] = useState(false);
+  const [appTab, setAppTab] = useState<"android" | "ios">("android");
 
   const devAccounts: DevAccount[] = [
     {
@@ -257,9 +262,121 @@ export default function LoginPage() {
           </div>
         </div>
 
-        <p className="text-center text-[10px] text-[#94A3B8]">
-          MIZAN • Pondok Pesantren Raudhatussalam
-        </p>
+        <div className="flex items-center justify-between px-2 pt-1 text-xs">
+          <p className="text-[10px] text-[#94A3B8]">
+            MIZAN • Pondok Pesantren Raudhatussalam
+          </p>
+
+          <button
+            type="button"
+            onClick={() => setShowAppModal(true)}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-[#CBD5E1] text-[#1B4D3E] text-[11px] font-bold shadow-xs hover:bg-[#FAF7EE] transition-colors"
+          >
+            <Smartphone className="w-3.5 h-3.5" />
+            <span>Aplikasi</span>
+          </button>
+        </div>
+
+        {showAppModal && (
+          <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
+            <div className="w-full max-w-sm mizan-card p-5 bg-white space-y-4 shadow-2xl">
+              <div className="flex items-center justify-between pb-2 border-b border-[#E2E8F0]">
+                <div className="flex items-center gap-2">
+                  <Smartphone className="w-4 h-4 text-[#1B4D3E]" />
+                  <h3 className="text-xs font-bold text-[#172033] uppercase tracking-wider">
+                    Aplikasi Mobile MIZAN
+                  </h3>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setShowAppModal(false)}
+                  className="p-1 rounded-lg text-[#94A3B8] hover:text-[#172033]"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+
+              <div className="flex rounded-xl p-1 bg-[#EEF2F6]">
+                <button
+                  type="button"
+                  onClick={() => setAppTab("android")}
+                  className={`flex-1 py-1.5 rounded-lg text-xs font-bold transition-all text-center ${
+                    appTab === "android"
+                      ? "bg-white text-[#1B4D3E] shadow-xs"
+                      : "text-[#64748B]"
+                  }`}
+                >
+                  Android
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setAppTab("ios")}
+                  className={`flex-1 py-1.5 rounded-lg text-xs font-bold transition-all text-center ${
+                    appTab === "ios"
+                      ? "bg-white text-[#1B4D3E] shadow-xs"
+                      : "text-[#64748B]"
+                  }`}
+                >
+                  iOS
+                </button>
+              </div>
+
+              {appTab === "android" ? (
+                <div className="space-y-3">
+                  <div className="p-3 rounded-2xl bg-[#ECFDF5] border border-[#A7F3D0] space-y-1 text-center">
+                    <p className="text-xs font-bold text-[#065F46]">
+                      Format APK Resmi Android (2,4 MB)
+                    </p>
+                    <p className="text-[10px] text-[#047857]">
+                      Penyimpanan lokal aktif, cache offline, serta pembaruan antarmuka otomatis langsung dari server.
+                    </p>
+                  </div>
+
+                  <a
+                    href="/downloads/mizan.apk"
+                    download="mizan.apk"
+                    className="w-full py-3 rounded-2xl bg-[#1B4D3E] text-white font-bold text-xs flex items-center justify-center gap-2 shadow-md hover:bg-[#153e32] transition-colors"
+                  >
+                    <Download className="w-4 h-4" />
+                    <span>Unduh</span>
+                  </a>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  <div className="p-3 rounded-2xl bg-[#FAF7EE] border border-[#C5A059]/40 space-y-1.5 text-xs text-[#172033]">
+                    <p className="font-bold text-[#A8833E]">
+                      Petunjuk Apple iPhone / iPad:
+                    </p>
+                    <ol className="list-decimal pl-4 space-y-1 text-[11px] text-[#64748B]">
+                      <li>Buka website ini di peramban <strong>Safari</strong>.</li>
+                      <li>Ketuk ikon <strong>Bagikan</strong> (tombol kotak panah atas).</li>
+                      <li>Pilih menu <strong>Tambahkan ke Layar Utama</strong>.</li>
+                    </ol>
+                  </div>
+
+                  <a
+                    href="/downloads/mizan.mobileconfig"
+                    download="mizan.mobileconfig"
+                    className="w-full py-2.5 rounded-2xl bg-[#172033] text-white font-bold text-xs flex items-center justify-center gap-2 shadow-sm hover:bg-black transition-colors"
+                  >
+                    <Download className="w-4 h-4" />
+                    <span>Pasang</span>
+                  </a>
+                </div>
+              )}
+
+              <div className="pt-1">
+                <button
+                  type="button"
+                  onClick={() => setShowAppModal(false)}
+                  className="w-full py-2 rounded-xl text-xs font-bold text-[#64748B] bg-[#EEF2F6] hover:bg-[#E2E8F0]"
+                >
+                  Tutup
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

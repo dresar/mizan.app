@@ -3,24 +3,15 @@
 import React, { useState, useMemo } from "react";
 import Link from "next/link";
 import {
-  Clock,
-  Calendar,
-  Filter,
   Trash2,
   Edit2,
   Check,
   X,
-  Search,
-  CheckCircle2,
-  AlertCircle,
-  HelpCircle,
-  XCircle,
-  ArrowLeft
+  Search
 } from "lucide-react";
 import { useMizan } from "@/lib/mizan-context";
 import { RoleShell } from "@/components/RoleShell";
-import { Card, CardSub, CardInset } from "@/components/ui/Card";
-import { Avatar } from "@/components/ui/Avatar";
+import { Card } from "@/components/ui/Card";
 import { StatusAbsensi, WaktuSholat } from "@/lib/mock-data";
 
 const PRAYER_TIMES: ("ALL" | WaktuSholat)[] = [
@@ -35,7 +26,7 @@ const PRAYER_TIMES: ("ALL" | WaktuSholat)[] = [
 ];
 
 export default function PengasuhanHistoryPage() {
-  const { absensiList, santriList, currentUser, kelasList, updateAbsensi, deleteAbsensi, showToast } = useMizan();
+  const { absensiList, santriList, currentUser, kelasList, updateAbsensi, deleteAbsensi } = useMizan();
 
   const [selectedPrayer, setSelectedPrayer] = useState<"ALL" | WaktuSholat>("ALL");
   const [selectedStatus, setSelectedStatus] = useState<"ALL" | StatusAbsensi>("ALL");
@@ -126,7 +117,7 @@ export default function PengasuhanHistoryPage() {
               </label>
               <select
                 value={selectedPrayer}
-                onChange={(e) => setSelectedPrayer(e.target.value as any)}
+                onChange={(e) => setSelectedPrayer(e.target.value as "ALL" | WaktuSholat)}
                 className="w-full px-3 py-2 rounded-xl text-xs font-bold bg-[#EEF2F6] border border-transparent text-[#172033] focus:bg-white focus:border-[#1B4D3E] focus:outline-none"
               >
                 {PRAYER_TIMES.map((time) => (
@@ -143,7 +134,7 @@ export default function PengasuhanHistoryPage() {
               </label>
               <select
                 value={selectedStatus}
-                onChange={(e) => setSelectedStatus(e.target.value as any)}
+                onChange={(e) => setSelectedStatus(e.target.value as "ALL" | StatusAbsensi)}
                 className="w-full px-3 py-2 rounded-xl text-xs font-bold bg-[#EEF2F6] border border-transparent text-[#172033] focus:bg-white focus:border-[#1B4D3E] focus:outline-none"
               >
                 <option value="ALL">Semua Status</option>

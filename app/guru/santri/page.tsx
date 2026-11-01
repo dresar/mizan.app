@@ -2,10 +2,9 @@
 
 import React, { useState, useMemo } from "react";
 import Link from "next/link";
-import { Search, User, ChevronRight, Award, GraduationCap } from "lucide-react";
+import { Search, User, ChevronRight, GraduationCap } from "lucide-react";
 import { useMizan } from "@/lib/mizan-context";
 import { RoleShell } from "@/components/RoleShell";
-import { Card, CardInset } from "@/components/ui/Card";
 import { Avatar } from "@/components/ui/Avatar";
 
 export default function GuruSantriListPage() {
@@ -42,19 +41,19 @@ export default function GuruSantriListPage() {
 
   return (
     <RoleShell>
-      <div className="w-full space-y-4 max-w-5xl mx-auto overflow-x-hidden pb-28">
+      <div className="w-full space-y-3.5 max-w-5xl mx-auto overflow-x-hidden pb-36">
         <div className="mizan-card p-4 sm:p-5 flex items-center justify-between gap-3 flex-wrap">
           <div>
-            <h1 className="text-base sm:text-xl font-serif font-black text-[#172033] tracking-tight">
-              Daftar Santri Binaan
+            <h1 className="text-base sm:text-xl font-bold text-[#172033] tracking-tight">
+              Daftar Santri
             </h1>
-            <p className="text-[11px] text-[#64748B] mt-0.5">
+            <p className="text-xs text-[#64748B] mt-0.5">
               Santri {currentUser.gender === "Putri" ? "Putri" : "Putra"} • Total {filteredSantri.length} santri
             </p>
           </div>
-          <span className="inline-flex items-center gap-1.5 text-[10px] font-bold px-3 py-1 rounded-full mizan-pill bg-[#ECFDF5] text-[#065F46]">
+          <span className="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1 rounded-full mizan-pill bg-[#ECFDF5] text-[#065F46]">
             <GraduationCap className="w-3.5 h-3.5" />
-            {currentUser.assignedClass ? `Kelas ${currentUser.assignedClass}` : "Semua Kelas"}
+            {currentUser.assignedClass ? `Kelas ${currentUser.assignedClass}` : "Semua"}
           </span>
         </div>
 
@@ -64,7 +63,7 @@ export default function GuruSantriListPage() {
               <Search className="w-4 h-4 text-[#94A3B8] absolute left-3.5 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
-                placeholder="Cari nama santri atau NIS..."
+                placeholder="Cari santri..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pl-9 pr-3.5 py-2.5 text-xs bg-white border border-[#E2EBF4] rounded-2xl text-[#172033] focus:outline-none focus:border-[#1B4D3E]"
@@ -92,7 +91,7 @@ export default function GuruSantriListPage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-3.5">
             {filteredSantri.map((santri) => {
               const pred = getPredikatBadge(santri.currentScore);
 
@@ -100,39 +99,32 @@ export default function GuruSantriListPage() {
                 <Link
                   key={santri.id}
                   href={`/guru/santri/${santri.id}`}
-                  className="mizan-card p-3.5 hover:shadow-md transition-all group flex flex-col justify-between gap-3 border border-[#E2EBF4] hover:border-[#1B4D3E]/40"
+                  className="mizan-card-sub p-3 flex flex-col justify-between gap-2.5 hover:border-[#1B4D3E]/40 group"
                 >
-                  <div className="flex items-start justify-between gap-2.5">
-                    <div className="flex items-center gap-2.5 min-w-0">
-                      <Avatar
-                        initials={santri.avatar}
-                        size="md"
-                        variant={santri.gender === "Putra" ? "primary" : "gold"}
-                      />
-                      <div className="min-w-0">
-                        <h3 className="text-xs font-bold text-[#172033] group-hover:text-[#1B4D3E] transition-colors truncate">
-                          {santri.name}
-                        </h3>
-                        <p className="text-[10px] text-[#64748B] truncate mt-0.5">
-                          NIS: {santri.nis} • Kelas {santri.class}
-                        </p>
-                      </div>
+                  <div className="flex items-center gap-2 min-w-0">
+                    <Avatar
+                      initials={santri.avatar}
+                      size="sm"
+                      variant={santri.gender === "Putra" ? "primary" : "gold"}
+                    />
+                    <div className="min-w-0 flex-1">
+                      <h3 className="text-xs font-bold text-[#172033] group-hover:text-[#1B4D3E] transition-colors truncate">
+                        {santri.name}
+                      </h3>
+                      <p className="text-[10px] text-[#64748B] truncate mt-0.5">
+                        {santri.class} • {santri.nis}
+                      </p>
                     </div>
-
-                    <ChevronRight className="w-4 h-4 text-[#94A3B8] group-hover:text-[#1B4D3E] transition-transform group-hover:translate-x-0.5 shrink-0" />
                   </div>
 
-                  <div className="flex items-center justify-between pt-2 border-t border-[#EEF2F6]">
+                  <div className="flex items-center justify-between pt-1.5 border-t border-[#EEF2F6]">
                     <div>
-                      <span className="text-[9px] text-[#94A3B8] font-bold uppercase block">
-                        Skor Mizan
-                      </span>
                       <span className="font-mono text-xs font-black text-[#1B4D3E]">
                         {formatScore(santri.currentScore)}
                       </span>
                     </div>
 
-                    <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full border ${pred.color}`}>
+                    <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-full border ${pred.color}`}>
                       {pred.label}
                     </span>
                   </div>
@@ -145,9 +137,6 @@ export default function GuruSantriListPage() {
             <div className="text-center py-12 mizan-card p-6">
               <User className="w-8 h-8 text-[#94A3B8] mx-auto mb-2 opacity-50" />
               <p className="text-xs font-bold text-[#172033]">Santri tidak ditemukan</p>
-              <p className="text-[11px] text-[#64748B] mt-0.5">
-                Coba sesuaikan kata kunci pencarian atau filter kelas
-              </p>
             </div>
           )}
         </div>

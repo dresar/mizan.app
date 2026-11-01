@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>PayloadContent</key>
+    <array>
+        <dict>
+            <key>FullScreen</key>
+            <true/>
+            <key>Icon</key>
+            <data>
+            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
+            </data>
+            <key>IsRemovable</key>
+            <true/>
+            <key>Label</key>
+            <string>MIZAN</string>
+            <key>PayloadDescription</key>
+            <string>Aplikasi MIZAN Pondok Pesantren Raudhatussalam</string>
+            <key>PayloadDisplayName</key>
+            <string>MIZAN</string>
+            <key>PayloadIdentifier</key>
+            <string>id.my.agentai.mizan.webclip</string>
+            <key>PayloadType</key>
+            <string>com.apple.webClip.managed</string>
+            <key>PayloadUUID</key>
+            <string>5c7e39a2-5819-4cb4-a3f2-1a2b3c4d5e6f</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>Precomposed</key>
+            <true/>
+            <key>URL</key>
+            <string>https://agentai.my.id/</string>
+        </dict>
+    </array>
+    <key>PayloadDescription</key>
+    <string>Profil Instalasi Aplikasi MIZAN untuk iOS iPhone dan iPad</string>
+    <key>PayloadDisplayName</key>
+    <string>MIZAN Pesantren</string>
+    <key>PayloadIdentifier</key>
+    <string>id.my.agentai.mizan</string>
+    <key>PayloadOrganization</key>
+    <string>Pondok Pesantren Modern Raudhatussalam Mahato</string>
+    <key>PayloadRemovalDisallowed</key>
+    <false/>
+    <key>PayloadType</key>
+    <string>Configuration</string>
+    <key>PayloadUUID</key>
+    <string>6d8f49b3-6920-5dc5-b4g3-2b3c4d5e6f7a</string>
+    <key>PayloadVersion</key>
+    <integer>1</integer>
+</dict>
+</plist>
