@@ -22,7 +22,7 @@ mizan.apps/
 │   │   ├── dashboard/         # Dashboard ringkasan pondok
 │   │   ├── santri/            # Manajemen santri, tambah, filter gender/status
 │   │   ├── kelas/             # Detail kelas santri, rata-rata skor, prestasi/pelanggaran (tanpa modal)
-│   │   ├── wali-kelas/        # Penugasan wali kelas & fitur share statistik publik
+│   │   ├── wali-kelas/        # Penugasan wali kelas, paginasi max 20 (grid & tabel), & share statistik publik
 │   │   ├── absensi/           # Rekap absensi sholat 7 waktu & kegiatan
 │   │   ├── rapor/             # Rapor terpadu santri & santriwati (1 halaman tabel lengkap, cetak PDF massal)
 │   │   ├── pengaturan-nilai/  # Bobot nilai & batas skor adab dinamis dari DB
