@@ -66,7 +66,7 @@ export default function SantriProfilPage() {
 
   return (
     <RoleShell>
-      <div className="space-y-4 max-w-2xl mx-auto pb-36">
+      <div className="w-full space-y-4 overflow-x-hidden pb-36">
         <div className="bg-[#1B4D3E] text-white p-6 rounded-2xl shadow-sm text-center relative overflow-hidden">
           <div className="relative z-10 flex flex-col items-center">
             <Avatar

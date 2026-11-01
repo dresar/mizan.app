@@ -171,7 +171,7 @@ export default function PengasuhanAbsenPage() {
 
   return (
     <RoleShell>
-      <div className="space-y-4 max-w-4xl mx-auto overflow-x-hidden pb-20">
+      <div className="w-full space-y-4 overflow-x-hidden pb-36">
         <div className="mizan-card p-4 sm:p-5 bg-white space-y-3">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
             <div>

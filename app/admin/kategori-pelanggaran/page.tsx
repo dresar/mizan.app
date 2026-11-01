@@ -91,7 +91,7 @@ export default function AdminKategoriPelanggaranPage() {
 
   return (
     <RoleShell>
-      <div className="space-y-6 max-w-6xl mx-auto pb-20">
+      <div className="w-full space-y-4 pb-36">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
             <div className="flex items-center gap-2">
@@ -117,7 +117,7 @@ export default function AdminKategoriPelanggaranPage() {
               className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-2xl bg-white border border-[#E2EBF4] text-[#172033] text-xs font-bold hover:bg-[#FAF7EE] transition-colors shadow-2xs"
             >
               <FolderPlus className="w-3.5 h-3.5 text-[#C5A059]" />
-              <span>+ Kategori Baru</span>
+              <span>Kategori</span>
             </Link>
 
             <Link
@@ -125,15 +125,14 @@ export default function AdminKategoriPelanggaranPage() {
               className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-2xl bg-white border border-[#E2EBF4] text-[#172033] text-xs font-bold hover:bg-[#FAF7EE] transition-colors shadow-2xs"
             >
               <Layers className="w-3.5 h-3.5 text-[#1B4D3E]" />
-              <span>+ Unsur Baru</span>
+              <span>Unsur</span>
             </Link>
 
             <Link
               href="/admin/kategori-pelanggaran/indikator"
               className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-2xl bg-[#1B4D3E] text-white text-xs font-bold hover:bg-[#153e32] transition-colors shadow-xs"
             >
-              <Plus className="w-4 h-4" />
-              <span>+ Indikator Baru</span>
+              <span>Indikator</span>
             </Link>
           </div>
         </div>

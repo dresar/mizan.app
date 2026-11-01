@@ -120,7 +120,7 @@ export default function AdminWaliKelasPage() {
 
   return (
     <RoleShell>
-      <div className="space-y-5 max-w-6xl mx-auto overflow-x-hidden pb-12">
+      <div className="w-full space-y-4 overflow-x-hidden pb-36">
         <div className="mizan-card p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
             <div className="flex items-center gap-2">

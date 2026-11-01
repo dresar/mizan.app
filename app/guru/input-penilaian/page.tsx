@@ -232,7 +232,7 @@ export default function InputPenilaianPage() {
 
   return (
     <RoleShell>
-      <div className="w-full space-y-4 max-w-5xl mx-auto overflow-x-hidden pb-32">
+      <div className="w-full space-y-4 overflow-x-hidden pb-36">
         <div className="mizan-card p-4 sm:p-5 flex items-center justify-between gap-3 flex-wrap">
           <div>
             <h1 className="text-base sm:text-xl font-serif font-black text-[#172033] tracking-tight">

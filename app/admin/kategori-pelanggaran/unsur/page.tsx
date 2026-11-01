@@ -35,7 +35,7 @@ export default function TambahUnsurPage() {
 
   return (
     <RoleShell>
-      <div className="space-y-4 max-w-xl mx-auto pb-16">
+      <div className="w-full space-y-4 pb-36">
         <div className="flex items-center gap-3">
           <Link
             href="/admin/kategori-pelanggaran"
@@ -53,7 +53,7 @@ export default function TambahUnsurPage() {
           </div>
         </div>
 
-        <Card className="p-5 sm:p-6 bg-white space-y-4 shadow-sm">
+        <Card className="p-5 sm:p-6 bg-white space-y-4 shadow-sm w-full">
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block text-xs font-bold text-[#172033] mb-1.5 uppercase tracking-wider">

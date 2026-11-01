@@ -119,7 +119,7 @@ function SantriDetailContent() {
 
   return (
     <RoleShell>
-      <div className="w-full space-y-4 max-w-4xl mx-auto overflow-x-hidden print:p-0 print:m-0 print:max-w-none">
+      <div className="w-full space-y-4 overflow-x-hidden pb-36 print:p-0 print:m-0 print:max-w-none">
         <div className="flex items-center justify-between gap-3 print:hidden">
           <button
             type="button"

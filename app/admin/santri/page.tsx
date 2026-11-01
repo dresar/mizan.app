@@ -242,7 +242,7 @@ export default function AdminSantriPage() {
 
   return (
     <RoleShell>
-      <div className="space-y-4 max-w-5xl mx-auto overflow-x-hidden">
+      <div className="w-full space-y-4 overflow-x-hidden pb-36">
         <div className="mizan-card p-4 sm:p-5 flex flex-col md:flex-row md:items-center justify-between gap-3">
           <div>
             <div className="flex items-center gap-2">

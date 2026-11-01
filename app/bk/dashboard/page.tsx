@@ -60,7 +60,7 @@ export default function PengasuhanDashboardPage() {
 
   return (
     <RoleShell>
-      <div className="space-y-3.5 max-w-4xl mx-auto overflow-x-hidden pb-36">
+      <div className="w-full space-y-4 overflow-x-hidden pb-36">
         <div className="mizan-card p-4 sm:p-6 bg-white space-y-3.5">
           <div className="flex items-center justify-between gap-2">
             <div>

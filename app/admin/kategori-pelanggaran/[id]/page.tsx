@@ -115,7 +115,7 @@ function CategoryDetailContent() {
   if (!currentCategory) {
     return (
       <RoleShell>
-        <div className="space-y-4 max-w-4xl mx-auto py-12 text-center">
+        <div className="w-full space-y-4 py-12 text-center">
           <h2 className="text-xl font-bold text-[#172033]">Kategori Tidak Ditemukan</h2>
           <p className="text-xs text-[#64748B]">
             Kategori dengan kode atau nama &quot;{categoryId}&quot; tidak terdaftar di sistem.
@@ -136,7 +136,7 @@ function CategoryDetailContent() {
 
   return (
     <RoleShell>
-      <div className="space-y-6 max-w-6xl mx-auto pb-20">
+      <div className="w-full space-y-4 pb-36">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <Link
@@ -144,7 +144,7 @@ function CategoryDetailContent() {
             className="inline-flex items-center gap-1.5 text-xs font-bold text-[#64748B] hover:text-[#1B4D3E] transition-colors mb-2"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
-            <span>Kembali ke Daftar Kategori Utama</span>
+            <span>Kembali</span>
           </Link>
           <div className="flex items-center gap-2">
             <span className="w-7 h-7 rounded-lg bg-[#1B4D3E] text-white font-mono font-black text-xs flex items-center justify-center">
@@ -165,15 +165,14 @@ function CategoryDetailContent() {
             className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-2xl bg-white border border-[#E2EBF4] text-[#172033] text-xs font-bold hover:bg-[#FAF7EE] transition-colors shadow-2xs"
           >
             <Layers className="w-3.5 h-3.5 text-[#1B4D3E]" />
-            <span>+ Tambah Unsur</span>
+            <span>Unsur</span>
           </Link>
 
           <Link
             href={`/admin/kategori-pelanggaran/indikator`}
             className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-2xl bg-[#1B4D3E] text-white text-xs font-bold hover:bg-[#153e32] transition-colors shadow-xs"
           >
-            <Plus className="w-4 h-4" />
-            <span>+ Tambah Indikator</span>
+            <span>Indikator</span>
           </Link>
         </div>
       </div>
@@ -293,8 +292,7 @@ function CategoryDetailContent() {
                     href={`/admin/kategori-pelanggaran/indikator`}
                     className="px-2.5 py-1 text-[11px] font-bold rounded-xl bg-[#EEF2F6] text-[#172033] hover:bg-[#E2E8F0] transition-colors inline-flex items-center gap-1"
                   >
-                    <Plus className="w-3 h-3 text-[#1B4D3E]" />
-                    <span>Tambah Indikator</span>
+                    <span>Indikator</span>
                   </Link>
                 </div>
               </div>

@@ -36,7 +36,7 @@ export default function GuruRiwayatPage() {
 
   return (
     <RoleShell>
-      <div className="space-y-4 max-w-4xl mx-auto">
+      <div className="w-full space-y-4 overflow-x-hidden pb-36">
         <div className="mizan-card p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
             <h1 className="text-lg sm:text-xl font-serif font-black text-[#172033] tracking-tight">
@@ -49,10 +49,9 @@ export default function GuruRiwayatPage() {
 
           <Link
             href="/guru/input-penilaian"
-            className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-full mizan-btn-primary text-xs font-bold shrink-0"
+            className="inline-flex items-center justify-center px-4 py-2.5 rounded-full mizan-btn-primary text-xs font-bold shrink-0"
           >
-            <Plus className="w-4 h-4" />
-            <span>Input Baru</span>
+            <span>Input</span>
           </Link>
         </div>
 

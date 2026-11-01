@@ -144,7 +144,7 @@ export default function GuruProfilPage() {
 
   return (
     <RoleShell>
-      <div className="w-full space-y-4 max-w-4xl mx-auto overflow-x-hidden pb-36">
+      <div className="w-full space-y-4 overflow-x-hidden pb-36">
         <Card className="p-5 sm:p-6 text-center space-y-3 bg-white">
           <div className="mx-auto w-20 h-20 rounded-3xl mizan-card flex items-center justify-center text-2xl font-black text-[#1B4D3E] overflow-hidden">
             {currentUser.avatarUrl ? (

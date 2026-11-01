@@ -1,12 +1,14 @@
-const CACHE_NAME = "mizan-pwa-v1.0.0";
+const CACHE_NAME = "mizan-pwa-v1.0.1";
 const PRECACHE_ASSETS = [
   "/",
   "/login",
   "/manifest.json",
+  "/logo.png",
+  "/favicon.ico",
+  "/favicon.png",
   "/icons/icon-192.png",
   "/icons/icon-512.png",
-  "/icons/apple-touch-icon.png",
-  "/favicon.png"
+  "/icons/apple-touch-icon.png"
 ];
 
 self.addEventListener("install", (event) => {

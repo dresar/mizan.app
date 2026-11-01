@@ -97,7 +97,7 @@ export default function AdminPengaturanNilaiPage() {
 
   return (
     <RoleShell>
-      <div className="space-y-6 max-w-4xl mx-auto pb-36">
+      <div className="w-full space-y-4 pb-36">
         <div className="mizan-card p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
             <div className="flex items-center gap-2">
