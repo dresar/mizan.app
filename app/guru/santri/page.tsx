@@ -6,11 +6,14 @@ import { Search, User, ChevronRight, GraduationCap } from "lucide-react";
 import { useMizan } from "@/lib/mizan-context";
 import { RoleShell } from "@/components/RoleShell";
 import { Avatar } from "@/components/ui/Avatar";
+import { Pagination } from "@/components/ui/Pagination";
 
 export default function GuruSantriListPage() {
   const { accessibleSantriList, currentUser } = useMizan();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedClass, setSelectedClass] = useState("ALL");
+  const [currentPage, setCurrentPage] = useState(1);
+  const PAGE_SIZE = 20;
 
   const classes = useMemo(() => {
     const set = new Set(accessibleSantriList.map((s) => s.class));
@@ -26,6 +29,23 @@ export default function GuruSantriListPage() {
       return matchSearch && matchClass;
     });
   }, [accessibleSantriList, searchQuery, selectedClass]);
+
+  const totalPages = Math.ceil(filteredSantri.length / PAGE_SIZE) || 1;
+
+  const paginatedSantri = useMemo(() => {
+    const start = (currentPage - 1) * PAGE_SIZE;
+    return filteredSantri.slice(start, start + PAGE_SIZE);
+  }, [filteredSantri, currentPage]);
+
+  const handleSearchChange = (val: string) => {
+    setSearchQuery(val);
+    setCurrentPage(1);
+  };
+
+  const handleClassChange = (val: string) => {
+    setSelectedClass(val);
+    setCurrentPage(1);
+  };
 
   const formatScore = (score: number) => {
     return score.toFixed(3).replace(".", ",");
@@ -65,7 +85,7 @@ export default function GuruSantriListPage() {
                 type="text"
                 placeholder="Cari santri..."
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={(e) => handleSearchChange(e.target.value)}
                 className="w-full pl-9 pr-3.5 py-2.5 text-xs bg-white border border-[#E2EBF4] rounded-2xl text-[#172033] focus:outline-none focus:border-[#1B4D3E]"
               />
             </div>
@@ -77,7 +97,7 @@ export default function GuruSantriListPage() {
                   <button
                     key={cls}
                     type="button"
-                    onClick={() => setSelectedClass(cls)}
+                    onClick={() => handleClassChange(cls)}
                     className={`px-3 py-2 rounded-xl text-xs font-bold transition-all shrink-0 ${
                       isSelected
                         ? "bg-[#1B4D3E] text-white shadow-sm"
@@ -92,7 +112,7 @@ export default function GuruSantriListPage() {
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-3.5">
-            {filteredSantri.map((santri) => {
+            {paginatedSantri.map((santri) => {
               const pred = getPredikatBadge(santri.currentScore);
 
               return (
@@ -132,6 +152,15 @@ export default function GuruSantriListPage() {
               );
             })}
           </div>
+
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+            totalItems={filteredSantri.length}
+            itemsPerPage={PAGE_SIZE}
+            itemName="santri"
+          />
 
           {filteredSantri.length === 0 && (
             <div className="text-center py-12 mizan-card p-6">

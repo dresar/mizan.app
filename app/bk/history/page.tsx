@@ -12,6 +12,7 @@ import {
 import { useMizan } from "@/lib/mizan-context";
 import { RoleShell } from "@/components/RoleShell";
 import { Card } from "@/components/ui/Card";
+import { Pagination } from "@/components/ui/Pagination";
 import { StatusAbsensi, WaktuSholat } from "@/lib/mock-data";
 
 const PRAYER_TIMES: ("ALL" | WaktuSholat)[] = [
@@ -33,8 +34,10 @@ export default function PengasuhanHistoryPage() {
   const [selectedStatus, setSelectedStatus] = useState<"ALL" | StatusAbsensi>("ALL");
   const [selectedClass, setSelectedClass] = useState<string>("ALL");
   const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
   const [editingRecordId, setEditingRecordId] = useState<string | null>(null);
   const [editStatusVal, setEditStatusVal] = useState<StatusAbsensi>("Hadir");
+  const PAGE_SIZE = 20;
 
   const filteredHistory = useMemo(() => {
     return absensiList.filter((item) => {
@@ -58,6 +61,33 @@ export default function PengasuhanHistoryPage() {
       return matchPrayer && matchStatus && matchClass && matchSearch && matchGender;
     });
   }, [absensiList, santriList, currentUser, selectedPrayer, selectedStatus, selectedClass, searchQuery]);
+
+  const totalPages = Math.ceil(filteredHistory.length / PAGE_SIZE) || 1;
+
+  const paginatedHistory = useMemo(() => {
+    const start = (currentPage - 1) * PAGE_SIZE;
+    return filteredHistory.slice(start, start + PAGE_SIZE);
+  }, [filteredHistory, currentPage]);
+
+  const handlePrayerChange = (val: "ALL" | WaktuSholat) => {
+    setSelectedPrayer(val);
+    setCurrentPage(1);
+  };
+
+  const handleStatusChange = (val: "ALL" | StatusAbsensi) => {
+    setSelectedStatus(val);
+    setCurrentPage(1);
+  };
+
+  const handleClassChange = (val: string) => {
+    setSelectedClass(val);
+    setCurrentPage(1);
+  };
+
+  const handleSearchChange = (val: string) => {
+    setSearchQuery(val);
+    setCurrentPage(1);
+  };
 
   const handleStartEdit = (id: string, currentStatus: StatusAbsensi) => {
     setEditingRecordId(id);
@@ -118,7 +148,7 @@ export default function PengasuhanHistoryPage() {
               </label>
               <select
                 value={selectedPrayer}
-                onChange={(e) => setSelectedPrayer(e.target.value as "ALL" | WaktuSholat)}
+                onChange={(e) => handlePrayerChange(e.target.value as "ALL" | WaktuSholat)}
                 className="w-full px-3 py-2 rounded-xl text-xs font-bold bg-[#EEF2F6] border border-transparent text-[#172033] focus:bg-white focus:border-[#1B4D3E] focus:outline-none"
               >
                 {PRAYER_TIMES.map((time) => (
@@ -135,7 +165,7 @@ export default function PengasuhanHistoryPage() {
               </label>
               <select
                 value={selectedStatus}
-                onChange={(e) => setSelectedStatus(e.target.value as "ALL" | StatusAbsensi)}
+                onChange={(e) => handleStatusChange(e.target.value as "ALL" | StatusAbsensi)}
                 className="w-full px-3 py-2 rounded-xl text-xs font-bold bg-[#EEF2F6] border border-transparent text-[#172033] focus:bg-white focus:border-[#1B4D3E] focus:outline-none"
               >
                 <option value="ALL">Semua Status</option>
@@ -152,7 +182,7 @@ export default function PengasuhanHistoryPage() {
               </label>
               <select
                 value={selectedClass}
-                onChange={(e) => setSelectedClass(e.target.value)}
+                onChange={(e) => handleClassChange(e.target.value)}
                 className="w-full px-3 py-2 rounded-xl text-xs font-bold bg-[#EEF2F6] border border-transparent text-[#172033] focus:bg-white focus:border-[#1B4D3E] focus:outline-none"
               >
                 <option value="ALL">Semua Kelas</option>
@@ -172,7 +202,7 @@ export default function PengasuhanHistoryPage() {
                   type="text"
                   placeholder="Nama santri..."
                   value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onChange={(e) => handleSearchChange(e.target.value)}
                   className="w-full pl-8 pr-3 py-2 text-xs bg-[#EEF2F6] border border-transparent rounded-xl text-[#172033] focus:bg-white focus:border-[#1B4D3E] focus:outline-none"
                 />
               </div>
@@ -196,7 +226,7 @@ export default function PengasuhanHistoryPage() {
             </div>
           ) : (
             <div className="space-y-2">
-              {filteredHistory.map((item) => {
+              {paginatedHistory.map((item) => {
                 const isEditing = editingRecordId === item.id;
 
                 return (
@@ -296,6 +326,15 @@ export default function PengasuhanHistoryPage() {
               })}
             </div>
           )}
+
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+            totalItems={filteredHistory.length}
+            itemsPerPage={PAGE_SIZE}
+            itemName="presensi"
+          />
         </Card>
       </div>
     </RoleShell>

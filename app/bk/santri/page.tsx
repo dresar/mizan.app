@@ -123,7 +123,7 @@ export default function BkSantriListPage() {
                 type="text"
                 placeholder="Cari nama santri atau NIS..."
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={(e) => handleSearchChange(e.target.value)}
                 className="w-full pl-9 pr-3.5 py-2.5 text-xs bg-white border border-[#E2EBF4] rounded-2xl text-[#172033] focus:outline-none focus:border-[#1B4D3E]"
               />
             </div>
@@ -133,10 +133,7 @@ export default function BkSantriListPage() {
                 <button
                   key={g}
                   type="button"
-                  onClick={() => {
-                    setGenderFilter(g);
-                    setSelectedClass("ALL");
-                  }}
+                  onClick={() => handleGenderChange(g)}
                   className={`px-3 py-1.5 text-xs font-bold rounded-xl transition-all ${
                     genderFilter === g
                       ? "bg-[#1B4D3E] text-white shadow-2xs"
@@ -155,7 +152,7 @@ export default function BkSantriListPage() {
                   <button
                     key={cls}
                     type="button"
-                    onClick={() => setSelectedClass(cls)}
+                    onClick={() => handleClassChange(cls)}
                     className={`px-3 py-1.5 rounded-2xl text-xs font-bold transition-all shrink-0 ${
                       isSelected
                         ? "bg-[#C5A059] text-white shadow-2xs"
@@ -170,7 +167,7 @@ export default function BkSantriListPage() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            {filteredSantri.map((santri) => {
+            {paginatedSantri.map((santri) => {
               const pred = getPredikatBadge(santri.currentScore);
 
               return (
@@ -244,6 +241,15 @@ export default function BkSantriListPage() {
               );
             })}
           </div>
+
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+            totalItems={filteredSantri.length}
+            itemsPerPage={PAGE_SIZE}
+            itemName="santri"
+          />
 
           {filteredSantri.length === 0 && (
             <div className="text-center py-12 mizan-card p-6">

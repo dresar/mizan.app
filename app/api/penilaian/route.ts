@@ -84,7 +84,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ success: true, id, message: "Penilaian berhasil disimpan." });
   } catch (err: any) {
-    return NextResponse.json({ success: false, message: "Terjadi kendala saat menyimpan penilaian." }, { status: 500 });
+    return NextResponse.json({ success: false, message: "Terjadi kendala saat menyimpan penilaian.", error: err?.message }, { status: 500 });
   }
 }
 

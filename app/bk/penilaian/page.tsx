@@ -458,10 +458,20 @@ export default function PengasuhanPenilaianPage() {
               Pusat Pengasuhan Pondok (BK) • Catat prestasi hasanah dan pelanggaran sayyiah
             </p>
           </div>
-          <span className="inline-flex items-center gap-1.5 text-[10px] font-bold px-3 py-1 rounded-full mizan-pill bg-[#ECFDF5] text-[#065F46]">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            Pengasuhan BK
-          </span>
+          <div className="flex items-center gap-2 flex-wrap">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-2xl bg-white border border-[#E2EBF4] shadow-2xs text-[11px]">
+              <Clock className="w-3.5 h-3.5 text-[#1B4D3E] animate-pulse" />
+              <div className="flex items-center gap-1.5 font-mono">
+                <span className="text-[#64748B] font-medium hidden sm:inline">{formattedDateLive}</span>
+                <span className="text-[#64748B] hidden sm:inline">•</span>
+                <span className="font-bold text-[#172033]">{formattedTimeLive || "Memuat..."}</span>
+              </div>
+            </div>
+            <span className="inline-flex items-center gap-1.5 text-[10px] font-bold px-3 py-1.5 rounded-full mizan-pill bg-[#ECFDF5] text-[#065F46]">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              Pengasuhan BK
+            </span>
+          </div>
         </div>
 
         <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-12 gap-3.5 sm:gap-4 w-full">
@@ -1007,6 +1017,27 @@ export default function PengasuhanPenilaianPage() {
                 </CardSub>
               </div>
 
+              <div className="p-3 rounded-2xl bg-[#F8FAFC] border border-[#E2EBF4] flex items-center justify-between gap-3">
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <div className="w-8 h-8 rounded-xl bg-emerald-50 text-[#1B4D3E] flex items-center justify-center shrink-0 border border-emerald-100">
+                    <Clock className="w-4 h-4 animate-pulse" />
+                  </div>
+                  <div className="min-w-0">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#64748B] block truncate">
+                      Waktu & Tanggal Realtime
+                    </span>
+                    <p className="text-xs font-bold text-[#172033] truncate mt-0.5">
+                      {formattedDateLive || "Memuat..."}
+                    </p>
+                  </div>
+                </div>
+                <div className="text-right shrink-0">
+                  <span className="inline-block px-2.5 py-1 rounded-xl bg-white border border-[#E2EBF4] font-mono text-xs font-black text-[#1B4D3E] shadow-2xs">
+                    {formattedTimeLive || "--:--:-- WIB"}
+                  </span>
+                </div>
+              </div>
+
               <div>
                 <label className="block text-[11px] font-bold text-[#64748B] uppercase mb-1">
                   Catatan Ringkas (Opsional)
@@ -1047,6 +1078,76 @@ export default function PengasuhanPenilaianPage() {
             </Card>
           </div>
         </form>
+
+        <Card className="p-4 sm:p-5 space-y-3">
+          <div className="flex items-center justify-between gap-2 flex-wrap">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-xl bg-emerald-50 text-[#1B4D3E] flex items-center justify-center border border-emerald-100">
+                <History className="w-4 h-4" />
+              </div>
+              <div>
+                <h3 className="text-xs sm:text-sm font-bold text-[#172033]">
+                  Riwayat Penilaian Realtime
+                </h3>
+                <p className="text-[10px] text-[#64748B]">
+                  Catatan waktu nyata tersimpan di database
+                </p>
+              </div>
+            </div>
+            <span className="text-[10px] font-mono font-bold px-2.5 py-1 rounded-full bg-[#F8FAFC] text-[#64748B] border border-[#E2EBF4]">
+              {penilaianList.length} Catatan
+            </span>
+          </div>
+
+          <div className="space-y-2 max-h-72 overflow-y-auto pr-1">
+            {penilaianList.slice(0, 10).map((p) => (
+              <div
+                key={p.id}
+                className="p-3 rounded-2xl bg-[#F8FAFC] border border-[#E2EBF4] flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs"
+              >
+                <div className="min-w-0 flex-1 space-y-1">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span
+                      className={`text-[9px] font-bold px-2 py-0.5 rounded-full ${
+                        p.type === "HASANAH"
+                          ? "bg-emerald-100 text-emerald-800"
+                          : "bg-red-100 text-red-800"
+                      }`}
+                    >
+                      {p.type === "HASANAH" ? "Hasanah" : "Sayyiah"}
+                    </span>
+                    <span className="font-bold text-[#172033]">{p.santriName}</span>
+                    <span className="text-[10px] text-[#64748B]">({p.santriClass})</span>
+                  </div>
+                  <p className="text-xs text-[#334155] font-medium">{p.unsurName || p.indicatorText}</p>
+                  {p.notes && <p className="text-[10px] text-[#64748B] italic">"{p.notes}"</p>}
+                  <div className="flex items-center gap-2 text-[10px] text-[#94A3B8] font-mono">
+                    <Clock className="w-3 h-3 text-[#1B4D3E]" />
+                    <span>{p.createdAt}</span>
+                    <span>•</span>
+                    <span>{p.guruName}</span>
+                  </div>
+                </div>
+                <div className="text-right shrink-0">
+                  <span
+                    className={`font-mono text-xs sm:text-sm font-black px-2.5 py-1 rounded-xl block ${
+                      p.score >= 0
+                        ? "bg-emerald-50 text-[#065F46] border border-emerald-200"
+                        : "bg-red-50 text-[#991B1B] border border-red-200"
+                    }`}
+                  >
+                    {p.score >= 0 ? `+${formatScore(p.score)}` : `-${formatScore(Math.abs(p.score))}`}
+                  </span>
+                </div>
+              </div>
+            ))}
+            {penilaianList.length === 0 && (
+              <div className="py-8 text-center text-xs text-[#94A3B8]">
+                Belum ada catatan penilaian yang tersimpan
+              </div>
+            )}
+          </div>
+        </Card>
 
         <div className="fixed bottom-[68px] inset-x-3 md:inset-x-auto md:right-8 md:bottom-6 z-30 mizan-card p-3 flex items-center justify-between gap-3 shadow-xl bg-white/95 backdrop-blur-md border border-[#E2EBF4] rounded-3xl max-w-md mx-auto">
           <div className="min-w-0">

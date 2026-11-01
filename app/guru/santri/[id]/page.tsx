@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, Suspense } from "react";
+import React, { useState, useEffect, useMemo, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useParams } from "next/navigation";
 import {
@@ -22,6 +22,7 @@ import { RoleShell } from "@/components/RoleShell";
 import { Card, CardSub, CardInset } from "@/components/ui/Card";
 import { Avatar } from "@/components/ui/Avatar";
 import { Badge } from "@/components/ui/Badge";
+import { Pagination } from "@/components/ui/Pagination";
 import { generateSantriPdf } from "@/lib/pdf-generator";
 import { ShareModal } from "@/components/ShareModal";
 
@@ -33,6 +34,10 @@ function SantriDetailContent() {
   const { santriList, penilaianList, absensiList } = useMizan();
   const [printDate, setPrintDate] = useState("31 Oktober 2026");
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const [penilaianPage, setPenilaianPage] = useState(1);
+  const [absensiPage, setAbsensiPage] = useState(1);
+  const PENILAIAN_PAGE_SIZE = 8;
+  const ABSENSI_PAGE_SIZE = 12;
 
   useEffect(() => {
     try {
@@ -68,6 +73,18 @@ function SantriDetailContent() {
 
   const studentPenilaian = penilaianList.filter((p) => p.santriId === santri?.id);
   const studentAbsensi = absensiList.filter((a) => a.santriId === santri?.id);
+
+  const totalPenilaianPages = Math.ceil(studentPenilaian.length / PENILAIAN_PAGE_SIZE) || 1;
+  const paginatedPenilaian = useMemo(() => {
+    const start = (penilaianPage - 1) * PENILAIAN_PAGE_SIZE;
+    return studentPenilaian.slice(start, start + PENILAIAN_PAGE_SIZE);
+  }, [studentPenilaian, penilaianPage]);
+
+  const totalAbsensiPages = Math.ceil(studentAbsensi.length / ABSENSI_PAGE_SIZE) || 1;
+  const paginatedAbsensi = useMemo(() => {
+    const start = (absensiPage - 1) * ABSENSI_PAGE_SIZE;
+    return studentAbsensi.slice(start, start + ABSENSI_PAGE_SIZE);
+  }, [studentAbsensi, absensiPage]);
 
   const totalHasanah = studentPenilaian
     .filter((p) => p.type === "HASANAH")
@@ -259,34 +276,45 @@ function SantriDetailContent() {
               Belum ada catatan pelanggaran atau prestasi khusus yang tercatat.
             </CardInset>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-              {studentPenilaian.map((item) => (
-                <CardSub key={item.id} className="p-3 space-y-1">
-                  <div className="flex items-center justify-between gap-1">
-                    <span
-                      className={`text-[10px] font-mono font-black px-2 py-0.5 rounded-full mizan-pill ${
-                        item.type === "HASANAH"
-                          ? "bg-[#ECFDF5] text-[#065F46]"
-                          : "bg-[#FEF2F2] text-[#991B1B]"
-                      }`}
-                    >
-                      {formatScoreWithSign(item.score)}
-                    </span>
-                    <span className="text-[10px] text-[#94A3B8]">{item.createdAt}</span>
-                  </div>
-                  <p className="text-xs font-bold text-[#172033] line-clamp-2">
-                    {item.indicatorText}
-                  </p>
-                  {item.notes && (
-                    <p className="text-[11px] text-[#64748B] italic">
-                      &quot;{item.notes}&quot;
+            <div className="space-y-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                {paginatedPenilaian.map((item) => (
+                  <CardSub key={item.id} className="p-3 space-y-1">
+                    <div className="flex items-center justify-between gap-1">
+                      <span
+                        className={`text-[10px] font-mono font-black px-2 py-0.5 rounded-full mizan-pill ${
+                          item.type === "HASANAH"
+                            ? "bg-[#ECFDF5] text-[#065F46]"
+                            : "bg-[#FEF2F2] text-[#991B1B]"
+                        }`}
+                      >
+                        {formatScoreWithSign(item.score)}
+                      </span>
+                      <span className="text-[10px] text-[#94A3B8]">{item.createdAt}</span>
+                    </div>
+                    <p className="text-xs font-bold text-[#172033] line-clamp-2">
+                      {item.indicatorText}
                     </p>
-                  )}
-                  <span className="text-[10px] text-[#A8833E] font-medium block">
-                    Pencatat: {item.guruName}
-                  </span>
-                </CardSub>
-              ))}
+                    {item.notes && (
+                      <p className="text-[11px] text-[#64748B] italic">
+                        &quot;{item.notes}&quot;
+                      </p>
+                    )}
+                    <span className="text-[10px] text-[#A8833E] font-medium block">
+                      Pencatat: {item.guruName}
+                    </span>
+                  </CardSub>
+                ))}
+              </div>
+
+              <Pagination
+                currentPage={penilaianPage}
+                totalPages={totalPenilaianPages}
+                onPageChange={setPenilaianPage}
+                totalItems={studentPenilaian.length}
+                itemsPerPage={PENILAIAN_PAGE_SIZE}
+                itemName="catatan"
+              />
             </div>
           )}
         </Card>
@@ -304,23 +332,34 @@ function SantriDetailContent() {
               Belum ada data absensi individual.
             </CardInset>
           ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-              {studentAbsensi.map((abs) => (
-                <CardSub key={abs.id} className="p-2.5 text-center">
-                  <span className="text-[10px] text-[#94A3B8] block">{abs.date}</span>
-                  <span
-                    className={`text-xs font-bold block mt-0.5 ${
-                      abs.status === "Hadir"
-                        ? "text-[#065F46]"
-                        : abs.status === "Alpa"
-                        ? "text-[#991B1B]"
-                        : "text-[#854D0E]"
-                    }`}
-                  >
-                    {abs.status} ({formatScoreWithSign(abs.scoreImpact)})
-                  </span>
-                </CardSub>
-              ))}
+            <div className="space-y-3">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                {paginatedAbsensi.map((abs) => (
+                  <CardSub key={abs.id} className="p-2.5 text-center">
+                    <span className="text-[10px] text-[#94A3B8] block">{abs.date}</span>
+                    <span
+                      className={`text-xs font-bold block mt-0.5 ${
+                        abs.status === "Hadir"
+                          ? "text-[#065F46]"
+                          : abs.status === "Alpa"
+                          ? "text-[#991B1B]"
+                          : "text-[#854D0E]"
+                      }`}
+                    >
+                      {abs.status} ({formatScoreWithSign(abs.scoreImpact)})
+                    </span>
+                  </CardSub>
+                ))}
+              </div>
+
+              <Pagination
+                currentPage={absensiPage}
+                totalPages={totalAbsensiPages}
+                onPageChange={setAbsensiPage}
+                totalItems={studentAbsensi.length}
+                itemsPerPage={ABSENSI_PAGE_SIZE}
+                itemName="absensi"
+              />
             </div>
           )}
         </Card>

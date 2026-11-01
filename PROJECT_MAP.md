@@ -58,7 +58,7 @@ mizan.apps/
 - `santri`: Data 249 santri & santriwati resmi pondok (113 Putra, 136 Putri di 12 kelas 1A-6A & 1B-6B).
 - `guru_monitoring`: Status keaktifan dan pelaporan guru pembina.
 - `categories`, `unsurs`, `indicators`: Hierarki poin pelanggaran dan kebaikan.
-- `penilaian`: Catatan sikap hasanah/sayyiah (santri_id, guru_name, type, score, date, keterangan).
+- `penilaian`: Catatan sikap hasanah/sayyiah (santri_id, guru_name, type, score, notes, created_at [timestamp with time zone realtime], date_key).
 - `absensi`: Absensi sholat (santri_id, date, status [Hadir/Izin/Sakit/Alpa], waktu_sholat [Subuh..Tahajjud]).
 - `classes`: Data kelas & wali kelas (name, wali_kelas, guru_id, gender).
 - `app_settings`: Pengaturan bobot skor dinamis (base_score, max_score, penalty_limit, dll).

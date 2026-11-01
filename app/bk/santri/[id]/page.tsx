@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, Suspense } from "react";
+import React, { useState, useEffect, useMemo, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useParams } from "next/navigation";
 import {
@@ -22,6 +22,7 @@ import { RoleShell } from "@/components/RoleShell";
 import { Card, CardSub, CardInset } from "@/components/ui/Card";
 import { Avatar } from "@/components/ui/Avatar";
 import { Badge } from "@/components/ui/Badge";
+import { Pagination } from "@/components/ui/Pagination";
 import { generateSantriPdf } from "@/lib/pdf-generator";
 import { ShareModal } from "@/components/ShareModal";
 
@@ -33,6 +34,10 @@ function BkSantriDetailContent() {
   const { santriList, penilaianList, absensiList, showToast } = useMizan();
   const [printDate, setPrintDate] = useState("1 November 2026");
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const [penilaianPage, setPenilaianPage] = useState(1);
+  const [absensiPage, setAbsensiPage] = useState(1);
+  const PENILAIAN_PAGE_SIZE = 6;
+  const ABSENSI_PAGE_SIZE = 10;
 
   useEffect(() => {
     try {
@@ -52,6 +57,18 @@ function BkSantriDetailContent() {
 
   const studentPenilaian = penilaianList.filter((p) => p.santriId === santri?.id);
   const studentAbsensi = absensiList.filter((a) => a.santriId === santri?.id);
+
+  const totalPenilaianPages = Math.ceil(studentPenilaian.length / PENILAIAN_PAGE_SIZE) || 1;
+  const paginatedPenilaian = useMemo(() => {
+    const start = (penilaianPage - 1) * PENILAIAN_PAGE_SIZE;
+    return studentPenilaian.slice(start, start + PENILAIAN_PAGE_SIZE);
+  }, [studentPenilaian, penilaianPage]);
+
+  const totalAbsensiPages = Math.ceil(studentAbsensi.length / ABSENSI_PAGE_SIZE) || 1;
+  const paginatedAbsensi = useMemo(() => {
+    const start = (absensiPage - 1) * ABSENSI_PAGE_SIZE;
+    return studentAbsensi.slice(start, start + ABSENSI_PAGE_SIZE);
+  }, [studentAbsensi, absensiPage]);
 
   const totalHasanah = studentPenilaian
     .filter((p) => p.type === "HASANAH")
@@ -270,8 +287,8 @@ function BkSantriDetailContent() {
               </span>
             </div>
 
-            <div className="space-y-2 max-h-80 overflow-y-auto pr-1">
-              {studentPenilaian.map((p) => {
+            <div className="space-y-2">
+              {paginatedPenilaian.map((p) => {
                 const isHasanah = p.type === "HASANAH";
                 return (
                   <CardInset key={p.id} className="p-2.5">
@@ -323,6 +340,15 @@ function BkSantriDetailContent() {
                 </div>
               )}
             </div>
+
+            <Pagination
+              currentPage={penilaianPage}
+              totalPages={totalPenilaianPages}
+              onPageChange={setPenilaianPage}
+              totalItems={studentPenilaian.length}
+              itemsPerPage={PENILAIAN_PAGE_SIZE}
+              itemName="catatan"
+            />
           </Card>
 
           <Card className="p-4 sm:p-5 space-y-3">
@@ -338,8 +364,8 @@ function BkSantriDetailContent() {
               </span>
             </div>
 
-            <div className="space-y-2 max-h-80 overflow-y-auto pr-1">
-              {studentAbsensi.map((a) => {
+            <div className="space-y-2">
+              {paginatedAbsensi.map((a) => {
                 const isHadir = a.status === "Hadir";
                 const isAlpa = a.status === "Alpa";
                 return (
@@ -386,6 +412,15 @@ function BkSantriDetailContent() {
                 </div>
               )}
             </div>
+
+            <Pagination
+              currentPage={absensiPage}
+              totalPages={totalAbsensiPages}
+              onPageChange={setAbsensiPage}
+              totalItems={studentAbsensi.length}
+              itemsPerPage={ABSENSI_PAGE_SIZE}
+              itemName="presensi"
+            />
           </Card>
         </div>
 
