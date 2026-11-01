@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 import {
   Search,
@@ -27,6 +27,8 @@ import { Badge } from "@/components/ui/Badge";
 import { Avatar } from "@/components/ui/Avatar";
 import { ScoreBar } from "@/components/ui/ScoreBar";
 import { EmptyState } from "@/components/ui/EmptyState";
+import { DeleteModal } from "@/components/ui/DeleteModal";
+import { Pagination } from "@/components/ui/Pagination";
 import { Santri } from "@/lib/mock-data";
 
 export default function AdminSantriPage() {
@@ -39,8 +41,21 @@ export default function AdminSantriPage() {
     importSantriBatch,
     updateSantri,
     deleteSantri,
+    deleteSantriBulk,
     showToast
   } = useMizan();
+
+  const [selectedSantriIds, setSelectedSantriIds] = useState<string[]>([]);
+  const [deleteModalState, setDeleteModalState] = useState<{
+    isOpen: boolean;
+    ids: string[];
+    name?: string;
+    count?: number;
+    isLoading?: boolean;
+  }>({
+    isOpen: false,
+    ids: []
+  });
 
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedGender, setSelectedGender] = useState<"ALL" | "Putra" | "Putri">("ALL");
@@ -78,6 +93,21 @@ export default function AdminSantriPage() {
       return matchSearch && matchGender && matchClass;
     });
   }, [santriList, searchQuery, selectedGender, selectedClass]);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const PAGE_SIZE = 20;
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, selectedGender, selectedClass]);
+
+  const totalPages = Math.max(1, Math.ceil(filteredSantri.length / PAGE_SIZE));
+  const safePage = Math.min(Math.max(1, currentPage), totalPages);
+
+  const paginatedSantri = useMemo(() => {
+    const start = (safePage - 1) * PAGE_SIZE;
+    return filteredSantri.slice(start, start + PAGE_SIZE);
+  }, [filteredSantri, safePage]);
 
   const putraCount = santriList.filter((s) => s.gender === "Putra").length;
   const putriCount = santriList.filter((s) => s.gender === "Putri").length;
@@ -285,9 +315,53 @@ export default function AdminSantriPage() {
     setEditingSantri(null);
   };
 
-  const handleDelete = async (id: string) => {
-    if (confirm("Hapus data santri ini beserta riwayatnya?")) {
-      await deleteSantri(id);
+  const toggleSelectSantri = (id: string) => {
+    setSelectedSantriIds((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+    );
+  };
+
+  const handleSelectAll = () => {
+    const pageIds = paginatedSantri.map((s) => s.id);
+    const isAllPageSelected = pageIds.length > 0 && pageIds.every((id) => selectedSantriIds.includes(id));
+    if (isAllPageSelected) {
+      setSelectedSantriIds((prev) => prev.filter((id) => !pageIds.includes(id)));
+    } else {
+      setSelectedSantriIds((prev) => Array.from(new Set([...prev, ...pageIds])));
+    }
+  };
+
+  const handleOpenDeleteSingle = (santri: Santri) => {
+    setDeleteModalState({
+      isOpen: true,
+      ids: [santri.id],
+      name: santri.name,
+      count: 1
+    });
+  };
+
+  const handleOpenDeleteBulk = () => {
+    if (selectedSantriIds.length === 0) return;
+    setDeleteModalState({
+      isOpen: true,
+      ids: selectedSantriIds,
+      count: selectedSantriIds.length
+    });
+  };
+
+  const handleConfirmDelete = async () => {
+    if (deleteModalState.ids.length === 0) return;
+    setDeleteModalState((prev) => ({ ...prev, isLoading: true }));
+    try {
+      if (deleteModalState.ids.length === 1) {
+        await deleteSantri(deleteModalState.ids[0]);
+      } else {
+        await deleteSantriBulk(deleteModalState.ids);
+      }
+      setSelectedSantriIds((prev) => prev.filter((id) => !deleteModalState.ids.includes(id)));
+      setDeleteModalState({ isOpen: false, ids: [] });
+    } finally {
+      setDeleteModalState((prev) => ({ ...prev, isLoading: false }));
     }
   };
 
@@ -493,94 +567,150 @@ export default function AdminSantriPage() {
             }}
           />
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-3">
-            {filteredSantri.map((santri) => (
-              <div
-                key={santri.id}
-                className="mizan-card p-4 flex flex-col justify-between hover:border-[#1B4D3E]/40 group transition-all"
-              >
-                <div>
-                  <div className="flex items-start justify-between gap-2 mb-2">
-                    <div className="flex items-center gap-2 min-w-0">
-                      <Avatar
-                        initials={santri.avatar}
-                        size="md"
-                        variant={santri.gender === "Putra" ? "primary" : "gold"}
-                      />
-                      <div className="min-w-0">
-                        <h3 className="font-bold text-xs sm:text-sm text-[#172033] leading-tight truncate group-hover:text-[#1B4D3E] transition-colors">
-                          {santri.name}
-                        </h3>
-                        <p className="text-[10px] text-[#94A3B8] mt-0.5">
-                          NIS: {santri.nis} • Kelas {santri.class}
-                        </p>
+          <div className="space-y-3">
+            <div className="flex items-center justify-between gap-3 px-1 py-1">
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={handleSelectAll}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-bold border transition-colors flex items-center gap-1.5 ${
+                    paginatedSantri.length > 0 && paginatedSantri.every((s) => selectedSantriIds.includes(s.id))
+                      ? "bg-[#1B4D3E] text-white border-[#1B4D3E]"
+                      : "bg-white text-gray-700 border-gray-200 hover:bg-gray-50"
+                  }`}
+                >
+                  <Check className="w-3.5 h-3.5" />
+                  <span>{paginatedSantri.length > 0 && paginatedSantri.every((s) => selectedSantriIds.includes(s.id)) ? "Batal" : "Pilih"}</span>
+                </button>
+                {selectedSantriIds.length > 0 && (
+                  <span className="text-xs text-[#64748B] font-medium">
+                    {selectedSantriIds.length} terpilih
+                  </span>
+                )}
+              </div>
+
+              {selectedSantriIds.length > 0 && (
+                <button
+                  type="button"
+                  onClick={handleOpenDeleteBulk}
+                  className="px-3.5 py-1.5 rounded-xl bg-red-600 text-white text-xs font-bold hover:bg-red-700 transition-colors flex items-center gap-1.5 shadow-xs"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                  <span>Hapus ({selectedSantriIds.length})</span>
+                </button>
+              )}
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-3">
+              {paginatedSantri.map((santri) => {
+                const isSelected = selectedSantriIds.includes(santri.id);
+                return (
+                  <div
+                    key={santri.id}
+                    className={`mizan-card p-4 flex flex-col justify-between hover:border-[#1B4D3E]/40 group transition-all relative ${
+                      isSelected ? "ring-2 ring-red-400 bg-red-50/20" : ""
+                    }`}
+                  >
+                    <div>
+                      <div className="flex items-start justify-between gap-2 mb-2">
+                        <div className="flex items-center gap-2 min-w-0">
+                          <input
+                            type="checkbox"
+                            checked={isSelected}
+                            onChange={() => toggleSelectSantri(santri.id)}
+                            className="w-4 h-4 rounded text-[#1B4D3E] accent-[#1B4D3E] cursor-pointer shrink-0"
+                            aria-label={`Pilih ${santri.name}`}
+                          />
+                          <Avatar
+                            initials={santri.avatar}
+                            size="md"
+                            variant={santri.gender === "Putra" ? "primary" : "gold"}
+                          />
+                          <div className="min-w-0">
+                            <h3 className="font-bold text-xs sm:text-sm text-[#172033] leading-tight truncate group-hover:text-[#1B4D3E] transition-colors">
+                              {santri.name}
+                            </h3>
+                            <p className="text-[10px] text-[#94A3B8] mt-0.5">
+                              NIS: {santri.nis} • Kelas {santri.class}
+                            </p>
+                          </div>
+                        </div>
+
+                        <span
+                          className={`text-[9px] font-bold px-2 py-0.5 rounded-full mizan-pill shrink-0 ${
+                            santri.gender === "Putra"
+                              ? "bg-[#ECFDF5] text-[#065F46]"
+                              : "bg-[#FAF7EE] text-[#A8833E]"
+                          }`}
+                        >
+                          {santri.gender}
+                        </span>
+                      </div>
+
+                      <CardInset className="p-2.5 grid grid-cols-2 gap-2 text-center my-2">
+                        <div>
+                          <span className="text-[9px] text-[#94A3B8] block font-bold uppercase">
+                            Skor Akhlak
+                          </span>
+                          <span className="text-xs font-black font-mono text-[#1B4D3E]">
+                            {santri.currentScore.toFixed(3).replace(".", ",")}
+                          </span>
+                        </div>
+
+                        <div>
+                          <span className="text-[9px] text-[#94A3B8] block font-bold uppercase">
+                            Kehadiran
+                          </span>
+                          <span className="text-xs font-black font-mono text-[#065F46]">
+                            {santri.totalHadir || 0} Hari
+                          </span>
+                        </div>
+                      </CardInset>
+                    </div>
+
+                    <div className="pt-2 border-t border-[#E2EBF4] flex items-center justify-between gap-2 text-[11px]">
+                      <span className="text-[#64748B] truncate max-w-[120px]">
+                        {santri.waliName || "Bapak Santri"}
+                      </span>
+
+                      <div className="flex items-center gap-1.5 shrink-0">
+                        <button
+                          type="button"
+                          onClick={() => handleOpenEdit(santri)}
+                          className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-[#F1F5F9] text-[#475569] hover:bg-[#E2E8F0]"
+                        >
+                          Edit
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => handleOpenDeleteSingle(santri)}
+                          className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-red-50 text-red-600 hover:bg-red-100"
+                        >
+                          Hapus
+                        </button>
+
+                        <Link
+                          href={`/guru/santri/${santri.id}`}
+                          className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-[#1B4D3E] text-white hover:bg-[#153e32]"
+                        >
+                          Profil
+                        </Link>
                       </div>
                     </div>
-
-                    <span
-                      className={`text-[9px] font-bold px-2 py-0.5 rounded-full mizan-pill shrink-0 ${
-                        santri.gender === "Putra"
-                          ? "bg-[#ECFDF5] text-[#065F46]"
-                          : "bg-[#FAF7EE] text-[#A8833E]"
-                      }`}
-                    >
-                      {santri.gender}
-                    </span>
                   </div>
+                );
+              })}
+            </div>
 
-                  <CardInset className="p-2.5 grid grid-cols-2 gap-2 text-center my-2">
-                    <div>
-                      <span className="text-[9px] text-[#94A3B8] block font-bold uppercase">
-                        Skor Akhlak
-                      </span>
-                      <span className="text-xs font-black font-mono text-[#1B4D3E]">
-                        {santri.currentScore.toFixed(3).replace(".", ",")}
-                      </span>
-                    </div>
-
-                    <div>
-                      <span className="text-[9px] text-[#94A3B8] block font-bold uppercase">
-                        Kehadiran
-                      </span>
-                      <span className="text-xs font-black font-mono text-[#065F46]">
-                        {santri.totalHadir || 0} Hari
-                      </span>
-                    </div>
-                  </CardInset>
-                </div>
-
-                <div className="pt-2 border-t border-[#E2EBF4] flex items-center justify-between gap-2 text-[11px]">
-                  <span className="text-[#64748B] truncate max-w-[120px]">
-                    {santri.waliName || "Bapak Santri"}
-                  </span>
-
-                  <div className="flex items-center gap-1.5 shrink-0">
-                    <button
-                      type="button"
-                      onClick={() => handleOpenEdit(santri)}
-                      className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-[#F1F5F9] text-[#475569] hover:bg-[#E2E8F0]"
-                    >
-                      Edit
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() => handleDelete(santri.id)}
-                      className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-red-50 text-red-600 hover:bg-red-100"
-                    >
-                      Hapus
-                    </button>
-
-                    <Link
-                      href={`/guru/santri/${santri.id}`}
-                      className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-[#1B4D3E] text-white hover:bg-[#153e32]"
-                    >
-                      Profil
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            ))}
+            <Pagination
+              currentPage={safePage}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
+              totalItems={filteredSantri.length}
+              itemsPerPage={PAGE_SIZE}
+              itemName="santri"
+            />
           </div>
         )}
 
@@ -955,6 +1085,19 @@ export default function AdminSantriPage() {
           </div>
         )}
       </div>
+
+      <DeleteModal
+        isOpen={deleteModalState.isOpen}
+        onClose={() => setDeleteModalState({ isOpen: false, ids: [] })}
+        onConfirm={handleConfirmDelete}
+        count={deleteModalState.count}
+        message={
+          deleteModalState.count === 1 && deleteModalState.name
+            ? `Hapus data santri ${deleteModalState.name} beserta seluruh riwayatnya?`
+            : undefined
+        }
+        isLoading={deleteModalState.isLoading}
+      />
     </RoleShell>
   );
 }
