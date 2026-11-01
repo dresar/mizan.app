@@ -12,6 +12,7 @@ import {
   ShieldCheck,
   CheckCircle2,
   AlertCircle,
+  AlertTriangle,
   Clock,
   Calendar,
   Download,
@@ -35,12 +36,15 @@ import {
   MapPin,
   UserCheck,
   KeyRound,
-  Lock
+  Lock,
+  Bell,
+  Info
 } from "lucide-react";
 import { useMizan } from "@/lib/mizan-context";
 import { Santri, formatScore, getSantriDisciplineStatus } from "@/lib/mock-data";
 import { Avatar } from "@/components/ui/Avatar";
 import { generateSantriPdf } from "@/lib/pdf-generator";
+import { formatWIBDate, formatWIBDateTime, getWIBTime, getWIBDate } from "@/lib/date-utils";
 
 export default function OrtuDashboardPage() {
   const router = useRouter();
@@ -52,17 +56,38 @@ export default function OrtuDashboardPage() {
     currentUser,
     loginUser,
     logoutUser,
+    refreshData,
     showToast
   } = useMizan();
 
   const [selectedSantriId, setSelectedSantriId] = useState<string>("");
   const [searchQuery, setSearchQuery] = useState("");
-  const [activeTab, setActiveTab] = useState<"RINGKASAN" | "KEBAIKAN" | "EVALUASI" | "RAPOR">("RINGKASAN");
+  const [activeTab, setActiveTab] = useState<"RINGKASAN" | "KEBAIKAN" | "PELANGGARAN" | "PRESENSI" | "RAPOR">("RINGKASAN");
   const [isDownloadingPdf, setIsDownloadingPdf] = useState(false);
   const [isClient, setIsClient] = useState(false);
   const [loginNis, setLoginNis] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
   const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const [currentTime, setCurrentTime] = useState<Date | null>(null);
+  useEffect(() => {
+    setCurrentTime(new Date());
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const liveDateString = useMemo(() => {
+    if (!currentTime) return "";
+    return formatWIBDate(currentTime, "full");
+  }, [currentTime]);
+
+  const liveTimeString = useMemo(() => {
+    if (!currentTime) return "";
+    return `${getWIBTime(currentTime, true)} WIB`;
+  }, [currentTime]);
 
   useEffect(() => {
     setIsClient(true);
@@ -101,6 +126,18 @@ export default function OrtuDashboardPage() {
       localStorage.removeItem("mizan_ortu_santri_id");
     } catch {
       void 0;
+    }
+  };
+
+  const handleManualRefresh = async () => {
+    try {
+      setIsRefreshing(true);
+      await refreshData();
+      showToast("Data diperbarui realtime", "success");
+    } catch {
+      showToast("Gagal memperbarui data", "error");
+    } finally {
+      setIsRefreshing(false);
     }
   };
 
@@ -169,7 +206,13 @@ export default function OrtuDashboardPage() {
 
   const studentPenilaian = useMemo(() => {
     if (!selectedSantri) return [];
-    return penilaianList.filter((p) => p.santriId === selectedSantri.id);
+    return penilaianList
+      .filter((p) => p.santriId === selectedSantri.id)
+      .sort((a, b) => {
+        const da = a.rawCreatedAt ? new Date(a.rawCreatedAt).getTime() : 0;
+        const db = b.rawCreatedAt ? new Date(b.rawCreatedAt).getTime() : 0;
+        return db - da;
+      });
   }, [selectedSantri, penilaianList]);
 
   const hasanahRecords = useMemo(() => {
@@ -180,9 +223,19 @@ export default function OrtuDashboardPage() {
     return studentPenilaian.filter((p) => p.type === "SAYYIAH");
   }, [studentPenilaian]);
 
+  const latestSayyiah = useMemo(() => {
+    return sayyiahRecords.length > 0 ? sayyiahRecords[0] : null;
+  }, [sayyiahRecords]);
+
   const studentAbsensi = useMemo(() => {
     if (!selectedSantri) return [];
-    return absensiList.filter((a) => a.santriId === selectedSantri.id);
+    return absensiList
+      .filter((a) => a.santriId === selectedSantri.id)
+      .sort((a, b) => {
+        const da = a.rawCreatedAt ? new Date(a.rawCreatedAt).getTime() : 0;
+        const db = b.rawCreatedAt ? new Date(b.rawCreatedAt).getTime() : 0;
+        return db - da;
+      });
   }, [selectedSantri, absensiList]);
 
   const disciplineStatus = useMemo(() => {
@@ -236,6 +289,13 @@ export default function OrtuDashboardPage() {
   };
 
   const appLogo = settings?.appLogoUrl || "/logo.png";
+
+  const waContactUrl = useMemo(() => {
+    if (!selectedSantri) return "https://wa.me/6281234567890";
+    const baseNumber = selectedSantri.gender === "Putri" ? "6281234567891" : "6281234567890";
+    const msg = `Assalamu'alaikum Pengasuhan Raudhatussalam, saya wali dari ${selectedSantri.name} (Kelas ${selectedSantri.class}). Mohon izin berkonsultasi mengenai perkembangan ananda.`;
+    return `https://wa.me/${baseNumber}?text=${encodeURIComponent(msg)}`;
+  }, [selectedSantri]);
 
   if (!isClient) {
     return (
@@ -319,84 +379,66 @@ export default function OrtuDashboardPage() {
               <button
                 type="submit"
                 disabled={isLoggingIn}
-                className="w-full py-2.5 rounded-xl bg-[#1B4D3E] hover:bg-[#153e32] text-white text-xs font-bold transition-all flex items-center justify-center gap-1.5 shadow-sm disabled:opacity-60 cursor-pointer"
+                className="w-full py-2.5 rounded-xl bg-[#1B4D3E] text-white text-xs font-bold hover:bg-[#153e32] transition-colors flex items-center justify-center gap-1.5 shadow-xs disabled:opacity-50 cursor-pointer"
               >
-                <span>Masuk</span>
-                <ArrowRight className="w-3.5 h-3.5" />
+                <KeyRound className="w-3.5 h-3.5" />
+                <span>{isLoggingIn ? "Memeriksa" : "Masuk"}</span>
               </button>
             </form>
 
-            <div className="space-y-1.5">
-              <label className="block text-xs font-bold text-[#172033]">
-                Pencarian Data Ananda
-              </label>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-[#172033]">
+                  Atau Cari Nama Ananda Langsung
+                </span>
+                <span className="text-[10px] font-bold text-[#A8833E]">
+                  {santriList.length} Santri
+                </span>
+              </div>
+
               <div className="relative">
-                <Search className="w-4 h-4 absolute left-3.5 top-3.5 text-[#94A3B8]" />
+                <Search className="w-3.5 h-3.5 absolute left-3 top-3 text-[#94A3B8]" />
                 <input
                   type="text"
-                  placeholder="Ketik NIS, nama santri, atau no. HP wali..."
+                  placeholder="Ketik nama santri atau kelas..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2.5 rounded-2xl bg-[#F8FAFC] border border-[#E2EBF4] text-xs font-semibold focus:outline-none focus:border-[#1B4D3E] text-[#172033]"
+                  className="w-full pl-9 pr-3 py-2.5 rounded-xl bg-[#F8FAFC] border border-[#E2EBF4] text-xs font-semibold focus:outline-none focus:border-[#1B4D3E] text-[#172033]"
                 />
               </div>
-            </div>
 
-            <div className="space-y-2">
-              <div className="flex items-center justify-between text-[11px] font-bold text-[#64748B]">
-                <span>Daftar Santri</span>
-                <span>{filteredSearchResults.length} Santri</span>
-              </div>
-
-              <div className="max-h-72 overflow-y-auto space-y-2 pr-1">
-                {filteredSearchResults.map((santri) => (
-                  <div
+              <div className="max-h-64 overflow-y-auto divide-y divide-[#F1F5F9] border border-[#E2EBF4] rounded-2xl">
+                {filteredSearchResults.slice(0, 30).map((santri) => (
+                  <button
                     key={santri.id}
+                    type="button"
                     onClick={() => handleSelectSantri(santri)}
-                    className="p-3 rounded-2xl border border-[#E2EBF4] hover:border-[#1B4D3E]/60 bg-[#FAF7EE]/40 hover:bg-[#FAF7EE] transition-all cursor-pointer flex items-center justify-between gap-3 group"
+                    className="w-full p-2.5 flex items-center justify-between text-left hover:bg-[#FAF7EE] transition-colors group cursor-pointer"
                   >
-                    <div className="flex items-center gap-3 min-w-0">
+                    <div className="flex items-center gap-2.5 min-w-0">
                       <Avatar
                         initials={santri.avatar}
-                        size="lg"
+                        size="sm"
                         variant={santri.gender === "Putri" ? "gold" : "primary"}
                       />
                       <div className="min-w-0">
-                        <p className="text-xs font-bold text-[#172033] truncate group-hover:text-[#1B4D3E]">
+                        <p className="text-xs font-bold text-[#172033] group-hover:text-[#1B4D3E] truncate">
                           {santri.name}
                         </p>
-                        <p className="text-[10px] text-[#64748B]">
-                          NIS: <span className="font-mono font-bold">{santri.nis}</span> • Kelas {santri.class}
+                        <p className="text-[10px] text-[#94A3B8]">
+                          NIS: {santri.nis} • Kelas {santri.class} ({santri.gender})
                         </p>
-                        {santri.waliName && (
-                          <p className="text-[10px] text-[#A8833E] font-medium truncate">
-                            Wali: {santri.waliName}
-                          </p>
-                        )}
                       </div>
                     </div>
-
-                    <div className="text-right shrink-0">
-                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#ECFDF5] text-[#065F46] border border-[#A7F3D0]">
-                        {formatScore(santri.currentScore)}
-                      </span>
-                      <div className="flex items-center gap-0.5 text-[10px] text-[#1B4D3E] font-bold mt-1 justify-end">
-                        <span>Pilih</span>
-                        <ChevronRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
-                      </div>
-                    </div>
-                  </div>
+                    <span className="text-xs text-[#C5A059] font-bold flex items-center gap-0.5">
+                      <span>Buka</span>
+                      <ChevronRight className="w-3.5 h-3.5" />
+                    </span>
+                  </button>
                 ))}
-
                 {filteredSearchResults.length === 0 && (
-                  <div className="py-8 text-center space-y-2">
-                    <User className="w-8 h-8 text-[#94A3B8] mx-auto opacity-60" />
-                    <p className="text-xs font-bold text-[#172033]">
-                      Santri Tidak Ditemukan
-                    </p>
-                    <p className="text-[10px] text-[#64748B]">
-                      Pastikan ejaan nama, NIS, atau nomor telepon wali sesuai.
-                    </p>
+                  <div className="p-6 text-center text-xs text-[#94A3B8]">
+                    Santri tidak ditemukan dengan kata kunci &quot;{searchQuery}&quot;
                   </div>
                 )}
               </div>
@@ -440,6 +482,10 @@ export default function OrtuDashboardPage() {
                 <span className="text-[9px] font-bold px-1.5 py-0.2 rounded-md bg-[#FAF7EE] text-[#A8833E] border border-[#C5A059]/40 uppercase">
                   Wali Santri
                 </span>
+                <span className="inline-flex items-center gap-1 text-[9px] font-bold px-2 py-0.2 rounded-full bg-[#ECFDF5] text-[#065F46] border border-[#A7F3D0]">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#10B981] animate-pulse" />
+                  <span>Realtime</span>
+                </span>
               </div>
               <p className="text-[10px] text-[#64748B] leading-none hidden sm:block">
                 Pesantren Modern Raudhatussalam Mahato
@@ -450,10 +496,20 @@ export default function OrtuDashboardPage() {
           <div className="flex items-center gap-2">
             <button
               type="button"
-              onClick={handleClearSelection}
-              className="px-3 py-1.5 rounded-xl border border-[#D4C9B5] bg-white text-[#172033] text-xs font-bold hover:bg-[#FAF7EE] transition-colors flex items-center gap-1.5 shadow-2xs"
+              onClick={handleManualRefresh}
+              disabled={isRefreshing}
+              className="px-2.5 py-1.5 rounded-xl border border-[#D4C9B5] bg-white text-[#172033] text-xs font-bold hover:bg-[#FAF7EE] transition-colors flex items-center gap-1 shadow-2xs cursor-pointer"
+              title="Segarkan data realtime"
             >
-              <RefreshCw className="w-3 h-3 text-[#A8833E]" />
+              <RefreshCw className={`w-3 h-3 text-[#A8833E] ${isRefreshing ? "animate-spin" : ""}`} />
+              <span className="hidden sm:inline">Segarkan</span>
+            </button>
+            <button
+              type="button"
+              onClick={handleClearSelection}
+              className="px-2.5 py-1.5 rounded-xl border border-[#D4C9B5] bg-white text-[#172033] text-xs font-bold hover:bg-[#FAF7EE] transition-colors flex items-center gap-1 shadow-2xs cursor-pointer"
+            >
+              <User className="w-3 h-3 text-[#1B4D3E]" />
               <span>Ganti</span>
             </button>
             <button
@@ -469,7 +525,7 @@ export default function OrtuDashboardPage() {
       </header>
 
       <main className="max-w-5xl mx-auto w-full px-3 sm:px-6 py-4 space-y-4">
-        <div className="bg-white rounded-3xl p-4 sm:p-6 shadow-xl border border-[#E2EBF4] relative overflow-hidden">
+        <div className="bg-white rounded-3xl p-4 sm:p-5 shadow-xl border border-[#E2EBF4] relative overflow-hidden">
           <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-[#C5A059]/10 to-transparent rounded-bl-full pointer-events-none" />
 
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -505,12 +561,18 @@ export default function OrtuDashboardPage() {
                   )}
                 </div>
 
-                {selectedSantri.waliName && (
-                  <p className="text-[11px] text-[#A8833E] font-semibold mt-1 flex items-center gap-1">
-                    <User className="w-3 h-3" />
-                    <span>Wali: {selectedSantri.waliName}</span>
-                  </p>
-                )}
+                <div className="flex items-center gap-3 text-[11px] text-[#A8833E] font-semibold mt-1 flex-wrap">
+                  {selectedSantri.waliName && (
+                    <span className="flex items-center gap-1">
+                      <User className="w-3 h-3" />
+                      <span>Wali: {selectedSantri.waliName}</span>
+                    </span>
+                  )}
+                  <span className="flex items-center gap-1 font-mono text-[#1B4D3E]" suppressHydrationWarning>
+                    <Clock className="w-3 h-3" />
+                    <span>{liveDateString} • {liveTimeString}</span>
+                  </span>
+                </div>
               </div>
             </div>
 
@@ -530,25 +592,122 @@ export default function OrtuDashboardPage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5">
-          <div className="bg-white rounded-3xl p-4 sm:p-5 shadow-lg border border-[#E2EBF4] flex flex-col justify-between">
+        <div className="space-y-3">
+          {sayyiahRecords.length > 0 || (selectedSantri.currentScore < 80) ? (
+            <div className="rounded-3xl p-4 sm:p-5 bg-[#FEF2F2] border border-[#FECACA] shadow-md space-y-2">
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex items-start gap-2.5">
+                  <div className="w-9 h-9 rounded-xl bg-white border border-[#FECACA] text-[#B91C1C] flex items-center justify-center shrink-0 mt-0.5">
+                    <ShieldAlert className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-red-100 text-[#B91C1C]">
+                        Peringatan Kedisiplinan
+                      </span>
+                      <span className="text-xs font-bold text-[#991B1B]">
+                        {disciplineStatus?.label || "Perlu Perhatian"}
+                      </span>
+                    </div>
+                    <h3 className="text-sm font-bold text-[#172033] mt-1">
+                      Pemberitahuan Pembinaan Ananda
+                    </h3>
+                    <p className="text-xs text-[#475569] mt-0.5 leading-relaxed">
+                      Ananda memiliki <strong className="text-[#991B1B]">{sayyiahRecords.length} catatan pelanggaran</strong> dengan akumulasi pengurangan skor <strong className="text-[#991B1B]">-{formatScore(totalPenaltiSayyiah)}</strong>. Tindakan: {disciplineStatus?.action}
+                    </p>
+                    {latestSayyiah && (
+                      <p className="text-[11px] text-[#B91C1C] font-medium mt-1">
+                        Catatan terakhir: &quot;{latestSayyiah.indicatorText}&quot; ({formatWIBDate(latestSayyiah.incidentDate || latestSayyiah.createdAt, "short")} pukul {latestSayyiah.incidentTime || "WIB"})
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                <a
+                  href={waContactUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-3.5 py-2 rounded-xl bg-[#B91C1C] text-white text-xs font-bold hover:bg-[#991B1B] transition-colors flex items-center gap-1.5 shrink-0 shadow-xs"
+                >
+                  <MessageSquare className="w-3.5 h-3.5" />
+                  <span>Hubungi</span>
+                </a>
+              </div>
+            </div>
+          ) : (
+            <div className="rounded-3xl p-4 sm:p-5 bg-[#ECFDF5] border border-[#A7F3D0] shadow-md flex items-center justify-between gap-3">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl bg-white border border-[#A7F3D0] text-[#065F46] flex items-center justify-center shrink-0">
+                  <CheckCircle2 className="w-5 h-5" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#D1FAE5] text-[#065F46]">
+                      Kondisi Terpuji
+                    </span>
+                    <span className="text-xs font-bold text-[#065F46]">
+                      Bebas Surat Peringatan
+                    </span>
+                  </div>
+                  <p className="text-xs text-[#172033] mt-0.5">
+                    Alhamdulillah, ananda senantiasa menjaga ketertiban dan sopan santun. Tidak ada catatan sanksi atau surat peringatan aktif.
+                  </p>
+                </div>
+              </div>
+
+              <div className="hidden sm:block text-right shrink-0">
+                <span className="text-xs font-mono font-black text-[#065F46] block">
+                  {formatScore(selectedSantri.currentScore)} Poin
+                </span>
+                <span className="text-[10px] text-[#64748B]">Indeks Akhlak</span>
+              </div>
+            </div>
+          )}
+
+          {settings?.popupActive && settings?.popupMessage && (
+            <div className="rounded-3xl p-4 bg-[#FAF7EE] border border-[#C5A059]/40 shadow-xs flex items-start gap-3">
+              <div className="w-8 h-8 rounded-xl bg-white border border-[#C5A059]/40 text-[#A8833E] flex items-center justify-center shrink-0 mt-0.5">
+                <Bell className="w-4 h-4" />
+              </div>
+              <div className="min-w-0">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-white text-[#A8833E] border border-[#C5A059]/30">
+                    {settings.popupType || "Maklumat"}
+                  </span>
+                  <span className="text-xs font-bold text-[#172033]">
+                    {settings.popupTitle || "Maklumat Pimpinan Pesantren"}
+                  </span>
+                </div>
+                <p className="text-xs text-[#475569] mt-1 leading-relaxed">
+                  {settings.popupMessage}
+                </p>
+                <p className="text-[10px] text-[#A8833E] mt-1 font-semibold">
+                  {settings.popupSender || "Pimpinan Pesantren"} • {settings.popupUpdatedAt ? formatWIBDateTime(settings.popupUpdatedAt) : "Terkini"}
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-3.5">
+          <div className="bg-white rounded-3xl p-3.5 sm:p-5 shadow-lg border border-[#E2EBF4] flex flex-col justify-between">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-[#64748B] uppercase tracking-wider">
-                Indeks Skor Akhlak
+              <span className="text-[10px] sm:text-xs font-bold text-[#64748B] uppercase tracking-wider">
+                Skor Akhlak
               </span>
               <Sparkles className="w-4 h-4 text-[#C5A059]" />
             </div>
 
-            <div className="my-3">
-              <div className="text-2xl sm:text-3xl font-mono font-black text-[#1B4D3E]">
+            <div className="my-2.5">
+              <div className="text-xl sm:text-3xl font-mono font-black text-[#1B4D3E]">
                 {formatScore(selectedSantri.currentScore)}
               </div>
-              <p className="text-[11px] text-[#64748B] mt-0.5">
-                Predikat: <strong className="text-[#172033]">{getPredikat(selectedSantri.currentScore)}</strong>
+              <p className="text-[10px] sm:text-[11px] text-[#64748B] mt-0.5 truncate">
+                {getPredikat(selectedSantri.currentScore).split(" ")[0]}
               </p>
             </div>
 
-            <div className="w-full bg-[#EEF2F6] h-2 rounded-full overflow-hidden">
+            <div className="w-full bg-[#EEF2F6] h-1.5 rounded-full overflow-hidden">
               <div
                 className="bg-[#1B4D3E] h-full rounded-full transition-all duration-500"
                 style={{
@@ -556,55 +715,79 @@ export default function OrtuDashboardPage() {
                 }}
               />
             </div>
-            <div className="flex items-center justify-between text-[10px] text-[#94A3B8] font-mono mt-1.5">
-              <span>Batas Binaan: 61,000</span>
-              <span>Standar: 80,000</span>
-              <span>100,000</span>
+            <div className="flex items-center justify-between text-[9px] text-[#94A3B8] font-mono mt-1">
+              <span>Standar 80</span>
+              <span>100</span>
             </div>
           </div>
 
-          <div className="bg-white rounded-3xl p-4 sm:p-5 shadow-lg border border-[#E2EBF4] flex flex-col justify-between">
+          <div className="bg-white rounded-3xl p-3.5 sm:p-5 shadow-lg border border-[#E2EBF4] flex flex-col justify-between">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-[#64748B] uppercase tracking-wider">
-                Catatan Kebaikan
+              <span className="text-[10px] sm:text-xs font-bold text-[#64748B] uppercase tracking-wider">
+                Kebaikan
               </span>
               <Award className="w-4 h-4 text-[#065F46]" />
             </div>
 
-            <div className="my-3">
-              <div className="text-2xl sm:text-3xl font-mono font-black text-[#065F46]">
+            <div className="my-2.5">
+              <div className="text-xl sm:text-3xl font-mono font-black text-[#065F46]">
                 +{formatScore(totalBonusHasanah)}
               </div>
-              <p className="text-[11px] text-[#64748B] mt-0.5">
-                {hasanahRecords.length} Catatan Apresiasi Hasanah
+              <p className="text-[10px] sm:text-[11px] text-[#64748B] mt-0.5">
+                {hasanahRecords.length} Prestasi Hasanah
               </p>
             </div>
 
-            <div className="p-2 rounded-xl bg-[#ECFDF5] border border-[#A7F3D0] text-[10px] font-bold text-[#065F46] flex items-center gap-1.5">
-              <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
-              <span>Ananda aktif dalam kebaikan dan ketertiban</span>
+            <div className="p-1.5 rounded-xl bg-[#ECFDF5] border border-[#A7F3D0] text-[9px] sm:text-[10px] font-bold text-[#065F46] truncate">
+              Apresiasi adab ananda
             </div>
           </div>
 
-          <div className="bg-white rounded-3xl p-4 sm:p-5 shadow-lg border border-[#E2EBF4] flex flex-col justify-between">
+          <div className="bg-white rounded-3xl p-3.5 sm:p-5 shadow-lg border border-[#E2EBF4] flex flex-col justify-between">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-[#64748B] uppercase tracking-wider">
-                Presensi Sholat Hari Ini
+              <span className="text-[10px] sm:text-xs font-bold text-[#64748B] uppercase tracking-wider">
+                Pelanggaran
+              </span>
+              <ShieldAlert className="w-4 h-4 text-[#B91C1C]" />
+            </div>
+
+            <div className="my-2.5">
+              <div className="text-xl sm:text-3xl font-mono font-black text-[#B91C1C]">
+                -{formatScore(totalPenaltiSayyiah)}
+              </div>
+              <p className="text-[10px] sm:text-[11px] text-[#64748B] mt-0.5">
+                {sayyiahRecords.length} Catatan Sayyi&apos;ah
+              </p>
+            </div>
+
+            <div className={`p-1.5 rounded-xl text-[9px] sm:text-[10px] font-bold truncate ${
+              sayyiahRecords.length === 0
+                ? "bg-[#ECFDF5] border border-[#A7F3D0] text-[#065F46]"
+                : "bg-red-50 border border-red-200 text-[#B91C1C]"
+            }`}>
+              {sayyiahRecords.length === 0 ? "Nihil Pelanggaran" : disciplineStatus?.label || "Perlu Binaan"}
+            </div>
+          </div>
+
+          <div className="bg-white rounded-3xl p-3.5 sm:p-5 shadow-lg border border-[#E2EBF4] flex flex-col justify-between">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] sm:text-xs font-bold text-[#64748B] uppercase tracking-wider">
+                Sholat Hari Ini
               </span>
               <Clock className="w-4 h-4 text-[#A8833E]" />
             </div>
 
-            <div className="my-3">
-              <div className="text-2xl sm:text-3xl font-mono font-black text-[#172033]">
-                {hadirCount} <span className="text-sm font-normal text-[#64748B]">/ 7 Waktu</span>
+            <div className="my-2.5">
+              <div className="text-xl sm:text-3xl font-mono font-black text-[#172033]">
+                {hadirCount} <span className="text-xs font-normal text-[#64748B]">/ 7</span>
               </div>
-              <p className="text-[11px] text-[#64748B] mt-0.5">
-                Kehadiran Sholat Berjamaah Masjid
+              <p className="text-[10px] sm:text-[11px] text-[#64748B] mt-0.5">
+                Berjamaah di Masjid
               </p>
             </div>
 
-            <div className="p-2 rounded-xl bg-[#FAF7EE] border border-[#C5A059]/30 text-[10px] font-bold text-[#A8833E] flex items-center justify-between">
-              <span>Tertib 7 Waktu</span>
+            <div className="p-1.5 rounded-xl bg-[#FAF7EE] border border-[#C5A059]/30 text-[9px] sm:text-[10px] font-bold text-[#A8833E] flex items-center justify-between">
+              <span>Tertib</span>
               <span className="font-mono">{Math.round((hadirCount / 7) * 100)}%</span>
             </div>
           </div>
@@ -683,14 +866,25 @@ export default function OrtuDashboardPage() {
             </button>
             <button
               type="button"
-              onClick={() => setActiveTab("EVALUASI")}
+              onClick={() => setActiveTab("PELANGGARAN")}
               className={`px-3.5 py-2 rounded-2xl text-xs font-bold transition-all shrink-0 cursor-pointer ${
-                activeTab === "EVALUASI"
+                activeTab === "PELANGGARAN"
+                  ? "bg-[#B91C1C] text-white shadow-2xs"
+                  : "text-[#64748B] hover:text-[#172033] hover:bg-[#FEF2F2]"
+              }`}
+            >
+              Pelanggaran ({sayyiahRecords.length})
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveTab("PRESENSI")}
+              className={`px-3.5 py-2 rounded-2xl text-xs font-bold transition-all shrink-0 cursor-pointer ${
+                activeTab === "PRESENSI"
                   ? "bg-[#1B4D3E] text-white shadow-2xs"
                   : "text-[#64748B] hover:text-[#172033] hover:bg-[#FAF7EE]"
               }`}
             >
-              Evaluasi ({sayyiahRecords.length})
+              Presensi ({studentAbsensi.length})
             </button>
             <button
               type="button"
@@ -807,7 +1001,7 @@ export default function OrtuDashboardPage() {
                         <div className="flex flex-wrap items-center gap-1.5 mt-2 text-[10px]">
                           <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-white border border-[#A7F3D0] text-[#065F46] font-medium">
                             <Calendar className="w-3 h-3 text-[#065F46]" />
-                            {item.incidentDate || item.date || item.createdAt}
+                            {item.incidentDate ? formatWIBDate(item.incidentDate, "short") : item.date || item.createdAt}
                           </span>
                           {item.incidentTime && (
                             <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-white border border-[#A7F3D0] text-[#065F46] font-medium">
@@ -860,12 +1054,12 @@ export default function OrtuDashboardPage() {
               </div>
             )}
 
-            {activeTab === "EVALUASI" && (
+            {activeTab === "PELANGGARAN" && (
               <div className="space-y-3">
                 {sayyiahRecords.map((item) => (
                   <div
                     key={item.id}
-                    className="p-3.5 rounded-2xl border border-red-200 bg-red-50/50 flex items-start justify-between gap-3 shadow-2xs"
+                    className="p-3.5 rounded-2xl border border-red-200 bg-red-50/50 flex flex-col sm:flex-row sm:items-start justify-between gap-3 shadow-2xs"
                   >
                     <div className="flex items-start gap-2.5 min-w-0">
                       <div className="w-8 h-8 rounded-xl bg-white border border-red-200 text-[#B91C1C] flex items-center justify-center shrink-0 mt-0.5">
@@ -887,13 +1081,13 @@ export default function OrtuDashboardPage() {
                         </div>
                         {item.notes && (
                           <p className="text-[11px] text-[#475569] mt-1.5 leading-relaxed bg-white/80 p-2 rounded-xl border border-red-200/60">
-                            {item.notes}
+                            &quot;{item.notes}&quot;
                           </p>
                         )}
                         <div className="flex flex-wrap items-center gap-1.5 mt-2 text-[10px]">
                           <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-white border border-red-200 text-[#B91C1C] font-medium">
                             <Calendar className="w-3 h-3 text-[#B91C1C]" />
-                            {item.incidentDate || item.date || item.createdAt}
+                            {item.incidentDate ? formatWIBDate(item.incidentDate, "short") : item.date || item.createdAt}
                           </span>
                           {item.incidentTime && (
                             <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-white border border-red-200 text-[#B91C1C] font-medium">
@@ -921,14 +1115,25 @@ export default function OrtuDashboardPage() {
                           )}
                         </div>
                         <p className="text-[9px] text-[#94A3B8] font-mono mt-1.5">
-                          Pembina: {item.guruName || "Bagian Pengasuhan"}
+                          Dicatat: {item.guruName || "Bagian Pengasuhan"}
                         </p>
                       </div>
                     </div>
 
-                    <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-[#B91C1C] text-white shrink-0">
-                      -{formatScore(Math.abs(item.score))}
-                    </span>
+                    <div className="flex items-center gap-2 shrink-0 self-end sm:self-start">
+                      <span className="px-2.5 py-1 rounded-full text-xs font-mono font-bold bg-[#B91C1C] text-white">
+                        -{formatScore(Math.abs(item.score))}
+                      </span>
+                      <a
+                        href={waContactUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-2.5 py-1 rounded-xl bg-white border border-red-200 text-[#B91C1C] text-[11px] font-bold hover:bg-red-50 transition-colors flex items-center gap-1"
+                      >
+                        <MessageSquare className="w-3 h-3" />
+                        <span>Klarifikasi</span>
+                      </a>
+                    </div>
                   </div>
                 ))}
 
@@ -943,6 +1148,71 @@ export default function OrtuDashboardPage() {
                     </p>
                   </div>
                 )}
+              </div>
+            )}
+
+            {activeTab === "PRESENSI" && (
+              <div className="space-y-4">
+                <div className="p-3.5 rounded-2xl bg-[#FAF7EE] border border-[#C5A059]/30 flex items-center justify-between">
+                  <div>
+                    <h4 className="text-xs font-bold text-[#172033]">
+                      Rekap Kehadiran Sholat Berjamaah
+                    </h4>
+                    <p className="text-[10px] text-[#64748B]">
+                      7 Waktu Sholat Wajib & Sunnah Muakkad di Masjid Pondok
+                    </p>
+                  </div>
+                  <span className="text-xs font-mono font-black text-[#1B4D3E]">
+                    {hadirCount} / 7 Hari Ini
+                  </span>
+                </div>
+
+                <div className="space-y-2">
+                  {studentAbsensi.slice(0, 35).map((item) => (
+                    <div
+                      key={item.id}
+                      className="p-3 rounded-2xl border border-[#E2EBF4] bg-white flex items-center justify-between gap-3 hover:border-[#1B4D3E]/30 transition-all"
+                    >
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        <div className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 ${
+                          item.status === "Hadir"
+                            ? "bg-[#ECFDF5] text-[#065F46]"
+                            : item.status === "Alpa"
+                            ? "bg-red-50 text-red-600"
+                            : "bg-blue-50 text-blue-600"
+                        }`}>
+                          <Clock className="w-4 h-4" />
+                        </div>
+                        <div className="min-w-0">
+                          <p className="text-xs font-bold text-[#172033]">
+                            Sholat {item.waktuSholat || "Wajib"}
+                          </p>
+                          <p className="text-[10px] text-[#64748B]">
+                            {item.date ? formatWIBDate(item.date, "short") : "Hari ini"} • {item.createdAt}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-2 shrink-0">
+                        <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full ${
+                          item.status === "Hadir"
+                            ? "bg-[#ECFDF5] text-[#065F46]"
+                            : item.status === "Alpa"
+                            ? "bg-red-100 text-red-700"
+                            : "bg-amber-100 text-amber-800"
+                        }`}>
+                          {item.status} ({item.scoreImpact > 0 ? `+${formatScore(item.scoreImpact)}` : item.scoreImpact < 0 ? `-${formatScore(Math.abs(item.scoreImpact))}` : "0,000"})
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+
+                  {studentAbsensi.length === 0 && (
+                    <div className="py-12 text-center text-xs text-[#94A3B8]">
+                      Belum ada rekaman presensi sholat ananda.
+                    </div>
+                  )}
+                </div>
               </div>
             )}
 
@@ -1032,11 +1302,7 @@ export default function OrtuDashboardPage() {
           </div>
 
           <a
-            href={
-              selectedSantri.gender === "Putri"
-                ? "https://wa.me/6281234567891?text=Assalamu%27alaikum%2C%20saya%20wali%20santri%20dari%20" + encodeURIComponent(selectedSantri.name)
-                : "https://wa.me/6281234567890?text=Assalamu%27alaikum%2C%20saya%20wali%20santri%20dari%20" + encodeURIComponent(selectedSantri.name)
-            }
+            href={waContactUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="w-full sm:w-auto px-4 py-2 rounded-xl bg-[#065F46] text-white text-xs font-bold hover:bg-[#054d38] transition-colors flex items-center justify-center gap-1.5 shadow-2xs"

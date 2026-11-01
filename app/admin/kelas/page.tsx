@@ -17,6 +17,7 @@ import {
 import { useMizan } from "@/lib/mizan-context";
 import { RoleShell } from "@/components/RoleShell";
 import { Card, CardSub } from "@/components/ui/Card";
+import { DeleteModal } from "@/components/ui/DeleteModal";
 
 export default function AdminKelasPage() {
   const {
@@ -38,6 +39,7 @@ export default function AdminKelasPage() {
   const [logFilter, setLogFilter] = useState<"ALL" | "HASANAH" | "SAYYIAH">("ALL");
 
   const [isAddingClass, setIsAddingClass] = useState(false);
+  const [deleteModalState, setDeleteModalState] = useState<{ isOpen: boolean; name?: string }>({ isOpen: false });
   const [newClassName, setNewClassName] = useState("");
   const [newClassGender, setNewClassGender] = useState<"Putra" | "Putri">("Putra");
   const [newWaliId, setNewWaliId] = useState("");
@@ -228,13 +230,18 @@ export default function AdminKelasPage() {
 
   const handleDeleteClass = () => {
     if (!activeClassDetails) return;
-    if (confirm(`Yakin ingin menghapus Kelas ${activeClassDetails.name}?`)) {
-      removeClass(activeClassDetails.name);
-      const remaining = kelasList.filter((c) => c !== activeClassDetails.name);
-      if (remaining.length > 0) {
-        setSelectedClassName(remaining[0]);
-      }
+    setDeleteModalState({ isOpen: true, name: activeClassDetails.name });
+  };
+
+  const handleConfirmDeleteClass = () => {
+    if (!deleteModalState.name) return;
+    const targetName = deleteModalState.name;
+    removeClass(targetName);
+    const remaining = kelasList.filter((c) => c !== targetName);
+    if (remaining.length > 0) {
+      setSelectedClassName(remaining[0]);
     }
+    setDeleteModalState({ isOpen: false });
   };
 
   const formatDecimal = (val: number) => {
@@ -961,6 +968,14 @@ export default function AdminKelasPage() {
           </div>
         )}
       </div>
+
+      <DeleteModal
+        isOpen={deleteModalState.isOpen}
+        onClose={() => setDeleteModalState({ isOpen: false })}
+        onConfirm={handleConfirmDeleteClass}
+        title="Hapus Kelas"
+        message={deleteModalState.name ? `Yakin ingin menghapus Kelas ${deleteModalState.name}?` : undefined}
+      />
     </RoleShell>
   );
 }

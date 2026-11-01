@@ -15,6 +15,7 @@ import {
 import { useMizan } from "@/lib/mizan-context";
 import { RoleShell } from "@/components/RoleShell";
 import { Card } from "@/components/ui/Card";
+import { DeleteModal } from "@/components/ui/DeleteModal";
 import { Tingkat, IndikatorType } from "@/lib/mock-data";
 
 function CategoryDetailContent() {
@@ -28,6 +29,7 @@ function CategoryDetailContent() {
   const [typeFilter, setTypeFilter] = useState<"ALL" | IndikatorType>("ALL");
   const [tingkatFilter, setTingkatFilter] = useState<"ALL" | Tingkat>("ALL");
   const [currentPage, setCurrentPage] = useState(1);
+  const [deleteModalState, setDeleteModalState] = useState<{ isOpen: boolean; indId?: string; indText?: string }>({ isOpen: false });
   const UNSURS_PER_PAGE = 10;
 
   const currentCategory = useMemo(() => {
@@ -100,10 +102,14 @@ function CategoryDetailContent() {
   const paginatedUnsurs = filteredUnsurs.slice(startIndex, startIndex + UNSURS_PER_PAGE);
 
   const handleDeleteIndicator = (indId: string, indText: string) => {
-    if (confirm(`Hapus indikator "${indText}"?`)) {
-      deleteIndikatorItem(indId);
-      showToast("Indikator berhasil dihapus");
-    }
+    setDeleteModalState({ isOpen: true, indId, indText });
+  };
+
+  const handleConfirmDeleteIndicator = () => {
+    if (!deleteModalState.indId) return;
+    deleteIndikatorItem(deleteModalState.indId);
+    showToast("Indikator berhasil dihapus");
+    setDeleteModalState({ isOpen: false });
   };
 
   const formatScore = (score: number) => {
@@ -400,6 +406,14 @@ function CategoryDetailContent() {
         )}
       </div>
     </div>
+
+    <DeleteModal
+      isOpen={deleteModalState.isOpen}
+      onClose={() => setDeleteModalState({ isOpen: false })}
+      onConfirm={handleConfirmDeleteIndicator}
+      title="Hapus Indikator"
+      message={deleteModalState.indText ? `Hapus indikator "${deleteModalState.indText}"?` : undefined}
+    />
   </RoleShell>
 );
 }

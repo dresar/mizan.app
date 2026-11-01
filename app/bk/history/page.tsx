@@ -846,13 +846,41 @@ export default function PengasuhanHistoryPage() {
             </Card>
 
             <Card className="p-4 sm:p-5 space-y-3 bg-white">
-              <div className="flex items-center justify-between pb-2 border-b border-[#E2E8F0]">
-                <h2 className="text-xs font-bold text-[#172033] uppercase tracking-wider">
-                  Daftar Catatan Presensi Sholat ({filteredAbsensi.length})
-                </h2>
-                <span className="text-[10px] text-[#64748B]">
-                  Pilih edit untuk memperbarui status
-                </span>
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-2 border-b border-[#E2E8F0] gap-2">
+                <div>
+                  <h2 className="text-xs font-bold text-[#172033] uppercase tracking-wider">
+                    Daftar Catatan Presensi Sholat ({filteredAbsensi.length})
+                  </h2>
+                  <span className="text-[10px] text-[#64748B]">
+                    Pilih edit untuk memperbarui status
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={handleSelectAllAbsensi}
+                    className={`px-3 py-1 rounded-xl text-[11px] font-bold border transition-colors flex items-center gap-1.5 ${
+                      paginatedAbsensi.length > 0 && paginatedAbsensi.every((i) => selectedAbsensiIds.includes(i.id))
+                        ? "bg-[#1B4D3E] text-white border-[#1B4D3E]"
+                        : "bg-white text-gray-700 border-gray-200 hover:bg-gray-50"
+                    }`}
+                  >
+                    <Check className="w-3.5 h-3.5" />
+                    <span>{paginatedAbsensi.length > 0 && paginatedAbsensi.every((i) => selectedAbsensiIds.includes(i.id)) ? "Batal" : "Pilih Semua"}</span>
+                  </button>
+
+                  {selectedAbsensiIds.length > 0 && (
+                    <button
+                      type="button"
+                      onClick={handleOpenDeleteBulkAbsensi}
+                      className="px-3 py-1 rounded-xl bg-red-600 text-white text-[11px] font-bold hover:bg-red-700 transition-colors flex items-center gap-1.5 shadow-xs"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                      <span>Hapus ({selectedAbsensiIds.length})</span>
+                    </button>
+                  )}
+                </div>
               </div>
 
               {filteredAbsensi.length === 0 ? (
@@ -870,13 +898,23 @@ export default function PengasuhanHistoryPage() {
                   {paginatedAbsensi.map((item) => {
                     const isEditing = editingRecordId === item.id;
                     const dateDisplay = item.date ? formatWIBDate(item.date, "short") : "";
+                    const isSelected = selectedAbsensiIds.includes(item.id);
 
                     return (
                       <div
                         key={item.id}
-                        className="p-3 rounded-2xl mizan-card-sub flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:border-[#1B4D3E]/30 transition-all bg-white"
+                        className={`p-3 rounded-2xl mizan-card-sub flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:border-[#1B4D3E]/30 transition-all bg-white ${
+                          isSelected ? "ring-2 ring-red-400 bg-red-50/20" : ""
+                        }`}
                       >
                         <div className="flex items-center gap-2.5 min-w-0">
+                          <input
+                            type="checkbox"
+                            checked={isSelected}
+                            onChange={() => toggleSelectAbsensi(item.id)}
+                            className="w-4 h-4 rounded text-[#1B4D3E] accent-[#1B4D3E] cursor-pointer shrink-0"
+                            aria-label={`Pilih ${item.santriName}`}
+                          />
                           <div className="w-9 h-9 rounded-xl mizan-inset flex items-center justify-center font-bold text-xs text-[#1B4D3E] shrink-0">
                             {item.santriName.split(" ").slice(0, 2).map((n) => n[0]).join("")}
                           </div>
@@ -957,7 +995,7 @@ export default function PengasuhanHistoryPage() {
 
                               <button
                                 type="button"
-                                onClick={() => handleDeleteAbsensi(item.id, item.santriName)}
+                                onClick={() => handleOpenDeleteSingleAbsensi(item.id, item.santriName)}
                                 className="p-1.5 rounded-lg text-[#94A3B8] hover:text-red-600 hover:bg-red-50"
                                 title="Hapus"
                               >
@@ -984,6 +1022,19 @@ export default function PengasuhanHistoryPage() {
           </div>
         )}
       </div>
+
+      <DeleteModal
+        isOpen={deleteModalState.isOpen}
+        onClose={() => setDeleteModalState({ isOpen: false, type: "PENILAIAN", ids: [] })}
+        onConfirm={handleConfirmDelete}
+        count={deleteModalState.count}
+        message={
+          deleteModalState.count === 1 && deleteModalState.name
+            ? `Hapus catatan ${deleteModalState.type === "ABSENSI" ? "presensi" : "perilaku"} untuk ${deleteModalState.name}?`
+            : undefined
+        }
+        isLoading={deleteModalState.isLoading}
+      />
     </RoleShell>
   );
 }
