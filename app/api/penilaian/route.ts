@@ -74,14 +74,14 @@ export async function POST(req: Request) {
     );
 
     if (santriRes.length > 0 && dueProcessStatus !== "DIBATALKAN") {
-      const prevScore = parseFloat(santriRes[0].current_score) || 80.0;
+      const prevScore = parseFloat(santriRes[0].current_score) || 70.0;
       const newScore = Math.max(0, Math.min(100, Number((prevScore + scoreVal).toFixed(3))));
       let newStatus = "Aman";
-      if (newScore < 16) newStatus = "Pengembalian";
-      else if (newScore < 31) newStatus = "SP 3";
-      else if (newScore < 46) newStatus = "SP 2";
-      else if (newScore < 61) newStatus = "SP 1";
-      else if (newScore < 80) newStatus = "Peringatan Lisan";
+      if (newScore < 6) newStatus = "Pengembalian";
+      else if (newScore < 21) newStatus = "SP 3";
+      else if (newScore < 36) newStatus = "SP 2";
+      else if (newScore < 51) newStatus = "SP 1";
+      else if (newScore < 70) newStatus = "Peringatan Lisan";
 
       await query(
         "UPDATE santri SET current_score = $1, status = $2 WHERE id = $3",
@@ -138,15 +138,15 @@ export async function DELETE(req: Request) {
       const { santri_id, score, due_process_status } = item;
       const santriRes = await query("SELECT current_score FROM santri WHERE id = $1", [santri_id]);
       if (santriRes.length > 0 && due_process_status !== "DIBATALKAN") {
-        const prev = parseFloat(santriRes[0].current_score) || 80.0;
+        const prev = parseFloat(santriRes[0].current_score) || 70.0;
         const scoreVal = parseFloat(score) || 0;
         const rolledBack = Math.max(0, Math.min(100, Number((prev - scoreVal).toFixed(3))));
         let newStatus = "Aman";
-        if (rolledBack < 16) newStatus = "Pengembalian";
-        else if (rolledBack < 31) newStatus = "SP 3";
-        else if (rolledBack < 46) newStatus = "SP 2";
-        else if (rolledBack < 61) newStatus = "SP 1";
-        else if (rolledBack < 80) newStatus = "Peringatan Lisan";
+        if (rolledBack < 6) newStatus = "Pengembalian";
+        else if (rolledBack < 21) newStatus = "SP 3";
+        else if (rolledBack < 36) newStatus = "SP 2";
+        else if (rolledBack < 51) newStatus = "SP 1";
+        else if (rolledBack < 70) newStatus = "Peringatan Lisan";
 
         await query("UPDATE santri SET current_score = $1, status = $2 WHERE id = $3", [
           rolledBack,
@@ -211,15 +211,15 @@ export async function PUT(req: Request) {
 
         const santriRes = await query("SELECT current_score FROM santri WHERE id = $1", [item.santri_id]);
         if (santriRes.length > 0) {
-          const prev = parseFloat(santriRes[0].current_score) || 80.0;
+          const prev = parseFloat(santriRes[0].current_score) || 70.0;
           const scoreVal = parseFloat(item.score) || 0;
           const restored = Math.max(0, Math.min(100, Number((prev - scoreVal).toFixed(3))));
           let newStatus = "Aman";
-          if (restored < 16) newStatus = "Pengembalian";
-          else if (restored < 31) newStatus = "SP 3";
-          else if (restored < 46) newStatus = "SP 2";
-          else if (restored < 61) newStatus = "SP 1";
-          else if (restored < 80) newStatus = "Peringatan Lisan";
+          if (restored < 6) newStatus = "Pengembalian";
+          else if (restored < 21) newStatus = "SP 3";
+          else if (restored < 36) newStatus = "SP 2";
+          else if (restored < 51) newStatus = "SP 1";
+          else if (restored < 70) newStatus = "Peringatan Lisan";
 
           await query("UPDATE santri SET current_score = $1, status = $2 WHERE id = $3", [
             restored,

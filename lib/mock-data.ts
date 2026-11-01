@@ -206,9 +206,9 @@ export interface AppSettings {
 }
 
 export const DEFAULT_SETTINGS: AppSettings = {
-  defaultBaseScore: 80.0,
-  minScoreBaik: 80.0,
-  minScorePerhatian: 61.0,
+  defaultBaseScore: 70.0,
+  minScoreBaik: 70.0,
+  minScorePerhatian: 51.0,
   maxScore: 100.0,
   penaltyRingan: -0.05,
   penaltySedang: -0.1,
@@ -230,15 +230,15 @@ export const DEFAULT_SETTINGS: AppSettings = {
   popupType: "Nasihat",
   popupTarget: "Semua",
   popupUpdatedAt: "",
-  lisanThreshold: 79.0,
-  lisanMin: 61.0,
-  sp1Threshold: 60.0,
-  sp1Min: 46.0,
-  sp2Threshold: 45.0,
-  sp2Min: 31.0,
-  sp3Threshold: 30.0,
-  sp3Min: 16.0,
-  pengembalianThreshold: 15.0,
+  lisanThreshold: 69.0,
+  lisanMin: 51.0,
+  sp1Threshold: 50.0,
+  sp1Min: 36.0,
+  sp2Threshold: 35.0,
+  sp2Min: 21.0,
+  sp3Threshold: 20.0,
+  sp3Min: 6.0,
+  pengembalianThreshold: 5.0,
   inputTimeLimitHours: 48,
   sanggahanTimeLimitHours: 24,
   sp1Action: "Pemanggilan santri, penulisan surat pengakuan & surat perjanjian, wali santri diinformasikan via WA",
@@ -248,11 +248,11 @@ export const DEFAULT_SETTINGS: AppSettings = {
 };
 
 export function getSantriDisciplineStatus(score: number, settings?: AppSettings) {
-  const lisanMin = settings?.lisanMin ?? 61.0;
-  const sp1Min = settings?.sp1Min ?? 46.0;
-  const sp2Min = settings?.sp2Min ?? 31.0;
-  const sp3Min = settings?.sp3Min ?? 16.0;
-  const base = settings?.defaultBaseScore ?? 80.0;
+  const lisanMin = settings?.lisanMin ?? 51.0;
+  const sp1Min = settings?.sp1Min ?? 36.0;
+  const sp2Min = settings?.sp2Min ?? 21.0;
+  const sp3Min = settings?.sp3Min ?? 6.0;
+  const base = settings?.defaultBaseScore ?? 70.0;
 
   if (score >= base) {
     return {

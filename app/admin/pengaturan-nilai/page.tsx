@@ -400,7 +400,7 @@ export default function AdminPengaturanNilaiPage() {
                       <input
                         type="number"
                         step="0.1"
-                        value={formState.lisanMin ?? 61.0}
+                        value={formState.lisanMin ?? 51.0}
                         onChange={(e) => setFormState({ ...formState, lisanMin: parseFloat(e.target.value) || 0 })}
                         className="w-16 px-1.5 py-1 text-xs font-bold font-mono bg-[#FAF7F2] border border-[#D4C9B5] rounded-md text-[#854D0E] text-center"
                       />
@@ -408,7 +408,7 @@ export default function AdminPengaturanNilaiPage() {
                       <input
                         type="number"
                         step="0.1"
-                        value={formState.lisanThreshold ?? 79.0}
+                        value={formState.lisanThreshold ?? 69.0}
                         onChange={(e) => setFormState({ ...formState, lisanThreshold: parseFloat(e.target.value) || 0 })}
                         className="w-16 px-1.5 py-1 text-xs font-bold font-mono bg-[#FAF7F2] border border-[#D4C9B5] rounded-md text-[#854D0E] text-center"
                       />
@@ -430,7 +430,7 @@ export default function AdminPengaturanNilaiPage() {
                       <input
                         type="number"
                         step="0.1"
-                        value={formState.sp1Min ?? 46.0}
+                        value={formState.sp1Min ?? 36.0}
                         onChange={(e) => setFormState({ ...formState, sp1Min: parseFloat(e.target.value) || 0 })}
                         className="w-16 px-1.5 py-1 text-xs font-bold font-mono bg-[#FAF7F2] border border-[#D4C9B5] rounded-md text-[#C2410C] text-center"
                       />
@@ -438,7 +438,7 @@ export default function AdminPengaturanNilaiPage() {
                       <input
                         type="number"
                         step="0.1"
-                        value={formState.sp1Threshold ?? 60.0}
+                        value={formState.sp1Threshold ?? 50.0}
                         onChange={(e) => setFormState({ ...formState, sp1Threshold: parseFloat(e.target.value) || 0 })}
                         className="w-16 px-1.5 py-1 text-xs font-bold font-mono bg-[#FAF7F2] border border-[#D4C9B5] rounded-md text-[#C2410C] text-center"
                       />
@@ -463,7 +463,7 @@ export default function AdminPengaturanNilaiPage() {
                       <input
                         type="number"
                         step="0.1"
-                        value={formState.sp2Min ?? 31.0}
+                        value={formState.sp2Min ?? 21.0}
                         onChange={(e) => setFormState({ ...formState, sp2Min: parseFloat(e.target.value) || 0 })}
                         className="w-16 px-1.5 py-1 text-xs font-bold font-mono bg-[#FAF7F2] border border-[#D4C9B5] rounded-md text-[#BE123C] text-center"
                       />
@@ -471,7 +471,7 @@ export default function AdminPengaturanNilaiPage() {
                       <input
                         type="number"
                         step="0.1"
-                        value={formState.sp2Threshold ?? 45.0}
+                        value={formState.sp2Threshold ?? 35.0}
                         onChange={(e) => setFormState({ ...formState, sp2Threshold: parseFloat(e.target.value) || 0 })}
                         className="w-16 px-1.5 py-1 text-xs font-bold font-mono bg-[#FAF7F2] border border-[#D4C9B5] rounded-md text-[#BE123C] text-center"
                       />
@@ -496,7 +496,7 @@ export default function AdminPengaturanNilaiPage() {
                       <input
                         type="number"
                         step="0.1"
-                        value={formState.sp3Min ?? 16.0}
+                        value={formState.sp3Min ?? 6.0}
                         onChange={(e) => setFormState({ ...formState, sp3Min: parseFloat(e.target.value) || 0 })}
                         className="w-16 px-1.5 py-1 text-xs font-bold font-mono bg-[#FAF7F2] border border-[#D4C9B5] rounded-md text-[#991B1B] text-center"
                       />
@@ -504,7 +504,7 @@ export default function AdminPengaturanNilaiPage() {
                       <input
                         type="number"
                         step="0.1"
-                        value={formState.sp3Threshold ?? 30.0}
+                        value={formState.sp3Threshold ?? 20.0}
                         onChange={(e) => setFormState({ ...formState, sp3Threshold: parseFloat(e.target.value) || 0 })}
                         className="w-16 px-1.5 py-1 text-xs font-bold font-mono bg-[#FAF7F2] border border-[#D4C9B5] rounded-md text-[#991B1B] text-center"
                       />
@@ -530,7 +530,7 @@ export default function AdminPengaturanNilaiPage() {
                       <input
                         type="number"
                         step="0.1"
-                        value={formState.pengembalianThreshold ?? 15.0}
+                        value={formState.pengembalianThreshold ?? 5.0}
                         onChange={(e) => setFormState({ ...formState, pengembalianThreshold: parseFloat(e.target.value) || 0 })}
                         className="w-16 px-1.5 py-1 text-xs font-bold font-mono bg-[#FAF7F2] border border-[#D4C9B5] rounded-md text-[#7F1D1D] text-center"
                       />

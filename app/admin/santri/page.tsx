@@ -74,7 +74,7 @@ export default function AdminSantriPage() {
   const [formName, setFormName] = useState("");
   const [formGender, setFormGender] = useState<"Putra" | "Putri">("Putra");
   const [formClass, setFormClass] = useState("1A");
-  const [formBaseScore, setFormBaseScore] = useState("80.000");
+  const [formBaseScore, setFormBaseScore] = useState("70.000");
   const [formWaliName, setFormWaliName] = useState("");
   const [formWaliPhone, setFormWaliPhone] = useState("");
   const [formStatus, setFormStatus] = useState<Santri["status"]>("Baik");
@@ -823,7 +823,7 @@ export default function AdminSantriPage() {
                             onClick={() => handleOpenEdit(santri)}
                             className="px-2.5 py-1.5 rounded-xl text-[10px] font-bold bg-[#F1F5F9] text-[#475569] hover:bg-[#E2E8F0] transition-colors"
                           >
-                            Edit
+                            Ubah
                           </button>
 
                           <button

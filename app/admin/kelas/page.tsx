@@ -12,7 +12,8 @@ import {
   X,
   Award,
   TrendingUp,
-  TrendingDown
+  TrendingDown,
+  UserCheck
 } from "lucide-react";
 import { useMizan } from "@/lib/mizan-context";
 import { RoleShell } from "@/components/RoleShell";
@@ -45,11 +46,17 @@ export default function AdminKelasPage() {
   const [newWaliId, setNewWaliId] = useState("");
 
   const [isEditingClass, setIsEditingClass] = useState(false);
+  const [targetEditClass, setTargetEditClass] = useState<any>(null);
+  const [editClassName, setEditClassName] = useState("");
   const [editGender, setEditGender] = useState<"Putra" | "Putri">("Putra");
   const [editWaliId, setEditWaliId] = useState("");
 
+  const [isEditingWali, setIsEditingWali] = useState(false);
+  const [targetWaliClass, setTargetWaliClass] = useState<any>(null);
+  const [quickWaliId, setQuickWaliId] = useState("");
+
   const availableTeachers = useMemo(() => {
-    return userList.filter((u) => u.role === "GURU");
+    return userList.filter((u) => u.role === "GURU" || u.role === "PENGASUHAN");
   }, [userList]);
 
   const enrichedClasses = useMemo(() => {
@@ -69,7 +76,7 @@ export default function AdminKelasPage() {
       }
 
       const assignedTeacher = userList.find(
-        (u) => u.assignedClass?.toUpperCase() === clsName.toUpperCase() && u.role === "GURU"
+        (u) => u.assignedClass?.toUpperCase() === clsName.toUpperCase() && (u.role === "GURU" || u.role === "PENGASUHAN")
       );
 
       return {
@@ -183,25 +190,63 @@ export default function AdminKelasPage() {
     return classPenilaianList.filter((p) => p.type === logFilter);
   }, [classPenilaianList, logFilter]);
 
-  const handleStartEdit = () => {
-    if (!activeClassDetails) return;
-    setEditGender(activeClassDetails.gender);
-    setEditWaliId(activeClassDetails.guruId);
+  const handleOpenEditClass = (cls: any) => {
+    setTargetEditClass(cls);
+    setEditClassName(cls.name);
+    setEditGender(cls.gender);
+    setEditWaliId(cls.guruId);
     setIsEditingClass(true);
+    setIsEditingWali(false);
   };
 
-  const handleSaveEdit = async (e: React.FormEvent) => {
+  const handleSaveEditClass = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!activeClassDetails) return;
+    if (!targetEditClass) return;
+
+    const cleanNew = editClassName.trim().toUpperCase();
+    if (!cleanNew) {
+      showToast("Nama kelas wajib diisi", "error");
+      return;
+    }
 
     const teacher = userList.find((u) => u.id === editWaliId);
-    await updateClass(activeClassDetails.name, {
+    const res = await updateClass(targetEditClass.name, {
+      newName: cleanNew,
       gender: editGender,
       waliKelas: teacher?.name || "",
       guruId: editWaliId
     });
 
+    if (res.success) {
+      if (selectedClassName === targetEditClass.name) {
+        setSelectedClassName(cleanNew);
+      }
+      setIsEditingClass(false);
+      setTargetEditClass(null);
+    }
+  };
+
+  const handleOpenEditWali = (cls: any) => {
+    setTargetWaliClass(cls);
+    setQuickWaliId(cls.guruId);
+    setIsEditingWali(true);
     setIsEditingClass(false);
+  };
+
+  const handleSaveQuickWali = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!targetWaliClass) return;
+
+    const teacher = userList.find((u) => u.id === quickWaliId);
+    const res = await updateClass(targetWaliClass.name, {
+      waliKelas: teacher?.name || "",
+      guruId: quickWaliId
+    });
+
+    if (res.success) {
+      setIsEditingWali(false);
+      setTargetWaliClass(null);
+    }
   };
 
   const handleCreateClass = async (e: React.FormEvent) => {
@@ -228,9 +273,8 @@ export default function AdminKelasPage() {
     }
   };
 
-  const handleDeleteClass = () => {
-    if (!activeClassDetails) return;
-    setDeleteModalState({ isOpen: true, name: activeClassDetails.name });
+  const handleDeleteClassByName = (name: string) => {
+    setDeleteModalState({ isOpen: true, name });
   };
 
   const handleConfirmDeleteClass = () => {
@@ -370,6 +414,171 @@ export default function AdminKelasPage() {
           </Card>
         )}
 
+        {isEditingClass && targetEditClass && (
+          <Card className="p-4 sm:p-5 border-2 border-[#A8833E]/40 bg-[#FAF7EE] space-y-4">
+            <div className="flex items-center justify-between pb-2 border-b border-[#D4C9B5]">
+              <div className="flex items-center gap-2">
+                <Edit2 className="w-4 h-4 text-[#A8833E]" />
+                <h2 className="text-xs font-bold text-[#172033] uppercase tracking-wider">
+                  Ubah Kelas {targetEditClass.name}
+                </h2>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setIsEditingClass(false);
+                  setTargetEditClass(null);
+                }}
+                className="p-1 rounded-lg text-[#64748B] hover:text-[#172033]"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveEditClass} className="space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div>
+                  <label className="block text-[11px] font-bold text-[#475569] uppercase mb-1">
+                    Nama Kelas
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={editClassName}
+                    onChange={(e) => setEditClassName(e.target.value)}
+                    placeholder="Misal: 1A, 2B..."
+                    className="w-full p-2.5 text-xs bg-white border border-[#D4C9B5] rounded-xl text-[#172033] focus:outline-none focus:border-[#1B4D3E]"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-bold text-[#475569] uppercase mb-1">
+                    Kategori Gender
+                  </label>
+                  <div className="grid grid-cols-2 gap-2">
+                    {(["Putra", "Putri"] as const).map((g) => (
+                      <button
+                        key={g}
+                        type="button"
+                        onClick={() => setEditGender(g)}
+                        className={`py-2 rounded-xl text-xs font-bold text-center border transition-all ${
+                          editGender === g
+                            ? "bg-[#1B4D3E] text-white border-[#1B4D3E] shadow-xs"
+                            : "bg-white text-[#64748B] border-[#D4C9B5] hover:bg-[#FAF7EE]"
+                        }`}
+                      >
+                        {g}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-bold text-[#475569] uppercase mb-1">
+                    Wali Kelas / Guru Pembina
+                  </label>
+                  <select
+                    value={editWaliId}
+                    onChange={(e) => setEditWaliId(e.target.value)}
+                    className="w-full p-2.5 text-xs bg-white border border-[#D4C9B5] rounded-xl text-[#172033] focus:outline-none focus:border-[#1B4D3E]"
+                  >
+                    <option value="">-- Belum Ditugaskan --</option>
+                    {availableTeachers.map((t) => (
+                      <option key={t.id} value={t.id}>
+                        {t.name} ({t.gender})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-end gap-2 pt-2 border-t border-[#D4C9B5]">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsEditingClass(false);
+                    setTargetEditClass(null);
+                  }}
+                  className="px-4 py-2 rounded-xl text-xs font-bold text-[#64748B] bg-white border border-[#D4C9B5] hover:bg-[#FAF7EE]"
+                >
+                  Batal
+                </button>
+                <button
+                  type="submit"
+                  className="px-5 py-2 rounded-xl text-xs font-bold text-white bg-[#1B4D3E] hover:bg-[#143B2F] shadow-xs"
+                >
+                  Simpan
+                </button>
+              </div>
+            </form>
+          </Card>
+        )}
+
+        {isEditingWali && targetWaliClass && (
+          <Card className="p-4 sm:p-5 border-2 border-blue-200 bg-[#F0F7FF] space-y-4">
+            <div className="flex items-center justify-between pb-2 border-b border-blue-200">
+              <div className="flex items-center gap-2">
+                <UserCheck className="w-4 h-4 text-[#1E3A8A]" />
+                <h2 className="text-xs font-bold text-[#172033] uppercase tracking-wider">
+                  Ubah Wali Kelas {targetWaliClass.name} ({targetWaliClass.gender})
+                </h2>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setIsEditingWali(false);
+                  setTargetWaliClass(null);
+                }}
+                className="p-1 rounded-lg text-[#64748B] hover:text-[#172033]"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveQuickWali} className="space-y-4">
+              <div>
+                <label className="block text-[11px] font-bold text-[#475569] uppercase mb-1">
+                  Pilih Wali Kelas Baru
+                </label>
+                <select
+                  value={quickWaliId}
+                  onChange={(e) => setQuickWaliId(e.target.value)}
+                  className="w-full p-2.5 text-xs bg-white border border-[#B9D5F3] rounded-xl text-[#172033] focus:outline-none focus:border-[#1B4D3E]"
+                >
+                  <option value="">-- Belum Ditugaskan --</option>
+                  {availableTeachers.map((t) => (
+                    <option key={t.id} value={t.id}>
+                      {t.name} ({t.gender})
+                    </option>
+                  ))}
+                </select>
+                <p className="text-[11px] text-[#64748B] mt-1.5">
+                  Wali saat ini: <strong className="text-[#172033]">{targetWaliClass.waliKelas}</strong>
+                </p>
+              </div>
+
+              <div className="flex items-center justify-end gap-2 pt-2 border-t border-blue-200">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsEditingWali(false);
+                    setTargetWaliClass(null);
+                  }}
+                  className="px-4 py-2 rounded-xl text-xs font-bold text-[#64748B] bg-white border border-[#CBD5E1] hover:bg-slate-50"
+                >
+                  Batal
+                </button>
+                <button
+                  type="submit"
+                  className="px-5 py-2 rounded-xl text-xs font-bold text-white bg-[#1B4D3E] hover:bg-[#143B2F] shadow-xs"
+                >
+                  Simpan
+                </button>
+              </div>
+            </form>
+          </Card>
+        )}
+
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
           <CardSub className="p-3 text-center">
             <span className="text-[10px] text-[#64748B] font-bold uppercase block">
@@ -448,7 +657,6 @@ export default function AdminKelasPage() {
                   key={cls.name}
                   onClick={() => {
                     setSelectedClassName(cls.name);
-                    setIsEditingClass(false);
                   }}
                   className={`p-3 rounded-2xl cursor-pointer transition-all border text-left flex flex-col justify-between ${
                     isSelected
@@ -456,29 +664,79 @@ export default function AdminKelasPage() {
                       : "bg-white border-[#E2EBF4] hover:border-[#1B4D3E]/40 hover:shadow-xs"
                   }`}
                 >
-                  <div className="flex items-start justify-between gap-1">
-                    <span className="text-base font-serif font-black text-[#172033]">
-                      Kelas {cls.name}
-                    </span>
-                    <span
-                      className={`text-[9px] font-bold px-1.5 py-0.5 rounded-full ${
-                        cls.gender === "Putra"
-                          ? "bg-[#ECFDF5] text-[#065F46]"
-                          : "bg-[#FAF7EE] text-[#A8833E]"
-                      }`}
-                    >
-                      {cls.gender}
-                    </span>
+                  <div>
+                    <div className="flex items-start justify-between gap-1">
+                      <span className="text-base font-serif font-black text-[#172033]">
+                        Kelas {cls.name}
+                      </span>
+                      <span
+                        className={`text-[9px] font-bold px-1.5 py-0.5 rounded-full ${
+                          cls.gender === "Putra"
+                            ? "bg-[#ECFDF5] text-[#065F46]"
+                            : "bg-[#FAF7EE] text-[#A8833E]"
+                        }`}
+                      >
+                        {cls.gender}
+                      </span>
+                    </div>
+
+                    <div className="mt-2 text-[11px] space-y-0.5">
+                      <p className="text-[#64748B] truncate text-[10px]">
+                        {cls.waliKelas}
+                      </p>
+                      <div className="flex items-center justify-between font-mono font-bold pt-1 border-t border-[#F1F5F9]">
+                        <span className="text-[#64748B] text-[10px]">{cls.studentCount} Santri</span>
+                        <span className="text-[#1B4D3E]">{formatDecimal(cls.avgScore)}</span>
+                      </div>
+                    </div>
                   </div>
 
-                  <div className="mt-2 text-[11px] space-y-0.5">
-                    <p className="text-[#64748B] truncate text-[10px]">
-                      {cls.waliKelas}
-                    </p>
-                    <div className="flex items-center justify-between font-mono font-bold pt-1 border-t border-[#F1F5F9]">
-                      <span className="text-[#64748B] text-[10px]">{cls.studentCount} Santri</span>
-                      <span className="text-[#1B4D3E]">{formatDecimal(cls.avgScore)}</span>
-                    </div>
+                  <div className="mt-2.5 pt-2 border-t border-[#F1F5F9] flex items-center justify-between gap-1">
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSelectedClassName(cls.name);
+                        const el = document.getElementById("detail-kelas");
+                        if (el) el.scrollIntoView({ behavior: "smooth" });
+                      }}
+                      className="flex-1 py-1 px-1.5 rounded-lg text-[10px] font-bold text-[#1B4D3E] bg-[#ECFDF5] hover:bg-[#D1FAE5] transition-colors text-center"
+                    >
+                      Detail
+                    </button>
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleOpenEditClass(cls);
+                      }}
+                      className="py-1 px-2 rounded-lg text-[10px] font-bold text-[#A8833E] bg-[#FAF7EE] hover:bg-[#F5EED9] border border-[#C5A059]/30 transition-colors"
+                      title="Ubah Kelas"
+                    >
+                      Ubah
+                    </button>
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleOpenEditWali(cls);
+                      }}
+                      className="py-1 px-2 rounded-lg text-[10px] font-bold text-[#1E3A8A] bg-[#EFF6FF] hover:bg-[#DBEAFE] border border-blue-200 transition-colors"
+                      title="Ubah Wali"
+                    >
+                      Wali
+                    </button>
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDeleteClassByName(cls.name);
+                      }}
+                      className="p-1 rounded-lg text-red-600 bg-red-50 hover:bg-red-100 transition-colors"
+                      title="Hapus Kelas"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
                   </div>
                 </div>
               );
@@ -487,7 +745,7 @@ export default function AdminKelasPage() {
         </div>
 
         {activeClassDetails && (
-          <div className="space-y-4">
+          <div id="detail-kelas" className="space-y-4">
             <Card className="p-4 sm:p-5 bg-white border border-[#E2E8F0] space-y-4">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[#E2E8F0]">
                 <div>
@@ -514,7 +772,16 @@ export default function AdminKelasPage() {
                 <div className="flex items-center gap-2 shrink-0">
                   <button
                     type="button"
-                    onClick={handleStartEdit}
+                    onClick={() => handleOpenEditWali(activeClassDetails)}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-[#EFF6FF] text-[#1E3A8A] border border-blue-200 hover:bg-[#DBEAFE] transition-colors"
+                  >
+                    <UserCheck className="w-3.5 h-3.5" />
+                    <span>Wali</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => handleOpenEditClass(activeClassDetails)}
                     className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-[#FAF7EE] text-[#A8833E] border border-[#C5A059]/40 hover:bg-[#F5EED9] transition-colors"
                   >
                     <Edit2 className="w-3.5 h-3.5" />
@@ -523,7 +790,7 @@ export default function AdminKelasPage() {
 
                   <button
                     type="button"
-                    onClick={handleDeleteClass}
+                    onClick={() => handleDeleteClassByName(activeClassDetails.name)}
                     className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-red-50 text-red-600 border border-red-200 hover:bg-red-100 transition-colors"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
@@ -531,83 +798,6 @@ export default function AdminKelasPage() {
                   </button>
                 </div>
               </div>
-
-              {isEditingClass && (
-                <div className="p-4 rounded-2xl bg-[#FAF7EE] border border-[#C5A059]/30 space-y-3">
-                  <div className="flex items-center justify-between pb-1 border-b border-[#D4C9B5]">
-                    <span className="text-xs font-bold text-[#172033] uppercase">
-                      Pengaturan Kelas {activeClassDetails.name}
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => setIsEditingClass(false)}
-                      className="text-[#64748B] hover:text-[#172033]"
-                    >
-                      <X className="w-4 h-4" />
-                    </button>
-                  </div>
-
-                  <form onSubmit={handleSaveEdit} className="space-y-3">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      <div>
-                        <label className="block text-[11px] font-bold text-[#475569] uppercase mb-1">
-                          Kategori Gender
-                        </label>
-                        <div className="grid grid-cols-2 gap-2">
-                          {(["Putra", "Putri"] as const).map((g) => (
-                            <button
-                              key={g}
-                              type="button"
-                              onClick={() => setEditGender(g)}
-                              className={`py-2 rounded-xl text-xs font-bold text-center border transition-all ${
-                                editGender === g
-                                  ? "bg-[#1B4D3E] text-white border-[#1B4D3E] shadow-xs"
-                                  : "bg-white text-[#64748B] border-[#D4C9B5] hover:bg-[#FAF7EE]"
-                              }`}
-                            >
-                              {g}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-
-                      <div>
-                        <label className="block text-[11px] font-bold text-[#475569] uppercase mb-1">
-                          Wali Kelas / Guru Pembina
-                        </label>
-                        <select
-                          value={editWaliId}
-                          onChange={(e) => setEditWaliId(e.target.value)}
-                          className="w-full p-2.5 text-xs bg-white border border-[#D4C9B5] rounded-xl text-[#172033] focus:outline-none focus:border-[#1B4D3E]"
-                        >
-                          <option value="">-- Belum Ditugaskan --</option>
-                          {availableTeachers.map((t) => (
-                            <option key={t.id} value={t.id}>
-                              {t.name} ({t.gender})
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center justify-end gap-2 pt-2 border-t border-[#D4C9B5]">
-                      <button
-                        type="button"
-                        onClick={() => setIsEditingClass(false)}
-                        className="px-4 py-1.5 rounded-xl text-xs font-bold text-[#64748B] bg-white border border-[#D4C9B5] hover:bg-[#FAF7EE]"
-                      >
-                        Batal
-                      </button>
-                      <button
-                        type="submit"
-                        className="px-5 py-1.5 rounded-xl text-xs font-bold text-white bg-[#1B4D3E] hover:bg-[#143B2F] shadow-xs"
-                      >
-                        Simpan
-                      </button>
-                    </div>
-                  </form>
-                </div>
-              )}
 
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                 <div className="p-3.5 rounded-2xl bg-[#F8FAFC] border border-[#E2E8F0] text-center">

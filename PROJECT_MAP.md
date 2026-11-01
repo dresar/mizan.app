@@ -21,7 +21,7 @@ mizan.apps/
 │   ├── admin/                 # Admin Master
 │   │   ├── dashboard/         # Dashboard ringkasan pondok
 │   │   ├── santri/            # Manajemen santri, tambah, filter gender/status
-│   │   ├── kelas/             # Detail kelas santri, rata-rata skor, prestasi/pelanggaran (tanpa modal)
+│   │   ├── kelas/             # CRUD kelas: edit nama & gender, ubah wali kelas instan, hapus modal, detail santri & log
 │   │   ├── wali-kelas/        # Penugasan wali kelas, paginasi max 20 (grid & tabel), & share statistik publik
 │   │   ├── absensi/           # Rekap absensi sholat 7 waktu & kegiatan
 │   │   ├── rapor/             # Rapor terpadu santri & santriwati (1 halaman tabel lengkap, cetak PDF massal)
@@ -39,7 +39,7 @@ mizan.apps/
 │   ├── ortu/ & dashboard/     # Portal Wali Santri (login stambuk & sandi RDS1234, skor akhlak, sholat 7 waktu, detail kejadian prestasi & pelanggaran, unduh rapor PDF & kontak pengasuhan)
 │   ├── santri/profil/         # Profil mandiri santri, skor adab & tombol Bagikan
 │   ├── share/[id]/            # Halaman publik kartu share (stat-*) tanpa perlu login
-│   ├── login/                 # Autentikasi multi-role (login cepat 92 akun Ustadz/Ustadzah & BK dengan pemisahan gender)
+│   ├── login/                 # Autentikasi multi-role (login cepat 85 akun Ustadz/Ustadzah & BK dengan isolasi gender ketat)
 │   └── api/                   # REST API routes (auth, absensi, backup, data, penilaian, settings, share, santri, classes, users)
 ├── components/                # UI Components
 │   ├── ShareCard.tsx          # Komponen kartu statistik soft-UI neumorphic (7-item recessed, dual-stat, verified)

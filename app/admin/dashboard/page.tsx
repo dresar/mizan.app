@@ -26,7 +26,7 @@ import { StatusGuru } from "@/lib/mock-data";
 import { PrayerAttendanceChart } from "@/components/PrayerAttendanceChart";
 
 export default function AdminDashboardPage() {
-  const { santriList, guruList, absensiList, setGuruStatus } = useMizan();
+  const { santriList, guruList, absensiList, setGuruStatus, settings } = useMizan();
 
   const [leaderboardGender, setLeaderboardGender] = useState<"ALL" | "Putra" | "Putri">("ALL");
   const [attentionGender, setAttentionGender] = useState<"ALL" | "Putra" | "Putri">("ALL");
@@ -62,10 +62,10 @@ export default function AdminDashboardPage() {
   }, [filteredGuruList, guruCurrentPage]);
 
   const avgScore = useMemo(() => {
-    if (totalSantri === 0) return "80,000";
+    if (totalSantri === 0) return (settings.defaultBaseScore || 70).toFixed(3).replace(".", ",");
     const sum = santriList.reduce((acc, s) => acc + s.currentScore, 0);
     return (sum / totalSantri).toFixed(3).replace(".", ",");
-  }, [santriList, totalSantri]);
+  }, [santriList, totalSantri, settings.defaultBaseScore]);
 
   const rankedSantriList = useMemo(() => {
     let list = [...santriList];
@@ -106,8 +106,9 @@ export default function AdminDashboardPage() {
   }, [santriList, attentionGender]);
 
   const totalNeedAttentionCount = useMemo(() => {
-    return santriList.filter((s) => s.currentScore < 80 || (s.status !== "Aman" && s.status !== "Baik")).length;
-  }, [santriList]);
+    const minBaik = settings.defaultBaseScore || 70;
+    return santriList.filter((s) => s.currentScore < minBaik || (s.status !== "Aman" && s.status !== "Baik")).length;
+  }, [santriList, settings.defaultBaseScore]);
 
   const getGuruBadgeVariant = (status: StatusGuru) => {
     if (status === "Sudah Lapor") return "sudah-lapor";
@@ -219,7 +220,7 @@ export default function AdminDashboardPage() {
               {totalNeedAttentionCount}
             </div>
             <p className="text-[10px] text-[#64748B] mt-1">
-              Skor di bawah 80,000
+              Skor di bawah {(settings.defaultBaseScore || 70).toFixed(3).replace(".", ",")}
             </p>
           </CardSub>
         </div>

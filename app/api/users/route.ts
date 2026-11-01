@@ -19,6 +19,7 @@ export async function GET(req: Request) {
         gender, assigned_class as "assignedClass", is_active as "isActive",
         created_at as "createdAt"
       FROM users 
+      WHERE is_active = true
       ORDER BY role ASC, name ASC
     `);
 

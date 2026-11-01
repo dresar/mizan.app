@@ -55,11 +55,11 @@ export async function PUT(req: Request) {
     `, [JSON.stringify(mergedSettings)]);
 
     if (applyToSantri) {
-      const base = mergedSettings.defaultBaseScore ?? 80.0;
-      const lisanMin = mergedSettings.lisanMin ?? 61.0;
-      const sp1Min = mergedSettings.sp1Min ?? 46.0;
-      const sp2Min = mergedSettings.sp2Min ?? 31.0;
-      const sp3Min = mergedSettings.sp3Min ?? 16.0;
+      const base = mergedSettings.defaultBaseScore ?? 70.0;
+      const lisanMin = mergedSettings.lisanMin ?? 51.0;
+      const sp1Min = mergedSettings.sp1Min ?? 36.0;
+      const sp2Min = mergedSettings.sp2Min ?? 21.0;
+      const sp3Min = mergedSettings.sp3Min ?? 6.0;
 
       await query(`
         UPDATE santri
