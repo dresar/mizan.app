@@ -11,7 +11,14 @@ import {
   Award,
   Loader2,
   Camera,
-  Upload
+  Upload,
+  Eye,
+  X,
+  Check,
+  Building2,
+  BookOpen,
+  AlertCircle,
+  Download
 } from "lucide-react";
 import { useMizan } from "@/lib/mizan-context";
 import { RoleShell } from "@/components/RoleShell";
@@ -26,6 +33,7 @@ export default function AdminPengaturanNilaiPage() {
   const [isSaving, setIsSaving] = useState(false);
   const [logoPreview, setLogoPreview] = useState<string>(settings?.appLogoUrl || "/logo.png");
   const [isUploadingLogo, setIsUploadingLogo] = useState(false);
+  const [showPreviewModal, setShowPreviewModal] = useState(false);
 
   useEffect(() => {
     if (settings) {
@@ -73,7 +81,12 @@ export default function AdminPengaturanNilaiPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSaving(true);
-    await updateSettings(formState, {
+    const updatedState = {
+      ...formState,
+      popupUpdatedAt: new Date().toISOString()
+    };
+    setFormState(updatedState);
+    await updateSettings(updatedState, {
       applyToSantri,
       applyToIndicators
     });
@@ -182,6 +195,132 @@ export default function AdminPengaturanNilaiPage() {
         </Card>
 
         <form onSubmit={handleSubmit} className="space-y-5">
+          <Card className="p-4 sm:p-5 bg-white space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-[#E2E8F0]">
+              <div>
+                <h2 className="text-xs sm:text-sm font-bold text-[#172033] uppercase tracking-wider flex items-center gap-2">
+                  <Bell className="w-4 h-4 text-[#A8833E]" />
+                  Pengumuman & Nasihat Popup (Modal Beranda)
+                </h2>
+                <p className="text-[11px] text-[#64748B] mt-0.5">
+                  Tampilkan jendela popup pesan, tausiyah pimpinan, atau pengumuman santri yang dapat ditutup
+                </p>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setShowPreviewModal(true)}
+                  className="px-3 py-1.5 rounded-full border border-[#CBD5E1] hover:bg-[#FAF7EE] text-[11px] font-bold text-[#1B4D3E] flex items-center gap-1.5 transition-colors cursor-pointer"
+                >
+                  <Eye className="w-3.5 h-3.5" />
+                  <span>Pratinjau</span>
+                </button>
+
+                <label className="inline-flex items-center gap-2 cursor-pointer bg-[#F8FAFC] px-3 py-1.5 rounded-full border border-[#E2EBF4]">
+                  <input
+                    type="checkbox"
+                    checked={formState.popupActive ?? false}
+                    onChange={(e) =>
+                      setFormState({ ...formState, popupActive: e.target.checked })
+                    }
+                    className="h-4 w-4 rounded border-[#CBD5E1] text-[#1B4D3E] focus:ring-[#1B4D3E]"
+                  />
+                  <span className={`text-xs font-bold ${formState.popupActive ? "text-[#065F46]" : "text-[#64748B]"}`}>
+                    {formState.popupActive ? "Aktif" : "Nonaktif"}
+                  </span>
+                </label>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label className="block text-[11px] font-bold text-[#475569] uppercase mb-1">
+                  Kategori Pesan
+                </label>
+                <div className="grid grid-cols-4 gap-1 p-1 rounded-2xl bg-[#EEF2F6]">
+                  {(["Nasihat", "Pengumuman", "Tausiyah", "Penting"] as const).map((t) => (
+                    <button
+                      key={t}
+                      type="button"
+                      onClick={() => setFormState({ ...formState, popupType: t })}
+                      className={`py-1.5 rounded-xl text-[10px] font-bold transition-all text-center ${
+                        (formState.popupType || "Nasihat") === t
+                          ? "bg-[#1B4D3E] text-white shadow-2xs"
+                          : "text-[#64748B] hover:text-[#172033]"
+                      }`}
+                    >
+                      {t}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-bold text-[#475569] uppercase mb-1">
+                  Sasaran Penerima
+                </label>
+                <div className="grid grid-cols-3 gap-1 p-1 rounded-2xl bg-[#EEF2F6]">
+                  {(["Semua", "GURU", "PENGASUHAN"] as const).map((target) => (
+                    <button
+                      key={target}
+                      type="button"
+                      onClick={() => setFormState({ ...formState, popupTarget: target })}
+                      className={`py-1.5 rounded-xl text-[10px] font-bold transition-all text-center ${
+                        (formState.popupTarget || "Semua") === target
+                          ? "bg-[#1B4D3E] text-white shadow-2xs"
+                          : "text-[#64748B] hover:text-[#172033]"
+                      }`}
+                    >
+                      {target === "Semua" ? "Semua" : target === "GURU" ? "Guru" : "BK"}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div className="sm:col-span-2">
+                <label className="block text-[11px] font-bold text-[#475569] uppercase mb-1">
+                  Judul Pengumuman / Nasihat
+                </label>
+                <input
+                  type="text"
+                  value={formState.popupTitle || ""}
+                  onChange={(e) => setFormState({ ...formState, popupTitle: e.target.value })}
+                  placeholder="Contoh: Nasihat Kedisiplinan Sholat Berjamaah"
+                  className="w-full px-3.5 py-2 text-xs bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl focus:bg-white focus:border-[#1B4D3E] focus:outline-none font-bold text-[#172033]"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-bold text-[#475569] uppercase mb-1">
+                  Pihak Pengirim / Penulis
+                </label>
+                <input
+                  type="text"
+                  value={formState.popupSender || ""}
+                  onChange={(e) => setFormState({ ...formState, popupSender: e.target.value })}
+                  placeholder="Contoh: Pimpinan Pesantren"
+                  className="w-full px-3.5 py-2 text-xs bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl focus:bg-white focus:border-[#1B4D3E] focus:outline-none font-semibold text-[#172033]"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-[11px] font-bold text-[#475569] uppercase mb-1">
+                Isi Pesan / Nasihat / Arahan
+              </label>
+              <textarea
+                rows={4}
+                value={formState.popupMessage || ""}
+                onChange={(e) => setFormState({ ...formState, popupMessage: e.target.value })}
+                placeholder="Tuliskan arahan, tausiyah, atau pengumuman yang akan tampil di modal popup beranda pengguna..."
+                className="w-full p-3 text-xs bg-[#F8FAFC] border border-[#CBD5E1] rounded-2xl focus:bg-white focus:border-[#1B4D3E] focus:outline-none text-[#172033] font-medium leading-relaxed resize-none"
+              />
+            </div>
+          </Card>
+
           <Card className="p-4 sm:p-5 bg-white space-y-4">
             <CardHeader
               title="Nilai Awal & Ambang Batas Status Santri"
@@ -655,13 +794,152 @@ export default function AdminPengaturanNilaiPage() {
             <button
               type="submit"
               disabled={isSaving}
-              className="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-full bg-[#1B4D3E] text-white text-xs font-bold hover:bg-[#143B2F] shadow-xs transition-all disabled:opacity-50"
+              className="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-full bg-[#1B4D3E] text-white text-xs font-bold hover:bg-[#143B2F] shadow-xs transition-all disabled:opacity-50 cursor-pointer"
             >
               {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
               <span>Simpan</span>
             </button>
           </div>
         </form>
+
+        <Card className="p-4 sm:p-5 bg-white space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[#EEF2F6]">
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#FAF7EE] text-[#A8833E] border border-[#C5A059]/30">
+                  Format JSON
+                </span>
+              </div>
+              <h2 className="text-sm sm:text-base font-bold text-[#172033] mt-1">
+                Cadangan Data
+              </h2>
+              <p className="text-xs text-[#64748B]">
+                Unduh seluruh data santri, presensi, penilaian, dan konfigurasi dalam format berkas JSON.
+              </p>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <a
+                href="/api/admin/backup?download=1"
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-2xl bg-[#1B4D3E] text-white hover:bg-[#153e32] text-xs font-bold shadow-xs transition-colors"
+              >
+                <Download className="w-3.5 h-3.5" />
+                <span>Backup</span>
+              </a>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+            <div className="p-3 rounded-2xl bg-[#F8FAFC] border border-[#E2EBF4] text-center">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-[#64748B] block">Santri</span>
+              <span className="font-mono text-base font-black text-[#1B4D3E]">249</span>
+              <a
+                href="/api/admin/backup?scope=santri&download=1"
+                className="mt-2 block text-[10px] font-bold text-[#1B4D3E] hover:underline"
+              >
+                Santri
+              </a>
+            </div>
+
+            <div className="p-3 rounded-2xl bg-[#F8FAFC] border border-[#E2EBF4] text-center">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-[#64748B] block">Kelas</span>
+              <span className="font-mono text-base font-black text-[#1B4D3E]">12</span>
+              <span className="mt-2 block text-[10px] font-bold text-[#94A3B8]">Terdaftar</span>
+            </div>
+
+            <div className="p-3 rounded-2xl bg-[#F8FAFC] border border-[#E2EBF4] text-center">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-[#64748B] block">Presensi</span>
+              <span className="font-mono text-base font-black text-[#065F46]">Aktif</span>
+              <a
+                href="/api/admin/backup?scope=absensi&download=1"
+                className="mt-2 block text-[10px] font-bold text-[#065F46] hover:underline"
+              >
+                Presensi
+              </a>
+            </div>
+
+            <div className="p-3 rounded-2xl bg-[#F8FAFC] border border-[#E2EBF4] text-center">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-[#64748B] block">Penilaian</span>
+              <span className="font-mono text-base font-black text-[#C5A059]">Baku</span>
+              <a
+                href="/api/admin/backup?scope=penilaian&download=1"
+                className="mt-2 block text-[10px] font-bold text-[#A8833E] hover:underline"
+              >
+                Penilaian
+              </a>
+            </div>
+          </div>
+        </Card>
+
+        {showPreviewModal && (
+          <div
+            role="dialog"
+            aria-modal="true"
+            className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-black/60 backdrop-blur-xs"
+          >
+            <div className="w-full max-w-lg bg-white rounded-3xl p-5 sm:p-6 shadow-2xl border border-[#C5A059]/40 relative space-y-4 overflow-hidden">
+              <div className="absolute top-0 inset-x-0 h-2 bg-gradient-to-r from-[#1B4D3E] via-[#C5A059] to-[#1B4D3E]" />
+
+              <div className="flex items-start justify-between gap-3 pt-1">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-10 h-10 rounded-2xl bg-[#FAF7EE] border border-[#C5A059]/30 flex items-center justify-center shrink-0 shadow-2xs">
+                    {(formState.popupType || "Nasihat") === "Nasihat" ? (
+                      <Sparkles className="w-5 h-5 text-[#C5A059]" />
+                    ) : (formState.popupType || "Nasihat") === "Pengumuman" ? (
+                      <Bell className="w-5 h-5 text-[#1B4D3E]" />
+                    ) : (formState.popupType || "Nasihat") === "Tausiyah" ? (
+                      <BookOpen className="w-5 h-5 text-[#A8833E]" />
+                    ) : (
+                      <AlertCircle className="w-5 h-5 text-red-600" />
+                    )}
+                  </div>
+                  <div>
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full border inline-block bg-[#FAF7EE] text-[#A8833E] border-[#C5A059]/30">
+                      {formState.popupType || "Nasihat"}
+                    </span>
+                    <p className="text-[10px] text-[#94A3B8] font-bold mt-0.5 flex items-center gap-1">
+                      <Building2 className="w-3 h-3" />
+                      {formState.popupSender || "Pimpinan Pesantren"}
+                    </p>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => setShowPreviewModal(false)}
+                  className="p-1.5 rounded-xl hover:bg-[#F1F5F9] text-[#94A3B8] hover:text-[#172033] transition-colors cursor-pointer"
+                  aria-label="Tutup"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+
+              <div className="space-y-2 border-y border-[#F1F5F9] py-3.5 max-h-[55vh] overflow-y-auto pr-1">
+                <h2 className="text-base sm:text-lg font-serif font-black text-[#172033] leading-snug">
+                  {formState.popupTitle || "Judul Pengumuman / Nasihat"}
+                </h2>
+                <div className="text-xs text-[#475569] leading-relaxed whitespace-pre-line font-medium">
+                  {formState.popupMessage || "Isi pengumuman atau nasihat akan tampil di sini..."}
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between gap-3 pt-1">
+                <p className="text-[10px] text-[#94A3B8] italic truncate">
+                  Pesantren Modern Raudhatussalam Mahato
+                </p>
+
+                <button
+                  type="button"
+                  onClick={() => setShowPreviewModal(false)}
+                  className="px-5 py-2.5 rounded-full bg-[#1B4D3E] hover:bg-[#153e32] text-white font-bold text-xs flex items-center gap-1.5 shadow-sm transition-all shrink-0 cursor-pointer"
+                >
+                  <Check className="w-3.5 h-3.5" />
+                  <span>Tutup</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </RoleShell>
   );

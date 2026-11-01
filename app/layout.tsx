@@ -13,7 +13,7 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: "MIZAN - Sistem Penilaian Sikap & Absensi Sholat",
-  description: "Sistem Penilaian Sikap & Perilaku Santri Pondok Pesantren Modern Raudhatussalam Mahato.",
+  description: "Sistem Penilaian Sikap & Perilaku Santri Pesantren Modern Raudhatussalam Mahato.",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,

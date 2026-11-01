@@ -266,7 +266,7 @@ export default function LoginPage() {
             Sistem Penilaian Sikap & Mental Santri
           </h1>
           <p className="text-xs font-semibold text-[#64748B]">
-            Pondok Pesantren Modern Raudhatussalam Mahato
+            Pesantren Modern Raudhatussalam Mahato
           </p>
         </div>
 
@@ -403,7 +403,7 @@ export default function LoginPage() {
 
         <div className="flex items-center justify-between px-2 pt-1 text-xs">
           <p className="text-[10px] text-[#94A3B8]">
-            MIZAN • Pondok Pesantren Modern Raudhatussalam Mahato
+            MIZAN • Pesantren Modern Raudhatussalam Mahato
           </p>
 
           <button

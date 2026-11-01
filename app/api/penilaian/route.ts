@@ -27,13 +27,17 @@ export async function POST(req: Request) {
 
     const id = "pen-" + Date.now() + "-" + Math.random().toString(36).substring(2, 6);
 
+    const createdAtDate = body.createdAt ? new Date(body.createdAt) : new Date();
+    const validCreatedAt = isNaN(createdAtDate.getTime()) ? new Date() : createdAtDate;
+    const dateKey = body.dateKey || validCreatedAt.toISOString().split("T")[0];
+
     await query(
       `INSERT INTO penilaian (
         id, santri_id, santri_name, santri_class, santri_asrama,
         guru_id, guru_name, type, category, unsur_name,
         indicator_text, tingkat, score, notes, proof_file_name,
         proof_file_size, created_at, date_key
-      ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,NOW(),$17)`,
+      ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18)`,
       [
         id,
         body.santriId,
@@ -51,7 +55,8 @@ export async function POST(req: Request) {
         body.notes || "",
         body.proofFileName || null,
         body.proofFileSize || null,
-        "today"
+        validCreatedAt,
+        dateKey
       ]
     );
 

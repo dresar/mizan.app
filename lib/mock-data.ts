@@ -139,6 +139,7 @@ export interface PenilaianRecord {
   createdAt: string;
   dateKey: string;
   date?: string;
+  rawCreatedAt?: string;
 }
 
 export interface AppSettings {
@@ -159,6 +160,13 @@ export interface AppSettings {
   notifyParents: boolean;
   realtimeSimulation: boolean;
   appLogoUrl?: string;
+  popupActive?: boolean;
+  popupTitle?: string;
+  popupMessage?: string;
+  popupSender?: string;
+  popupType?: "Pengumuman" | "Nasihat" | "Tausiyah" | "Penting";
+  popupTarget?: "Semua" | "GURU" | "PENGASUHAN";
+  popupUpdatedAt?: string;
 }
 
 export const DEFAULT_SETTINGS: AppSettings = {
@@ -178,7 +186,14 @@ export const DEFAULT_SETTINGS: AppSettings = {
   absenAlpaScore: -0.050,
   notifyParents: true,
   realtimeSimulation: true,
-  appLogoUrl: "/logo.png"
+  appLogoUrl: "/logo.png",
+  popupActive: false,
+  popupTitle: "",
+  popupMessage: "",
+  popupSender: "Pimpinan Pesantren",
+  popupType: "Nasihat",
+  popupTarget: "Semua",
+  popupUpdatedAt: ""
 };
 
 export const INITIAL_CLASSES: string[] = [];

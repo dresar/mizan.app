@@ -7,6 +7,7 @@ import { Header } from "@/components/Header";
 import { Sidebar } from "@/components/Sidebar";
 import { BottomNav } from "@/components/BottomNav";
 import { ToastContainer } from "@/components/ui/Toast";
+import { AnnouncementPopup } from "@/components/AnnouncementPopup";
 
 interface RoleShellProps {
   children: React.ReactNode;
@@ -107,6 +108,7 @@ export function RoleShell({ children }: RoleShellProps) {
       </div>
       <BottomNav />
       <ToastContainer />
+      <AnnouncementPopup />
     </div>
   );
 }

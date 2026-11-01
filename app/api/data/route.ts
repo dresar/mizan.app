@@ -141,14 +141,28 @@ export async function GET() {
       isActive: u.isActive
     }));
 
-    const formattedPenilaian: PenilaianRecord[] = penRows.map((p: any) => ({
-      ...p,
-      score: parseFloat(p.score),
-      createdAt: new Date(p.createdAt).toLocaleDateString("id-ID", {
-        hour: "2-digit",
-        minute: "2-digit"
-      })
-    }));
+    const formattedPenilaian: PenilaianRecord[] = penRows.map((p: any) => {
+      const dt = new Date(p.createdAt);
+      const isValid = !isNaN(dt.getTime());
+      const formattedDate = isValid
+        ? dt.toLocaleDateString("id-ID", {
+            day: "numeric",
+            month: "short",
+            year: "numeric"
+          }) + " • " + dt.toLocaleTimeString("id-ID", {
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit"
+          }) + " WIB"
+        : "Baru saja";
+      return {
+        ...p,
+        score: parseFloat(p.score),
+        createdAt: formattedDate,
+        date: isValid ? dt.toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" }) : "",
+        rawCreatedAt: isValid ? dt.toISOString() : undefined
+      };
+    });
 
     const formattedAbsensi: AbsensiRecord[] = absRows.map((a: any) => {
       const dt = new Date(a.createdAt);

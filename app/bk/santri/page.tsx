@@ -6,19 +6,22 @@ import { Search, User, GraduationCap, FileText, Share2, Eye } from "lucide-react
 import { useMizan } from "@/lib/mizan-context";
 import { RoleShell } from "@/components/RoleShell";
 import { Avatar } from "@/components/ui/Avatar";
+import { Pagination } from "@/components/ui/Pagination";
 import { generateSantriPdf } from "@/lib/pdf-generator";
 import { ShareModal } from "@/components/ShareModal";
 import { Santri } from "@/lib/mock-data";
 
 export default function BkSantriListPage() {
-  const { santriList, currentUser, penilaianList, absensiList } = useMizan();
+  const { santriList, currentUser, penilaianList, absensiList, showToast } = useMizan();
   const [searchQuery, setSearchQuery] = useState("");
   const [genderFilter, setGenderFilter] = useState<"Semua" | "Putra" | "Putri">(
     currentUser.gender === "Putri" ? "Putri" : "Semua"
   );
   const [selectedClass, setSelectedClass] = useState("ALL");
+  const [currentPage, setCurrentPage] = useState(1);
   const [shareTargetSantri, setShareTargetSantri] = useState<Santri | null>(null);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const PAGE_SIZE = 20;
 
   const classes = useMemo(() => {
     let list = santriList;
@@ -40,6 +43,29 @@ export default function BkSantriListPage() {
     });
   }, [santriList, genderFilter, searchQuery, selectedClass]);
 
+  const totalPages = Math.ceil(filteredSantri.length / PAGE_SIZE) || 1;
+
+  const paginatedSantri = useMemo(() => {
+    const start = (currentPage - 1) * PAGE_SIZE;
+    return filteredSantri.slice(start, start + PAGE_SIZE);
+  }, [filteredSantri, currentPage]);
+
+  const handleSearchChange = (val: string) => {
+    setSearchQuery(val);
+    setCurrentPage(1);
+  };
+
+  const handleGenderChange = (val: "Semua" | "Putra" | "Putri") => {
+    setGenderFilter(val);
+    setSelectedClass("ALL");
+    setCurrentPage(1);
+  };
+
+  const handleClassChange = (val: string) => {
+    setSelectedClass(val);
+    setCurrentPage(1);
+  };
+
   const formatScore = (score: number) => {
     return score.toFixed(3).replace(".", ",");
   };
@@ -52,10 +78,18 @@ export default function BkSantriListPage() {
     return { label: "RASIB", color: "text-[#991B1B] bg-[#FEF2F2] border-[#FECACA]" };
   };
 
-  const handleDownloadRapor = (santri: Santri) => {
-    const studentPenilaian = penilaianList.filter((p) => p.santriId === santri.id);
-    const studentAbsensi = absensiList.filter((a) => a.santriId === santri.id);
-    generateSantriPdf(santri, studentPenilaian, studentAbsensi);
+  const handleDownloadRapor = async (santri: Santri) => {
+    try {
+      showToast(`Menyiapkan rapor ${santri.name}...`, "info");
+      const studentPenilaian = penilaianList.filter((p) => p.santriId === santri.id);
+      const studentAbsensi = absensiList.filter((a) => a.santriId === santri.id);
+      await generateSantriPdf(santri, studentPenilaian, studentAbsensi);
+      showToast(`Rapor ${santri.name} siap`, "success");
+    } catch (err: unknown) {
+      if ((err as Error)?.name !== "AbortError") {
+        showToast("Gagal mengunduh rapor", "error");
+      }
+    }
   };
 
   const handleOpenShare = (santri: Santri) => {

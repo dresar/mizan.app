@@ -14,14 +14,22 @@ import {
   Apple,
   Bell,
   AlertTriangle,
-  FileText
+  FileText,
+  Menu
 } from "lucide-react";
 import { useMizan } from "@/lib/mizan-context";
 import { Avatar } from "@/components/ui/Avatar";
 
 export default function Header() {
   const router = useRouter();
-  const { currentUser, logoutUser, activeRole, settings } = useMizan();
+  const {
+    currentUser,
+    logoutUser,
+    activeRole,
+    settings,
+    isMobileNavOpen,
+    setIsMobileNavOpen
+  } = useMizan();
   const appLogo = settings?.appLogoUrl || "/logo.png";
 
   const [isOpen, setIsOpen] = useState(false);
@@ -73,14 +81,27 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-40 w-full bg-white/95 backdrop-blur-md border-b border-[#E2EBF4] shadow-xs">
       <div className="w-full px-3 sm:px-6 h-14 flex items-center justify-between gap-3">
-        <Link href={dashboardHref} className="flex items-center gap-2.5 group">
-          <div className="w-9 h-9 rounded-2xl mizan-card bg-[#1B4D3E] p-1 flex items-center justify-center shadow-xs group-hover:scale-105 transition-transform overflow-hidden">
-            <Image src={appLogo} alt="Mizan Logo" width={36} height={36} className="w-full h-full object-contain" unoptimized />
-          </div>
-          <span className="font-serif font-black tracking-wide text-[#1B4D3E] text-lg sm:text-xl">
-            MIZAN
-          </span>
-        </Link>
+        <div className="flex items-center gap-2">
+          {activeRole === "SUPER_ADMIN" && (
+            <button
+              type="button"
+              onClick={() => setIsMobileNavOpen(!isMobileNavOpen)}
+              className="md:hidden p-2 rounded-2xl bg-[#FAF7EE] text-[#1B4D3E] hover:bg-[#FAF7EE]/80 border border-[#C5A059]/30 transition-all focus:outline-none"
+              aria-label="Menu Navigasi"
+            >
+              <Menu className="w-5 h-5 text-[#1B4D3E]" />
+            </button>
+          )}
+
+          <Link href={dashboardHref} className="flex items-center gap-2.5 group">
+            <div className="w-9 h-9 rounded-2xl mizan-card bg-[#1B4D3E] p-1 flex items-center justify-center shadow-xs group-hover:scale-105 transition-transform overflow-hidden">
+              <Image src={appLogo} alt="Mizan Logo" width={36} height={36} className="w-full h-full object-contain" unoptimized />
+            </div>
+            <span className="font-serif font-black tracking-wide text-[#1B4D3E] text-lg sm:text-xl">
+              MIZAN
+            </span>
+          </Link>
+        </div>
 
         <div className="flex items-center gap-2">
           {currentUser?.username && (

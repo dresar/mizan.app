@@ -1,12 +1,12 @@
 import { jsPDF } from "jspdf";
 import { Santri, PenilaianRecord, AbsensiRecord } from "./mock-data";
 
-export function generateSantriPdf(
+export async function generateSantriPdf(
   santri: Santri,
   penilaianList: PenilaianRecord[] = [],
   absensiList: AbsensiRecord[] = [],
   printDate = "1 November 2026"
-) {
+): Promise<void> {
   const doc = new jsPDF({
     orientation: "portrait",
     unit: "mm",
@@ -70,10 +70,11 @@ export function generateSantriPdf(
     .filter((p) => p.type === "SAYYIAH")
     .reduce((sum, p) => sum + Math.abs(p.score), 0);
 
+  const currentScore = typeof santri.currentScore === "number" && !isNaN(santri.currentScore) ? santri.currentScore : 70;
   let predikatLabel = "JAYYID (BAIK)";
-  if (santri.currentScore >= 90) predikatLabel = "MUMTAZ (ISTIMEWA)";
-  else if (santri.currentScore >= 80) predikatLabel = "JAYYID JIDDAN (SANGAT BAIK)";
-  else if (santri.currentScore < 60) predikatLabel = "PEMBINAAN KHUSUS";
+  if (currentScore >= 90) predikatLabel = "MUMTAZ (ISTIMEWA)";
+  else if (currentScore >= 80) predikatLabel = "JAYYID JIDDAN (SANGAT BAIK)";
+  else if (currentScore < 60) predikatLabel = "PEMBINAAN KHUSUS";
 
   const statBoxY = 72;
   const statBoxWidth = (contentWidth - 6) / 3;
@@ -87,7 +88,7 @@ export function generateSantriPdf(
   doc.setFont("helvetica", "bold");
   doc.setFontSize(11);
   doc.setTextColor(27, 77, 62);
-  doc.text(`${santri.currentScore.toFixed(3).replace(".", ",")} / 99,000`, margin + statBoxWidth / 2, statBoxY + 12.5, { align: "center" });
+  doc.text(`${currentScore.toFixed(3).replace(".", ",")} / 99,000`, margin + statBoxWidth / 2, statBoxY + 12.5, { align: "center" });
   doc.setFontSize(7);
   doc.setTextColor(100, 116, 139);
   doc.text(`Skor Awal Baku: 70,000`, margin + statBoxWidth / 2, statBoxY + 17, { align: "center" });
@@ -122,7 +123,9 @@ export function generateSantriPdf(
   doc.text(predikatLabel, statBox3X + statBoxWidth / 2, statBoxY + 12, { align: "center" });
   doc.setFontSize(7);
   doc.setTextColor(23, 32, 51);
-  doc.text(`Hadir: ${santri.totalHadir || 28} Hari | Alpa: ${santri.totalAlpa || 0}`, statBox3X + statBoxWidth / 2, statBoxY + 17, { align: "center" });
+  const totalHadir = santri.totalHadir ?? (absensiList.length > 0 ? absensiList.filter((a) => a.status === "Hadir").length : 28);
+  const totalAlpa = santri.totalAlpa ?? (absensiList.length > 0 ? absensiList.filter((a) => a.status === "Alpa").length : 0);
+  doc.text(`Hadir: ${totalHadir} Hari | Alpa: ${totalAlpa}`, statBox3X + statBoxWidth / 2, statBoxY + 17, { align: "center" });
 
   let curY = 98;
   doc.setFont("helvetica", "bold");
@@ -220,6 +223,54 @@ export function generateSantriPdf(
   doc.text("Pembina Kedisiplinan Asrama", leftSignX, signY + 30);
   doc.text("Super Admin Pengasuhan MIZAN", rightSignX, signY + 30);
 
-  const sanitizedName = santri.name.replace(/[^a-zA-Z0-9]/g, "_");
-  doc.save(`Rapor_Akhlak_${sanitizedName}_${santri.nis}.pdf`);
+  const safeName = (santri.name || "Santri").replace(/[^a-zA-Z0-9]/g, "_");
+  const safeNis = santri.nis || "000";
+  const filename = `Rapor_Akhlak_${safeName}_${safeNis}.pdf`;
+
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  const blob = doc.output("blob");
+  const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+  if (isMobile && typeof navigator.share === "function" && typeof File !== "undefined") {
+    try {
+      const file = new File([blob], filename, { type: "application/pdf" });
+      const canShareFiles = typeof navigator.canShare === "function" ? navigator.canShare({ files: [file] }) : true;
+      if (canShareFiles) {
+        await navigator.share({
+          files: [file],
+          title: filename,
+          text: `Rapor Santri ${santri.name || ""}`
+        });
+        return;
+      }
+    } catch (shareErr: unknown) {
+      if ((shareErr as Error)?.name === "AbortError") {
+        return;
+      }
+    }
+  }
+
+  const blobUrl = URL.createObjectURL(blob);
+  const anchor = document.createElement("a");
+  anchor.href = blobUrl;
+  anchor.download = filename;
+  anchor.target = "_blank";
+  anchor.rel = "noopener noreferrer";
+  document.body.appendChild(anchor);
+  anchor.click();
+
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+  if (isIOS) {
+    window.open(blobUrl, "_blank");
+  }
+
+  setTimeout(() => {
+    if (anchor.parentNode) {
+      document.body.removeChild(anchor);
+    }
+    URL.revokeObjectURL(blobUrl);
+  }, 4000);
 }

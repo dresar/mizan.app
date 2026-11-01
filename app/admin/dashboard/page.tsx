@@ -12,7 +12,8 @@ import {
   CheckCircle2,
   AlertCircle,
   HelpCircle,
-  Trophy
+  Trophy,
+  Download
 } from "lucide-react";
 import { useMizan } from "@/lib/mizan-context";
 import { RoleShell } from "@/components/RoleShell";
@@ -86,6 +87,14 @@ export default function AdminDashboardPage() {
           </div>
 
           <div className="flex items-center gap-2">
+            <a
+              href="/api/admin/backup?download=1"
+              className="px-3.5 py-2 rounded-2xl bg-[#FAF7EE] border border-[#C5A059]/40 text-[#854D0E] text-xs font-bold flex items-center gap-1.5 shadow-2xs hover:bg-[#FEFCE8] transition-colors"
+              title="Cadangkan seluruh data dalam format JSON"
+            >
+              <Download className="w-3.5 h-3.5 text-[#C5A059]" />
+              <span>Backup</span>
+            </a>
             <Link
               href="/admin/users"
               className="px-3.5 py-2 rounded-2xl bg-[#1B4D3E] text-white text-xs font-bold flex items-center gap-1.5 shadow-sm hover:bg-[#153e32] transition-colors"

@@ -30,7 +30,7 @@ function BkSantriDetailContent() {
   const params = useParams();
   const santriId = (params?.id as string) || "";
 
-  const { santriList, penilaianList, absensiList } = useMizan();
+  const { santriList, penilaianList, absensiList, showToast } = useMizan();
   const [printDate, setPrintDate] = useState("1 November 2026");
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
 
@@ -126,7 +126,17 @@ function BkSantriDetailContent() {
 
             <button
               type="button"
-              onClick={() => generateSantriPdf(santri, studentPenilaian, studentAbsensi, printDate)}
+              onClick={async () => {
+                try {
+                  showToast(`Menyiapkan rapor ${santri.name}...`, "info");
+                  await generateSantriPdf(santri, studentPenilaian, studentAbsensi, printDate);
+                  showToast(`Rapor ${santri.name} siap`, "success");
+                } catch (err: unknown) {
+                  if ((err as Error)?.name !== "AbortError") {
+                    showToast("Gagal mengunduh rapor", "error");
+                  }
+                }
+              }}
               className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#1B4D3E] text-white text-xs font-bold shadow-md hover:bg-[#153e32] transition-colors"
             >
               <Download className="w-4 h-4" />

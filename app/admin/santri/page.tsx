@@ -14,6 +14,7 @@ import {
   Download,
   Upload,
   FileSpreadsheet,
+  FileCode,
   Edit,
   X,
   Check,
@@ -37,7 +38,8 @@ export default function AdminSantriPage() {
     addSantri,
     importSantriBatch,
     updateSantri,
-    deleteSantri
+    deleteSantri,
+    showToast
   } = useMizan();
 
   const [searchQuery, setSearchQuery] = useState("");
@@ -123,6 +125,26 @@ export default function AdminSantriPage() {
     document.body.removeChild(link);
   };
 
+  const handleExportJson = () => {
+    const payload = {
+      app: "MIZAN",
+      institution: "Pondok Pesantren Modern Raudhatussalam Mahato",
+      exportedAt: new Date().toISOString(),
+      count: filteredSantri.length,
+      santri: filteredSantri
+    };
+    const jsonStr = JSON.stringify(payload, null, 2);
+    const blob = new Blob([jsonStr], { type: "application/json;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", `backup_santri_mizan_${new Date().toISOString().slice(0, 10)}.json`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    showToast("Data santri berhasil dicadangkan");
+  };
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -132,6 +154,35 @@ export default function AdminSantriPage() {
     reader.onload = (event) => {
       const text = event.target?.result as string;
       setImportCsvText(text);
+
+      if (file.name.endsWith(".json")) {
+        try {
+          const json = JSON.parse(text);
+          const list = Array.isArray(json)
+            ? json
+            : json.santri || json.data?.santri || [];
+          const parsed = list
+            .map((item: any) => ({
+              nis: String(item.nis || item.stbk || ""),
+              name: String(item.name || ""),
+              gender: (item.gender === "Putri" ? "Putri" : "Putra") as "Putra" | "Putri",
+              class: String(item.class || item.kelas || "1A"),
+              waliName: item.waliName || item.wali_name || "",
+              waliPhone: item.waliPhone || item.wali_phone || "",
+              asrama: item.asrama || "",
+              kamar: item.kamar || "",
+              baseScore: parseFloat(item.baseScore || item.base_score || 70.0),
+              currentScore: parseFloat(item.currentScore || item.current_score || item.baseScore || 70.0),
+              status: (item.status || "Baik") as "Baik" | "Peringatan" | "Bahaya"
+            }))
+            .filter((s: any) => s.nis && s.name);
+          setImportPreview(parsed);
+          return;
+        } catch {
+          showToast("Format berkas JSON tidak valid", "error");
+        }
+      }
+
       parseCsvText(text);
     };
     reader.readAsText(file);
@@ -285,6 +336,16 @@ export default function AdminSantriPage() {
             >
               <Download className="w-3.5 h-3.5" />
               <span>Ekspor</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={handleExportJson}
+              title="Cadangkan data santri dalam format JSON"
+              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-[#FAF7EE] border border-[#C5A059]/40 text-[#854D0E] text-xs font-bold hover:bg-[#FEFCE8] transition-colors"
+            >
+              <FileCode className="w-3.5 h-3.5 text-[#C5A059]" />
+              <span>Backup</span>
             </button>
 
             <Link
@@ -807,7 +868,7 @@ export default function AdminSantriPage() {
             <div className="w-full max-w-lg mizan-card p-5 bg-white space-y-4 shadow-2xl">
               <div className="flex items-center justify-between pb-2 border-b border-[#E2E8F0]">
                 <h3 className="text-xs font-bold text-[#172033] uppercase tracking-wider">
-                  Impor Berkas Data Santri (.csv)
+                  Impor Berkas Data Santri (.csv / .json)
                 </h3>
                 <button
                   type="button"
@@ -821,11 +882,11 @@ export default function AdminSantriPage() {
               <div className="p-3 rounded-2xl bg-[#F8FAFC] border border-dashed border-[#CBD5E1] text-center space-y-2">
                 <FileSpreadsheet className="w-8 h-8 text-[#A8833E] mx-auto" />
                 <p className="text-xs font-bold text-[#172033]">
-                  Pilih file CSV sesuai format template
+                  Pilih file CSV atau JSON cadangan
                 </p>
                 <input
                   type="file"
-                  accept=".csv,text/csv"
+                  accept=".csv,.json,text/csv,application/json"
                   onChange={handleFileChange}
                   className="text-xs text-[#64748B] mx-auto block file:mr-2 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-[#1B4D3E] file:text-white hover:file:bg-[#153e32]"
                 />

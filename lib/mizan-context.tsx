@@ -57,7 +57,7 @@ interface MizanContextType {
   guruList: GuruMonitoring[];
   setGuruStatus: (guruId: string, status: StatusGuru) => void;
   penilaianList: PenilaianRecord[];
-  addPenilaian: (record: Omit<PenilaianRecord, "id" | "createdAt" | "dateKey">) => void;
+  addPenilaian: (record: Omit<PenilaianRecord, "id" | "createdAt" | "dateKey"> & { createdAt?: string; dateKey?: string }) => void;
   deletePenilaian: (id: string) => void;
   absensiList: AbsensiRecord[];
   batchAddAbsensi: (records: Omit<AbsensiRecord, "id" | "createdAt">[]) => void;
@@ -83,6 +83,8 @@ interface MizanContextType {
   deleteUser: (id: string) => Promise<{ success: boolean; message: string }>;
   refreshData: () => Promise<void>;
   isDbConnected: boolean;
+  isMobileNavOpen: boolean;
+  setIsMobileNavOpen: (open: boolean) => void;
 }
 
 const MizanContext = createContext<MizanContextType | undefined>(undefined);
@@ -116,6 +118,7 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
   const [absensiList, setAbsensiList] = useState<AbsensiRecord[]>([]);
   const [settings, setSettings] = useState<AppSettings>(DEFAULT_SETTINGS);
   const [toasts, setToasts] = useState<ToastItem[]>([]);
+  const [isMobileNavOpen, setIsMobileNavOpen] = useState<boolean>(false);
   const [isDbConnected, setIsDbConnected] = useState(false);
 
   const refreshData = async () => {
@@ -263,13 +266,30 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
     );
   };
 
-  const addPenilaian = (record: Omit<PenilaianRecord, "id" | "createdAt" | "dateKey">) => {
+  const addPenilaian = (record: Omit<PenilaianRecord, "id" | "createdAt" | "dateKey"> & { createdAt?: string; dateKey?: string }) => {
     const id = "pen-" + Date.now();
+    const now = new Date();
+    const isoString = record.createdAt || now.toISOString();
+    const dateObj = new Date(isoString);
+    const validDate = isNaN(dateObj.getTime()) ? now : dateObj;
+    const formattedDisplay = validDate.toLocaleDateString("id-ID", {
+      day: "numeric",
+      month: "short",
+      year: "numeric"
+    }) + " • " + validDate.toLocaleTimeString("id-ID", {
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit"
+    }) + " WIB";
+    const dateKey = record.dateKey || validDate.toISOString().split("T")[0];
+
     const newRecord: PenilaianRecord = {
       ...record,
       id,
-      createdAt: "Hari ini, baru saja",
-      dateKey: "today"
+      createdAt: formattedDisplay,
+      dateKey,
+      date: validDate.toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" }),
+      rawCreatedAt: isoString
     };
 
     setPenilaianList((prev) => [newRecord, ...prev]);
@@ -291,8 +311,14 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
     fetch("/api/penilaian", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(record)
-    }).catch(() => void 0);
+      body: JSON.stringify({
+        ...record,
+        createdAt: isoString,
+        dateKey
+      })
+    })
+      .then(() => refreshData())
+      .catch(() => void 0);
 
     showToast("Catatan penilaian berhasil disimpan", "success");
   };
@@ -756,7 +782,9 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
         updateUser,
         deleteUser,
         refreshData,
-        isDbConnected
+        isDbConnected,
+        isMobileNavOpen,
+        setIsMobileNavOpen
       }}
     >
       {children}

@@ -21,7 +21,10 @@ import {
   ExternalLink,
   CalendarCheck,
   Phone,
-  Scale
+  Scale,
+  Clock,
+  Calendar,
+  History
 } from "lucide-react";
 import { useMizan } from "@/lib/mizan-context";
 import { RoleShell } from "@/components/RoleShell";
@@ -90,6 +93,37 @@ export default function PengasuhanPenilaianPage() {
     }
   }, [currentUser?.gender]);
 
+  const [currentTime, setCurrentTime] = useState<Date | null>(null);
+
+  useEffect(() => {
+    setCurrentTime(new Date());
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const formattedDateLive = useMemo(() => {
+    if (!currentTime) return "";
+    return currentTime.toLocaleDateString("id-ID", {
+      weekday: "long",
+      day: "numeric",
+      month: "long",
+      year: "numeric"
+    });
+  }, [currentTime]);
+
+  const formattedTimeLive = useMemo(() => {
+    if (!currentTime) return "";
+    return (
+      currentTime.toLocaleTimeString("id-ID", {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit"
+      }) + " WIB"
+    );
+  }, [currentTime]);
+
   const [selectedSantriId, setSelectedSantriId] = useState<string>("");
   const [penilaianType, setPenilaianType] = useState<"HASANAH" | "SAYYIAH">("HASANAH");
   const [selectedCategoryName, setSelectedCategoryName] = useState<string>("");
@@ -104,6 +138,25 @@ export default function PengasuhanPenilaianPage() {
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [profileModalSantri, setProfileModalSantri] = useState<Santri | null>(null);
   const [profileModalTab, setProfileModalTab] = useState<"CATATAN" | "ABSENSI" | "WALI">("CATATAN");
+  const [isDownloadingRapor, setIsDownloadingRapor] = useState(false);
+
+  const handleDownloadRapor = async (targetSantri: Santri) => {
+    if (!targetSantri || isDownloadingRapor) return;
+    try {
+      setIsDownloadingRapor(true);
+      showToast(`Menyiapkan rapor ${targetSantri.name}...`, "info");
+      const studentPenilaian = penilaianList.filter((p) => p.santriId === targetSantri.id);
+      const studentAbsensi = absensiList.filter((a) => a.santriId === targetSantri.id);
+      await generateSantriPdf(targetSantri, studentPenilaian, studentAbsensi);
+      showToast(`Rapor ${targetSantri.name} siap`, "success");
+    } catch (err: unknown) {
+      if ((err as Error)?.name !== "AbortError") {
+        showToast("Gagal mengunduh rapor", "error");
+      }
+    } finally {
+      setIsDownloadingRapor(false);
+    }
+  };
 
   const [liveSearchQuery, setLiveSearchQuery] = useState("");
   const [isLiveSearchOpen, setIsLiveSearchOpen] = useState(false);
@@ -366,6 +419,7 @@ export default function PengasuhanPenilaianPage() {
       return;
     }
 
+    const now = new Date();
     const finalUnsurName = cleanUnsurName(activeUnsur.name);
     addPenilaian({
       santriId: selectedSantri.id,
@@ -380,7 +434,9 @@ export default function PengasuhanPenilaianPage() {
       type: penilaianType,
       notes: notes || "",
       proofFileName: attachedFile?.name,
-      proofFileSize: attachedFile?.size
+      proofFileSize: attachedFile?.size,
+      createdAt: now.toISOString(),
+      dateKey: now.toISOString().split("T")[0]
     });
 
     showToast(`Penilaian ${finalUnsurName} (${formatScoreWithSign(totalUnsurScore)}) tersimpan`, "success");
@@ -467,15 +523,12 @@ export default function PengasuhanPenilaianPage() {
 
                   <button
                     type="button"
-                    onClick={() => {
-                      const studentPenilaian = penilaianList.filter((p) => p.santriId === selectedSantri.id);
-                      const studentAbsensi = absensiList.filter((a) => a.santriId === selectedSantri.id);
-                      generateSantriPdf(selectedSantri, studentPenilaian, studentAbsensi);
-                    }}
-                    className="inline-flex items-center justify-center gap-1 py-1.5 px-2 rounded-xl bg-[#1B4D3E] text-white hover:bg-[#153e32] text-[10px] font-bold shadow-2xs transition-colors"
+                    onClick={() => handleDownloadRapor(selectedSantri)}
+                    disabled={isDownloadingRapor}
+                    className="inline-flex items-center justify-center gap-1 py-1.5 px-2 rounded-xl bg-[#1B4D3E] text-white hover:bg-[#153e32] text-[10px] font-bold shadow-2xs transition-colors disabled:opacity-50"
                   >
                     <FileText className="w-3 h-3 text-[#C5A059]" />
-                    <span>Rapor</span>
+                    <span>{isDownloadingRapor ? "Proses" : "Rapor"}</span>
                   </button>
 
                   <button
@@ -1365,15 +1418,12 @@ export default function PengasuhanPenilaianPage() {
 
                   <button
                     type="button"
-                    onClick={() => {
-                      const studentPenilaian = penilaianList.filter((p) => p.santriId === profileModalSantri.id);
-                      const studentAbsensi = absensiList.filter((a) => a.santriId === profileModalSantri.id);
-                      generateSantriPdf(profileModalSantri, studentPenilaian, studentAbsensi);
-                    }}
-                    className="inline-flex items-center gap-1 px-3.5 py-2 rounded-xl bg-[#1B4D3E] text-white hover:bg-[#153e32] text-xs font-bold transition-colors"
+                    onClick={() => profileModalSantri && handleDownloadRapor(profileModalSantri)}
+                    disabled={isDownloadingRapor}
+                    className="inline-flex items-center gap-1 px-3.5 py-2 rounded-xl bg-[#1B4D3E] text-white hover:bg-[#153e32] text-xs font-bold transition-colors disabled:opacity-50"
                   >
                     <FileText className="w-3.5 h-3.5 text-[#C5A059]" />
-                    <span>Rapor</span>
+                    <span>{isDownloadingRapor ? "Proses" : "Rapor"}</span>
                   </button>
 
                   <Link
