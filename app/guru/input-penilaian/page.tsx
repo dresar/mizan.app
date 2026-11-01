@@ -56,11 +56,14 @@ export default function InputPenilaianPage() {
   const [penilaianType, setPenilaianType] = useState<"HASANAH" | "SAYYIAH">("HASANAH");
   const [selectedCategoryName, setSelectedCategoryName] = useState<string>("");
   const [selectedUnsurId, setSelectedUnsurId] = useState<string>("");
+  const [unsurSearch, setUnsurSearch] = useState("");
   const [santriSearch, setSantriSearch] = useState("");
   const [selectedClassFilter, setSelectedClassFilter] = useState("ALL");
   const [isMobileSantriExpanded, setIsMobileSantriExpanded] = useState(false);
   const [notes, setNotes] = useState("");
   const [attachedFile, setAttachedFile] = useState<{ name: string; size: number } | null>(null);
+
+  const cleanUnsurName = (name: string) => name.replace(/^\d+\.\s*/, "");
 
   const categoriesForType: CategoryItem[] = useMemo(() => {
     return (categoriesMasterData as unknown as CategoryItem[])
@@ -72,15 +75,10 @@ export default function InputPenilaianPage() {
       .filter((cat) => cat.unsurs.length > 0);
   }, [penilaianType]);
 
-  useEffect(() => {
-    if (categoriesForType.length > 0) {
-      setSelectedCategoryName(categoriesForType[0].name);
-      if (categoriesForType[0].unsurs && categoriesForType[0].unsurs.length > 0) {
-        setSelectedUnsurId(categoriesForType[0].unsurs[0].id);
-      } else {
-        setSelectedUnsurId("");
-      }
-    }
+  const allUnsursForType = useMemo(() => {
+    return categoriesForType.flatMap((cat) =>
+      cat.unsurs.map((u) => ({ ...u, categoryName: cat.name }))
+    );
   }, [categoriesForType]);
 
   const activeCategory = useMemo(() => {
@@ -94,13 +92,44 @@ export default function InputPenilaianPage() {
     return activeCategory?.unsurs || [];
   }, [activeCategory]);
 
+  const filteredUnsurs = useMemo(() => {
+    const q = unsurSearch.trim().toLowerCase();
+    if (!q) {
+      return availableUnsurs;
+    }
+    return allUnsursForType.filter((u) =>
+      u.name.toLowerCase().includes(q) ||
+      u.categoryName?.toLowerCase().includes(q) ||
+      u.indicators.some((ind) => ind.text.toLowerCase().includes(q))
+    );
+  }, [unsurSearch, availableUnsurs, allUnsursForType]);
+
   const activeUnsur = useMemo(() => {
     return (
-      availableUnsurs.find((uns) => uns.id === selectedUnsurId) ||
-      availableUnsurs[0] ||
+      allUnsursForType.find((uns) => uns.id === selectedUnsurId) ||
+      filteredUnsurs[0] ||
       null
     );
-  }, [availableUnsurs, selectedUnsurId]);
+  }, [allUnsursForType, filteredUnsurs, selectedUnsurId]);
+
+  useEffect(() => {
+    if (categoriesForType.length > 0) {
+      if (!selectedCategoryName || !categoriesForType.some((c) => c.name === selectedCategoryName)) {
+        setSelectedCategoryName(categoriesForType[0].name);
+      }
+    }
+  }, [categoriesForType, selectedCategoryName]);
+
+  useEffect(() => {
+    if (filteredUnsurs.length > 0) {
+      const exists = filteredUnsurs.some((u) => u.id === selectedUnsurId);
+      if (!exists) {
+        setSelectedUnsurId(filteredUnsurs[0].id);
+      }
+    } else {
+      setSelectedUnsurId("");
+    }
+  }, [filteredUnsurs, selectedUnsurId]);
 
   const currentIndicators = useMemo(() => {
     return activeUnsur?.indicators || [];
@@ -112,6 +141,7 @@ export default function InputPenilaianPage() {
 
   const handleCategoryChange = (catName: string) => {
     setSelectedCategoryName(catName);
+    setUnsurSearch("");
     const targetCat = categoriesForType.find((c) => c.name === catName);
     if (targetCat && targetCat.unsurs.length > 0) {
       setSelectedUnsurId(targetCat.unsurs[0].id);
@@ -120,12 +150,17 @@ export default function InputPenilaianPage() {
     }
   };
 
-  const handleUnsurToggle = (unsurId: string) => {
+  const handleUnsurSelect = (unsurId: string) => {
     setSelectedUnsurId(unsurId);
+    const target = allUnsursForType.find((u) => u.id === unsurId);
+    if (target && target.categoryName && target.categoryName !== selectedCategoryName) {
+      setSelectedCategoryName(target.categoryName);
+    }
   };
 
   const handleSwitchPenilaianType = (type: "HASANAH" | "SAYYIAH") => {
     setPenilaianType(type);
+    setUnsurSearch("");
   };
 
   const classList = useMemo(() => {
@@ -208,6 +243,7 @@ export default function InputPenilaianPage() {
       return;
     }
 
+    const finalUnsurName = cleanUnsurName(activeUnsur.name);
     addPenilaian({
       santriId: selectedSantri.id,
       santriName: selectedSantri.name,
@@ -215,8 +251,8 @@ export default function InputPenilaianPage() {
       guruId: currentUser.id,
       guruName: currentUser.name,
       category: selectedCategoryName,
-      unsurName: activeUnsur.name,
-      indicatorText: `${activeUnsur.name} (${currentIndicators.length} Butir Baku)`,
+      unsurName: finalUnsurName,
+      indicatorText: `${finalUnsurName} (${currentIndicators.length} Butir Baku)`,
       score: totalUnsurScore,
       type: penilaianType,
       notes: notes || "",
@@ -224,7 +260,7 @@ export default function InputPenilaianPage() {
       proofFileSize: attachedFile?.size
     });
 
-    showToast(`Penilaian ${activeUnsur.name} (${formatScoreWithSign(totalUnsurScore)}) tersimpan`, "success");
+    showToast(`Penilaian ${finalUnsurName} (${formatScoreWithSign(totalUnsurScore)}) tersimpan`, "success");
     setNotes("");
     setAttachedFile(null);
     router.push("/guru/riwayat");
@@ -415,126 +451,114 @@ export default function InputPenilaianPage() {
                 </button>
               </div>
 
-              <div className="space-y-1.5 pt-1">
-                <label className="block text-[11px] font-bold text-[#64748B] uppercase">
-                  Kategori Utama
-                </label>
-                <select
-                  aria-label="Pilih Kategori Utama"
-                  value={selectedCategoryName}
-                  onChange={(e) => handleCategoryChange(e.target.value)}
-                  className="w-full px-3.5 py-2.5 text-xs bg-white border border-[#E2EBF4] rounded-2xl text-[#172033] font-bold focus:outline-none focus:border-[#1B4D3E]"
-                >
-                  {categoriesForType.map((cat) => (
-                    <option key={cat.code} value={cat.name}>
-                      [{cat.code}] {cat.name}
-                    </option>
-                  ))}
-                </select>
+              <div className="relative pt-1">
+                <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[#94A3B8]" />
+                <input
+                  type="text"
+                  value={unsurSearch}
+                  onChange={(e) => setUnsurSearch(e.target.value)}
+                  placeholder={
+                    penilaianType === "HASANAH"
+                      ? "Cari prestasi atau kata kunci..."
+                      : "Cari pelanggaran atau kata kunci..."
+                  }
+                  className="w-full pl-9 pr-3.5 py-2.5 text-xs bg-[#F8FAFC] focus:bg-white border border-[#E2EBF4] rounded-2xl text-[#172033] font-medium focus:outline-none focus:border-[#1B4D3E] transition-colors"
+                />
               </div>
 
-              <div className="space-y-2 pt-1">
-                <div className="flex items-center justify-between">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                <div className="space-y-1.5">
                   <label className="block text-[11px] font-bold text-[#64748B] uppercase">
-                    {penilaianType === "HASANAH" ? "Jenis Prestasi" : "Jenis Pelanggaran"} ({availableUnsurs.length})
+                    Kategori Utama
                   </label>
-                  <span className="text-[10px] text-[#94A3B8]">Klik untuk memilih dan buka rincian</span>
+                  <select
+                    aria-label="Pilih Kategori Utama"
+                    value={selectedCategoryName}
+                    onChange={(e) => handleCategoryChange(e.target.value)}
+                    className="w-full px-3.5 py-2.5 text-xs bg-white border border-[#E2EBF4] rounded-2xl text-[#172033] font-bold focus:outline-none focus:border-[#1B4D3E]"
+                  >
+                    {categoriesForType.map((cat) => (
+                      <option key={cat.code} value={cat.name}>
+                        {cat.name}
+                      </option>
+                    ))}
+                  </select>
                 </div>
 
-                <div className="space-y-2 max-h-[380px] overflow-y-auto pr-1">
-                  {availableUnsurs.map((uns, idx) => {
-                    const isSelected = (selectedUnsurId || activeUnsur?.id) === uns.id;
-                    const unsScore = uns.indicators.reduce((acc, ind) => acc + (ind.defaultScore || 0), 0);
-
-                    return (
-                      <div
-                        key={uns.id}
-                        className={`rounded-2xl transition-all border ${
-                          isSelected
-                            ? "bg-white border-[#1B4D3E] shadow-sm"
-                            : "bg-[#F8FAFC] hover:bg-white border-[#E2EBF4]"
-                        }`}
-                      >
-                        <div
-                          onClick={() => handleUnsurToggle(uns.id)}
-                          className="p-3 flex items-center justify-between gap-2.5 cursor-pointer select-none"
-                        >
-                          <div className="flex items-center gap-2.5 min-w-0">
-                            <span className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-mono font-bold shrink-0 ${
-                              isSelected
-                                ? "bg-[#1B4D3E] text-white"
-                                : "bg-[#EEF2F6] text-[#64748B]"
-                            }`}>
-                              {idx + 1}
-                            </span>
-                            <div className="min-w-0">
-                              <span className={`text-xs block leading-snug truncate ${
-                                isSelected ? "font-bold text-[#172033]" : "font-medium text-[#475569]"
-                              }`}>
-                                {uns.name}
-                              </span>
-                              <span className="text-[10px] text-[#94A3B8] block">
-                                {uns.indicators.length} Butir Unsur
-                              </span>
-                            </div>
-                          </div>
-
-                          <div className="flex items-center gap-2 shrink-0">
-                            <span
-                              className={`text-[11px] font-mono font-bold px-2 py-0.5 rounded-full ${
-                                unsScore >= 0
-                                  ? "bg-[#ECFDF5] text-[#065F46]"
-                                  : "bg-[#FEF2F2] text-[#991B1B]"
-                              }`}
-                            >
-                              {formatScoreWithSign(unsScore)}
-                            </span>
-                            {isSelected ? (
-                              <ChevronUp className="w-4 h-4 text-[#1B4D3E]" />
-                            ) : (
-                              <ChevronDown className="w-4 h-4 text-[#94A3B8]" />
-                            )}
-                          </div>
-                        </div>
-
-                        {isSelected && (
-                          <div className="px-3 pb-3 pt-1 border-t border-[#E2EBF4] space-y-2">
-                            <p className="text-[10px] font-bold text-[#64748B] uppercase tracking-wider">
-                              Rincian Unsur Penilaian ({uns.indicators.length} butir baku):
-                            </p>
-                            <div className="space-y-1.5 max-h-44 overflow-y-auto">
-                              {uns.indicators.map((ind, indIdx) => (
-                                <div
-                                  key={ind.id}
-                                  className="p-2 rounded-xl bg-[#F8FAFC] flex items-center justify-between gap-2 text-xs"
-                                >
-                                  <div className="flex items-center gap-2 min-w-0">
-                                    <span className="text-[10px] font-bold text-[#94A3B8] shrink-0">
-                                      #{indIdx + 1}
-                                    </span>
-                                    <span className="text-[11px] text-[#172033] leading-snug">
-                                      {ind.text}
-                                    </span>
-                                  </div>
-                                  <span
-                                    className={`text-[10px] font-mono font-bold px-1.5 py-0.5 rounded-md shrink-0 ${
-                                      ind.defaultScore >= 0
-                                        ? "bg-emerald-100 text-[#065F46]"
-                                        : "bg-red-100 text-[#991B1B]"
-                                    }`}
-                                  >
-                                    {formatScoreWithSign(ind.defaultScore)}
-                                  </span>
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })}
+                <div className="space-y-1.5">
+                  <label className="block text-[11px] font-bold text-[#64748B] uppercase">
+                    {penilaianType === "HASANAH" ? "Jenis Prestasi" : "Jenis Pelanggaran"} ({filteredUnsurs.length})
+                  </label>
+                  <select
+                    aria-label={penilaianType === "HASANAH" ? "Pilih Jenis Prestasi" : "Pilih Jenis Pelanggaran"}
+                    value={activeUnsur?.id || ""}
+                    onChange={(e) => handleUnsurSelect(e.target.value)}
+                    className="w-full px-3.5 py-2.5 text-xs bg-white border border-[#E2EBF4] rounded-2xl text-[#172033] font-bold focus:outline-none focus:border-[#1B4D3E]"
+                  >
+                    {filteredUnsurs.length === 0 ? (
+                      <option value="">Tidak ditemukan hasil yang cocok</option>
+                    ) : (
+                      filteredUnsurs.map((uns) => {
+                        const unsScore = uns.indicators.reduce(
+                          (acc, ind) => acc + (ind.defaultScore || 0),
+                          0
+                        );
+                        return (
+                          <option key={uns.id} value={uns.id}>
+                            {cleanUnsurName(uns.name)} ({formatScoreWithSign(unsScore)})
+                          </option>
+                        );
+                      })
+                    )}
+                  </select>
                 </div>
               </div>
+
+              {activeUnsur && currentIndicators.length > 0 && (
+                <div className="p-3.5 rounded-2xl bg-[#F8FAFC] border border-[#E2EBF4] space-y-2.5 mt-2">
+                  <div className="flex items-center justify-between">
+                    <p className="text-[11px] font-bold text-[#172033] uppercase tracking-wider">
+                      Rincian Unsur Penilaian ({currentIndicators.length} butir baku):
+                    </p>
+                    <span
+                      className={`text-xs font-mono font-black px-2 py-0.5 rounded-full ${
+                        totalUnsurScore >= 0
+                          ? "bg-[#ECFDF5] text-[#065F46]"
+                          : "bg-[#FEF2F2] text-[#991B1B]"
+                      }`}
+                    >
+                      {formatScoreWithSign(totalUnsurScore)}
+                    </span>
+                  </div>
+
+                  <div className="space-y-1.5 max-h-56 overflow-y-auto pr-0.5">
+                    {currentIndicators.map((ind, indIdx) => (
+                      <div
+                        key={ind.id}
+                        className="p-2.5 rounded-xl bg-white border border-[#E2EBF4]/80 flex items-center justify-between gap-2.5 text-xs shadow-2xs"
+                      >
+                        <div className="flex items-center gap-2 min-w-0">
+                          <span className="text-[10px] font-mono font-bold text-[#94A3B8] shrink-0">
+                            #{indIdx + 1}
+                          </span>
+                          <span className="text-[11px] font-medium text-[#172033] leading-snug">
+                            {ind.text}
+                          </span>
+                        </div>
+                        <span
+                          className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-lg shrink-0 ${
+                            ind.defaultScore >= 0
+                              ? "bg-emerald-50 text-[#065F46] border border-emerald-200"
+                              : "bg-red-50 text-[#991B1B] border border-red-200"
+                          }`}
+                        >
+                          {formatScoreWithSign(ind.defaultScore)}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </Card>
 
             <Card className="p-3.5 sm:p-4 space-y-3">
