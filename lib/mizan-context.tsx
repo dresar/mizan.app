@@ -18,6 +18,7 @@ import {
   DEFAULT_SETTINGS,
   getSantriDisciplineStatus
 } from "./mock-data";
+import { formatWIBDate, formatWIBDateTime, getWIBDate, getWIBTime } from "./date-utils";
 
 export type { UserProfile } from "./mock-data";
 
@@ -54,18 +55,21 @@ interface MizanContextType {
   importSantriBatch: (batch: Array<Partial<Santri>>) => Promise<{ success: boolean; message: string }>;
   updateSantri: (id: string, santriData: Partial<Santri>) => Promise<{ success: boolean; message: string }>;
   deleteSantri: (id: string) => Promise<{ success: boolean; message: string }>;
+  deleteSantriBulk: (ids: string[]) => Promise<{ success: boolean; message: string }>;
   categories: Kategori[];
   guruList: GuruMonitoring[];
   setGuruStatus: (guruId: string, status: StatusGuru) => void;
   penilaianList: PenilaianRecord[];
   addPenilaian: (record: Omit<PenilaianRecord, "id" | "createdAt" | "dateKey"> & { createdAt?: string; dateKey?: string }) => void;
   deletePenilaian: (id: string) => void;
+  deletePenilaianBulk: (ids: string[]) => Promise<{ success: boolean; message: string }>;
   submitSanggahan: (penilaianId: string, reason: string) => Promise<{ success: boolean; message: string }>;
   resolveSanggahan: (penilaianId: string, decision: "TERIMA" | "TOLAK", staffName?: string, notes?: string) => Promise<{ success: boolean; message: string }>;
   absensiList: AbsensiRecord[];
   batchAddAbsensi: (records: Omit<AbsensiRecord, "id" | "createdAt">[]) => void;
   updateAbsensi: (id: string, status: StatusAbsensi, notes?: string) => Promise<{ success: boolean; message: string }>;
   deleteAbsensi: (id: string) => Promise<{ success: boolean; message: string }>;
+  deleteAbsensiBulk: (ids: string[]) => Promise<{ success: boolean; message: string }>;
   kelasList: string[];
   classList: ClassInfo[];
   addClass: (newClass: string, gender?: "Putra" | "Putri", waliKelas?: string, guruId?: string) => Promise<{ success: boolean; message: string }>;
@@ -84,6 +88,7 @@ interface MizanContextType {
   addUser: (userData: any) => Promise<{ success: boolean; message: string }>;
   updateUser: (id: string, data: any) => Promise<{ success: boolean; message: string }>;
   deleteUser: (id: string) => Promise<{ success: boolean; message: string }>;
+  deleteUserBulk: (ids: string[]) => Promise<{ success: boolean; message: string }>;
   refreshData: () => Promise<void>;
   isDbConnected: boolean;
   isMobileNavOpen: boolean;
@@ -361,23 +366,15 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
     const isoString = record.createdAt || now.toISOString();
     const dateObj = new Date(isoString);
     const validDate = isNaN(dateObj.getTime()) ? now : dateObj;
-    const formattedDisplay = validDate.toLocaleDateString("id-ID", {
-      day: "numeric",
-      month: "short",
-      year: "numeric"
-    }) + " • " + validDate.toLocaleTimeString("id-ID", {
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit"
-    }) + " WIB";
-    const dateKey = record.dateKey || validDate.toISOString().split("T")[0];
+    const formattedDisplay = formatWIBDateTime(validDate, true);
+    const dateKey = record.dateKey || getWIBDate(validDate);
 
     const newRecord: PenilaianRecord = {
       ...record,
       id,
       createdAt: formattedDisplay,
       dateKey,
-      date: validDate.toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" }),
+      date: formatWIBDate(validDate, "long"),
       rawCreatedAt: isoString
     };
 
@@ -426,8 +423,25 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
     showToast("Penilaian dihapus", "info");
   };
 
+  const deletePenilaianBulk = async (ids: string[]): Promise<{ success: boolean; message: string }> => {
+    try {
+      const res = await fetch(`/api/penilaian?ids=${ids.join(",")}`, { method: "DELETE" });
+      const data = await res.json();
+      if (data.success) {
+        await refreshData();
+        showToast(data.message, "info");
+        return { success: true, message: data.message };
+      }
+      showToast(data.message || "Gagal menghapus penilaian", "error");
+      return { success: false, message: data.message };
+    } catch (err: any) {
+      showToast(err.message, "error");
+      return { success: false, message: err.message };
+    }
+  };
+
   const batchAddAbsensi = (records: Omit<AbsensiRecord, "id" | "createdAt">[]) => {
-    const timestamp = new Date().toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" });
+    const timestamp = getWIBTime();
     const newItems: AbsensiRecord[] = records.map((r, idx) => ({
       ...r,
       id: `abs-${Date.now()}-${idx}`,
@@ -491,6 +505,23 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
       if (data.success) {
         await refreshData();
         showToast("Data absensi dihapus", "info");
+        return { success: true, message: data.message };
+      }
+      showToast(data.message || "Gagal menghapus absensi", "error");
+      return { success: false, message: data.message };
+    } catch (err: any) {
+      showToast(err.message, "error");
+      return { success: false, message: err.message };
+    }
+  };
+
+  const deleteAbsensiBulk = async (ids: string[]): Promise<{ success: boolean; message: string }> => {
+    try {
+      const res = await fetch(`/api/absensi?ids=${ids.join(",")}`, { method: "DELETE" });
+      const data = await res.json();
+      if (data.success) {
+        await refreshData();
+        showToast(data.message || "Data absensi dihapus", "info");
         return { success: true, message: data.message };
       }
       showToast(data.message || "Gagal menghapus absensi", "error");
@@ -567,6 +598,23 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
   const deleteSantri = async (id: string): Promise<{ success: boolean; message: string }> => {
     try {
       const res = await fetch(`/api/santri?id=${id}`, { method: "DELETE" });
+      const data = await res.json();
+      if (data.success) {
+        await refreshData();
+        showToast(data.message, "info");
+        return { success: true, message: data.message };
+      }
+      showToast(data.message || "Gagal menghapus santri", "error");
+      return { success: false, message: data.message || "Gagal menghapus santri" };
+    } catch (err: any) {
+      showToast(err.message, "error");
+      return { success: false, message: err.message };
+    }
+  };
+
+  const deleteSantriBulk = async (ids: string[]): Promise<{ success: boolean; message: string }> => {
+    try {
+      const res = await fetch(`/api/santri?ids=${ids.join(",")}`, { method: "DELETE" });
       const data = await res.json();
       if (data.success) {
         await refreshData();
@@ -828,6 +876,23 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const deleteUserBulk = async (ids: string[]): Promise<{ success: boolean; message: string }> => {
+    try {
+      const res = await fetch(`/api/users?ids=${ids.join(",")}`, { method: "DELETE" });
+      const resData = await res.json();
+      if (resData.success) {
+        await refreshData();
+        showToast(resData.message, "info");
+        return { success: true, message: resData.message };
+      }
+      showToast(resData.message || "Gagal menghapus pengguna", "error");
+      return { success: false, message: resData.message || "Gagal menghapus pengguna" };
+    } catch (err: any) {
+      showToast(err.message, "error");
+      return { success: false, message: err.message };
+    }
+  };
+
   return (
     <MizanContext.Provider
       value={{
@@ -847,18 +912,21 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
         importSantriBatch,
         updateSantri,
         deleteSantri,
+        deleteSantriBulk,
         categories,
         guruList,
         setGuruStatus,
         penilaianList,
         addPenilaian,
         deletePenilaian,
+        deletePenilaianBulk,
         submitSanggahan,
         resolveSanggahan,
         absensiList,
         batchAddAbsensi,
         updateAbsensi,
         deleteAbsensi,
+        deleteAbsensiBulk,
         kelasList,
         classList,
         addClass,
@@ -877,6 +945,7 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
         addUser,
         updateUser,
         deleteUser,
+        deleteUserBulk,
         refreshData,
         isDbConnected,
         isMobileNavOpen,

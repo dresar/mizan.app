@@ -208,21 +208,37 @@ export async function DELETE(req: Request) {
 
     const { searchParams } = new URL(req.url);
     const id = searchParams.get("id");
+    const idsParam = searchParams.get("ids");
+    let targetIds: string[] = [];
+    if (idsParam) {
+      targetIds = idsParam.split(",").map((s) => s.trim()).filter(Boolean);
+    } else if (id) {
+      targetIds = [id.trim()];
+    } else {
+      try {
+        const body = await req.json();
+        if (Array.isArray(body?.ids)) {
+          targetIds = body.ids.filter(Boolean);
+        }
+      } catch {
+        void 0;
+      }
+    }
 
-    if (!id) {
+    if (targetIds.length === 0) {
       return NextResponse.json(
         { success: false, message: "ID santri wajib disertakan." },
         { status: 400 }
       );
     }
 
-    await query(`DELETE FROM penilaian WHERE santri_id = $1`, [id]);
-    await query(`DELETE FROM absensi WHERE santri_id = $1`, [id]);
-    await query(`DELETE FROM santri WHERE id = $1`, [id]);
+    await query(`DELETE FROM penilaian WHERE santri_id = ANY($1::text[])`, [targetIds]);
+    await query(`DELETE FROM absensi WHERE santri_id = ANY($1::text[])`, [targetIds]);
+    await query(`DELETE FROM santri WHERE id = ANY($1::text[])`, [targetIds]);
 
     return NextResponse.json({
       success: true,
-      message: "Data santri berhasil dihapus."
+      message: `${targetIds.length} data santri berhasil dihapus.`
     });
   } catch (error: any) {
     return NextResponse.json(

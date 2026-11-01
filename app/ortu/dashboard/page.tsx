@@ -31,7 +31,11 @@ import {
   FileText,
   HelpCircle,
   Compass,
-  CheckCheck
+  CheckCheck,
+  MapPin,
+  UserCheck,
+  KeyRound,
+  Lock
 } from "lucide-react";
 import { useMizan } from "@/lib/mizan-context";
 import { Santri, formatScore, getSantriDisciplineStatus } from "@/lib/mock-data";
@@ -45,6 +49,9 @@ export default function OrtuDashboardPage() {
     penilaianList,
     absensiList,
     settings,
+    currentUser,
+    loginUser,
+    logoutUser,
     showToast
   } = useMizan();
 
@@ -53,18 +60,25 @@ export default function OrtuDashboardPage() {
   const [activeTab, setActiveTab] = useState<"RINGKASAN" | "KEBAIKAN" | "EVALUASI" | "RAPOR">("RINGKASAN");
   const [isDownloadingPdf, setIsDownloadingPdf] = useState(false);
   const [isClient, setIsClient] = useState(false);
+  const [loginNis, setLoginNis] = useState("");
+  const [loginPassword, setLoginPassword] = useState("");
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
-    try {
-      const savedId = localStorage.getItem("mizan_ortu_santri_id");
-      if (savedId) {
-        setSelectedSantriId(savedId);
+    if (currentUser?.role === "ORTU" && currentUser?.santriId) {
+      setSelectedSantriId(currentUser.santriId);
+    } else {
+      try {
+        const savedId = localStorage.getItem("mizan_ortu_santri_id");
+        if (savedId) {
+          setSelectedSantriId(savedId);
+        }
+      } catch {
+        void 0;
       }
-    } catch {
-      void 0;
     }
-  }, []);
+  }, [currentUser]);
 
   const selectedSantri = useMemo(() => {
     if (!selectedSantriId || !santriList.length) return null;
@@ -90,9 +104,59 @@ export default function OrtuDashboardPage() {
     }
   };
 
+  const handleLogout = () => {
+    logoutUser();
+    setSelectedSantriId("");
+    try {
+      localStorage.removeItem("mizan_ortu_santri_id");
+      document.cookie = "mizan_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+      document.cookie = "mizan_auth=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+      document.cookie = "mizan_uid=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+      document.cookie = "mizan_santri_id=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    } catch {
+      void 0;
+    }
+    router.push("/login");
+  };
+
+  const handleOrtuLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!loginNis.trim() || !loginPassword.trim()) {
+      showToast("Masukkan nomor stambuk dan kata sandi", "error");
+      return;
+    }
+    setIsLoggingIn(true);
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username: loginNis.trim(), password: loginPassword.trim() })
+      });
+      const data = await res.json();
+      if (data.success && data.user) {
+        loginUser(data.user);
+        if (data.user.santriId) {
+          setSelectedSantriId(data.user.santriId);
+          try {
+            localStorage.setItem("mizan_ortu_santri_id", data.user.santriId);
+          } catch {
+            void 0;
+          }
+        }
+        showToast("Login berhasil", "success");
+      } else {
+        showToast(data.message || "Gagal masuk", "error");
+      }
+    } catch {
+      showToast("Kendala koneksi ke server", "error");
+    } finally {
+      setIsLoggingIn(false);
+    }
+  };
+
   const filteredSearchResults = useMemo(() => {
     const q = searchQuery.trim().toLowerCase();
-    if (!q) return santriList.slice(0, 6);
+    if (!q) return santriList;
     return santriList.filter((s) => {
       const matchName = s.name.toLowerCase().includes(q);
       const matchNis = s.nis.toLowerCase().includes(q);
@@ -202,7 +266,66 @@ export default function OrtuDashboardPage() {
             </div>
           </div>
 
-          <div className="bg-white rounded-3xl p-5 sm:p-6 shadow-xl border border-[#E2EBF4] space-y-4">
+          <div className="bg-white rounded-3xl p-5 sm:p-6 shadow-xl border border-[#E2EBF4] space-y-5">
+            <form onSubmit={handleOrtuLogin} className="space-y-3 pb-4 border-b border-[#E2EBF4]">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-xl bg-[#1B4D3E]/10 border border-[#1B4D3E]/20 text-[#1B4D3E] flex items-center justify-center shrink-0">
+                  <KeyRound className="w-4 h-4" />
+                </div>
+                <div>
+                  <h3 className="text-xs font-bold text-[#172033]">
+                    Masuk Akun Wali Santri
+                  </h3>
+                  <p className="text-[10px] text-[#64748B]">
+                    Gunakan No. Stambuk murid & kata sandi RDS1234
+                  </p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                <div>
+                  <label className="block text-[10px] font-bold text-[#64748B] mb-1">
+                    No. Stambuk / NIS
+                  </label>
+                  <div className="relative">
+                    <User className="w-3.5 h-3.5 absolute left-3 top-3 text-[#94A3B8]" />
+                    <input
+                      type="text"
+                      placeholder="Contoh: 221488"
+                      value={loginNis}
+                      onChange={(e) => setLoginNis(e.target.value)}
+                      className="w-full pl-9 pr-3 py-2 rounded-xl bg-[#F8FAFC] border border-[#E2EBF4] text-xs font-semibold focus:outline-none focus:border-[#1B4D3E] text-[#172033]"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-[10px] font-bold text-[#64748B] mb-1">
+                    Kata Sandi
+                  </label>
+                  <div className="relative">
+                    <Lock className="w-3.5 h-3.5 absolute left-3 top-3 text-[#94A3B8]" />
+                    <input
+                      type="password"
+                      placeholder="Default: RDS1234"
+                      value={loginPassword}
+                      onChange={(e) => setLoginPassword(e.target.value)}
+                      className="w-full pl-9 pr-3 py-2 rounded-xl bg-[#F8FAFC] border border-[#E2EBF4] text-xs font-semibold focus:outline-none focus:border-[#1B4D3E] text-[#172033]"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                disabled={isLoggingIn}
+                className="w-full py-2.5 rounded-xl bg-[#1B4D3E] hover:bg-[#153e32] text-white text-xs font-bold transition-all flex items-center justify-center gap-1.5 shadow-sm disabled:opacity-60 cursor-pointer"
+              >
+                <span>Masuk</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+            </form>
+
             <div className="space-y-1.5">
               <label className="block text-xs font-bold text-[#172033]">
                 Pencarian Data Ananda
@@ -333,13 +456,14 @@ export default function OrtuDashboardPage() {
               <RefreshCw className="w-3 h-3 text-[#A8833E]" />
               <span>Ganti</span>
             </button>
-            <Link
-              href="/login"
-              className="px-3 py-1.5 rounded-xl bg-[#1B4D3E] text-white text-xs font-bold hover:bg-[#153e32] transition-colors shadow-2xs flex items-center gap-1"
+            <button
+              type="button"
+              onClick={handleLogout}
+              className="px-3 py-1.5 rounded-xl bg-[#1B4D3E] text-white text-xs font-bold hover:bg-[#153e32] transition-colors shadow-2xs flex items-center gap-1 cursor-pointer"
             >
               <LogOut className="w-3 h-3" />
               <span>Keluar</span>
-            </Link>
+            </button>
           </div>
         </div>
       </header>
@@ -655,7 +779,7 @@ export default function OrtuDashboardPage() {
                 {hasanahRecords.map((item) => (
                   <div
                     key={item.id}
-                    className="p-3 rounded-2xl border border-[#A7F3D0] bg-[#ECFDF5]/50 flex items-start justify-between gap-3"
+                    className="p-3.5 rounded-2xl border border-[#A7F3D0] bg-[#ECFDF5]/50 flex items-start justify-between gap-3 shadow-2xs"
                   >
                     <div className="flex items-start gap-2.5 min-w-0">
                       <div className="w-8 h-8 rounded-xl bg-white border border-[#A7F3D0] text-[#065F46] flex items-center justify-center shrink-0 mt-0.5">
@@ -665,15 +789,52 @@ export default function OrtuDashboardPage() {
                         <p className="text-xs font-bold text-[#172033]">
                           {item.indicatorText || item.unsurName || "Prestasi Kebaikan"}
                         </p>
-                        <p className="text-[10px] text-[#065F46] font-semibold mt-0.5">
-                          Kategori: {item.category}
-                        </p>
+                        <div className="flex items-center gap-2 mt-0.5 flex-wrap">
+                          <span className="text-[10px] text-[#065F46] font-semibold">
+                            Kategori: {item.category}
+                          </span>
+                          {item.tingkat && (
+                            <span className="text-[9px] px-1.5 py-0.2 rounded-md bg-[#D1FAE5] text-[#065F46] font-bold">
+                              {item.tingkat}
+                            </span>
+                          )}
+                        </div>
                         {item.notes && (
-                          <p className="text-[11px] text-[#64748B] mt-1 leading-relaxed">
+                          <p className="text-[11px] text-[#475569] mt-1.5 leading-relaxed bg-white/80 p-2 rounded-xl border border-[#A7F3D0]/60">
                             {item.notes}
                           </p>
                         )}
-                        <p className="text-[9px] text-[#94A3B8] font-mono mt-1">
+                        <div className="flex flex-wrap items-center gap-1.5 mt-2 text-[10px]">
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-white border border-[#A7F3D0] text-[#065F46] font-medium">
+                            <Calendar className="w-3 h-3 text-[#065F46]" />
+                            {item.incidentDate || item.date || item.createdAt}
+                          </span>
+                          {item.incidentTime && (
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-white border border-[#A7F3D0] text-[#065F46] font-medium">
+                              <Clock className="w-3 h-3 text-[#065F46]" />
+                              {item.incidentTime} WIB
+                            </span>
+                          )}
+                          {item.location && (
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-white border border-[#A7F3D0] text-[#475569] font-medium">
+                              <MapPin className="w-3 h-3 text-[#A8833E]" />
+                              {item.location}
+                            </span>
+                          )}
+                          {item.witnessName && (
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-white border border-[#A7F3D0] text-[#475569] font-medium">
+                              <UserCheck className="w-3 h-3 text-[#1B4D3E]" />
+                              Saksi: {item.witnessName}
+                            </span>
+                          )}
+                          {item.dueProcessStatus && (
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-[#065F46] text-white font-bold text-[9px]">
+                              <ShieldCheck className="w-2.5 h-2.5" />
+                              {item.dueProcessStatus}
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-[9px] text-[#94A3B8] font-mono mt-1.5">
                           Dicatat: {item.guruName || "Pembina Santri"}
                         </p>
                       </div>
@@ -704,7 +865,7 @@ export default function OrtuDashboardPage() {
                 {sayyiahRecords.map((item) => (
                   <div
                     key={item.id}
-                    className="p-3 rounded-2xl border border-red-200 bg-red-50/50 flex items-start justify-between gap-3"
+                    className="p-3.5 rounded-2xl border border-red-200 bg-red-50/50 flex items-start justify-between gap-3 shadow-2xs"
                   >
                     <div className="flex items-start gap-2.5 min-w-0">
                       <div className="w-8 h-8 rounded-xl bg-white border border-red-200 text-[#B91C1C] flex items-center justify-center shrink-0 mt-0.5">
@@ -714,15 +875,52 @@ export default function OrtuDashboardPage() {
                         <p className="text-xs font-bold text-[#172033]">
                           {item.indicatorText || item.unsurName || "Catatan Kedisiplinan"}
                         </p>
-                        <p className="text-[10px] text-[#B91C1C] font-semibold mt-0.5">
-                          Tingkat: {item.tingkat || item.category || "Pembinaan"}
-                        </p>
+                        <div className="flex items-center gap-2 mt-0.5 flex-wrap">
+                          <span className="text-[10px] text-[#B91C1C] font-semibold">
+                            Kategori: {item.category || "Kedisiplinan"}
+                          </span>
+                          {item.tingkat && (
+                            <span className="text-[9px] px-1.5 py-0.2 rounded-md bg-red-100 text-[#B91C1C] font-bold">
+                              Tingkat: {item.tingkat}
+                            </span>
+                          )}
+                        </div>
                         {item.notes && (
-                          <p className="text-[11px] text-[#64748B] mt-1 leading-relaxed">
+                          <p className="text-[11px] text-[#475569] mt-1.5 leading-relaxed bg-white/80 p-2 rounded-xl border border-red-200/60">
                             {item.notes}
                           </p>
                         )}
-                        <p className="text-[9px] text-[#94A3B8] font-mono mt-1">
+                        <div className="flex flex-wrap items-center gap-1.5 mt-2 text-[10px]">
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-white border border-red-200 text-[#B91C1C] font-medium">
+                            <Calendar className="w-3 h-3 text-[#B91C1C]" />
+                            {item.incidentDate || item.date || item.createdAt}
+                          </span>
+                          {item.incidentTime && (
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-white border border-red-200 text-[#B91C1C] font-medium">
+                              <Clock className="w-3 h-3 text-[#B91C1C]" />
+                              {item.incidentTime} WIB
+                            </span>
+                          )}
+                          {item.location && (
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-white border border-red-200 text-[#475569] font-medium">
+                              <MapPin className="w-3 h-3 text-[#B91C1C]" />
+                              {item.location}
+                            </span>
+                          )}
+                          {item.witnessName && (
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-white border border-red-200 text-[#475569] font-medium">
+                              <UserCheck className="w-3 h-3 text-[#B91C1C]" />
+                              Saksi: {item.witnessName}
+                            </span>
+                          )}
+                          {item.dueProcessStatus && (
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-[#B91C1C] text-white font-bold text-[9px]">
+                              <ShieldAlert className="w-2.5 h-2.5" />
+                              {item.dueProcessStatus}
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-[9px] text-[#94A3B8] font-mono mt-1.5">
                           Pembina: {item.guruName || "Bagian Pengasuhan"}
                         </p>
                       </div>

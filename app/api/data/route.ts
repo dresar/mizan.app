@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { query } from "@/lib/db";
+import { formatWIBDate, formatWIBDateTime, getWIBTime } from "@/lib/date-utils";
 import {
   Kategori,
   Santri,
@@ -164,21 +165,13 @@ export async function GET() {
       const dt = new Date(p.createdAt);
       const isValid = !isNaN(dt.getTime());
       const formattedDate = isValid
-        ? dt.toLocaleDateString("id-ID", {
-            day: "numeric",
-            month: "short",
-            year: "numeric"
-          }) + " • " + dt.toLocaleTimeString("id-ID", {
-            hour: "2-digit",
-            minute: "2-digit",
-            second: "2-digit"
-          }) + " WIB"
+        ? formatWIBDateTime(dt, true)
         : "Baru saja";
       return {
         ...p,
         score: parseFloat(p.score),
         createdAt: formattedDate,
-        date: isValid ? dt.toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" }) : "",
+        date: isValid ? formatWIBDate(dt, "long") : "",
         rawCreatedAt: isValid ? dt.toISOString() : undefined
       };
     });
@@ -187,7 +180,7 @@ export async function GET() {
       const dt = new Date(a.createdAt);
       const isValid = !isNaN(dt.getTime());
       const timeStr = isValid
-        ? dt.toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" }) + " WIB"
+        ? getWIBTime(dt) + " WIB"
         : "";
       return {
         ...a,

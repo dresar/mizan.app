@@ -35,8 +35,8 @@ mizan.apps/
 │   │   ├── riwayat/           # Riwayat input pembinaan
 │   │   ├── santri/ & [id]/    # Profil lengkap santri & tombol Cetak/Unduh PDF/Bagikan
 │   │   └── profil/            # Profil ustadz, ganti password, avatar VPS, share profil
-│   ├── bk/                    # Modul Pengasuhan BK (dashboard, absen, history, profil, penilaian, santri/ & [id]/ profil & rapor)
-│   ├── ortu/ & dashboard/     # Portal Wali Santri (pencarian ananda, skor akhlak, sholat 7 waktu, riwayat hasanah/sayyiah, unduh rapor PDF & kontak pengasuhan)
+│   ├── bk/                    # Modul Pengasuhan BK (dashboard, absen, history log lengkap presensi & pelanggaran/prestasi realtime WIB, profil, penilaian, santri/ & [id]/ profil & rapor)
+│   ├── ortu/ & dashboard/     # Portal Wali Santri (login stambuk & sandi RDS1234, skor akhlak, sholat 7 waktu, detail kejadian prestasi & pelanggaran, unduh rapor PDF & kontak pengasuhan)
 │   ├── santri/profil/         # Profil mandiri santri, skor adab & tombol Bagikan
 │   ├── share/[id]/            # Halaman publik kartu share (stat-*) tanpa perlu login
 │   ├── login/                 # Autentikasi multi-role (login cepat 92 akun Ustadz/Ustadzah & BK dengan pemisahan gender)
@@ -47,9 +47,9 @@ mizan.apps/
 │   ├── PrayerAttendanceChart.tsx # Grafik kehadiran sholat
 │   ├── PembinaReportChart.tsx # Grafik laporan pembina
 │   ├── Header.tsx, Sidebar.tsx, BottomNav.tsx, RoleShell.tsx, AnnouncementPopup.tsx
-│   └── ui/                    # Atomik (Card, Badge, Avatar, ScoreBar, Toast, Modal)
+│   └── ui/                    # Atomik (Card, Badge, Avatar, ScoreBar, Toast, Modal, DeleteModal)
 ├── middleware.ts              # Edge server auth guard & role protection (/admin, /bk, /guru, /api/admin)
-├── lib/                       # auth-server.ts, db.ts, mizan-context.tsx, mock-data.ts, pdf-generator.ts, quick-accounts.ts, kop-surat-base64.ts
+├── lib/                       # auth-server.ts, db.ts, date-utils.ts (WIB Asia/Jakarta formatting), mizan-context.tsx, mock-data.ts, pdf-generator.ts, quick-accounts.ts, kop-surat-base64.ts
 └── public/                    # kop-surat.png, logo-raport.png, manifest.json, sw.js, favicon, icons, downloads/
 ```
 

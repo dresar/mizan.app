@@ -1,6 +1,5 @@
-const CACHE_NAME = "mizan-pwa-v1.0.6";
+const CACHE_NAME = "mizan-pwa-v1.0.8";
 const PRECACHE_ASSETS = [
-  "/",
   "/login",
   "/manifest.json",
   "/favicon.ico",
@@ -57,37 +56,57 @@ self.addEventListener("fetch", (event) => {
 
   if (url.pathname.startsWith("/api/")) {
     event.respondWith(
-      fetch(event.request).catch(() => caches.match(event.request))
-    );
-    return;
-  }
-
-  if (event.request.mode === "navigate") {
-    event.respondWith(
-      fetch(event.request)
-        .then((response) => {
-          if (response && response.status === 200) {
-            const clone = response.clone();
-            caches.open(CACHE_NAME).then((cache) => {
-              cache.put(event.request, clone).catch(() => void 0);
-            }).catch(() => void 0);
-          }
-          return response;
-        })
-        .catch(() => {
-          return caches.match(event.request).then((cached) => {
-            return cached || caches.match("/") || new Response("Offline", { status: 503 });
-          });
-        })
+      fetch(event.request).catch(() => {
+        return caches.match(event.request).then((cached) => {
+          return (
+            cached ||
+            new Response(JSON.stringify({ error: "Offline" }), {
+              status: 503,
+              statusText: "Service Unavailable",
+              headers: { "Content-Type": "application/json" }
+            })
+          );
+        });
+      })
     );
     return;
   }
 
   if (url.pathname.startsWith("/_next/static/")) {
     event.respondWith(
+      caches.match(event.request).then((cached) => {
+        if (cached) {
+          return cached;
+        }
+        return fetch(event.request)
+          .then((response) => {
+            if (response && response.status === 200) {
+              const clone = response.clone();
+              caches.open(CACHE_NAME).then((cache) => {
+                cache.put(event.request, clone).catch(() => void 0);
+              }).catch(() => void 0);
+            }
+            return response;
+          })
+          .catch(() => {
+            return new Response("", { status: 404, statusText: "Not Found" });
+          });
+      })
+    );
+    return;
+  }
+
+  const isHtmlOrRsc =
+    event.request.mode === "navigate" ||
+    event.request.headers.get("rsc") === "1" ||
+    url.searchParams.has("_rsc") ||
+    (event.request.headers.get("accept") || "").includes("text/x-component");
+
+  if (isHtmlOrRsc) {
+    event.respondWith(
       fetch(event.request)
         .then((response) => {
-          if (response && response.status === 200) {
+          if (response && response.status === 200 && event.request.mode === "navigate") {
             const clone = response.clone();
             caches.open(CACHE_NAME).then((cache) => {
               cache.put(event.request, clone).catch(() => void 0);
@@ -97,7 +116,15 @@ self.addEventListener("fetch", (event) => {
         })
         .catch(() => {
           return caches.match(event.request).then((cached) => {
-            return cached || new Response("", { status: 404, statusText: "Not Found" });
+            return (
+              cached ||
+              caches.match("/login") ||
+              new Response("Offline", {
+                status: 503,
+                statusText: "Service Unavailable",
+                headers: { "Content-Type": "text/html" }
+              })
+            );
           });
         })
     );
@@ -106,7 +133,10 @@ self.addEventListener("fetch", (event) => {
 
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
-      const fetchPromise = fetch(event.request)
+      if (cachedResponse) {
+        return cachedResponse;
+      }
+      return fetch(event.request)
         .then((networkResponse) => {
           if (networkResponse && networkResponse.status === 200) {
             const clone = networkResponse.clone();
@@ -116,9 +146,9 @@ self.addEventListener("fetch", (event) => {
           }
           return networkResponse;
         })
-        .catch(() => cachedResponse);
-
-      return cachedResponse || fetchPromise;
+        .catch(() => {
+          return new Response("", { status: 404, statusText: "Not Found" });
+        });
     })
   );
 });

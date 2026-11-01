@@ -33,6 +33,7 @@ import { Avatar } from "@/components/ui/Avatar";
 import { FileUploadMock } from "@/components/ui/FileUploadMock";
 import categoriesMasterData from "@/lib/categories-master.json";
 import { generateSantriPdf } from "@/lib/pdf-generator";
+import { formatWIBDate, getWIBTime, getWIBDate } from "@/lib/date-utils";
 import { ShareModal } from "@/components/ShareModal";
 import { Santri } from "@/lib/mock-data";
 
@@ -107,23 +108,12 @@ export default function PengasuhanPenilaianPage() {
 
   const formattedDateLive = useMemo(() => {
     if (!currentTime) return "";
-    return currentTime.toLocaleDateString("id-ID", {
-      weekday: "long",
-      day: "numeric",
-      month: "long",
-      year: "numeric"
-    });
+    return formatWIBDate(currentTime, "full");
   }, [currentTime]);
 
   const formattedTimeLive = useMemo(() => {
     if (!currentTime) return "";
-    return (
-      currentTime.toLocaleTimeString("id-ID", {
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit"
-      }) + " WIB"
-    );
+    return `${getWIBTime(currentTime, true)} WIB`;
   }, [currentTime]);
 
   const [selectedSantriId, setSelectedSantriId] = useState<string>("");
@@ -143,8 +133,8 @@ export default function PengasuhanPenilaianPage() {
 
   useEffect(() => {
     const now = new Date();
-    setIncidentDate(now.toISOString().split("T")[0]);
-    setIncidentTime(`${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`);
+    setIncidentDate(getWIBDate(now));
+    setIncidentTime(getWIBTime(now));
   }, []);
 
   const [isOverdueReport, setIsOverdueReport] = useState(false);

@@ -13,6 +13,7 @@ import {
   Lock,
   ArrowLeft,
   CheckCircle2,
+  Check,
   X,
   Save,
   Loader2,
@@ -23,10 +24,23 @@ import { useMizan } from "@/lib/mizan-context";
 import { RoleShell } from "@/components/RoleShell";
 import { Card, CardHeader, CardSub, CardInset } from "@/components/ui/Card";
 import { Avatar } from "@/components/ui/Avatar";
+import { DeleteModal } from "@/components/ui/DeleteModal";
 import { Role } from "@/lib/mock-data";
 
 export default function AdminUsersPage() {
-  const { userList, kelasList, addUser, updateUser, deleteUser, showToast } = useMizan();
+  const { userList, kelasList, addUser, updateUser, deleteUser, deleteUserBulk, showToast } = useMizan();
+
+  const [selectedUserIds, setSelectedUserIds] = useState<string[]>([]);
+  const [deleteModalState, setDeleteModalState] = useState<{
+    isOpen: boolean;
+    ids: string[];
+    name?: string;
+    count?: number;
+    isLoading?: boolean;
+  }>({
+    isOpen: false,
+    ids: []
+  });
 
   const [isAddingUser, setIsAddingUser] = useState(false);
   const [editingPasswordUserId, setEditingPasswordUserId] = useState<string | null>(null);
@@ -97,9 +111,51 @@ export default function AdminUsersPage() {
     }
   };
 
-  const handleDelete = async (userId: string, userName: string) => {
-    if (confirm(`Yakin ingin menghapus akun ${userName}?`)) {
-      await deleteUser(userId);
+  const toggleSelectUser = (id: string) => {
+    setSelectedUserIds((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+    );
+  };
+
+  const handleSelectAllUsers = () => {
+    if (selectedUserIds.length === userList.length) {
+      setSelectedUserIds([]);
+    } else {
+      setSelectedUserIds(userList.map((u) => u.id));
+    }
+  };
+
+  const handleOpenDeleteSingle = (user: any) => {
+    setDeleteModalState({
+      isOpen: true,
+      ids: [user.id],
+      name: user.name,
+      count: 1
+    });
+  };
+
+  const handleOpenDeleteBulk = () => {
+    if (selectedUserIds.length === 0) return;
+    setDeleteModalState({
+      isOpen: true,
+      ids: selectedUserIds,
+      count: selectedUserIds.length
+    });
+  };
+
+  const handleConfirmDelete = async () => {
+    if (deleteModalState.ids.length === 0) return;
+    setDeleteModalState((prev) => ({ ...prev, isLoading: true }));
+    try {
+      if (deleteModalState.ids.length === 1) {
+        await deleteUser(deleteModalState.ids[0]);
+      } else {
+        await deleteUserBulk(deleteModalState.ids);
+      }
+      setSelectedUserIds((prev) => prev.filter((id) => !deleteModalState.ids.includes(id)));
+      setDeleteModalState({ isOpen: false, ids: [] });
+    } finally {
+      setDeleteModalState((prev) => ({ ...prev, isLoading: false }));
     }
   };
 
@@ -379,13 +435,41 @@ export default function AdminUsersPage() {
         </Card>
 
         <Card className="p-4 sm:p-5 space-y-3 bg-white">
-          <div className="flex items-center justify-between pb-2 border-b border-[#E2E8F0]">
-            <h2 className="text-xs font-bold text-[#172033] uppercase tracking-wider">
-              Daftar Semua Akun Terdaftar ({userList.length})
-            </h2>
-            <span className="text-[10px] text-[#64748B]">
-              Username bersifat tetap, kata sandi dapat diatur ulang
-            </span>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-2 border-b border-[#E2E8F0] gap-2">
+            <div>
+              <h2 className="text-xs font-bold text-[#172033] uppercase tracking-wider">
+                Daftar Semua Akun Terdaftar ({userList.length})
+              </h2>
+              <span className="text-[10px] text-[#64748B]">
+                Username bersifat tetap, kata sandi dapat diatur ulang
+              </span>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={handleSelectAllUsers}
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold border transition-colors flex items-center gap-1.5 ${
+                  selectedUserIds.length > 0 && selectedUserIds.length === userList.length
+                    ? "bg-[#1B4D3E] text-white border-[#1B4D3E]"
+                    : "bg-white text-gray-700 border-gray-200 hover:bg-gray-50"
+                }`}
+              >
+                <Check className="w-3.5 h-3.5" />
+                <span>{selectedUserIds.length === userList.length && userList.length > 0 ? "Batal" : "Pilih Semua"}</span>
+              </button>
+
+              {selectedUserIds.length > 0 && (
+                <button
+                  type="button"
+                  onClick={handleOpenDeleteBulk}
+                  className="px-3.5 py-1.5 rounded-xl bg-red-600 text-white text-xs font-bold hover:bg-red-700 transition-colors flex items-center gap-1.5 shadow-xs"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                  <span>Hapus ({selectedUserIds.length})</span>
+                </button>
+              )}
+            </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -393,14 +477,24 @@ export default function AdminUsersPage() {
               const isSuper = user.role === "SUPER_ADMIN";
               const isPutri = user.gender === "Putri";
               const isEditingThisPwd = editingPasswordUserId === user.id;
+              const isSelected = selectedUserIds.includes(user.id);
 
               return (
                 <div
                   key={user.id}
-                  className="p-3.5 rounded-2xl mizan-card-sub space-y-3 hover:border-[#1B4D3E]/40 transition-all"
+                  className={`p-3.5 rounded-2xl mizan-card-sub space-y-3 hover:border-[#1B4D3E]/40 transition-all ${
+                    isSelected ? "ring-2 ring-red-400 bg-red-50/20" : ""
+                  }`}
                 >
                   <div className="flex items-start justify-between gap-2.5">
                     <div className="flex items-start gap-2.5 min-w-0">
+                      <input
+                        type="checkbox"
+                        checked={isSelected}
+                        onChange={() => toggleSelectUser(user.id)}
+                        className="w-4 h-4 rounded text-[#1B4D3E] accent-[#1B4D3E] cursor-pointer shrink-0 mt-1"
+                        aria-label={`Pilih ${user.name}`}
+                      />
                       <Avatar
                         initials={user.avatarInitials}
                         size="md"
@@ -436,7 +530,7 @@ export default function AdminUsersPage() {
 
                     <button
                       type="button"
-                      onClick={() => handleDelete(user.id, user.name)}
+                      onClick={() => handleOpenDeleteSingle(user)}
                       className="p-1.5 rounded-lg text-[#94A3B8] hover:text-red-600 hover:bg-red-50 transition-colors"
                       title="Hapus Pengguna"
                     >
@@ -499,6 +593,19 @@ export default function AdminUsersPage() {
           </div>
         </Card>
       </div>
+
+      <DeleteModal
+        isOpen={deleteModalState.isOpen}
+        onClose={() => setDeleteModalState({ isOpen: false, ids: [] })}
+        onConfirm={handleConfirmDelete}
+        count={deleteModalState.count}
+        message={
+          deleteModalState.count === 1 && deleteModalState.name
+            ? `Hapus akun pengguna ${deleteModalState.name}?`
+            : undefined
+        }
+        isLoading={deleteModalState.isLoading}
+      />
     </RoleShell>
   );
 }

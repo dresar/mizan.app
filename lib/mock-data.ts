@@ -1,4 +1,4 @@
-export type Role = "SUPER_ADMIN" | "PENGASUHAN" | "GURU";
+export type Role = "SUPER_ADMIN" | "PENGASUHAN" | "GURU" | "ORTU";
 
 export type WaktuSholat =
   | "Subuh"
@@ -80,6 +80,7 @@ export interface UserProfile {
   gender?: "Putra" | "Putri";
   assignedClass?: string;
   isActive?: boolean;
+  santriId?: string;
 }
 
 export interface Santri {

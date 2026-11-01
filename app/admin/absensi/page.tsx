@@ -27,6 +27,7 @@ import {
 import { useMizan } from "@/lib/mizan-context";
 import { RoleShell } from "@/components/RoleShell";
 import { Card } from "@/components/ui/Card";
+import { DeleteModal } from "@/components/ui/DeleteModal";
 import { StatusAbsensi, WaktuSholat, AbsensiRecord } from "@/lib/mock-data";
 
 const ALL_PRAYERS: WaktuSholat[] = [
@@ -56,8 +57,21 @@ export default function AdminAbsensiPage() {
     refreshData,
     updateAbsensi,
     deleteAbsensi,
+    deleteAbsensiBulk,
     showToast
   } = useMizan();
+
+  const [selectedAbsensiIds, setSelectedAbsensiIds] = useState<string[]>([]);
+  const [deleteModalState, setDeleteModalState] = useState<{
+    isOpen: boolean;
+    ids: string[];
+    name?: string;
+    count?: number;
+    isLoading?: boolean;
+  }>({
+    isOpen: false,
+    ids: []
+  });
 
   const [activeTab, setActiveTab] = useState<"SESI" | "SEMUA_LOG">("SESI");
   const [selectedGender, setSelectedGender] = useState<"ALL" | "Putra" | "Putri">("ALL");
@@ -290,12 +304,53 @@ export default function AdminAbsensiPage() {
     }
   };
 
-  const handleDelete = async (id: string, santriName: string) => {
-    if (confirm(`Hapus catatan presensi untuk ${santriName}?`)) {
-      const res = await deleteAbsensi(id);
-      if (res.success) {
-        showToast("Catatan absensi dihapus");
+  const toggleSelectAbsensi = (id: string) => {
+    setSelectedAbsensiIds((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+    );
+  };
+
+  const handleSelectAllAbsensi = (items: AbsensiRecord[]) => {
+    const itemIds = items.map((i) => i.id);
+    const allSelected = itemIds.length > 0 && itemIds.every((id) => selectedAbsensiIds.includes(id));
+    if (allSelected) {
+      setSelectedAbsensiIds((prev) => prev.filter((id) => !itemIds.includes(id)));
+    } else {
+      setSelectedAbsensiIds((prev) => Array.from(new Set([...prev, ...itemIds])));
+    }
+  };
+
+  const handleOpenDeleteSingle = (item: AbsensiRecord) => {
+    setDeleteModalState({
+      isOpen: true,
+      ids: [item.id],
+      name: item.santriName,
+      count: 1
+    });
+  };
+
+  const handleOpenDeleteBulk = () => {
+    if (selectedAbsensiIds.length === 0) return;
+    setDeleteModalState({
+      isOpen: true,
+      ids: selectedAbsensiIds,
+      count: selectedAbsensiIds.length
+    });
+  };
+
+  const handleConfirmDelete = async () => {
+    if (deleteModalState.ids.length === 0) return;
+    setDeleteModalState((prev) => ({ ...prev, isLoading: true }));
+    try {
+      if (deleteModalState.ids.length === 1) {
+        await deleteAbsensi(deleteModalState.ids[0]);
+      } else {
+        await deleteAbsensiBulk(deleteModalState.ids);
       }
+      setSelectedAbsensiIds((prev) => prev.filter((id) => !deleteModalState.ids.includes(id)));
+      setDeleteModalState({ isOpen: false, ids: [] });
+    } finally {
+      setDeleteModalState((prev) => ({ ...prev, isLoading: false }));
     }
   };
 
@@ -846,17 +901,60 @@ export default function AdminAbsensiPage() {
                 </div>
               </div>
 
+              <div className="flex items-center justify-between gap-3 px-1 py-1">
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => handleSelectAllAbsensi(filteredSessionRecords)}
+                    className={`px-3 py-1 rounded-xl text-[11px] font-bold border transition-colors flex items-center gap-1.5 ${
+                      filteredSessionRecords.length > 0 && filteredSessionRecords.every((i) => selectedAbsensiIds.includes(i.id))
+                        ? "bg-[#1B4D3E] text-white border-[#1B4D3E]"
+                        : "bg-white text-gray-700 border-gray-200 hover:bg-gray-50"
+                    }`}
+                  >
+                    <Check className="w-3.5 h-3.5" />
+                    <span>{filteredSessionRecords.length > 0 && filteredSessionRecords.every((i) => selectedAbsensiIds.includes(i.id)) ? "Batal" : "Pilih Semua"}</span>
+                  </button>
+                  {selectedAbsensiIds.length > 0 && (
+                    <span className="text-[11px] text-[#64748B] font-medium">
+                      {selectedAbsensiIds.length} terpilih
+                    </span>
+                  )}
+                </div>
+
+                {selectedAbsensiIds.length > 0 && (
+                  <button
+                    type="button"
+                    onClick={handleOpenDeleteBulk}
+                    className="px-3 py-1 rounded-xl bg-red-600 text-white text-[11px] font-bold hover:bg-red-700 transition-colors flex items-center gap-1.5 shadow-xs"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                    <span>Hapus ({selectedAbsensiIds.length})</span>
+                  </button>
+                )}
+              </div>
+
               <div className="divide-y divide-[#E2EBF4]">
                 {filteredSessionRecords.map((item) => {
                   const isEditing = editingRecordId === item.id;
                   const santriInfo = santriList.find((s) => s.id === item.santriId);
+                  const isSelected = selectedAbsensiIds.includes(item.id);
 
                   return (
                     <div
                       key={item.id}
-                      className="py-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-[#FAF7EE]/40 px-2 rounded-xl transition-colors"
+                      className={`py-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-2 rounded-xl transition-colors ${
+                        isSelected ? "bg-red-50/40" : "hover:bg-[#FAF7EE]/40"
+                      }`}
                     >
                       <div className="flex items-center gap-3">
+                        <input
+                          type="checkbox"
+                          checked={isSelected}
+                          onChange={() => toggleSelectAbsensi(item.id)}
+                          className="w-4 h-4 rounded text-[#1B4D3E] accent-[#1B4D3E] cursor-pointer shrink-0"
+                          aria-label={`Pilih ${item.santriName}`}
+                        />
                         <div className="w-9 h-9 rounded-xl bg-[#EEF2F6] text-[#172033] flex items-center justify-center font-bold text-xs shrink-0">
                           {item.santriName.substring(0, 2).toUpperCase()}
                         </div>
@@ -960,7 +1058,7 @@ export default function AdminAbsensiPage() {
                             </button>
                             <button
                               type="button"
-                              onClick={() => handleDelete(item.id, item.santriName)}
+                              onClick={() => handleOpenDeleteSingle(item)}
                               className="p-1.5 rounded-lg hover:bg-red-50 text-red-400 hover:text-red-600 transition-colors"
                               title="Hapus"
                             >
@@ -1068,18 +1166,54 @@ export default function AdminAbsensiPage() {
                     Riwayat presensi santri dan santriwati
                   </p>
                 </div>
+
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => handleSelectAllAbsensi(filteredLogRecords)}
+                    className={`px-2.5 py-1 rounded-xl text-[10px] font-bold border transition-colors flex items-center gap-1 ${
+                      filteredLogRecords.length > 0 && filteredLogRecords.every((i) => selectedAbsensiIds.includes(i.id))
+                        ? "bg-[#1B4D3E] text-white border-[#1B4D3E]"
+                        : "bg-white text-gray-700 border-gray-200 hover:bg-gray-50"
+                    }`}
+                  >
+                    <Check className="w-3 h-3" />
+                    <span>{filteredLogRecords.length > 0 && filteredLogRecords.every((i) => selectedAbsensiIds.includes(i.id)) ? "Batal" : "Pilih Semua"}</span>
+                  </button>
+
+                  {selectedAbsensiIds.length > 0 && (
+                    <button
+                      type="button"
+                      onClick={handleOpenDeleteBulk}
+                      className="px-2.5 py-1 rounded-xl bg-red-600 text-white text-[10px] font-bold hover:bg-red-700 transition-colors flex items-center gap-1 shadow-xs"
+                    >
+                      <Trash2 className="w-3 h-3" />
+                      <span>Hapus ({selectedAbsensiIds.length})</span>
+                    </button>
+                  )}
+                </div>
               </div>
 
               <div className="divide-y divide-[#E2EBF4] max-h-[600px] overflow-y-auto pr-1">
                 {filteredLogRecords.map((item) => {
                   const isEditing = editingRecordId === item.id;
+                  const isSelected = selectedAbsensiIds.includes(item.id);
 
                   return (
                     <div
                       key={item.id}
-                      className="py-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-[#FAF7EE]/40 px-2 rounded-xl transition-colors"
+                      className={`py-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-2 rounded-xl transition-colors ${
+                        isSelected ? "bg-red-50/40" : "hover:bg-[#FAF7EE]/40"
+                      }`}
                     >
                       <div className="flex items-center gap-3">
+                        <input
+                          type="checkbox"
+                          checked={isSelected}
+                          onChange={() => toggleSelectAbsensi(item.id)}
+                          className="w-4 h-4 rounded text-[#1B4D3E] accent-[#1B4D3E] cursor-pointer shrink-0"
+                          aria-label={`Pilih ${item.santriName}`}
+                        />
                         <div className="w-8 h-8 rounded-xl bg-[#EEF2F6] flex items-center justify-center shrink-0">
                           {getPrayerIcon((item.waktuSholat || "Subuh") as WaktuSholat)}
                         </div>
@@ -1179,7 +1313,7 @@ export default function AdminAbsensiPage() {
                             </button>
                             <button
                               type="button"
-                              onClick={() => handleDelete(item.id, item.santriName)}
+                              onClick={() => handleOpenDeleteSingle(item)}
                               className="p-1.5 rounded-lg hover:bg-red-50 text-red-400 hover:text-red-600 transition-colors"
                               title="Hapus"
                             >
@@ -1202,6 +1336,19 @@ export default function AdminAbsensiPage() {
           </div>
         )}
       </div>
+
+      <DeleteModal
+        isOpen={deleteModalState.isOpen}
+        onClose={() => setDeleteModalState({ isOpen: false, ids: [] })}
+        onConfirm={handleConfirmDelete}
+        count={deleteModalState.count}
+        message={
+          deleteModalState.count === 1 && deleteModalState.name
+            ? `Hapus catatan presensi untuk ${deleteModalState.name}?`
+            : undefined
+        }
+        isLoading={deleteModalState.isLoading}
+      />
     </RoleShell>
   );
 }

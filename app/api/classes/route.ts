@@ -133,19 +133,35 @@ export async function DELETE(req: Request) {
 
     const { searchParams } = new URL(req.url);
     const name = searchParams.get("name");
+    const namesParam = searchParams.get("names");
+    let targetNames: string[] = [];
+    if (namesParam) {
+      targetNames = namesParam.split(",").map((s) => s.trim().toUpperCase()).filter(Boolean);
+    } else if (name) {
+      targetNames = [name.trim().toUpperCase()];
+    } else {
+      try {
+        const body = await req.json();
+        if (Array.isArray(body?.names)) {
+          targetNames = body.names.map((s: string) => String(s).trim().toUpperCase()).filter(Boolean);
+        }
+      } catch {
+        void 0;
+      }
+    }
 
-    if (!name) {
+    if (targetNames.length === 0) {
       return NextResponse.json(
         { success: false, message: "Nama kelas wajib disertakan." },
         { status: 400 }
       );
     }
 
-    await query(`DELETE FROM classes WHERE UPPER(name) = UPPER($1)`, [name.trim()]);
+    await query(`DELETE FROM classes WHERE UPPER(name) = ANY($1::text[])`, [targetNames]);
 
     return NextResponse.json({
       success: true,
-      message: `Kelas ${name} berhasil dihapus.`
+      message: `${targetNames.length} kelas berhasil dihapus.`
     });
   } catch (error: any) {
     return NextResponse.json(

@@ -22,6 +22,7 @@ import { RoleShell } from "@/components/RoleShell";
 import { Card, CardSub, CardInset } from "@/components/ui/Card";
 import { Avatar } from "@/components/ui/Avatar";
 import { StatusAbsensi, WaktuSholat } from "@/lib/mock-data";
+import { getWIBDate, getWIBTime } from "@/lib/date-utils";
 
 const PRAYER_TIMES: WaktuSholat[] = [
   "Subuh",
@@ -70,14 +71,8 @@ export default function PengasuhanAbsenPage() {
   useEffect(() => {
     try {
       const now = new Date();
-      setSelectedDate(now.toISOString().split("T")[0]);
-      setCurrentTimeStr(
-        now.toLocaleTimeString("id-ID", {
-          hour: "2-digit",
-          minute: "2-digit",
-          timeZone: "Asia/Jakarta"
-        }) + " WIB"
-      );
+      setSelectedDate(getWIBDate(now));
+      setCurrentTimeStr(getWIBTime(now) + " WIB");
     } catch {
       void 0;
     }

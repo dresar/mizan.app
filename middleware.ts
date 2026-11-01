@@ -77,6 +77,9 @@ export async function middleware(req: NextRequest) {
       if (session.role === "PENGASUHAN") {
         return NextResponse.redirect(new URL("/bk/dashboard", req.url));
       }
+      if (session.role === "ORTU") {
+        return NextResponse.redirect(new URL("/ortu/dashboard", req.url));
+      }
       return NextResponse.redirect(new URL("/guru/dashboard", req.url));
     }
     return NextResponse.next();
@@ -91,6 +94,9 @@ export async function middleware(req: NextRequest) {
     if (session.role !== "SUPER_ADMIN") {
       if (session.role === "PENGASUHAN") {
         return NextResponse.redirect(new URL("/bk/dashboard", req.url));
+      }
+      if (session.role === "ORTU") {
+        return NextResponse.redirect(new URL("/ortu/dashboard", req.url));
       }
       return NextResponse.redirect(new URL("/guru/dashboard", req.url));
     }

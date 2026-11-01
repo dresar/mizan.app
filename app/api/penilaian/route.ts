@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { query } from "@/lib/db";
+import { getWIBDate, getWIBTime } from "@/lib/date-utils";
 
 export async function POST(req: Request) {
   try {
@@ -29,10 +30,10 @@ export async function POST(req: Request) {
 
     const createdAtDate = body.createdAt ? new Date(body.createdAt) : new Date();
     const validCreatedAt = isNaN(createdAtDate.getTime()) ? new Date() : createdAtDate;
-    const dateKey = body.dateKey || validCreatedAt.toISOString().split("T")[0];
+    const dateKey = body.dateKey || getWIBDate(validCreatedAt);
 
-    const incidentDate = body.incidentDate || (body.dateKey || validCreatedAt.toISOString().split("T")[0]);
-    const incidentTime = body.incidentTime || validCreatedAt.toTimeString().substring(0, 5);
+    const incidentDate = body.incidentDate || body.dateKey || getWIBDate(validCreatedAt);
+    const incidentTime = body.incidentTime || getWIBTime(validCreatedAt);
     const location = body.location || "Lingkungan Pondok";
     const witnessName = body.witnessName || null;
     const dueProcessStatus = body.dueProcessStatus || "DISAHKAN";
@@ -107,11 +108,34 @@ export async function DELETE(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
     const id = searchParams.get("id");
-    if (!id) return NextResponse.json({ success: false, message: "ID penilaian diperlukan." }, { status: 400 });
+    const idsParam = searchParams.get("ids");
+    let targetIds: string[] = [];
+    if (idsParam) {
+      targetIds = idsParam.split(",").map((s) => s.trim()).filter(Boolean);
+    } else if (id) {
+      targetIds = [id.trim()];
+    } else {
+      try {
+        const body = await req.json();
+        if (Array.isArray(body?.ids)) {
+          targetIds = body.ids.filter(Boolean);
+        }
+      } catch {
+        void 0;
+      }
+    }
 
-    const penRes = await query("SELECT santri_id, score, due_process_status FROM penilaian WHERE id = $1", [id]);
-    if (penRes.length > 0) {
-      const { santri_id, score, due_process_status } = penRes[0];
+    if (targetIds.length === 0) {
+      return NextResponse.json({ success: false, message: "ID penilaian diperlukan." }, { status: 400 });
+    }
+
+    const penRes = await query(
+      "SELECT id, santri_id, score, due_process_status FROM penilaian WHERE id = ANY($1::text[])",
+      [targetIds]
+    );
+
+    for (const item of penRes) {
+      const { santri_id, score, due_process_status } = item;
       const santriRes = await query("SELECT current_score FROM santri WHERE id = $1", [santri_id]);
       if (santriRes.length > 0 && due_process_status !== "DIBATALKAN") {
         const prev = parseFloat(santriRes[0].current_score) || 80.0;
@@ -130,10 +154,14 @@ export async function DELETE(req: Request) {
           santri_id
         ]);
       }
-      await query("DELETE FROM penilaian WHERE id = $1", [id]);
     }
 
-    return NextResponse.json({ success: true, message: "Penilaian berhasil dihapus." });
+    await query("DELETE FROM penilaian WHERE id = ANY($1::text[])", [targetIds]);
+
+    return NextResponse.json({
+      success: true,
+      message: `${targetIds.length} penilaian berhasil dihapus.`
+    });
   } catch (err: any) {
     return NextResponse.json({ success: false, message: "Terjadi kendala saat menghapus penilaian." }, { status: 500 });
   }

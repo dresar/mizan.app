@@ -86,6 +86,15 @@ export default function LoginPage() {
           router.push("/admin/dashboard");
         } else if (data.user.role === "PENGASUHAN") {
           router.push("/bk/dashboard");
+        } else if (data.user.role === "ORTU") {
+          if (data.user.santriId) {
+            try {
+              localStorage.setItem("mizan_ortu_santri_id", data.user.santriId);
+            } catch {
+              void 0;
+            }
+          }
+          router.push("/ortu/dashboard");
         } else {
           router.push("/guru/dashboard");
         }
@@ -124,6 +133,15 @@ export default function LoginPage() {
           router.push("/admin/dashboard");
         } else if (data.user.role === "PENGASUHAN") {
           router.push("/bk/dashboard");
+        } else if (data.user.role === "ORTU") {
+          if (data.user.santriId) {
+            try {
+              localStorage.setItem("mizan_ortu_santri_id", data.user.santriId);
+            } catch {
+              void 0;
+            }
+          }
+          router.push("/ortu/dashboard");
         } else {
           router.push("/guru/dashboard");
         }
@@ -198,7 +216,7 @@ export default function LoginPage() {
                     setUsername(e.target.value);
                     setSelectedDevUser("");
                   }}
-                  placeholder="Masukkan username"
+                  placeholder="Username atau No. Stambuk Santri"
                   className="w-full pl-10 pr-3.5 py-2.5 rounded-xl text-xs font-medium bg-[#EEF2F6] border border-transparent focus:bg-white focus:border-[#1B4D3E] focus:ring-2 focus:ring-[#1B4D3E]/10 focus:outline-none transition-all"
                   required
                 />
@@ -253,7 +271,7 @@ export default function LoginPage() {
                   Portal Orang Tua / Wali Santri
                 </p>
                 <p className="text-[10px] text-[#64748B] truncate">
-                  Pantau adab, sholat 7 waktu, dan rapor ananda
+                  Masuk dengan No. Stambuk & sandi RDS1234
                 </p>
               </div>
             </div>

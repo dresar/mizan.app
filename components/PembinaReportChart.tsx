@@ -10,10 +10,14 @@ import {
   Users,
   Copy,
   Check,
-  Target
+  Target,
+  Search,
+  ChevronLeft,
+  ChevronRight
 } from "lucide-react";
 import { GuruMonitoring } from "@/lib/mock-data";
 import { Card } from "@/components/ui/Card";
+import { Pagination } from "@/components/ui/Pagination";
 
 interface PembinaReportChartProps {
   guruList: GuruMonitoring[];
@@ -34,6 +38,10 @@ export function PembinaReportChart({
   const [viewMode, setViewMode] = useState<"BAR" | "DONUT" | "LIST">("BAR");
   const [filterRareOnly, setFilterRareOnly] = useState(false);
   const [copied, setCopied] = useState(false);
+
+  const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(5);
 
   const teacherAnalytics = useMemo(() => {
     return guruList.map((guru) => {
@@ -70,11 +78,23 @@ export function PembinaReportChart({
   }, [teacherAnalytics]);
 
   const displayedTeachers = useMemo(() => {
+    let list = teacherAnalytics;
     if (filterRareOnly) {
-      return teachersNeedingReminder;
+      list = teachersNeedingReminder;
     }
-    return teacherAnalytics;
-  }, [teacherAnalytics, teachersNeedingReminder, filterRareOnly]);
+    if (searchQuery.trim()) {
+      const q = searchQuery.trim().toLowerCase();
+      list = list.filter((t) => t.name.toLowerCase().includes(q) || t.assignedClass.toLowerCase().includes(q));
+    }
+    return list;
+  }, [teacherAnalytics, teachersNeedingReminder, filterRareOnly, searchQuery]);
+
+  const totalPages = Math.max(1, Math.ceil(displayedTeachers.length / itemsPerPage));
+
+  const paginatedTeachers = useMemo(() => {
+    const start = (currentPage - 1) * itemsPerPage;
+    return displayedTeachers.slice(start, start + itemsPerPage);
+  }, [displayedTeachers, currentPage, itemsPerPage]);
 
   const targetValue = useMemo(() => {
     if (reportTimeframe === "MINGGUAN") return 30;
@@ -125,7 +145,10 @@ export function PembinaReportChart({
               <button
                 key={period}
                 type="button"
-                onClick={() => setReportTimeframe(period)}
+                onClick={() => {
+                  setReportTimeframe(period);
+                  setCurrentPage(1);
+                }}
                 className={`px-3 py-1 rounded-lg text-[10px] font-bold transition-all ${
                   reportTimeframe === period
                     ? "bg-white text-[#1B4D3E] shadow-xs"
@@ -202,7 +225,10 @@ export function PembinaReportChart({
         </div>
 
         <div
-          onClick={() => setFilterRareOnly(!filterRareOnly)}
+          onClick={() => {
+            setFilterRareOnly(!filterRareOnly);
+            setCurrentPage(1);
+          }}
           className={`p-3 rounded-2xl mizan-card-sub flex items-center justify-between cursor-pointer transition-all ${
             filterRareOnly ? "ring-2 ring-red-500 bg-red-50/50" : ""
           }`}
@@ -259,7 +285,10 @@ export function PembinaReportChart({
             </button>
             <button
               type="button"
-              onClick={() => setFilterRareOnly(!filterRareOnly)}
+              onClick={() => {
+                setFilterRareOnly(!filterRareOnly);
+                setCurrentPage(1);
+              }}
               className={`px-3 py-1.5 rounded-xl text-[11px] font-bold transition-colors ${
                 filterRareOnly
                   ? "bg-red-600 text-white shadow-xs"
@@ -274,6 +303,60 @@ export function PembinaReportChart({
 
       {viewMode === "BAR" && (
         <div className="p-4 rounded-2xl mizan-card-sub space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-2 border-b border-[#EEF2F6]">
+            <div className="flex items-center gap-2 flex-wrap">
+              <div className="relative">
+                <Search className="w-3.5 h-3.5 absolute left-2.5 top-2.5 text-[#94A3B8]" />
+                <input
+                  type="text"
+                  placeholder="Cari pembina / kelas..."
+                  value={searchQuery}
+                  onChange={(e) => {
+                    setSearchQuery(e.target.value);
+                    setCurrentPage(1);
+                  }}
+                  className="pl-8 pr-2.5 py-1 text-xs bg-[#F8FAFC] border border-[#E2EBF4] rounded-xl text-[#172033] focus:outline-none focus:border-[#1B4D3E]"
+                />
+              </div>
+
+              <select
+                aria-label="Tampilkan per halaman"
+                value={itemsPerPage}
+                onChange={(e) => {
+                  setItemsPerPage(Number(e.target.value));
+                  setCurrentPage(1);
+                }}
+                className="px-2 py-1 text-xs bg-[#F8FAFC] border border-[#E2EBF4] rounded-xl font-bold text-[#172033] focus:outline-none"
+              >
+                <option value={5}>5 / hal</option>
+                <option value={10}>10 / hal</option>
+                <option value={20}>20 / hal</option>
+              </select>
+            </div>
+
+            <div className="flex items-center gap-2 self-end sm:self-auto text-xs font-bold text-[#64748B]">
+              <span>Hal. {currentPage} / {totalPages}</span>
+              <button
+                type="button"
+                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                disabled={currentPage <= 1}
+                className="p-1 rounded-lg border border-[#E2EBF4] hover:bg-[#EEF2F6] disabled:opacity-30 disabled:pointer-events-none transition-colors"
+                aria-label="Sebelumnya"
+              >
+                <ChevronLeft className="w-3.5 h-3.5" />
+              </button>
+              <button
+                type="button"
+                onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                disabled={currentPage >= totalPages}
+                className="p-1 rounded-lg border border-[#E2EBF4] hover:bg-[#EEF2F6] disabled:opacity-30 disabled:pointer-events-none transition-colors"
+                aria-label="Selanjutnya"
+              >
+                <ChevronRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          </div>
+
           <div className="flex items-center justify-between text-[11px] font-bold text-[#64748B]">
             <div className="flex items-center gap-3">
               <span className="flex items-center gap-1">
@@ -303,8 +386,8 @@ export function PembinaReportChart({
               </span>
             </div>
 
-            <div className="grid grid-cols-5 gap-2 sm:gap-4 h-48 items-end relative z-0">
-              {displayedTeachers.map((teacher) => {
+            <div className={`grid ${itemsPerPage <= 5 ? "grid-cols-5" : itemsPerPage <= 10 ? "grid-cols-5 sm:grid-cols-10" : "grid-cols-5 sm:grid-cols-10 md:grid-cols-20"} gap-2 sm:gap-4 h-48 items-end relative z-0`}>
+              {paginatedTeachers.map((teacher) => {
                 const heightPercent = Math.max(6, Math.min(100, (teacher.periodCount / maxChartValue) * 100));
 
                 return (
@@ -358,6 +441,12 @@ export function PembinaReportChart({
                   </div>
                 );
               })}
+
+              {paginatedTeachers.length === 0 && (
+                <div className="col-span-5 py-12 text-center text-xs text-[#94A3B8]">
+                  Tidak ada data pembina yang sesuai
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -443,12 +532,46 @@ export function PembinaReportChart({
 
       {(viewMode === "LIST" || !compact) && (
         <div className="space-y-2.5 pt-1">
-          <div className="flex items-center justify-between text-[11px] font-bold text-[#94A3B8] px-1 uppercase tracking-wider">
-            <span>Rincian Capaian Asatidzah</span>
-            <span>Target: {targetValue} Input</span>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-1">
+            <div className="flex items-center justify-between text-[11px] font-bold text-[#94A3B8] px-1 uppercase tracking-wider w-full sm:w-auto gap-4">
+              <span>Rincian Capaian Asatidzah ({displayedTeachers.length} Pembina)</span>
+              <span>Target: {targetValue} Input</span>
+            </div>
+
+            {viewMode === "LIST" && (
+              <div className="flex items-center gap-2 flex-wrap">
+                <div className="relative">
+                  <Search className="w-3.5 h-3.5 absolute left-2.5 top-2.5 text-[#94A3B8]" />
+                  <input
+                    type="text"
+                    placeholder="Cari pembina / kelas..."
+                    value={searchQuery}
+                    onChange={(e) => {
+                      setSearchQuery(e.target.value);
+                      setCurrentPage(1);
+                    }}
+                    className="pl-8 pr-2.5 py-1 text-xs bg-[#F8FAFC] border border-[#E2EBF4] rounded-xl text-[#172033] focus:outline-none focus:border-[#1B4D3E]"
+                  />
+                </div>
+
+                <select
+                  aria-label="Tampilkan per halaman"
+                  value={itemsPerPage}
+                  onChange={(e) => {
+                    setItemsPerPage(Number(e.target.value));
+                    setCurrentPage(1);
+                  }}
+                  className="px-2 py-1 text-xs bg-[#F8FAFC] border border-[#E2EBF4] rounded-xl font-bold text-[#172033] focus:outline-none"
+                >
+                  <option value={5}>5 / hal</option>
+                  <option value={10}>10 / hal</option>
+                  <option value={20}>20 / hal</option>
+                </select>
+              </div>
+            )}
           </div>
 
-          {displayedTeachers.map((teacher) => (
+          {paginatedTeachers.map((teacher) => (
             <div
               key={teacher.id}
               className={`p-3 rounded-2xl mizan-card-sub space-y-2 transition-all ${
@@ -512,6 +635,21 @@ export function PembinaReportChart({
               </div>
             </div>
           ))}
+
+          {paginatedTeachers.length === 0 && (
+            <div className="py-8 text-center text-xs text-[#94A3B8]">
+              Tidak ada data pembina yang sesuai dengan kriteria filter
+            </div>
+          )}
+
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+            totalItems={displayedTeachers.length}
+            itemsPerPage={itemsPerPage}
+            itemName="pembina"
+          />
         </div>
       )}
     </Card>

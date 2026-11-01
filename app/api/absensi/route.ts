@@ -181,36 +181,52 @@ export async function DELETE(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
     const id = searchParams.get("id");
+    const idsParam = searchParams.get("ids");
+    let targetIds: string[] = [];
+    if (idsParam) {
+      targetIds = idsParam.split(",").map((s) => s.trim()).filter(Boolean);
+    } else if (id) {
+      targetIds = [id.trim()];
+    } else {
+      try {
+        const body = await req.json();
+        if (Array.isArray(body?.ids)) {
+          targetIds = body.ids.filter(Boolean);
+        }
+      } catch {
+        void 0;
+      }
+    }
 
-    if (!id) {
+    if (targetIds.length === 0) {
       return NextResponse.json(
         { success: false, message: "ID absensi diperlukan." },
         { status: 400 }
       );
     }
 
-    const rows = await query(`
-      SELECT id, santri_id, status, score_impact FROM absensi WHERE id = $1
-    `, [id]);
+    const rows = await query(
+      `SELECT id, santri_id, status, score_impact FROM absensi WHERE id = ANY($1::text[])`,
+      [targetIds]
+    );
 
-    if (rows.length > 0) {
-      const rec = rows[0];
+    for (const rec of rows) {
       const impact = parseFloat(rec.score_impact);
-
       if (impact !== 0) {
-        await query(`
-          UPDATE santri
-          SET current_score = GREATEST(0, LEAST(99, ROUND(current_score - $1, 3)))
-          WHERE id = $2
-        `, [impact, rec.santri_id]);
+        await query(
+          `UPDATE santri
+           SET current_score = GREATEST(0, LEAST(99, ROUND(current_score - $1, 3)))
+           WHERE id = $2`,
+          [impact, rec.santri_id]
+        );
       }
-
-      await query(`DELETE FROM absensi WHERE id = $1`, [id]);
     }
+
+    await query(`DELETE FROM absensi WHERE id = ANY($1::text[])`, [targetIds]);
 
     return NextResponse.json({
       success: true,
-      message: "Data absensi berhasil dihapus."
+      message: `${targetIds.length} data absensi berhasil dihapus.`
     });
   } catch (error: any) {
     return NextResponse.json(

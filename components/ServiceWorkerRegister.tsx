@@ -37,16 +37,23 @@ export function ServiceWorkerRegister() {
 
     const handleChunkError = (event: ErrorEvent | PromiseRejectionEvent) => {
       const reason = "reason" in event ? event.reason : event.error;
-      const msg = reason?.message || String(reason || "");
+      const rawMsg = (
+        ("message" in event && typeof event.message === "string" ? event.message : "") ||
+        reason?.message ||
+        String(reason || "")
+      ).toLowerCase();
+
       if (
-        msg.includes("Failed to fetch dynamically imported module") ||
-        msg.includes("Loading chunk") ||
-        msg.includes("ChunkLoadError")
+        rawMsg.includes("chunkloaderror") ||
+        rawMsg.includes("failed to load chunk") ||
+        rawMsg.includes("loading chunk") ||
+        rawMsg.includes("failed to fetch dynamically imported module") ||
+        rawMsg.includes("error loading dynamically imported module")
       ) {
         const reloadKey = "mizan_chunk_reload";
         const lastReload = sessionStorage.getItem(reloadKey);
         const now = Date.now();
-        if (!lastReload || now - parseInt(lastReload, 10) > 10000) {
+        if (!lastReload || now - parseInt(lastReload, 10) > 6000) {
           sessionStorage.setItem(reloadKey, String(now));
           window.location.reload();
         }
