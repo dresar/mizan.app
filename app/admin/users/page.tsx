@@ -129,7 +129,7 @@ export default function AdminUsersPage() {
             className="px-4 py-2.5 rounded-2xl bg-[#1B4D3E] text-white text-xs font-bold flex items-center gap-2 shadow-sm hover:bg-[#153e32] transition-all self-start sm:self-auto"
           >
             {isAddingUser ? <X className="w-4 h-4" /> : <UserPlus className="w-4 h-4" />}
-            <span>{isAddingUser ? "Batal Tambah" : "Tambah Pengguna Baru"}</span>
+            <span>{isAddingUser ? "Batal" : "Tambah"}</span>
           </button>
         </div>
 
@@ -303,7 +303,7 @@ export default function AdminUsersPage() {
                   ) : (
                     <>
                       <Save className="w-3.5 h-3.5" />
-                      <span>Buat Akun</span>
+                      <span>Simpan</span>
                     </>
                   )}
                 </button>
@@ -417,7 +417,7 @@ export default function AdminUsersPage() {
                           className="inline-flex items-center gap-1 text-[11px] font-bold text-[#1B4D3E] hover:underline"
                         >
                           <KeyRound className="w-3 h-3" />
-                          <span>Atur Ulang Sandi</span>
+                          <span>Reset</span>
                         </button>
 
                         <span className="text-[10px] text-[#94A3B8] flex items-center gap-1 font-bold">

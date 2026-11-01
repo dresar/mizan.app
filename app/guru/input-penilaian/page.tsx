@@ -398,7 +398,7 @@ export default function InputPenilaianPage() {
                   }`}
                 >
                   <Award className="w-4 h-4 shrink-0" />
-                  <span>Prestasi (+)</span>
+                  <span>Prestasi</span>
                 </button>
 
                 <button
@@ -411,7 +411,7 @@ export default function InputPenilaianPage() {
                   }`}
                 >
                   <ShieldAlert className="w-4 h-4 shrink-0" />
-                  <span>Pelanggaran (-)</span>
+                  <span>Pelanggaran</span>
                 </button>
               </div>
 

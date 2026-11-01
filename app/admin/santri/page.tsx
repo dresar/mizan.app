@@ -77,7 +77,7 @@ export default function AdminSantriPage() {
             className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full mizan-btn-primary text-xs font-bold shrink-0 shadow-sm"
           >
             <Plus className="w-3.5 h-3.5" />
-            <span>Kelola Kelas</span>
+            <span>Kelas</span>
           </button>
         </div>
 

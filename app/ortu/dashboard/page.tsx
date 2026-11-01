@@ -29,7 +29,7 @@ export default function OrtuDashboardPage() {
           className="w-full py-2.5 rounded-full mizan-btn-primary text-xs font-bold flex items-center justify-center gap-1.5"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
-          <span>Kembali ke Halaman Masuk</span>
+          <span>Masuk</span>
         </button>
       </div>
     </div>

@@ -214,7 +214,7 @@ export default function AdminKategoriPelanggaranPage() {
               className="inline-flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-white border border-[#D4C9B5] text-[#1C2826] text-xs font-bold hover:bg-[#FAF7F2] transition-colors"
             >
               <FolderPlus className="w-3.5 h-3.5 text-[#C5A059]" />
-              + Kategori
+              Kategori
             </button>
 
             <button
@@ -223,7 +223,7 @@ export default function AdminKategoriPelanggaranPage() {
               className="inline-flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-white border border-[#D4C9B5] text-[#1C2826] text-xs font-bold hover:bg-[#FAF7F2] transition-colors"
             >
               <Layers className="w-3.5 h-3.5 text-[#1B4D3E]" />
-              + Unsur Penilaian
+              Unsur
             </button>
 
             <button
@@ -232,7 +232,7 @@ export default function AdminKategoriPelanggaranPage() {
               className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-2xl bg-[#1B4D3E] text-white text-xs font-bold hover:bg-[#143B2F] shadow-xs transition-colors"
             >
               <Plus className="w-4 h-4" />
-              + Indikator & Skor
+              Indikator
             </button>
           </div>
         </div>
@@ -523,7 +523,7 @@ export default function AdminKategoriPelanggaranPage() {
                   type="submit"
                   className="px-4 py-2 text-xs font-bold rounded-lg bg-[#1B4D3E] text-white hover:bg-[#143B2F] transition-colors shadow-xs"
                 >
-                  Simpan Indikator
+                  Simpan
                 </button>
               </div>
             </form>
@@ -581,7 +581,7 @@ export default function AdminKategoriPelanggaranPage() {
                 type="submit"
                 className="px-4 py-2 text-xs font-bold rounded-lg bg-[#1B4D3E] text-white hover:bg-[#143B2F] transition-colors shadow-xs"
               >
-                Simpan Unsur
+                Simpan
               </button>
             </div>
           </form>
@@ -634,7 +634,7 @@ export default function AdminKategoriPelanggaranPage() {
                 type="submit"
                 className="px-4 py-2 text-xs font-bold rounded-lg bg-[#1B4D3E] text-white hover:bg-[#143B2F] transition-colors shadow-xs"
               >
-                Simpan Kategori
+                Simpan
               </button>
             </div>
           </form>

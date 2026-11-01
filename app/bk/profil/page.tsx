@@ -91,7 +91,7 @@ export default function PengasuhanProfilPage() {
 
       const data = await res.json();
       if (data.success) {
-        showToast("Foto profil tersimpan di storage VPS.", "success");
+        showToast("Foto profil berhasil disimpan.", "success");
         updateUserAvatar(data.avatarUrl);
         setSelectedFile(null);
         setPreviewUrl("");
@@ -178,7 +178,7 @@ export default function PengasuhanProfilPage() {
           <div className="flex items-center gap-2 pb-1 border-b border-[#E2E8F0]">
             <Camera className="w-4 h-4 text-[#A8833E]" />
             <h2 className="text-xs font-bold text-[#172033] uppercase tracking-wider">
-              Unggah Foto Profil (Storage VPS)
+              Foto Profil
             </h2>
           </div>
 
@@ -205,7 +205,7 @@ export default function PengasuhanProfilPage() {
                   className="block w-full text-xs text-[#64748B] file:mr-2.5 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-[11px] file:font-bold file:bg-[#1B4D3E] file:text-white hover:file:bg-[#153e32] cursor-pointer"
                 />
                 <p className="text-[10px] text-[#94A3B8]">
-                  Format JPG, PNG, atau WebP (Maksimal 5 MB). Disimpan di storage VPS lokal.
+                  Format JPG, PNG, atau WebP (Maksimal 5 MB).
                 </p>
               </div>
             </div>
@@ -218,12 +218,12 @@ export default function PengasuhanProfilPage() {
               {isSavingAvatar ? (
                 <>
                   <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                  <span>Mengunggah ke VPS...</span>
+                  <span>Menyimpan...</span>
                 </>
               ) : (
                 <>
                   <Save className="w-3.5 h-3.5" />
-                  <span>Simpan Foto ke Server VPS</span>
+                  <span>Simpan</span>
                 </>
               )}
             </button>
@@ -282,7 +282,7 @@ export default function PengasuhanProfilPage() {
               ) : (
                 <>
                   <Save className="w-3.5 h-3.5" />
-                  <span>Simpan Kata Sandi</span>
+                  <span>Simpan</span>
                 </>
               )}
             </button>
@@ -296,7 +296,7 @@ export default function PengasuhanProfilPage() {
             className="w-full py-3 px-4 rounded-2xl mizan-card bg-white text-xs font-bold flex items-center justify-center gap-2 text-red-600 border border-red-200 hover:bg-red-50 transition-colors shadow-xs cursor-pointer"
           >
             <LogOut className="w-4 h-4" />
-            <span>Keluar dari Aplikasi</span>
+            <span>Keluar</span>
           </button>
         </div>
       </div>

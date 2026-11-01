@@ -321,7 +321,7 @@ export default function PengasuhanAbsenPage() {
               onClick={handleMarkAllHadir}
               className="text-[11px] font-bold text-[#065F46] bg-[#ECFDF5] px-3 py-1 rounded-full mizan-pill hover:bg-[#D1FAE5] transition-colors"
             >
-              Tandai Semua Hadir
+              Semua
             </button>
           </div>
 
@@ -473,7 +473,7 @@ export default function PengasuhanAbsenPage() {
                   onClick={() => setShowReviewModal(false)}
                   className="flex-1 py-2.5 rounded-xl text-xs font-bold text-[#64748B] bg-[#EEF2F6] hover:bg-[#E2E8F0]"
                 >
-                  Periksa Lagi
+                  Periksa
                 </button>
                 <button
                   type="button"

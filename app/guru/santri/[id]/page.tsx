@@ -132,7 +132,7 @@ function SantriDetailContent() {
             className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full mizan-btn-primary text-xs font-bold shadow-md hover:scale-105 transition-transform"
           >
             <Printer className="w-4 h-4" />
-            <span>Cetak / Unduh PDF</span>
+            <span>Cetak</span>
           </button>
         </div>
 

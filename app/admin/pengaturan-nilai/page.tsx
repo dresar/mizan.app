@@ -60,7 +60,7 @@ export default function AdminPengaturanNilaiPage() {
             className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-lg border border-[#D4C9B5] bg-white text-[#5C6B64] hover:bg-[#FAF7F2] transition-colors"
           >
             <RefreshCcw className="w-3.5 h-3.5" />
-            Reset Default Pondok
+            Reset
           </button>
         </div>
 
@@ -311,7 +311,7 @@ export default function AdminPengaturanNilaiPage() {
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-[#1B4D3E] text-white text-xs font-bold hover:bg-[#143B2F] shadow-xs transition-colors"
             >
               <Save className="w-4 h-4" />
-              Simpan Pengaturan Nilai
+              Simpan
             </button>
           </div>
         </form>

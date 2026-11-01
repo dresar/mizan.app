@@ -204,11 +204,11 @@ export default function LoginPage() {
               {isLoading ? (
                 <>
                   <Loader2 className="w-4 h-4 animate-spin" />
-                  <span>Memeriksa Akun...</span>
+                  <span>Memeriksa...</span>
                 </>
               ) : (
                 <>
-                  <span>Masuk Aplikasi</span>
+                  <span>Masuk</span>
                   <ArrowRight className="w-4 h-4" />
                 </>
               )}
@@ -252,13 +252,13 @@ export default function LoginPage() {
               })}
             </div>
             <p className="text-[10px] text-center text-[#94A3B8] mt-2">
-              Klik salah satu akun di atas untuk mengisi form, lalu klik tombol Masuk Aplikasi.
+              Pilih akun untuk mengisi formulir secara otomatis, lalu tekan tombol Masuk.
             </p>
           </div>
         </div>
 
         <p className="text-center text-[10px] text-[#94A3B8]">
-          MIZAN v4.1 • Terhubung ke PostgreSQL Neon
+          MIZAN • Pondok Pesantren Raudhatussalam
         </p>
       </div>
     </div>

@@ -61,7 +61,7 @@ export async function POST(req: Request) {
     return NextResponse.json({
       success: true,
       avatarUrl: relativeUrl,
-      message: "Foto profil berhasil disimpan ke storage VPS."
+      message: "Foto profil berhasil disimpan."
     });
   } catch (error: any) {
     return NextResponse.json(

@@ -56,9 +56,9 @@ export default function Header() {
           <button
             type="button"
             onClick={handleLogout}
-            title="Keluar / Ganti Akun"
+            title="Keluar"
             className="p-2 rounded-2xl border border-[#E2EBF4] hover:bg-red-50 text-[#64748B] hover:text-red-600 transition-colors shrink-0"
-            aria-label="Keluar dari akun"
+            aria-label="Keluar"
           >
             <LogOut className="w-4 h-4" />
           </button>
