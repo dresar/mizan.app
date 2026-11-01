@@ -50,8 +50,6 @@ export default function Header() {
     }
   }, []);
 
-  const uParam = currentUser?.username ? `?u=${encodeURIComponent(currentUser.username)}` : "";
-
   const notifications: MizanNotification[] = useMemo(() => {
     return [
       {
@@ -60,7 +58,7 @@ export default function Header() {
         message: "Terdapat santri dalam batas perhatian pembinaan adab khusus pondok.",
         time: "10m lalu",
         type: "urgent",
-        link: activeRole === "PENGASUHAN" ? `/bk/santri${uParam}` : `/admin/santri${uParam}`
+        link: activeRole === "PENGASUHAN" ? "/bk/santri" : "/admin/santri"
       },
       {
         id: "notif-sholat-today",
@@ -68,7 +66,7 @@ export default function Header() {
         message: "Data kehadiran sholat 7 waktu santri hari ini telah tercatat tertib.",
         time: "45m lalu",
         type: "success",
-        link: activeRole === "PENGASUHAN" ? `/bk/history${uParam}` : `/guru/absen${uParam}`
+        link: activeRole === "PENGASUHAN" ? "/bk/history" : "/guru/absen"
       },
       {
         id: "notif-rapor-master",
@@ -76,7 +74,7 @@ export default function Header() {
         message: "Tabel rekapitulasi rapor santri dan santriwati siap diunduh & dicetak.",
         time: "2j lalu",
         type: "info",
-        link: `/admin/rapor${uParam}`
+        link: "/admin/rapor"
       },
       {
         id: "notif-hasanah-baru",
@@ -84,7 +82,7 @@ export default function Header() {
         message: "Catatan kebaikan dan prestasi baru santri berhasil dicatat oleh pembina.",
         time: "4j lalu",
         type: "success",
-        link: activeRole === "PENGASUHAN" ? `/bk/history${uParam}` : `/guru/riwayat${uParam}`
+        link: activeRole === "PENGASUHAN" ? "/bk/history" : "/guru/riwayat"
       },
       {
         id: "notif-jadwal-disiplin",
@@ -92,10 +90,10 @@ export default function Header() {
         message: "Pemeriksaan kedisiplinan dan kerapian kamar santri pekan ini oleh mudabbir.",
         time: "1h lalu",
         type: "warning",
-        link: activeRole === "SUPER_ADMIN" ? `/admin/wali-kelas${uParam}` : `/guru/dashboard${uParam}`
+        link: activeRole === "SUPER_ADMIN" ? "/admin/wali-kelas" : "/guru/dashboard"
       }
     ];
-  }, [currentUser, activeRole, uParam]);
+  }, [currentUser, activeRole]);
 
   const handleMarkAsRead = (id: string) => {
     setReadNotifIds((prev) => {
@@ -124,11 +122,15 @@ export default function Header() {
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      const target = event.target as Node;
+      if (dropdownRef.current && !dropdownRef.current.contains(target)) {
         setIsOpen(false);
       }
-      if (notifRef.current && !notifRef.current.contains(event.target as Node)) {
-        setIsNotifOpen(false);
+      if (notifRef.current && !notifRef.current.contains(target)) {
+        const mobileDrawer = document.getElementById("mizan-notif-drawer");
+        if (!mobileDrawer || !mobileDrawer.contains(target)) {
+          setIsNotifOpen(false);
+        }
       }
     }
 
@@ -146,13 +148,13 @@ export default function Header() {
     router.push("/login");
   };
 
-  let dashboardHref = `/guru/dashboard${uParam}`;
-  if (activeRole === "SUPER_ADMIN") dashboardHref = `/admin/dashboard${uParam}`;
-  if (activeRole === "PENGASUHAN") dashboardHref = `/bk/dashboard${uParam}`;
+  let dashboardHref = "/guru/dashboard";
+  if (activeRole === "SUPER_ADMIN") dashboardHref = "/admin/dashboard";
+  if (activeRole === "PENGASUHAN") dashboardHref = "/bk/dashboard";
 
-  let profileHref = `/guru/profil${uParam}`;
-  if (activeRole === "SUPER_ADMIN") profileHref = `/admin/users${uParam}`;
-  if (activeRole === "PENGASUHAN") profileHref = `/bk/profil${uParam}`;
+  let profileHref = "/guru/profil";
+  if (activeRole === "SUPER_ADMIN") profileHref = "/admin/users";
+  if (activeRole === "PENGASUHAN") profileHref = "/bk/profil";
 
   const roleTitle =
     activeRole === "SUPER_ADMIN"
