@@ -1,8 +1,17 @@
 import { NextResponse } from "next/server";
 import { query } from "@/lib/db";
+import { verifyRequestAuth } from "@/lib/auth-server";
 
 export async function GET(request: Request) {
   try {
+    const auth = verifyRequestAuth(request, "SUPER_ADMIN");
+    if (!auth.authorized) {
+      return NextResponse.json(
+        { success: false, message: auth.message || "Akses ditolak: Hanya Super Admin yang berwenang mengunduh cadangan data." },
+        { status: 403 }
+      );
+    }
+
     const { searchParams } = new URL(request.url);
     const isDownload = searchParams.get("download") === "1";
     const scope = searchParams.get("scope") || "all";

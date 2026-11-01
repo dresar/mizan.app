@@ -26,7 +26,6 @@ import { Avatar } from "@/components/ui/Avatar";
 export function Sidebar() {
   const pathname = usePathname();
   const { activeRole, currentUser, isMobileNavOpen, setIsMobileNavOpen, settings } = useMizan();
-  const uParam = currentUser?.username ? `?u=${encodeURIComponent(currentUser.username)}` : "";
   const appLogo = settings?.appLogoUrl || "/logo.png";
 
   useEffect(() => {
@@ -125,7 +124,7 @@ export function Sidebar() {
             return (
               <Link
                 key={item.href}
-                href={`${item.href}${uParam}`}
+                href={item.href}
                 className={`flex items-center gap-3 px-3.5 py-2.5 rounded-2xl transition-all text-xs ${
                   isActive
                     ? "bg-[#1B4D3E] text-white font-bold shadow-sm"
@@ -216,7 +215,7 @@ export function Sidebar() {
                 return (
                   <Link
                     key={item.href}
-                    href={`${item.href}${uParam}`}
+                    href={item.href}
                     onClick={() => setIsMobileNavOpen(false)}
                     className={`flex items-center gap-3 px-3.5 py-2.5 rounded-2xl transition-all text-xs ${
                       isActive

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { query } from "@/lib/db";
+import { createSessionToken } from "@/lib/auth-server";
 
 export async function POST(req: Request) {
   try {
@@ -32,7 +33,7 @@ export async function POST(req: Request) {
 
     const user = rows[0];
 
-    if (user.password !== password && password !== "RDS123" && password !== "password123") {
+    if (user.password !== password && password !== "RDS123") {
       return NextResponse.json(
         { success: false, message: "Kata sandi yang Anda masukkan salah." },
         { status: 401 }
@@ -40,6 +41,11 @@ export async function POST(req: Request) {
     }
 
     const { password: _, ...userProfile } = user;
+    const sessionToken = createSessionToken({
+      id: userProfile.id,
+      username: userProfile.username,
+      role: userProfile.role
+    });
 
     const response = NextResponse.json({
       success: true,
@@ -47,15 +53,22 @@ export async function POST(req: Request) {
       user: userProfile
     });
 
+    response.cookies.set("mizan_session", sessionToken, {
+      path: "/",
+      maxAge: 86400 * 7,
+      sameSite: "lax",
+      httpOnly: false
+    });
+
     response.cookies.set("mizan_auth", userProfile.role, {
       path: "/",
-      maxAge: 86400,
+      maxAge: 86400 * 7,
       sameSite: "lax"
     });
 
     response.cookies.set("mizan_uid", userProfile.id, {
       path: "/",
-      maxAge: 86400,
+      maxAge: 86400 * 7,
       sameSite: "lax"
     });
 

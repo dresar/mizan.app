@@ -48,7 +48,8 @@ mizan.apps/
 │   ├── PembinaReportChart.tsx # Grafik laporan pembina
 │   ├── Header.tsx, Sidebar.tsx, BottomNav.tsx, RoleShell.tsx, AnnouncementPopup.tsx
 │   └── ui/                    # Atomik (Card, Badge, Avatar, ScoreBar, Toast, Modal)
-├── lib/                       # db.ts, mizan-context.tsx, mock-data.ts, pdf-generator.ts, quick-accounts.ts
+├── middleware.ts              # Edge server auth guard & role protection (/admin, /bk, /guru, /api/admin)
+├── lib/                       # auth-server.ts, db.ts, mizan-context.tsx, mock-data.ts, pdf-generator.ts, quick-accounts.ts
 └── public/                    # manifest.json, sw.js, favicon, icons, downloads/ (APK/iOS config)
 ```
 

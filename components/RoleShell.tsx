@@ -19,24 +19,6 @@ export function RoleShell({ children }: RoleShellProps) {
   const { currentUser, activeRole, isAuthenticated, isAuthLoading } = useMizan();
 
   useEffect(() => {
-    if (typeof window !== "undefined" && currentUser?.username) {
-      const url = new URL(window.location.href);
-      let changed = false;
-      if (url.searchParams.get("u") !== currentUser.username) {
-        url.searchParams.set("u", currentUser.username);
-        changed = true;
-      }
-      if (url.searchParams.get("user") !== currentUser.username) {
-        url.searchParams.set("user", currentUser.username);
-        changed = true;
-      }
-      if (changed) {
-        window.history.replaceState(null, "", url.toString());
-      }
-    }
-  }, [currentUser, pathname]);
-
-  useEffect(() => {
     if (isAuthLoading) return;
 
     if (!isAuthenticated || !currentUser?.id || !activeRole) {
@@ -44,25 +26,23 @@ export function RoleShell({ children }: RoleShellProps) {
       return;
     }
 
-    const u = encodeURIComponent(currentUser.username || "");
-
     if (pathname.startsWith("/admin")) {
       if (activeRole !== "SUPER_ADMIN") {
         if (activeRole === "PENGASUHAN") {
-          router.replace(`/bk/dashboard?u=${u}`);
+          router.replace("/bk/dashboard");
         } else {
-          router.replace(`/guru/dashboard?u=${u}`);
+          router.replace("/guru/dashboard");
         }
       }
     } else if (pathname.startsWith("/bk")) {
       if (activeRole === "SUPER_ADMIN") {
         if (pathname === "/bk/history") {
-          router.replace(`/admin/absensi?u=${u}`);
+          router.replace("/admin/absensi");
         } else {
-          router.replace(`/admin/dashboard?u=${u}`);
+          router.replace("/admin/dashboard");
         }
       } else if (activeRole !== "PENGASUHAN") {
-        router.replace(`/guru/dashboard?u=${u}`);
+        router.replace("/guru/dashboard");
       }
     } else if (pathname.startsWith("/guru")) {
       if (activeRole === "SUPER_ADMIN") {
@@ -71,7 +51,7 @@ export function RoleShell({ children }: RoleShellProps) {
           pathname === "/guru/dashboard" ||
           pathname === "/guru/profil"
         ) {
-          router.replace(`/admin/dashboard?u=${u}`);
+          router.replace("/admin/dashboard");
         }
       } else if (activeRole === "PENGASUHAN") {
         if (
@@ -79,7 +59,7 @@ export function RoleShell({ children }: RoleShellProps) {
           pathname === "/guru/dashboard" ||
           pathname === "/guru/profil"
         ) {
-          router.replace(`/bk/dashboard?u=${u}`);
+          router.replace("/bk/dashboard");
         }
       }
     }
@@ -95,6 +75,32 @@ export function RoleShell({ children }: RoleShellProps) {
 
   if (!isAuthenticated || !currentUser?.id || !activeRole) {
     return null;
+  }
+
+  const isAuthorized = (() => {
+    if (pathname.startsWith("/admin")) {
+      return activeRole === "SUPER_ADMIN";
+    }
+    if (pathname.startsWith("/bk")) {
+      return activeRole === "PENGASUHAN" || activeRole === "SUPER_ADMIN";
+    }
+    if (pathname.startsWith("/guru")) {
+      return activeRole === "GURU" || activeRole === "SUPER_ADMIN";
+    }
+    return true;
+  })();
+
+  if (!isAuthorized) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-[#F5F1E8] p-4 text-center">
+        <div className="max-w-md w-full p-6 rounded-3xl bg-white border border-[#E2EBF4] shadow-sm space-y-3">
+          <h2 className="text-base font-bold text-[#172033]">Akses Ditolak</h2>
+          <p className="text-xs text-[#64748B]">
+            Anda tidak memiliki wewenang untuk membuka halaman ini.
+          </p>
+        </div>
+      </div>
+    );
   }
 
   return (

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { query } from "@/lib/db";
+import { verifyRequestAuth } from "@/lib/auth-server";
 
 export async function GET(req: Request) {
   try {
@@ -43,6 +44,14 @@ export async function GET(req: Request) {
 
 export async function POST(req: Request) {
   try {
+    const auth = verifyRequestAuth(req, "SUPER_ADMIN");
+    if (!auth.authorized) {
+      return NextResponse.json(
+        { success: false, message: auth.message || "Akses ditolak: Memerlukan hak akses Super Admin." },
+        { status: 403 }
+      );
+    }
+
     const body = await req.json();
 
     if (Array.isArray(body)) {
@@ -144,6 +153,14 @@ export async function POST(req: Request) {
 
 export async function PUT(req: Request) {
   try {
+    const auth = verifyRequestAuth(req, "SUPER_ADMIN");
+    if (!auth.authorized) {
+      return NextResponse.json(
+        { success: false, message: auth.message || "Akses ditolak: Memerlukan hak akses Super Admin." },
+        { status: 403 }
+      );
+    }
+
     const { id, nis, name, gender, class: className, baseScore, waliName, waliPhone, status } = await req.json();
 
     if (!id) {
@@ -181,6 +198,14 @@ export async function PUT(req: Request) {
 
 export async function DELETE(req: Request) {
   try {
+    const auth = verifyRequestAuth(req, "SUPER_ADMIN");
+    if (!auth.authorized) {
+      return NextResponse.json(
+        { success: false, message: auth.message || "Akses ditolak: Memerlukan hak akses Super Admin." },
+        { status: 403 }
+      );
+    }
+
     const { searchParams } = new URL(req.url);
     const id = searchParams.get("id");
 

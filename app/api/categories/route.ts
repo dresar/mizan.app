@@ -1,8 +1,17 @@
 import { NextResponse } from "next/server";
 import { query } from "@/lib/db";
+import { verifyRequestAuth } from "@/lib/auth-server";
 
 export async function POST(req: Request) {
   try {
+    const auth = verifyRequestAuth(req, "SUPER_ADMIN");
+    if (!auth.authorized) {
+      return NextResponse.json(
+        { success: false, message: auth.message || "Akses ditolak: Memerlukan hak akses Super Admin." },
+        { status: 403 }
+      );
+    }
+
     const body = await req.json();
     const { action } = body;
 

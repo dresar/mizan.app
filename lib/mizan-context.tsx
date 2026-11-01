@@ -133,32 +133,34 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
         if (data.santri) setSantriList(data.santri);
         if (data.users && data.users.length > 0) {
           setUserList(data.users);
-          const urlParams = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
-          const uParam = urlParams ? (urlParams.get("u") || urlParams.get("user")) : null;
-          let matched: UserProfile | undefined = undefined;
-          if (uParam) {
-            matched = data.users.find((u: UserProfile) => u.username && u.username.toLowerCase() === uParam.toLowerCase());
-          }
-          if (!matched) {
-            const savedUserId = typeof window !== "undefined" ? localStorage.getItem(STORAGE_KEY_USER) : null;
-            if (savedUserId) {
-              matched = data.users.find((u: UserProfile) => u.id === savedUserId);
+        }
+
+        let authUser: UserProfile | null = null;
+        try {
+          const authRes = await fetch("/api/auth/me");
+          if (authRes.ok) {
+            const authData = await authRes.json();
+            if (authData.authenticated && authData.user) {
+              authUser = authData.user;
             }
           }
-          if (matched) {
-            setCurrentUser(matched);
-            setActiveRole(matched.role);
-            setIsAuthenticated(true);
-            try {
-              localStorage.setItem(STORAGE_KEY_ROLE, matched.role);
-              localStorage.setItem(STORAGE_KEY_USER, matched.id);
-            } catch {
-              void 0;
-            }
-          } else {
-            setCurrentUser(GUEST_USER);
-            setActiveRole(null);
-            setIsAuthenticated(false);
+        } catch {
+          authUser = null;
+        }
+
+        if (authUser) {
+          setCurrentUser(authUser);
+          setActiveRole(authUser.role);
+          setIsAuthenticated(true);
+        } else {
+          setCurrentUser(GUEST_USER);
+          setActiveRole(null);
+          setIsAuthenticated(false);
+          try {
+            localStorage.removeItem(STORAGE_KEY_ROLE);
+            localStorage.removeItem(STORAGE_KEY_USER);
+          } catch {
+            void 0;
           }
         }
         if (data.kelasList && data.kelasList.length > 0) setKelasList(data.kelasList);
@@ -225,12 +227,16 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
     try {
       localStorage.removeItem(STORAGE_KEY_ROLE);
       localStorage.removeItem(STORAGE_KEY_USER);
+      document.cookie = "mizan_session=; path=/; max-age=0; SameSite=Lax";
       document.cookie = "mizan_auth=; path=/; max-age=0; SameSite=Lax";
       document.cookie = "mizan_uid=; path=/; max-age=0; SameSite=Lax";
     } catch {
       void 0;
     }
     showToast("Anda telah keluar dari aplikasi.", "info");
+    if (typeof window !== "undefined") {
+      window.location.href = "/login";
+    }
   };
 
   const updateUserAvatar = (newUrl: string) => {

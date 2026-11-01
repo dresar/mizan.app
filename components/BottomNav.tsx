@@ -18,7 +18,6 @@ import { useMizan } from "@/lib/mizan-context";
 export function BottomNav() {
   const pathname = usePathname();
   const { activeRole, currentUser } = useMizan();
-  const uParam = currentUser?.username ? `?u=${encodeURIComponent(currentUser.username)}` : "";
 
   let navItems: { label: string; href: string; icon: React.ReactNode }[] = [];
 
@@ -65,7 +64,7 @@ export function BottomNav() {
           return (
             <Link
               key={item.href}
-              href={`${item.href}${uParam}`}
+              href={item.href}
               className={`flex-1 flex flex-col items-center justify-center min-h-[42px] py-1 px-0.5 rounded-full transition-all text-center ${
                 isActive
                   ? "text-[#1B4D3E] font-black bg-[#ECFDF5]"

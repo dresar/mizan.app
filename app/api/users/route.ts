@@ -1,8 +1,17 @@
 import { NextResponse } from "next/server";
 import { query } from "@/lib/db";
+import { verifyRequestAuth } from "@/lib/auth-server";
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
+    const auth = verifyRequestAuth(req, "SUPER_ADMIN");
+    if (!auth.authorized) {
+      return NextResponse.json(
+        { success: false, message: auth.message || "Akses ditolak: Memerlukan hak akses Super Admin." },
+        { status: 403 }
+      );
+    }
+
     const rows = await query(`
       SELECT 
         id, username, name, role, role_title as "roleTitle", 
@@ -24,6 +33,14 @@ export async function GET() {
 
 export async function POST(req: Request) {
   try {
+    const auth = verifyRequestAuth(req, "SUPER_ADMIN");
+    if (!auth.authorized) {
+      return NextResponse.json(
+        { success: false, message: auth.message || "Akses ditolak: Memerlukan hak akses Super Admin." },
+        { status: 403 }
+      );
+    }
+
     const body = await req.json();
     const { username, password, name, role, roleTitle, gender, assignedClass } = body;
 
@@ -90,6 +107,14 @@ export async function POST(req: Request) {
 
 export async function PUT(req: Request) {
   try {
+    const auth = verifyRequestAuth(req, "SUPER_ADMIN");
+    if (!auth.authorized) {
+      return NextResponse.json(
+        { success: false, message: auth.message || "Akses ditolak: Memerlukan hak akses Super Admin." },
+        { status: 403 }
+      );
+    }
+
     const body = await req.json();
     const { id, name, password, role, roleTitle, gender, assignedClass, isActive } = body;
 
@@ -129,6 +154,14 @@ export async function PUT(req: Request) {
 
 export async function DELETE(req: Request) {
   try {
+    const auth = verifyRequestAuth(req, "SUPER_ADMIN");
+    if (!auth.authorized) {
+      return NextResponse.json(
+        { success: false, message: auth.message || "Akses ditolak: Memerlukan hak akses Super Admin." },
+        { status: 403 }
+      );
+    }
+
     const { searchParams } = new URL(req.url);
     const id = searchParams.get("id");
 

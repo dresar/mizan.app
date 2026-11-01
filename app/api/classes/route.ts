@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { query } from "@/lib/db";
+import { verifyRequestAuth } from "@/lib/auth-server";
 
 export async function GET() {
   try {
@@ -33,6 +34,14 @@ export async function GET() {
 
 export async function POST(req: Request) {
   try {
+    const auth = verifyRequestAuth(req, "SUPER_ADMIN");
+    if (!auth.authorized) {
+      return NextResponse.json(
+        { success: false, message: auth.message || "Akses ditolak: Memerlukan hak akses Super Admin." },
+        { status: 403 }
+      );
+    }
+
     const { name, gender = "Putra", waliKelas = "", guruId = "" } = await req.json();
     if (!name || !name.trim()) {
       return NextResponse.json(
@@ -67,6 +76,14 @@ export async function POST(req: Request) {
 
 export async function PUT(req: Request) {
   try {
+    const auth = verifyRequestAuth(req, "SUPER_ADMIN");
+    if (!auth.authorized) {
+      return NextResponse.json(
+        { success: false, message: auth.message || "Akses ditolak: Memerlukan hak akses Super Admin." },
+        { status: 403 }
+      );
+    }
+
     const { name, gender, waliKelas, guruId } = await req.json();
     if (!name) {
       return NextResponse.json(
@@ -106,6 +123,14 @@ export async function PUT(req: Request) {
 
 export async function DELETE(req: Request) {
   try {
+    const auth = verifyRequestAuth(req, "SUPER_ADMIN");
+    if (!auth.authorized) {
+      return NextResponse.json(
+        { success: false, message: auth.message || "Akses ditolak: Memerlukan hak akses Super Admin." },
+        { status: 403 }
+      );
+    }
+
     const { searchParams } = new URL(req.url);
     const name = searchParams.get("name");
 

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { query } from "@/lib/db";
 import { DEFAULT_SETTINGS, AppSettings } from "@/lib/mock-data";
+import { verifyRequestAuth } from "@/lib/auth-server";
 
 export async function GET() {
   try {
@@ -26,6 +27,14 @@ export async function GET() {
 
 export async function PUT(req: Request) {
   try {
+    const auth = verifyRequestAuth(req, "SUPER_ADMIN");
+    if (!auth.authorized) {
+      return NextResponse.json(
+        { success: false, message: auth.message || "Akses ditolak: Hanya Super Admin yang berwenang mengubah pengaturan nilai." },
+        { status: 403 }
+      );
+    }
+
     const body = await req.json();
     const {
       settings,

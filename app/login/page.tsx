@@ -81,13 +81,12 @@ export default function LoginPage() {
 
       if (data.success && data.user) {
         loginUser(data.user);
-        const u = encodeURIComponent(data.user.username);
         if (data.user.role === "SUPER_ADMIN") {
-          router.push(`/admin/dashboard?u=${u}`);
+          router.push("/admin/dashboard");
         } else if (data.user.role === "PENGASUHAN") {
-          router.push(`/bk/dashboard?u=${u}`);
+          router.push("/bk/dashboard");
         } else {
-          router.push(`/guru/dashboard?u=${u}`);
+          router.push("/guru/dashboard");
         }
       } else {
         setErrorMessage(data.message || "Gagal masuk.");
@@ -120,13 +119,12 @@ export default function LoginPage() {
 
       if (data.success && data.user) {
         loginUser(data.user);
-        const u = encodeURIComponent(data.user.username);
         if (data.user.role === "SUPER_ADMIN") {
-          router.push(`/admin/dashboard?u=${u}`);
+          router.push("/admin/dashboard");
         } else if (data.user.role === "PENGASUHAN") {
-          router.push(`/bk/dashboard?u=${u}`);
+          router.push("/bk/dashboard");
         } else {
-          router.push(`/guru/dashboard?u=${u}`);
+          router.push("/guru/dashboard");
         }
       } else {
         setErrorMessage(data.message || "Username atau kata sandi tidak cocok.");

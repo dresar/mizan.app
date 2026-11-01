@@ -1,14 +1,30 @@
 import { NextResponse } from "next/server";
 import { query } from "@/lib/db";
+import { verifyRequestAuth } from "@/lib/auth-server";
 
 export async function POST(req: Request) {
   try {
+    const auth = verifyRequestAuth(req);
+    if (!auth.authorized || !auth.session) {
+      return NextResponse.json(
+        { success: false, message: auth.message || "Autentikasi diperlukan." },
+        { status: 401 }
+      );
+    }
+
     const { userId, newPassword, avatarUrl } = await req.json();
 
     if (!userId) {
       return NextResponse.json(
         { success: false, message: "User ID wajib disertakan." },
         { status: 400 }
+      );
+    }
+
+    if (auth.session.role !== "SUPER_ADMIN" && auth.session.userId !== userId) {
+      return NextResponse.json(
+        { success: false, message: "Akses ditolak: Anda tidak memiliki wewenang untuk akun ini." },
+        { status: 403 }
       );
     }
 
