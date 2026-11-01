@@ -131,7 +131,7 @@ export default function OrtuDashboardPage() {
   const todaySholatStatuses = useMemo(() => {
     if (!selectedSantri) return [];
     return sholatWaktu.map((waktu) => {
-      const record = studentAbsensi.find((a) => a.waktu === waktu);
+      const record = studentAbsensi.find((a) => a.waktuSholat === waktu);
       return {
         waktu,
         status: record ? record.status : "Hadir",
@@ -663,18 +663,18 @@ export default function OrtuDashboardPage() {
                       </div>
                       <div className="min-w-0">
                         <p className="text-xs font-bold text-[#172033]">
-                          {item.indikator || item.unsur || "Prestasi Kebaikan"}
+                          {item.indicatorText || item.unsurName || "Prestasi Kebaikan"}
                         </p>
                         <p className="text-[10px] text-[#065F46] font-semibold mt-0.5">
-                          Kategori: {item.kategori}
+                          Kategori: {item.category}
                         </p>
-                        {item.catatan && (
+                        {item.notes && (
                           <p className="text-[11px] text-[#64748B] mt-1 leading-relaxed">
-                            {item.catatan}
+                            {item.notes}
                           </p>
                         )}
                         <p className="text-[9px] text-[#94A3B8] font-mono mt-1">
-                          Dicatat: {item.createdByName || "Pembina Santri"}
+                          Dicatat: {item.guruName || "Pembina Santri"}
                         </p>
                       </div>
                     </div>
@@ -712,18 +712,18 @@ export default function OrtuDashboardPage() {
                       </div>
                       <div className="min-w-0">
                         <p className="text-xs font-bold text-[#172033]">
-                          {item.indikator || item.unsur || "Catatan Kedisiplinan"}
+                          {item.indicatorText || item.unsurName || "Catatan Kedisiplinan"}
                         </p>
                         <p className="text-[10px] text-[#B91C1C] font-semibold mt-0.5">
-                          Tingkat: {item.kategori || "Pembinaan"}
+                          Tingkat: {item.tingkat || item.category || "Pembinaan"}
                         </p>
-                        {item.catatan && (
+                        {item.notes && (
                           <p className="text-[11px] text-[#64748B] mt-1 leading-relaxed">
-                            {item.catatan}
+                            {item.notes}
                           </p>
                         )}
                         <p className="text-[9px] text-[#94A3B8] font-mono mt-1">
-                          Pembina: {item.createdByName || "Bagian Pengasuhan"}
+                          Pembina: {item.guruName || "Bagian Pengasuhan"}
                         </p>
                       </div>
                     </div>
