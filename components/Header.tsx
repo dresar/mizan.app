@@ -24,6 +24,9 @@ export default function Header() {
   if (activeRole === "SUPER_ADMIN") profileHref = "/admin/users";
   if (activeRole === "PENGASUHAN") profileHref = "/bk/profil";
 
+  const firstName = currentUser?.name ? currentUser.name.split(" ")[0] : "Akun";
+  const labelGender = currentUser?.gender || (activeRole === "SUPER_ADMIN" ? "Admin" : "");
+
   return (
     <header className="sticky top-0 z-40 w-full bg-white/95 backdrop-blur-md border-b border-[#E2EBF4] shadow-xs">
       <div className="w-full px-3 sm:px-6 h-14 flex items-center justify-between gap-3 max-w-6xl mx-auto">
@@ -40,16 +43,16 @@ export default function Header() {
           <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full mizan-pill bg-white border border-[#E2EBF4]">
             <User className="w-3.5 h-3.5 text-[#1B4D3E] shrink-0" />
             <span className="text-xs font-bold text-[#172033] max-w-[120px] sm:max-w-[200px] truncate">
-              {currentUser.name.split(" ")[0]} ({currentUser.gender ? currentUser.gender : "Admin"})
+              {firstName} {labelGender ? `(${labelGender})` : ""}
             </span>
           </div>
 
-          <Link href={profileHref} className="shrink-0" title="Buka Profil">
+          <Link href={profileHref} className="shrink-0" title="Profil">
             <Avatar
-              src={currentUser.avatarUrl}
-              initials={currentUser.avatarInitials || "MZ"}
+              src={currentUser?.avatarUrl}
+              initials={currentUser?.avatarInitials || "MZ"}
               size="sm"
-              variant={currentUser.gender === "Putri" ? "gold" : "primary"}
+              variant={currentUser?.gender === "Putri" ? "gold" : "primary"}
             />
           </Link>
 

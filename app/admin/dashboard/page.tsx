@@ -313,7 +313,7 @@ export default function AdminDashboardPage() {
                 </h2>
               </div>
               <p className="text-[11px] text-[#64748B] mt-0.5">
-                Urutan juara capaian akhlak tertinggi pondok (Maksimal 99,000)
+                Urutan capaian akhlak tertinggi pondok (Maksimal 99,000)
               </p>
             </div>
 
@@ -391,8 +391,9 @@ export default function AdminDashboardPage() {
                     <span className="text-xs font-black font-mono text-[#1B4D3E] block">
                       {formatScore(santri.currentScore)}
                     </span>
-                    <span className="text-[9px] text-[#A8833E] font-bold block">
-                      {isFirst ? "Juara 1 🥇" : isSecond ? "Juara 2 🥈" : isThird ? "Juara 3 🥉" : `Peringkat #${rank}`}
+                    <span className="inline-flex items-center gap-1 text-[10px] font-bold text-[#A8833E] bg-[#FAF7EE] border border-[#C5A059]/30 px-2.5 py-0.5 rounded-full mt-1">
+                      <Award className="w-3 h-3 text-[#A8833E]" />
+                      Peringkat {rank}
                     </span>
                   </div>
                 </Link>
@@ -437,7 +438,7 @@ export default function AdminDashboardPage() {
                   <span className="text-xs font-black font-mono text-red-600 block">
                     {formatScore(santri.currentScore)}
                   </span>
-                  <span className="text-[9px] text-[#64748B]">Buka Profil</span>
+                  <span className="text-[9px] text-[#64748B]">Profil</span>
                 </div>
               </Link>
             ))}

@@ -26,7 +26,9 @@ export interface ToastItem {
 
 interface MizanContextType {
   currentUser: UserProfile;
-  activeRole: Role;
+  activeRole: Role | null;
+  isAuthenticated: boolean;
+  isAuthLoading: boolean;
   userList: UserProfile[];
   switchRole: (role: Role, userId?: string) => void;
   loginUser: (user: UserProfile) => void;
@@ -70,21 +72,23 @@ const MizanContext = createContext<MizanContextType | undefined>(undefined);
 const STORAGE_KEY_ROLE = "mizan_role_state_v4";
 const STORAGE_KEY_USER = "mizan_user_id_v4";
 
-const FALLBACK_USER: UserProfile = {
-  id: "user-superadmin",
-  username: "admin",
-  name: "Ust. H. Ahmad Syukri, Lc.",
-  role: "SUPER_ADMIN",
-  roleTitle: "Super Admin Pengasuhan",
-  avatarInitials: "AS",
+const GUEST_USER: UserProfile = {
+  id: "",
+  username: "",
+  name: "Tamu",
+  role: "GURU",
+  roleTitle: "",
+  avatarInitials: "TM",
   gender: "Putra",
-  assignedClass: "Semua"
+  assignedClass: ""
 };
 
 export function MizanProvider({ children }: { children: React.ReactNode }) {
-  const [activeRole, setActiveRole] = useState<Role>("SUPER_ADMIN");
-  const [currentUser, setCurrentUser] = useState<UserProfile>(FALLBACK_USER);
-  const [userList, setUserList] = useState<UserProfile[]>([FALLBACK_USER]);
+  const [activeRole, setActiveRole] = useState<Role | null>(null);
+  const [currentUser, setCurrentUser] = useState<UserProfile>(GUEST_USER);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [isAuthLoading, setIsAuthLoading] = useState<boolean>(true);
+  const [userList, setUserList] = useState<UserProfile[]>([]);
   const [santriList, setSantriList] = useState<Santri[]>([]);
   const [kelasList, setKelasList] = useState<string[]>(["1A", "1B", "1C", "1D", "2A", "2B"]);
   const [categories, setCategories] = useState<Kategori[]>([]);
@@ -104,14 +108,22 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
         if (data.santri) setSantriList(data.santri);
         if (data.users && data.users.length > 0) {
           setUserList(data.users);
-          const savedUserId = localStorage.getItem(STORAGE_KEY_USER);
-          const matched = savedUserId ? data.users.find((u: UserProfile) => u.id === savedUserId) : null;
-          if (matched) {
-            setCurrentUser(matched);
-            setActiveRole(matched.role);
-          } else if (currentUser.id === FALLBACK_USER.id) {
-            setCurrentUser(data.users[0]);
-            setActiveRole(data.users[0].role);
+          const savedUserId = typeof window !== "undefined" ? localStorage.getItem(STORAGE_KEY_USER) : null;
+          if (savedUserId) {
+            const matched = data.users.find((u: UserProfile) => u.id === savedUserId);
+            if (matched) {
+              setCurrentUser(matched);
+              setActiveRole(matched.role);
+              setIsAuthenticated(true);
+            } else {
+              setCurrentUser(GUEST_USER);
+              setActiveRole(null);
+              setIsAuthenticated(false);
+            }
+          } else {
+            setCurrentUser(GUEST_USER);
+            setActiveRole(null);
+            setIsAuthenticated(false);
           }
         }
         if (data.kelasList && data.kelasList.length > 0) setKelasList(data.kelasList);
@@ -123,6 +135,8 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
       }
     } catch {
       setIsDbConnected(false);
+    } finally {
+      setIsAuthLoading(false);
     }
   };
 
@@ -131,6 +145,7 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const accessibleSantriList = useMemo(() => {
+    if (!isAuthenticated || !currentUser.id) return [];
     if (activeRole === "SUPER_ADMIN") return santriList;
     if (currentUser.gender === "Putra") {
       return santriList.filter((s) => s.gender === "Putra");
@@ -139,7 +154,7 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
       return santriList.filter((s) => s.gender === "Putri");
     }
     return santriList;
-  }, [activeRole, currentUser.gender, santriList]);
+  }, [activeRole, currentUser, isAuthenticated, santriList]);
 
   const showToast = (message: string, type: "success" | "error" | "info" = "success") => {
     const id = "toast-" + Date.now() + "-" + Math.random().toString(36).substring(2, 6);
@@ -156,9 +171,11 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
   const loginUser = (user: UserProfile) => {
     setCurrentUser(user);
     setActiveRole(user.role);
+    setIsAuthenticated(true);
     try {
       localStorage.setItem(STORAGE_KEY_ROLE, user.role);
       localStorage.setItem(STORAGE_KEY_USER, user.id);
+      document.cookie = `mizan_auth=${user.role}; path=/; max-age=86400; SameSite=Lax`;
     } catch {
       void 0;
     }
@@ -166,9 +183,14 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
   };
 
   const logoutUser = () => {
+    setCurrentUser(GUEST_USER);
+    setActiveRole(null);
+    setIsAuthenticated(false);
     try {
       localStorage.removeItem(STORAGE_KEY_ROLE);
       localStorage.removeItem(STORAGE_KEY_USER);
+      document.cookie = "mizan_auth=; path=/; max-age=0; SameSite=Lax";
+      document.cookie = "mizan_uid=; path=/; max-age=0; SameSite=Lax";
     } catch {
       void 0;
     }
@@ -176,6 +198,7 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
   };
 
   const updateUserAvatar = (newUrl: string) => {
+    if (!currentUser.id) return;
     setCurrentUser((prev) => ({
       ...prev,
       avatarUrl: newUrl
@@ -533,6 +556,8 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
       value={{
         currentUser,
         activeRole,
+        isAuthenticated,
+        isAuthLoading,
         userList,
         switchRole,
         loginUser,

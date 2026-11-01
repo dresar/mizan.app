@@ -41,11 +41,25 @@ export async function POST(req: Request) {
 
     const { password: _, ...userProfile } = user;
 
-    return NextResponse.json({
+    const response = NextResponse.json({
       success: true,
       message: "Login berhasil.",
       user: userProfile
     });
+
+    response.cookies.set("mizan_auth", userProfile.role, {
+      path: "/",
+      maxAge: 86400,
+      sameSite: "lax"
+    });
+
+    response.cookies.set("mizan_uid", userProfile.id, {
+      path: "/",
+      maxAge: 86400,
+      sameSite: "lax"
+    });
+
+    return response;
   } catch (error: any) {
     return NextResponse.json(
       { success: false, message: error.message },

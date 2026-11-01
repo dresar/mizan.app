@@ -60,10 +60,10 @@ export function Sidebar() {
           <span>Pengasuhan Pondok</span>
         </div>
         <p className="text-xs font-bold text-[#172033] mt-0.5 truncate">
-          {currentUser.name}
+          {currentUser?.name || "Akun"}
         </p>
         <span className="inline-block text-[10px] text-[#94A3B8] font-medium">
-          {currentUser.roleTitle}
+          {currentUser?.roleTitle || "Pengasuhan"}
         </span>
       </div>
 
