@@ -142,7 +142,7 @@ export default function GuruProfilPage() {
 
   return (
     <RoleShell>
-      <div className="w-full space-y-4 max-w-4xl mx-auto overflow-x-hidden">
+      <div className="w-full space-y-4 max-w-4xl mx-auto overflow-x-hidden pb-36">
         <Card className="p-5 sm:p-6 text-center space-y-3 bg-white">
           <div className="mx-auto w-20 h-20 rounded-3xl mizan-card flex items-center justify-center text-2xl font-black text-[#1B4D3E] overflow-hidden">
             {currentUser.avatarUrl ? (
@@ -247,6 +247,62 @@ export default function GuruProfilPage() {
                 Hadir (+0,050) • Alpa (-0,050)
               </p>
             </CardInset>
+          </div>
+        </Card>
+
+        <Card className="p-4 sm:p-5 space-y-3 bg-white">
+          <div className="flex items-center justify-between pb-1 border-b border-[#E2E8F0]">
+            <div className="flex items-center gap-2">
+              <Smartphone className="w-4 h-4 text-[#1B4D3E]" />
+              <h2 className="text-xs font-bold text-[#172033] uppercase tracking-wider">
+                Aplikasi Mobile
+              </h2>
+            </div>
+            <span className="text-[10px] font-bold text-[#065F46] bg-[#ECFDF5] px-2 py-0.5 rounded-full">
+              Pilihan
+            </span>
+          </div>
+
+          <div className="grid grid-cols-2 gap-2.5">
+            <div className="p-3 rounded-2xl mizan-card-sub flex flex-col justify-between gap-2.5">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-xl mizan-inset flex items-center justify-center text-[#1B4D3E] shrink-0">
+                  <Smartphone className="w-4 h-4" />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-xs font-bold text-[#172033] truncate">Android</p>
+                  <p className="text-[10px] text-[#64748B] truncate">.apk (2,4 MB)</p>
+                </div>
+              </div>
+
+              <a
+                href="/downloads/mizan.apk"
+                download="mizan.apk"
+                className="w-full py-2 rounded-xl bg-[#1B4D3E] hover:bg-[#153e32] text-white text-xs font-bold text-center transition-colors block"
+              >
+                Unduh
+              </a>
+            </div>
+
+            <div className="p-3 rounded-2xl mizan-card-sub flex flex-col justify-between gap-2.5">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-xl mizan-inset flex items-center justify-center text-[#A8833E] shrink-0">
+                  <Apple className="w-4 h-4" />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-xs font-bold text-[#172033] truncate">Apple</p>
+                  <p className="text-[10px] text-[#64748B] truncate">.ios WebClip</p>
+                </div>
+              </div>
+
+              <a
+                href="/downloads/mizan.mobileconfig"
+                download="mizan.mobileconfig"
+                className="w-full py-2 rounded-xl bg-[#FAF7EE] hover:bg-[#F5EED9] text-[#A8833E] border border-[#C5A059]/40 text-xs font-bold text-center transition-colors block"
+              >
+                Pasang
+              </a>
+            </div>
           </div>
         </Card>
 
