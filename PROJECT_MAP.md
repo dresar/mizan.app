@@ -35,7 +35,7 @@ mizan.apps/
 │   │   ├── riwayat/           # Riwayat input pembinaan
 │   │   ├── santri/ & [id]/    # Profil lengkap santri & tombol Cetak/Unduh PDF/Bagikan
 │   │   └── profil/            # Profil ustadz, ganti password, avatar VPS, share profil
-│   ├── bk/                    # Modul Pengasuhan BK (dashboard, absen dropdown realtime, penilaian santri & santriwati, history, profil)
+│   ├── bk/                    # Modul Pengasuhan BK (dashboard, absen, history, profil, penilaian, santri/ & [id]/ profil & rapor)
 │   ├── ortu/dashboard/        # Dashboard wali santri / orang tua
 │   ├── santri/profil/         # Profil mandiri santri, skor adab & tombol Bagikan
 │   ├── share/[id]/            # Halaman publik kartu share (stat-*) tanpa perlu login

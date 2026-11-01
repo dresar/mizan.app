@@ -43,6 +43,7 @@ export function Sidebar() {
     navItems = [
       { label: "Beranda Pengasuhan", href: "/bk/dashboard", icon: <LayoutDashboard className="w-4 h-4" />, description: "Pusat monitoring BK" },
       { label: "Penilaian Santri", href: "/bk/penilaian", icon: <Award className="w-4 h-4" />, description: "Catat hasanah & sayyi'ah" },
+      { label: "Data Santri", href: "/bk/santri", icon: <GraduationCap className="w-4 h-4" />, description: "Profil & rapor santri" },
       { label: "Absen Sholat", href: "/bk/absen", icon: <CalendarCheck className="w-4 h-4" />, description: "Presensi 7 waktu sholat" },
       { label: "Riwayat Absensi", href: "/bk/history", icon: <Clock className="w-4 h-4" />, description: "Log & kelola presensi" },
       { label: "Profil Pengasuhan", href: "/bk/profil", icon: <User className="w-4 h-4" />, description: "Data akun BK" }

@@ -262,11 +262,11 @@ export default function LoginPage() {
             </div>
           </div>
 
-          <h1 className="text-xl sm:text-2xl font-serif font-black tracking-wide text-[#172033]">
-            MIZAN
+          <h1 className="text-base sm:text-lg font-serif font-black tracking-tight text-[#172033] leading-snug">
+            Sistem Penilaian Sikap & Mental Santri
           </h1>
           <p className="text-xs font-semibold text-[#64748B]">
-            Sistem Penilaian Sikap & Absensi Sholat Santri
+            Pondok Pesantren Modern Raudhatussalam Mahato
           </p>
         </div>
 
@@ -403,7 +403,7 @@ export default function LoginPage() {
 
         <div className="flex items-center justify-between px-2 pt-1 text-xs">
           <p className="text-[10px] text-[#94A3B8]">
-            MIZAN • Pondok Pesantren Raudhatussalam
+            MIZAN • Pondok Pesantren Modern Raudhatussalam Mahato
           </p>
 
           <button

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useMemo, useEffect, useRef } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   Award,
@@ -11,14 +12,26 @@ import {
   ChevronDown,
   X,
   SlidersHorizontal,
-  Layers
+  Layers,
+  FileText,
+  Printer,
+  Download,
+  Share2,
+  Eye,
+  ExternalLink,
+  CalendarCheck,
+  Phone,
+  Scale
 } from "lucide-react";
 import { useMizan } from "@/lib/mizan-context";
 import { RoleShell } from "@/components/RoleShell";
-import { Card, CardSub } from "@/components/ui/Card";
+import { Card, CardSub, CardInset } from "@/components/ui/Card";
 import { Avatar } from "@/components/ui/Avatar";
 import { FileUploadMock } from "@/components/ui/FileUploadMock";
 import categoriesMasterData from "@/lib/categories-master.json";
+import { generateSantriPdf } from "@/lib/pdf-generator";
+import { ShareModal } from "@/components/ShareModal";
+import { Santri } from "@/lib/mock-data";
 
 interface IndicatorItem {
   id: string;
@@ -63,7 +76,8 @@ export default function PengasuhanPenilaianPage() {
     currentUser,
     addPenilaian,
     showToast,
-    penilaianList
+    penilaianList,
+    absensiList
   } = useMizan();
 
   const [genderFilter, setGenderFilter] = useState<"Semua" | "Putra" | "Putri">(
@@ -85,6 +99,11 @@ export default function PengasuhanPenilaianPage() {
   const [isMobileSantriExpanded, setIsMobileSantriExpanded] = useState(false);
   const [notes, setNotes] = useState("");
   const [attachedFile, setAttachedFile] = useState<{ name: string; size: number } | null>(null);
+
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+  const [profileModalSantri, setProfileModalSantri] = useState<Santri | null>(null);
+  const [profileModalTab, setProfileModalTab] = useState<"CATATAN" | "ABSENSI" | "WALI">("CATATAN");
 
   const [liveSearchQuery, setLiveSearchQuery] = useState("");
   const [isLiveSearchOpen, setIsLiveSearchOpen] = useState(false);
@@ -432,6 +451,44 @@ export default function PengasuhanPenilaianPage() {
                 </div>
               </div>
 
+              {selectedSantri && (
+                <div className="grid grid-cols-3 gap-1.5">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setProfileModalSantri(selectedSantri);
+                      setIsProfileModalOpen(true);
+                    }}
+                    className="inline-flex items-center justify-center gap-1 py-1.5 px-2 rounded-xl bg-white text-[#1B4D3E] border border-[#A7F3D0] hover:bg-[#ECFDF5] text-[10px] font-bold shadow-2xs transition-colors"
+                  >
+                    <Eye className="w-3 h-3 text-[#1B4D3E]" />
+                    <span>Profil</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const studentPenilaian = penilaianList.filter((p) => p.santriId === selectedSantri.id);
+                      const studentAbsensi = absensiList.filter((a) => a.santriId === selectedSantri.id);
+                      generateSantriPdf(selectedSantri, studentPenilaian, studentAbsensi);
+                    }}
+                    className="inline-flex items-center justify-center gap-1 py-1.5 px-2 rounded-xl bg-[#1B4D3E] text-white hover:bg-[#153e32] text-[10px] font-bold shadow-2xs transition-colors"
+                  >
+                    <FileText className="w-3 h-3 text-[#C5A059]" />
+                    <span>Rapor</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setIsShareModalOpen(true)}
+                    className="inline-flex items-center justify-center gap-1 py-1.5 px-2 rounded-xl bg-white text-[#854D0E] border border-[#FEF08A] hover:bg-[#FEFCE8] text-[10px] font-bold shadow-2xs transition-colors"
+                  >
+                    <Share2 className="w-3 h-3 text-[#C5A059]" />
+                    <span>Bagikan</span>
+                  </button>
+                </div>
+              )}
+
               <div className="grid grid-cols-3 gap-1 p-1 rounded-2xl bg-[#EEF2F6]">
                 {(["Semua", "Putra", "Putri"] as const).map((g) => (
                   <button
@@ -504,9 +561,27 @@ export default function PengasuhanPenilaianPage() {
                             </p>
                           </div>
                         </div>
-                        <span className="font-mono text-[11px] font-black text-[#1B4D3E] shrink-0">
-                          {formatScore(santri.currentScore)}
-                        </span>
+                        <div className="flex items-center gap-1.5 shrink-0">
+                          <span className={`font-mono text-[11px] font-black ${isSelected ? "text-white" : "text-[#1B4D3E]"}`}>
+                            {formatScore(santri.currentScore)}
+                          </span>
+                          <button
+                            type="button"
+                            title="Profil"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setProfileModalSantri(santri);
+                              setIsProfileModalOpen(true);
+                            }}
+                            className={`p-1 rounded-lg transition-colors ${
+                              isSelected
+                                ? "text-white/80 hover:text-white hover:bg-white/20"
+                                : "text-[#64748B] hover:text-[#1B4D3E] hover:bg-white/80"
+                            }`}
+                          >
+                            <Eye className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
                       </div>
                     );
                   })}
@@ -1076,6 +1151,239 @@ export default function PengasuhanPenilaianPage() {
                     Tidak ada indikator yang sesuai dengan filter pencarian
                   </div>
                 )}
+              </div>
+            </div>
+          </div>
+        )}
+
+        <ShareModal
+          isOpen={isShareModalOpen}
+          onClose={() => setIsShareModalOpen(false)}
+          initialType="SANTRI"
+          targetSantri={profileModalSantri || selectedSantri || undefined}
+        />
+
+        {isProfileModalOpen && profileModalSantri && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-xs">
+            <div className="bg-white rounded-3xl max-w-xl w-full max-h-[90vh] flex flex-col shadow-2xl border border-[#E2EBF4] overflow-hidden">
+              <div className="p-4 sm:p-5 border-b border-[#EEF2F6] flex items-center justify-between gap-3 bg-[#FAF7EE]/60">
+                <div className="flex items-center gap-3 min-w-0">
+                  <Avatar
+                    initials={profileModalSantri.avatar}
+                    size="md"
+                    variant={profileModalSantri.gender === "Putra" ? "primary" : "gold"}
+                  />
+                  <div className="min-w-0">
+                    <h3 className="text-sm sm:text-base font-bold text-[#172033] truncate">
+                      {profileModalSantri.name}
+                    </h3>
+                    <p className="text-[10px] text-[#64748B] truncate">
+                      NIS: {profileModalSantri.nis} • Kelas {profileModalSantri.class} ({profileModalSantri.gender})
+                    </p>
+                    <p className="text-[10px] text-[#A8833E] truncate font-medium">
+                      {profileModalSantri.kamar || profileModalSantri.asrama}
+                    </p>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => setIsProfileModalOpen(false)}
+                  className="p-1.5 rounded-full hover:bg-black/5 text-[#64748B] transition-colors"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              <div className="p-4 sm:p-5 overflow-y-auto space-y-4 flex-1">
+                <div className="grid grid-cols-3 gap-2 text-center">
+                  <div className="p-2.5 rounded-2xl bg-[#F8FAFC] border border-[#E2EBF4]">
+                    <span className="text-[9px] text-[#64748B] font-semibold block uppercase">Skor Adab</span>
+                    <span className="font-mono text-base font-black text-[#1B4D3E]">
+                      {formatScore(profileModalSantri.currentScore)}
+                    </span>
+                  </div>
+                  <div className="p-2.5 rounded-2xl bg-[#ECFDF5] border border-[#A7F3D0]">
+                    <span className="text-[9px] text-[#065F46] font-semibold block uppercase">Prestasi</span>
+                    <span className="font-mono text-base font-black text-[#065F46]">
+                      {penilaianList.filter((p) => p.santriId === profileModalSantri.id && p.type === "HASANAH").length}
+                    </span>
+                  </div>
+                  <div className="p-2.5 rounded-2xl bg-[#FEF2F2] border border-[#FECACA]">
+                    <span className="text-[9px] text-[#991B1B] font-semibold block uppercase">Pelanggaran</span>
+                    <span className="font-mono text-base font-black text-[#991B1B]">
+                      {penilaianList.filter((p) => p.santriId === profileModalSantri.id && p.type === "SAYYIAH").length}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="flex border-b border-[#EEF2F6] gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setProfileModalTab("CATATAN")}
+                    className={`pb-2 text-xs font-bold transition-colors ${
+                      profileModalTab === "CATATAN"
+                        ? "text-[#1B4D3E] border-b-2 border-[#1B4D3E]"
+                        : "text-[#64748B] hover:text-[#172033]"
+                    }`}
+                  >
+                    Catatan
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setProfileModalTab("ABSENSI")}
+                    className={`pb-2 text-xs font-bold transition-colors ${
+                      profileModalTab === "ABSENSI"
+                        ? "text-[#1B4D3E] border-b-2 border-[#1B4D3E]"
+                        : "text-[#64748B] hover:text-[#172033]"
+                    }`}
+                  >
+                    Presensi
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setProfileModalTab("WALI")}
+                    className={`pb-2 text-xs font-bold transition-colors ${
+                      profileModalTab === "WALI"
+                        ? "text-[#1B4D3E] border-b-2 border-[#1B4D3E]"
+                        : "text-[#64748B] hover:text-[#172033]"
+                    }`}
+                  >
+                    Wali
+                  </button>
+                </div>
+
+                {profileModalTab === "CATATAN" && (
+                  <div className="space-y-2 max-h-56 overflow-y-auto pr-1">
+                    {penilaianList
+                      .filter((p) => p.santriId === profileModalSantri.id)
+                      .map((p) => (
+                        <div key={p.id} className="p-2.5 rounded-xl bg-[#F8FAFC] border border-[#E2EBF4] text-xs">
+                          <div className="flex items-center justify-between gap-2">
+                            <span
+                              className={`text-[9px] font-bold px-1.5 py-0.5 rounded-full ${
+                                p.type === "HASANAH"
+                                  ? "bg-emerald-100 text-emerald-800"
+                                  : "bg-red-100 text-red-800"
+                              }`}
+                            >
+                              {p.type === "HASANAH" ? "Hasanah" : "Sayyi'ah"}
+                            </span>
+                            <span className="font-mono text-xs font-black">
+                              {p.type === "HASANAH" ? `+${formatScore(Math.abs(p.score))}` : `-${formatScore(Math.abs(p.score))}`}
+                            </span>
+                          </div>
+                          <p className="font-bold text-[#172033] mt-1">{p.unsurName || p.indicatorText}</p>
+                          {p.notes && <p className="text-[10px] text-[#64748B] italic mt-0.5">"{p.notes}"</p>}
+                          <p className="text-[9px] text-[#94A3B8] mt-1">{p.guruName} • {p.createdAt}</p>
+                        </div>
+                      ))}
+                    {penilaianList.filter((p) => p.santriId === profileModalSantri.id).length === 0 && (
+                      <div className="py-6 text-center text-xs text-[#94A3B8]">
+                        Belum ada catatan sikap
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {profileModalTab === "ABSENSI" && (
+                  <div className="space-y-2 max-h-56 overflow-y-auto pr-1">
+                    {absensiList
+                      .filter((a) => a.santriId === profileModalSantri.id)
+                      .map((a) => (
+                        <div key={a.id} className="p-2.5 rounded-xl bg-[#F8FAFC] border border-[#E2EBF4] flex items-center justify-between text-xs">
+                          <div>
+                            <span className="font-bold text-[#172033]">Sholat {a.waktuSholat}</span>
+                            <p className="text-[10px] text-[#64748B]">{a.date}</p>
+                          </div>
+                          <span
+                            className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                              a.status === "Hadir"
+                                ? "bg-emerald-100 text-emerald-800"
+                                : a.status === "Alpa"
+                                ? "bg-red-100 text-red-800"
+                                : "bg-amber-100 text-amber-800"
+                            }`}
+                          >
+                            {a.status}
+                          </span>
+                        </div>
+                      ))}
+                    {absensiList.filter((a) => a.santriId === profileModalSantri.id).length === 0 && (
+                      <div className="py-6 text-center text-xs text-[#94A3B8]">
+                        Belum ada catatan presensi
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {profileModalTab === "WALI" && (
+                  <div className="space-y-2.5 text-xs">
+                    <div className="p-3 rounded-2xl bg-[#F8FAFC] border border-[#E2EBF4]">
+                      <span className="text-[10px] text-[#64748B] block">Nama Wali</span>
+                      <p className="font-bold text-[#172033] mt-0.5">
+                        {profileModalSantri.waliName || `Wali ${profileModalSantri.name.split(" ")[0]}`}
+                      </p>
+                    </div>
+                    <div className="p-3 rounded-2xl bg-[#F8FAFC] border border-[#E2EBF4]">
+                      <span className="text-[10px] text-[#64748B] block">Kontak Telepon</span>
+                      <p className="font-bold text-[#172033] mt-0.5 font-mono">
+                        {profileModalSantri.waliPhone || "081234567890"}
+                      </p>
+                    </div>
+                    <div className="p-3 rounded-2xl bg-[#F8FAFC] border border-[#E2EBF4]">
+                      <span className="text-[10px] text-[#64748B] block">Kamar Asrama</span>
+                      <p className="font-bold text-[#172033] mt-0.5">
+                        {profileModalSantri.kamar || "Kamar Pondok"}
+                      </p>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <div className="p-4 border-t border-[#EEF2F6] flex items-center justify-between gap-2 bg-[#F8FAFC]">
+                <button
+                  type="button"
+                  onClick={() => setIsProfileModalOpen(false)}
+                  className="px-4 py-2 rounded-xl bg-white text-[#64748B] hover:text-[#172033] text-xs font-bold border border-[#E2EBF4] transition-colors"
+                >
+                  Tutup
+                </button>
+
+                <div className="flex items-center gap-1.5">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsProfileModalOpen(false);
+                      setIsShareModalOpen(true);
+                    }}
+                    className="inline-flex items-center gap-1 px-3 py-2 rounded-xl bg-white text-[#854D0E] border border-[#FEF08A] hover:bg-[#FEFCE8] text-xs font-bold transition-colors"
+                  >
+                    <Share2 className="w-3.5 h-3.5 text-[#C5A059]" />
+                    <span>Bagikan</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const studentPenilaian = penilaianList.filter((p) => p.santriId === profileModalSantri.id);
+                      const studentAbsensi = absensiList.filter((a) => a.santriId === profileModalSantri.id);
+                      generateSantriPdf(profileModalSantri, studentPenilaian, studentAbsensi);
+                    }}
+                    className="inline-flex items-center gap-1 px-3.5 py-2 rounded-xl bg-[#1B4D3E] text-white hover:bg-[#153e32] text-xs font-bold transition-colors"
+                  >
+                    <FileText className="w-3.5 h-3.5 text-[#C5A059]" />
+                    <span>Rapor</span>
+                  </button>
+
+                  <Link
+                    href={`/bk/santri/${profileModalSantri.id}`}
+                    className="inline-flex items-center gap-1 px-3.5 py-2 rounded-xl bg-[#FAF7EE] text-[#1B4D3E] border border-[#C5A059]/40 hover:bg-[#F3EEDC] text-xs font-bold transition-colors"
+                  >
+                    <ExternalLink className="w-3.5 h-3.5" />
+                    <span>Detail</span>
+                  </Link>
+                </div>
               </div>
             </div>
           </div>

@@ -1,0 +1,234 @@
+"use client";
+
+import React, { useState, useMemo } from "react";
+import Link from "next/link";
+import { Search, User, GraduationCap, FileText, Share2, Eye } from "lucide-react";
+import { useMizan } from "@/lib/mizan-context";
+import { RoleShell } from "@/components/RoleShell";
+import { Avatar } from "@/components/ui/Avatar";
+import { generateSantriPdf } from "@/lib/pdf-generator";
+import { ShareModal } from "@/components/ShareModal";
+import { Santri } from "@/lib/mock-data";
+
+export default function BkSantriListPage() {
+  const { santriList, currentUser, penilaianList, absensiList } = useMizan();
+  const [searchQuery, setSearchQuery] = useState("");
+  const [genderFilter, setGenderFilter] = useState<"Semua" | "Putra" | "Putri">(
+    currentUser.gender === "Putri" ? "Putri" : "Semua"
+  );
+  const [selectedClass, setSelectedClass] = useState("ALL");
+  const [shareTargetSantri, setShareTargetSantri] = useState<Santri | null>(null);
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+
+  const classes = useMemo(() => {
+    let list = santriList;
+    if (genderFilter !== "Semua") {
+      list = list.filter((s) => s.gender === genderFilter);
+    }
+    const set = new Set(list.map((s) => s.class));
+    return ["ALL", ...Array.from(set).sort()];
+  }, [santriList, genderFilter]);
+
+  const filteredSantri = useMemo(() => {
+    return santriList.filter((s) => {
+      const matchGender = genderFilter === "Semua" || s.gender === genderFilter;
+      const matchSearch =
+        s.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        s.nis.includes(searchQuery);
+      const matchClass = selectedClass === "ALL" || s.class === selectedClass;
+      return matchGender && matchSearch && matchClass;
+    });
+  }, [santriList, genderFilter, searchQuery, selectedClass]);
+
+  const formatScore = (score: number) => {
+    return score.toFixed(3).replace(".", ",");
+  };
+
+  const getPredikatBadge = (score: number) => {
+    if (score >= 90) return { label: "MUMTAZ", color: "text-[#065F46] bg-[#ECFDF5] border-[#A7F3D0]" };
+    if (score >= 80) return { label: "JAYYID JIDDAN", color: "text-[#1B4D3E] bg-[#E8F0EC] border-[#1B4D3E]/30" };
+    if (score >= 70) return { label: "JAYYID", color: "text-[#854D0E] bg-[#FEFCE8] border-[#FEF08A]" };
+    if (score >= 60) return { label: "MAQBUL", color: "text-[#C2410C] bg-[#FFF7ED] border-[#FED7AA]" };
+    return { label: "RASIB", color: "text-[#991B1B] bg-[#FEF2F2] border-[#FECACA]" };
+  };
+
+  const handleDownloadRapor = (santri: Santri) => {
+    const studentPenilaian = penilaianList.filter((p) => p.santriId === santri.id);
+    const studentAbsensi = absensiList.filter((a) => a.santriId === santri.id);
+    generateSantriPdf(santri, studentPenilaian, studentAbsensi);
+  };
+
+  const handleOpenShare = (santri: Santri) => {
+    setShareTargetSantri(santri);
+    setIsShareModalOpen(true);
+  };
+
+  return (
+    <RoleShell>
+      <div className="w-full space-y-4 overflow-x-hidden pb-36">
+        <div className="mizan-card p-4 sm:p-5 flex items-center justify-between gap-3 flex-wrap">
+          <div>
+            <h1 className="text-base sm:text-xl font-bold text-[#172033] tracking-tight">
+              Data Santri & Santriwati
+            </h1>
+            <p className="text-xs text-[#64748B] mt-0.5">
+              Pusat Pengasuhan Pondok (BK) • Total {filteredSantri.length} santri terdaftar
+            </p>
+          </div>
+          <span className="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1 rounded-full mizan-pill bg-[#ECFDF5] text-[#065F46]">
+            <GraduationCap className="w-3.5 h-3.5" />
+            Pengasuhan BK
+          </span>
+        </div>
+
+        <div className="space-y-3">
+          <div className="flex flex-col sm:flex-row gap-2.5">
+            <div className="relative flex-1">
+              <Search className="w-4 h-4 text-[#94A3B8] absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <input
+                type="text"
+                placeholder="Cari nama santri atau NIS..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-9 pr-3.5 py-2.5 text-xs bg-white border border-[#E2EBF4] rounded-2xl text-[#172033] focus:outline-none focus:border-[#1B4D3E]"
+              />
+            </div>
+
+            <div className="flex items-center gap-1.5 p-1 bg-white border border-[#E2EBF4] rounded-2xl shrink-0">
+              {(["Semua", "Putra", "Putri"] as const).map((g) => (
+                <button
+                  key={g}
+                  type="button"
+                  onClick={() => {
+                    setGenderFilter(g);
+                    setSelectedClass("ALL");
+                  }}
+                  className={`px-3 py-1.5 text-xs font-bold rounded-xl transition-all ${
+                    genderFilter === g
+                      ? "bg-[#1B4D3E] text-white shadow-2xs"
+                      : "text-[#64748B] hover:text-[#172033]"
+                  }`}
+                >
+                  {g}
+                </button>
+              ))}
+            </div>
+
+            <div className="flex gap-1.5 overflow-x-auto pb-1 shrink-0">
+              {classes.map((cls) => {
+                const isSelected = selectedClass === cls;
+                return (
+                  <button
+                    key={cls}
+                    type="button"
+                    onClick={() => setSelectedClass(cls)}
+                    className={`px-3 py-1.5 rounded-2xl text-xs font-bold transition-all shrink-0 ${
+                      isSelected
+                        ? "bg-[#C5A059] text-white shadow-2xs"
+                        : "bg-white text-[#64748B] border border-[#E2EBF4] hover:bg-[#F8FAFC]"
+                    }`}
+                  >
+                    {cls === "ALL" ? "Semua" : `Kls ${cls}`}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            {filteredSantri.map((santri) => {
+              const pred = getPredikatBadge(santri.currentScore);
+
+              return (
+                <div
+                  key={santri.id}
+                  className="mizan-card-sub p-3.5 flex flex-col justify-between gap-3 hover:border-[#1B4D3E]/40 group"
+                >
+                  <div className="flex items-start gap-3 min-w-0">
+                    <Avatar
+                      initials={santri.avatar}
+                      size="md"
+                      variant={santri.gender === "Putra" ? "primary" : "gold"}
+                    />
+                    <div className="min-w-0 flex-1">
+                      <Link
+                        href={`/bk/santri/${santri.id}`}
+                        className="text-xs font-bold text-[#172033] group-hover:text-[#1B4D3E] transition-colors truncate block"
+                      >
+                        {santri.name}
+                      </Link>
+                      <p className="text-[10px] text-[#64748B] truncate mt-0.5">
+                        NIS {santri.nis} • Kelas {santri.class} ({santri.gender})
+                      </p>
+                      <p className="text-[10px] text-[#A8833E] truncate mt-0.5 font-medium">
+                        {santri.kamar || santri.asrama}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between pt-2 border-t border-[#EEF2F6]">
+                    <div>
+                      <span className="text-[10px] text-[#94A3B8] block">Skor Adab</span>
+                      <span className="font-mono text-sm font-black text-[#1B4D3E]">
+                        {formatScore(santri.currentScore)}
+                      </span>
+                    </div>
+
+                    <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full border ${pred.color}`}>
+                      {pred.label}
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-3 gap-1.5 pt-2 border-t border-[#EEF2F6]">
+                    <Link
+                      href={`/bk/santri/${santri.id}`}
+                      className="inline-flex items-center justify-center gap-1 py-1.5 rounded-xl bg-[#F8FAFC] text-[#172033] hover:bg-[#EEF2F6] text-[10px] font-bold border border-[#E2EBF4] transition-colors"
+                    >
+                      <Eye className="w-3 h-3 text-[#1B4D3E]" />
+                      <span>Detail</span>
+                    </Link>
+
+                    <button
+                      type="button"
+                      onClick={() => handleDownloadRapor(santri)}
+                      className="inline-flex items-center justify-center gap-1 py-1.5 rounded-xl bg-[#ECFDF5] text-[#065F46] hover:bg-[#D1FAE5] text-[10px] font-bold border border-[#A7F3D0] transition-colors"
+                    >
+                      <FileText className="w-3 h-3" />
+                      <span>Rapor</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => handleOpenShare(santri)}
+                      className="inline-flex items-center justify-center gap-1 py-1.5 rounded-xl bg-[#FAF7EE] text-[#854D0E] hover:bg-[#FEFCE8] text-[10px] font-bold border border-[#FEF08A] transition-colors"
+                    >
+                      <Share2 className="w-3 h-3 text-[#C5A059]" />
+                      <span>Bagikan</span>
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {filteredSantri.length === 0 && (
+            <div className="text-center py-12 mizan-card p-6">
+              <User className="w-8 h-8 text-[#94A3B8] mx-auto mb-2 opacity-50" />
+              <p className="text-xs font-bold text-[#172033]">Santri tidak ditemukan</p>
+            </div>
+          )}
+        </div>
+
+        <ShareModal
+          isOpen={isShareModalOpen}
+          onClose={() => {
+            setIsShareModalOpen(false);
+            setShareTargetSantri(null);
+          }}
+          initialType="SANTRI"
+          targetSantri={shareTargetSantri || undefined}
+        />
+      </div>
+    </RoleShell>
+  );
+}
