@@ -73,7 +73,7 @@ interface MizanContextType {
   kelasList: string[];
   classList: ClassInfo[];
   addClass: (newClass: string, gender?: "Putra" | "Putri", waliKelas?: string, guruId?: string) => Promise<{ success: boolean; message: string }>;
-  updateClass: (name: string, data: { gender?: "Putra" | "Putri"; waliKelas?: string; guruId?: string }) => Promise<{ success: boolean; message: string }>;
+  updateClass: (name: string, data: { newName?: string; gender?: "Putra" | "Putri"; waliKelas?: string; guruId?: string }) => Promise<{ success: boolean; message: string }>;
   removeClass: (className: string) => void;
   settings: AppSettings;
   updateSettings: (newSettings: Partial<AppSettings>, options?: { applyToSantri?: boolean; applyToIndicators?: boolean }) => Promise<{ success: boolean; message: string }>;
@@ -653,7 +653,7 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const updateClass = async (name: string, data: { gender?: "Putra" | "Putri"; waliKelas?: string; guruId?: string }): Promise<{ success: boolean; message: string }> => {
+  const updateClass = async (name: string, data: { newName?: string; gender?: "Putra" | "Putri"; waliKelas?: string; guruId?: string }): Promise<{ success: boolean; message: string }> => {
     try {
       const res = await fetch("/api/classes", {
         method: "PUT",
