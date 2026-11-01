@@ -23,7 +23,6 @@ import { Badge } from "@/components/ui/Badge";
 import { Avatar } from "@/components/ui/Avatar";
 import { Pagination } from "@/components/ui/Pagination";
 import { StatusGuru } from "@/lib/mock-data";
-import { PembinaReportChart } from "@/components/PembinaReportChart";
 import { PrayerAttendanceChart } from "@/components/PrayerAttendanceChart";
 
 export default function AdminDashboardPage() {
@@ -72,7 +71,7 @@ export default function AdminDashboardPage() {
     if (leaderboardGender !== "ALL") {
       list = list.filter((s) => s.gender === leaderboardGender);
     }
-    return list.sort((a, b) => b.currentScore - a.currentScore);
+    return list.sort((a, b) => b.currentScore - a.currentScore).slice(0, 10);
   }, [santriList, leaderboardGender]);
 
   const needAttentionSantri = useMemo(() => {
@@ -198,19 +197,17 @@ export default function AdminDashboardPage() {
 
         <PrayerAttendanceChart absensiList={absensiList} />
 
-        <PembinaReportChart guruList={guruList} />
-
         <Card className="p-4 sm:p-5 space-y-4 bg-white">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-2 border-b border-[#E2E8F0]">
             <div>
               <div className="flex items-center gap-2">
                 <Trophy className="w-4 h-4 text-[#A8833E]" />
                 <h2 className="text-xs sm:text-sm font-bold text-[#172033] uppercase tracking-wider">
-                  Peringkat Santri & Santriwati Teladan
+                  Peringkat 10 Santri & Santriwati Teladan
                 </h2>
               </div>
               <p className="text-[11px] text-[#64748B] mt-0.5">
-                Urutan capaian akhlak tertinggi pondok (Maksimal 99,000)
+                10 santri peraih capaian akhlak tertinggi pondok (Maksimal 99,000)
               </p>
             </div>
 
@@ -270,7 +267,7 @@ export default function AdminDashboardPage() {
 
                     <Avatar
                       initials={santri.avatar}
-                      size="sm"
+                      size="md"
                       variant={isFirst ? "gold" : santri.gender === "Putra" ? "primary" : "gold"}
                     />
 
