@@ -497,9 +497,9 @@ export default function PengasuhanPenilaianPage() {
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-2xl bg-white border border-[#E2EBF4] shadow-2xs text-[11px]">
               <Clock className="w-3.5 h-3.5 text-[#1B4D3E] animate-pulse" />
               <div className="flex items-center gap-1.5 font-mono">
-                <span className="text-[#64748B] font-medium hidden sm:inline">{formattedDateLive}</span>
+                <span className="text-[#64748B] font-medium hidden sm:inline" suppressHydrationWarning>{formattedDateLive}</span>
                 <span className="text-[#64748B] hidden sm:inline">•</span>
-                <span className="font-bold text-[#172033]">{formattedTimeLive || "Memuat..."}</span>
+                <span className="font-bold text-[#172033]" suppressHydrationWarning>{formattedTimeLive || "Memuat..."}</span>
               </div>
             </div>
             <span className="inline-flex items-center gap-1.5 text-[10px] font-bold px-3 py-1.5 rounded-full mizan-pill bg-[#ECFDF5] text-[#065F46]">

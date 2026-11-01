@@ -13,8 +13,6 @@ import {
   Download,
   Apple,
   Bell,
-  AlertTriangle,
-  FileText,
   Menu
 } from "lucide-react";
 import { useMizan } from "@/lib/mizan-context";
@@ -189,24 +187,6 @@ export default function Header() {
         </div>
 
         <div className="flex items-center gap-2">
-          {currentUser?.username && (
-            <>
-              <div className="flex sm:hidden items-center">
-                <span className="text-[10px] font-mono font-bold text-[#065F46] bg-[#ECFDF5] px-2 py-0.5 rounded-full border border-[#A7F3D0]/60 truncate max-w-[105px]">
-                  @{currentUser.username}
-                </span>
-              </div>
-              <div className="hidden sm:flex flex-col items-end text-right">
-                <span className="text-xs font-bold text-[#172033] leading-tight truncate max-w-[150px]">
-                  {currentUser.name}
-                </span>
-                <span className="text-[10px] font-mono font-bold text-[#065F46] bg-[#ECFDF5] px-2 py-0.5 rounded-full border border-[#A7F3D0]/60">
-                  @{currentUser.username} • {roleTitle}
-                </span>
-              </div>
-            </>
-          )}
-
           <div className="relative" ref={notifRef}>
             <button
               type="button"

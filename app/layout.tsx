@@ -36,7 +36,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="id">
+    <html lang="id" suppressHydrationWarning>
       <head>
         <link rel="icon" href="/favicon.ico?v=2" sizes="any" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png?v=2" />
@@ -45,7 +45,7 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="MIZAN" />
       </head>
-      <body className="min-h-screen bg-[#F5F1E8] text-[#1C2826] font-sans antialiased selection:bg-[#C5A059]/30">
+      <body className="min-h-screen bg-[#F5F1E8] text-[#1C2826] font-sans antialiased selection:bg-[#C5A059]/30" suppressHydrationWarning>
         <MizanProvider>
           <ServiceWorkerRegister />
           {children}

@@ -13,13 +13,15 @@ import {
   AlertCircle,
   HelpCircle,
   Trophy,
-  Download
+  Download,
+  Search
 } from "lucide-react";
 import { useMizan } from "@/lib/mizan-context";
 import { RoleShell } from "@/components/RoleShell";
 import { Card, CardHeader, CardSub } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { Avatar } from "@/components/ui/Avatar";
+import { Pagination } from "@/components/ui/Pagination";
 import { StatusGuru } from "@/lib/mock-data";
 import { PembinaReportChart } from "@/components/PembinaReportChart";
 import { PrayerAttendanceChart } from "@/components/PrayerAttendanceChart";
@@ -28,9 +30,36 @@ export default function AdminDashboardPage() {
   const { santriList, guruList, absensiList, setGuruStatus } = useMizan();
 
   const [leaderboardGender, setLeaderboardGender] = useState<"ALL" | "Putra" | "Putri">("ALL");
+  const [guruSearch, setGuruSearch] = useState("");
+  const [guruGenderFilter, setGuruGenderFilter] = useState<"ALL" | "Putra" | "Putri">("ALL");
+  const [guruStatusFilter, setGuruStatusFilter] = useState<"ALL" | StatusGuru>("ALL");
+  const [guruCurrentPage, setGuruCurrentPage] = useState(1);
+  const GURU_PER_PAGE = 10;
 
   const totalSantri = santriList.length;
   const totalGuru = guruList.length;
+
+  const sudahLaporCount = useMemo(() => {
+    return guruList.filter((g) => g.status === "Sudah Lapor").length;
+  }, [guruList]);
+
+  const filteredGuruList = useMemo(() => {
+    return guruList.filter((g) => {
+      const matchSearch =
+        !guruSearch ||
+        g.name.toLowerCase().includes(guruSearch.toLowerCase()) ||
+        g.assignedClass.toLowerCase().includes(guruSearch.toLowerCase());
+      const matchGender = guruGenderFilter === "ALL" || g.gender === guruGenderFilter;
+      const matchStatus = guruStatusFilter === "ALL" || g.status === guruStatusFilter;
+      return matchSearch && matchGender && matchStatus;
+    });
+  }, [guruList, guruSearch, guruGenderFilter, guruStatusFilter]);
+
+  const totalGuruPages = Math.ceil(filteredGuruList.length / GURU_PER_PAGE) || 1;
+  const paginatedGuruList = useMemo(() => {
+    const start = (guruCurrentPage - 1) * GURU_PER_PAGE;
+    return filteredGuruList.slice(start, start + GURU_PER_PAGE);
+  }, [filteredGuruList, guruCurrentPage]);
 
   const avgScore = useMemo(() => {
     if (totalSantri === 0) return "80,000";
@@ -132,7 +161,7 @@ export default function AdminDashboardPage() {
               {totalGuru}
             </div>
             <p className="text-[10px] text-[#64748B] mt-1">
-              Ustadz & Ustadzah aktif
+              {sudahLaporCount} Lapor Hari Ini • {totalGuru} Terdata
             </p>
           </CardSub>
 
@@ -314,10 +343,56 @@ export default function AdminDashboardPage() {
         </Card>
 
         <Card className="p-4 sm:p-5 space-y-3 bg-white">
-          <CardHeader
-            title="Deteksi Laporan Harian Asatidzah Hari Ini"
-            subtitle="Status pelaporan piket dan penegakan adab santri oleh masing-masing pembina"
-          />
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-2.5">
+            <CardHeader
+              title="Deteksi Laporan Harian Asatidzah Hari Ini"
+              subtitle="Status pelaporan piket dan penegakan adab santri oleh masing-masing pembina"
+            />
+            <div className="flex items-center gap-1.5 flex-wrap">
+              <div className="relative">
+                <Search className="w-3.5 h-3.5 absolute left-2.5 top-2.5 text-[#94A3B8]" />
+                <input
+                  type="text"
+                  placeholder="Cari pembina / kelas..."
+                  value={guruSearch}
+                  onChange={(e) => {
+                    setGuruSearch(e.target.value);
+                    setGuruCurrentPage(1);
+                  }}
+                  className="pl-8 pr-2.5 py-1.5 text-xs bg-[#F8FAFC] border border-[#E2EBF4] rounded-xl text-[#172033] focus:outline-none focus:border-[#1B4D3E]"
+                />
+              </div>
+
+              <select
+                aria-label="Filter Gender Pembina"
+                value={guruGenderFilter}
+                onChange={(e) => {
+                  setGuruGenderFilter(e.target.value as any);
+                  setGuruCurrentPage(1);
+                }}
+                className="px-2 py-1.5 text-xs bg-[#F8FAFC] border border-[#E2EBF4] rounded-xl font-bold text-[#172033] focus:outline-none"
+              >
+                <option value="ALL">Semua Gender</option>
+                <option value="Putra">Ustadz (Putra)</option>
+                <option value="Putri">Ustadzah (Putri)</option>
+              </select>
+
+              <select
+                aria-label="Filter Status Laporan"
+                value={guruStatusFilter}
+                onChange={(e) => {
+                  setGuruStatusFilter(e.target.value as any);
+                  setGuruCurrentPage(1);
+                }}
+                className="px-2 py-1.5 text-xs bg-[#F8FAFC] border border-[#E2EBF4] rounded-xl font-bold text-[#172033] focus:outline-none"
+              >
+                <option value="ALL">Semua Status</option>
+                <option value="Sudah Lapor">Sudah Lapor</option>
+                <option value="Laporan Nihil">Laporan Nihil</option>
+                <option value="Belum Lapor">Belum Lapor</option>
+              </select>
+            </div>
+          </div>
 
           <div className="overflow-x-auto -mx-4 sm:mx-0">
             <table className="w-full text-left text-xs border-collapse">
@@ -332,7 +407,7 @@ export default function AdminDashboardPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#E2E8F0]">
-                {guruList.map((guru) => (
+                {paginatedGuruList.map((guru) => (
                   <tr key={guru.id} className="hover:bg-[#F8FAFC] transition-colors">
                     <td className="py-3 px-3 font-semibold text-[#172033]">
                       {guru.name}
@@ -364,9 +439,25 @@ export default function AdminDashboardPage() {
                     </td>
                   </tr>
                 ))}
+                {paginatedGuruList.length === 0 && (
+                  <tr>
+                    <td colSpan={6} className="py-8 text-center text-xs text-[#94A3B8]">
+                      Tidak ada pembina yang sesuai dengan kriteria filter
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>
+
+          <Pagination
+            currentPage={guruCurrentPage}
+            totalPages={totalGuruPages}
+            onPageChange={setGuruCurrentPage}
+            totalItems={filteredGuruList.length}
+            itemsPerPage={GURU_PER_PAGE}
+            itemName="pembina"
+          />
         </Card>
       </div>
     </RoleShell>

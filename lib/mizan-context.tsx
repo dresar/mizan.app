@@ -153,14 +153,31 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
           setActiveRole(authUser.role);
           setIsAuthenticated(true);
         } else {
-          setCurrentUser(GUEST_USER);
-          setActiveRole(null);
-          setIsAuthenticated(false);
+          let fallbackUser: UserProfile | null = null;
           try {
-            localStorage.removeItem(STORAGE_KEY_ROLE);
-            localStorage.removeItem(STORAGE_KEY_USER);
+            const urlParams = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
+            const uParam = urlParams?.get("u") || urlParams?.get("user");
+            const storedUserId = localStorage.getItem(STORAGE_KEY_USER);
+            if (uParam && data.users) {
+              fallbackUser = data.users.find((u: any) => u.username?.toLowerCase() === uParam.toLowerCase()) || null;
+            }
+            if (!fallbackUser && storedUserId && data.users) {
+              fallbackUser = data.users.find((u: any) => u.id === storedUserId) || null;
+            }
           } catch {
             void 0;
+          }
+
+          if (fallbackUser) {
+            setCurrentUser(fallbackUser);
+            setActiveRole(fallbackUser.role);
+            setIsAuthenticated(true);
+          } else if (currentUser?.id && currentUser.username) {
+            void 0;
+          } else {
+            setCurrentUser(GUEST_USER);
+            setActiveRole(null);
+            setIsAuthenticated(false);
           }
         }
         if (data.kelasList && data.kelasList.length > 0) setKelasList(data.kelasList);
@@ -180,6 +197,21 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     refreshData();
+    const timer = setInterval(() => {
+      if (typeof document !== "undefined" && !document.hidden) {
+        refreshData();
+      }
+    }, 6000);
+    const handleVisibility = () => {
+      if (!document.hidden) {
+        refreshData();
+      }
+    };
+    document.addEventListener("visibilitychange", handleVisibility);
+    return () => {
+      clearInterval(timer);
+      document.removeEventListener("visibilitychange", handleVisibility);
+    };
   }, []);
 
   const accessibleSantriList = useMemo(() => {
@@ -607,6 +639,11 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
 
   const setGuruStatus = (guruId: string, status: StatusGuru) => {
     setGuruList((prev) => prev.map((g) => (g.id === guruId ? { ...g, status } : g)));
+    fetch("/api/data", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: guruId, status })
+    }).catch(() => void 0);
   };
 
   const updateSettings = async (

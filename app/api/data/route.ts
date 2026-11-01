@@ -219,3 +219,16 @@ export async function GET() {
     );
   }
 }
+
+export async function PATCH(req: Request) {
+  try {
+    const { id, status } = await req.json();
+    if (!id || !status) {
+      return NextResponse.json({ success: false, message: "ID dan status diperlukan." }, { status: 400 });
+    }
+    await query("UPDATE guru_monitoring SET status = $1 WHERE id = $2 OR name = $2 OR id = $3", [status, id, "guru-" + id]);
+    return NextResponse.json({ success: true, message: "Status pembina diperbarui." });
+  } catch (error: any) {
+    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+  }
+}

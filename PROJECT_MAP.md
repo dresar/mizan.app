@@ -49,8 +49,8 @@ mizan.apps/
 │   ├── Header.tsx, Sidebar.tsx, BottomNav.tsx, RoleShell.tsx, AnnouncementPopup.tsx
 │   └── ui/                    # Atomik (Card, Badge, Avatar, ScoreBar, Toast, Modal)
 ├── middleware.ts              # Edge server auth guard & role protection (/admin, /bk, /guru, /api/admin)
-├── lib/                       # auth-server.ts, db.ts, mizan-context.tsx, mock-data.ts, pdf-generator.ts, quick-accounts.ts, logo-raport-base64.ts
-└── public/                    # logo-raport.png, manifest.json, sw.js, favicon, icons, downloads/ (APK/iOS config)
+├── lib/                       # auth-server.ts, db.ts, mizan-context.tsx, mock-data.ts, pdf-generator.ts, quick-accounts.ts, kop-surat-base64.ts
+└── public/                    # kop-surat.png, logo-raport.png, manifest.json, sw.js, favicon, icons, downloads/
 ```
 
 ---

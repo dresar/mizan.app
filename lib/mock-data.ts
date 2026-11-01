@@ -94,6 +94,7 @@ export interface Santri {
   currentScore: number;
   status: StatusSantri;
   avatar: string;
+  avatarUrl?: string;
   waliName?: string;
   waliPhone?: string;
   totalHadir?: number;
