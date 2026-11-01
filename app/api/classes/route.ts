@@ -84,7 +84,7 @@ export async function PUT(req: Request) {
       );
     }
 
-    const { name, gender, waliKelas, guruId } = await req.json();
+    const { name, newName, gender, waliKelas, guruId } = await req.json();
     if (!name) {
       return NextResponse.json(
         { success: false, message: "Nama kelas wajib disertakan." },
@@ -92,26 +92,37 @@ export async function PUT(req: Request) {
       );
     }
 
+    const oldName = name.trim().toUpperCase();
+    const targetName = (newName && newName.trim().toUpperCase()) || oldName;
+
     await query(`
       UPDATE classes
       SET 
-        gender = COALESCE($2, gender),
-        wali_kelas = COALESCE($3, wali_kelas),
-        guru_id = COALESCE($4, guru_id)
-      WHERE UPPER(name) = UPPER($1)
-    `, [name.trim(), gender, waliKelas, guruId]);
+        name = $1,
+        gender = COALESCE($3, gender),
+        wali_kelas = COALESCE($4, wali_kelas),
+        guru_id = COALESCE($5, guru_id)
+      WHERE UPPER(name) = UPPER($2)
+    `, [targetName, oldName, gender, waliKelas, guruId]);
 
-    if (guruId && name) {
+    if (targetName !== oldName) {
+      await query(`UPDATE santri SET class = $1 WHERE UPPER(class) = UPPER($2)`, [targetName, oldName]);
+      await query(`UPDATE users SET assigned_class = $1 WHERE UPPER(assigned_class) = UPPER($2)`, [targetName, oldName]);
+      await query(`UPDATE penilaian SET santri_class = $1 WHERE UPPER(santri_class) = UPPER($2)`, [targetName, oldName]);
+      await query(`UPDATE absensi SET santri_class = $1 WHERE UPPER(santri_class) = UPPER($2)`, [targetName, oldName]);
+    }
+
+    if (guruId) {
       await query(`
         UPDATE users
         SET assigned_class = $1
         WHERE id = $2
-      `, [name.trim(), guruId]);
+      `, [targetName, guruId]);
     }
 
     return NextResponse.json({
       success: true,
-      message: `Data kelas ${name} berhasil diperbarui.`
+      message: `Data kelas ${targetName} berhasil diperbarui.`
     });
   } catch (error: any) {
     return NextResponse.json(
@@ -158,6 +169,8 @@ export async function DELETE(req: Request) {
     }
 
     await query(`DELETE FROM classes WHERE UPPER(name) = ANY($1::text[])`, [targetNames]);
+    await query(`UPDATE santri SET class = '' WHERE UPPER(class) = ANY($1::text[])`, [targetNames]);
+    await query(`UPDATE users SET assigned_class = NULL WHERE UPPER(assigned_class) = ANY($1::text[])`, [targetNames]);
 
     return NextResponse.json({
       success: true,
