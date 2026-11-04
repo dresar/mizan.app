@@ -23,7 +23,19 @@ interface ShareRecord {
 
 function ShareContent() {
   const params = useParams();
-  const shareId = params?.id as string;
+  const [urlId, setUrlId] = useState<string>("");
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const parts = window.location.pathname.split("/").filter(Boolean);
+      const id = parts[parts.length - 1];
+      if (id && id !== "preview") {
+        setUrlId(id);
+      }
+    }
+  }, []);
+
+  const shareId = urlId || (params?.id as string) || "";
 
   const [shareData, setShareData] = useState<ShareRecord | null>(null);
   const [isLoading, setIsLoading] = useState(true);

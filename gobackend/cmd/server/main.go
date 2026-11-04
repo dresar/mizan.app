@@ -170,14 +170,55 @@ func main() {
 			}
 
 			reqPath := strings.Trim(c.Path(), "/")
+			if reqPath == "" {
+				return c.SendFile(cfg.StaticWebDir + "/index.html")
+			}
+
 			htmlFile := cfg.StaticWebDir + "/" + reqPath + ".html"
 			if _, err := os.Stat(htmlFile); err == nil {
 				return c.SendFile(htmlFile)
 			}
 
+			directFile := cfg.StaticWebDir + "/" + reqPath
+			if _, err := os.Stat(directFile); err == nil {
+				return c.SendFile(directFile)
+			}
+
+			if strings.HasPrefix(reqPath, "guru/santri/") {
+				if strings.HasSuffix(reqPath, ".txt") {
+					return c.SendFile(cfg.StaticWebDir + "/guru/santri/detail.txt")
+				}
+				return c.SendFile(cfg.StaticWebDir + "/guru/santri/detail.html")
+			}
+
+			if strings.HasPrefix(reqPath, "bk/santri/") {
+				if strings.HasSuffix(reqPath, ".txt") {
+					return c.SendFile(cfg.StaticWebDir + "/bk/santri/detail.txt")
+				}
+				return c.SendFile(cfg.StaticWebDir + "/bk/santri/detail.html")
+			}
+
+			if strings.HasPrefix(reqPath, "admin/kategori-pelanggaran/") {
+				if strings.HasSuffix(reqPath, ".txt") {
+					return c.SendFile(cfg.StaticWebDir + "/admin/kategori-pelanggaran/detail.txt")
+				}
+				return c.SendFile(cfg.StaticWebDir + "/admin/kategori-pelanggaran/detail.html")
+			}
+
+			if strings.HasPrefix(reqPath, "share/") {
+				if strings.HasSuffix(reqPath, ".txt") {
+					return c.SendFile(cfg.StaticWebDir + "/share/preview.txt")
+				}
+				return c.SendFile(cfg.StaticWebDir + "/share/preview.html")
+			}
+
 			nestedIndex := cfg.StaticWebDir + "/" + reqPath + "/index.html"
 			if _, err := os.Stat(nestedIndex); err == nil {
 				return c.SendFile(nestedIndex)
+			}
+
+			if strings.Contains(reqPath, ".") {
+				return c.Status(fiber.StatusNotFound).SendString("File not found")
 			}
 
 			return c.SendFile(cfg.StaticWebDir + "/index.html")

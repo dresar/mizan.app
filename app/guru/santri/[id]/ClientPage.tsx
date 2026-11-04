@@ -32,7 +32,19 @@ import { getSantriDisciplineStatus } from "@/lib/mock-data";
 function SantriDetailContent() {
   const router = useRouter();
   const params = useParams();
-  const santriId = (params?.id as string) || "santri-1";
+  const [urlId, setUrlId] = useState<string>("");
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const parts = window.location.pathname.split("/").filter(Boolean);
+      const id = parts[parts.length - 1];
+      if (id && id !== "detail") {
+        setUrlId(id);
+      }
+    }
+  }, []);
+
+  const santriId = urlId || (params?.id as string) || "santri-1";
 
   const { accessibleSantriList, penilaianList, absensiList, currentUser, showToast, settings } = useMizan();
   const isSuperAdmin = currentUser?.role === "SUPER_ADMIN";

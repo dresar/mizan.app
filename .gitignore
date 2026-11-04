@@ -23,6 +23,7 @@
 # binaries
 *.exe
 gobackend/server.exe
+*.fiber.gz
 
 # misc
 .DS_Store

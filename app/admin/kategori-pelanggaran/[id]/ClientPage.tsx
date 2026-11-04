@@ -1,6 +1,6 @@
 ﻿"use client";
 
-import React, { useState, useMemo, Suspense } from "react";
+import React, { useState, useEffect, useMemo, Suspense } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import {
@@ -20,7 +20,19 @@ import { Tingkat, IndikatorType } from "@/lib/mock-data";
 
 function CategoryDetailContent() {
   const params = useParams();
-  const rawId = (params?.id as string) || "";
+  const [urlId, setUrlId] = useState<string>("");
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const parts = window.location.pathname.split("/").filter(Boolean);
+      const id = parts[parts.length - 1];
+      if (id && id !== "detail") {
+        setUrlId(id);
+      }
+    }
+  }, []);
+
+  const rawId = urlId || (params?.id as string) || "";
   const categoryId = decodeURIComponent(rawId);
 
   const { categories, deleteIndikatorItem, showToast } = useMizan();
