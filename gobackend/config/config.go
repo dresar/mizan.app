@@ -25,7 +25,7 @@ func LoadConfig() *Config {
 		port = os.Getenv("GO_PORT")
 	}
 	if port == "" {
-		port = "4000"
+		port = "3000"
 	}
 
 	secret := os.Getenv("SESSION_SECRET")
