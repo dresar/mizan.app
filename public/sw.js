@@ -1,4 +1,4 @@
-const CACHE_NAME = "mizan-pwa-v1.0.8";
+const CACHE_NAME = "mizan-pwa-v1.0.9";
 const PRECACHE_ASSETS = [
   "/login",
   "/manifest.json",
@@ -74,24 +74,21 @@ self.addEventListener("fetch", (event) => {
 
   if (url.pathname.startsWith("/_next/static/")) {
     event.respondWith(
-      caches.match(event.request).then((cached) => {
-        if (cached) {
-          return cached;
-        }
-        return fetch(event.request)
-          .then((response) => {
-            if (response && response.status === 200) {
-              const clone = response.clone();
-              caches.open(CACHE_NAME).then((cache) => {
-                cache.put(event.request, clone).catch(() => void 0);
-              }).catch(() => void 0);
-            }
-            return response;
-          })
-          .catch(() => {
-            return new Response("", { status: 404, statusText: "Not Found" });
+      fetch(event.request)
+        .then((response) => {
+          if (response && response.status === 200) {
+            const clone = response.clone();
+            caches.open(CACHE_NAME).then((cache) => {
+              cache.put(event.request, clone).catch(() => void 0);
+            }).catch(() => void 0);
+          }
+          return response;
+        })
+        .catch(() => {
+          return caches.match(event.request).then((cached) => {
+            return cached || new Response("", { status: 404, statusText: "Not Found" });
           });
-      })
+        })
     );
     return;
   }

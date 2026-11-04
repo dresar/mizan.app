@@ -33,7 +33,12 @@ async function verifyEdgeToken(token: string | undefined): Promise<{ role: strin
       .replace(/\+/g, "-")
       .replace(/\//g, "_");
 
-    if (signature !== expectedSig) return null;
+    if (signature.length !== expectedSig.length) return null;
+    let diff = 0;
+    for (let i = 0; i < signature.length; i++) {
+      diff |= signature.charCodeAt(i) ^ expectedSig.charCodeAt(i);
+    }
+    if (diff !== 0) return null;
 
     const payload = JSON.parse(base64UrlDecode(payloadStr));
     const now = Math.floor(Date.now() / 1000);

@@ -17,6 +17,10 @@ export const pool =
     connectionTimeoutMillis: 20000
   });
 
+pool.on("error", () => {
+  void 0;
+});
+
 if (process.env.NODE_ENV !== "production") {
   global._mizanPgPool = pool;
 }

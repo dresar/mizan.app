@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { query } from "@/lib/db";
+import { verifyRequestAuth } from "@/lib/auth-server";
 
 export async function GET(req: Request) {
   try {
@@ -48,6 +49,13 @@ export async function GET(req: Request) {
 
 export async function POST(req: Request) {
   try {
+    const auth = verifyRequestAuth(req);
+    if (!auth.authorized) {
+      return NextResponse.json(
+        { success: false, message: auth.message || "Autentikasi diperlukan." },
+        { status: 401 }
+      );
+    }
     const body = await req.json();
     const { title, type, period, scope = "ALL", data } = body;
 

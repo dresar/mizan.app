@@ -18,6 +18,7 @@ import {
   UserCheck,
   Award,
   FileText,
+  MessageSquarePlus,
   X
 } from "lucide-react";
 import { useMizan } from "@/lib/mizan-context";
@@ -65,7 +66,8 @@ export function Sidebar() {
       { label: "Rapor Santri", href: "/admin/rapor", icon: <FileText className="w-4 h-4" />, description: "Rapor adab & sholat" },
       { label: "Kelola Pengguna", href: "/admin/users", icon: <User className="w-4 h-4" />, description: "Akun pembina & admin" },
       { label: "Master Kategori", href: "/admin/kategori-pelanggaran", icon: <Sliders className="w-4 h-4" />, description: "Hasanah & Sayyi'ah" },
-      { label: "Pengaturan Nilai", href: "/admin/pengaturan-nilai", icon: <Settings className="w-4 h-4" />, description: "Konfigurasi bobot" }
+      { label: "Pengaturan Nilai", href: "/admin/pengaturan-nilai", icon: <Settings className="w-4 h-4" />, description: "Konfigurasi bobot" },
+      { label: "Feedback & Bug", href: "/admin/feedback", icon: <MessageSquarePlus className="w-4 h-4" />, description: "Masukan & analisis bug" }
     ];
   } else if (activeRole === "PENGASUHAN") {
     navItems = [

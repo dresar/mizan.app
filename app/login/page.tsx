@@ -63,49 +63,11 @@ export default function LoginPage() {
     });
   }, [devCategory, quickSearch]);
 
-  const handleQuickLogin = async (acc: QuickAccount) => {
-    const pwd = acc.password || "RDS123";
+  const handleQuickLogin = (acc: QuickAccount) => {
     setUsername(acc.username);
-    setPassword(pwd);
+    setPassword("");
     setSelectedDevUser(acc.username);
     setErrorMessage("");
-    setIsLoading(true);
-
-    try {
-      const res = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username: acc.username, password: pwd })
-      });
-
-      const data = await res.json();
-
-      if (data.success && data.user) {
-        loginUser(data.user);
-        if (data.user.role === "SUPER_ADMIN") {
-          router.push("/admin/dashboard");
-        } else if (data.user.role === "PENGASUHAN") {
-          router.push("/bk/dashboard");
-        } else if (data.user.role === "ORTU") {
-          if (data.user.santriId) {
-            try {
-              localStorage.setItem("mizan_ortu_santri_id", data.user.santriId);
-            } catch {
-              void 0;
-            }
-          }
-          router.push("/ortu/dashboard");
-        } else {
-          router.push("/guru/dashboard");
-        }
-      } else {
-        setErrorMessage(data.message || "Gagal masuk.");
-      }
-    } catch {
-      setErrorMessage("Terjadi kendala koneksi.");
-    } finally {
-      setIsLoading(false);
-    }
   };
 
   const handleFormLogin = async (e: React.FormEvent) => {

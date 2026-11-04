@@ -27,6 +27,7 @@ mizan.apps/
 │   │   ├── rapor/             # Modern List/Grid view rapor santri, kartu skor adab & cetak PDF massal/per santri
 │   │   ├── pengaturan-nilai/  # Bobot nilai & batas skor adab dinamis dari DB
 │   │   ├── kategori-pelanggaran/ # Modern List/Grid view kategori, unsur, dan indikator penilaian
+│   │   ├── feedback/          # Manajemen feedback & laporan bug, diagnosa AI Code Inspector & prompt rekomendasi
 │   │   └── users/             # Modern List/Grid view pengguna, tabel rapi, avatar w-12 h-12, sandi & hapus modal
 │   ├── guru/                  # Modul Ustadz / Pembina
 │   │   ├── dashboard/         # Ringkasan santri binaan & grafik laporan
@@ -40,10 +41,12 @@ mizan.apps/
 │   ├── santri/profil/         # Profil mandiri santri, skor adab & tombol Bagikan
 │   ├── share/[id]/            # Halaman publik kartu share (stat-*) tanpa perlu login
 │   ├── login/                 # Autentikasi multi-role (login cepat 85 akun Ustadz/Ustadzah & BK dengan isolasi gender ketat)
-│   └── api/                   # REST API routes (auth, absensi, backup, data, penilaian, settings, share, santri, classes, users)
+│   └── api/                   # REST API routes (auth, absensi, backup, data, feedback, feedback/analyze, penilaian, settings, share, santri, classes, users)
 ├── components/                # UI Components
 │   ├── ShareCard.tsx          # Komponen kartu statistik soft-UI neumorphic (7-item recessed, dual-stat, verified)
 │   ├── ShareModal.tsx         # Modal share kompak (dropdown Jenis/Rentang/Sasaran, live preview, no-scroll)
+│   ├── FeedbackModal.tsx      # Modal saran/bug interaktif, diagnosa AI read-only & editor prompt teknis
+│   ├── FeedbackButton.tsx     # Floating button masukan & bug terpadu di semua akun
 │   ├── PrayerAttendanceChart.tsx # Grafik kehadiran sholat
 │   ├── PembinaReportChart.tsx # Grafik laporan pembina
 │   ├── Header.tsx, Sidebar.tsx, BottomNav.tsx, RoleShell.tsx, AnnouncementPopup.tsx
@@ -64,6 +67,7 @@ mizan.apps/
 - `classes`: Data kelas & wali kelas (name, wali_kelas, guru_id, gender).
 - `app_settings`: Pengaturan bobot skor dinamis (base_score, max_score, penalty_limit, dll).
 - `public_shares`: Snapshot kartu share publik (id VARCHAR(64) PRIMARY KEY, title, type, period, scope, data JSONB).
+- `feedbacks`: Masukan & laporan bug (id VARCHAR(64) PRIMARY KEY, type, category, title, description, page_url, user_id, user_name, user_role, ai_analysis JSONB, custom_prompt, status, admin_notes, created_at, updated_at).
 
 ---
 

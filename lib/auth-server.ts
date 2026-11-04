@@ -55,7 +55,9 @@ export function verifySessionToken(token: string | null | undefined): SessionPay
       .createHmac("sha256", SESSION_SECRET)
       .update(payloadStr)
       .digest("base64url");
-    if (!crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expectedSignature))) {
+    const sigBuf = Buffer.from(signature);
+    const expectedSigBuf = Buffer.from(expectedSignature);
+    if (sigBuf.length !== expectedSigBuf.length || !crypto.timingSafeEqual(sigBuf, expectedSigBuf)) {
       return null;
     }
     const payload: SessionPayload = JSON.parse(base64UrlDecode(payloadStr));

@@ -2,8 +2,15 @@ import { NextResponse } from "next/server";
 import { query } from "@/lib/db";
 import { verifyRequestAuth } from "@/lib/auth-server";
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
+    const auth = verifyRequestAuth(req);
+    if (!auth.authorized) {
+      return NextResponse.json(
+        { success: false, message: auth.message || "Autentikasi diperlukan." },
+        { status: 401 }
+      );
+    }
     const rows = await query(`
       SELECT 
         c.id, c.name, COALESCE(c.gender, 'Putra') as gender,

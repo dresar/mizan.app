@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { query } from "@/lib/db";
 import { formatWIBDate, formatWIBDateTime, getWIBTime } from "@/lib/date-utils";
+import { verifyRequestAuth } from "@/lib/auth-server";
 import {
   Kategori,
   Santri,
@@ -12,8 +13,15 @@ import {
   DEFAULT_SETTINGS
 } from "@/lib/mock-data";
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
+    const auth = verifyRequestAuth(req);
+    if (!auth.authorized) {
+      return NextResponse.json(
+        { success: false, message: auth.message || "Autentikasi diperlukan." },
+        { status: 401 }
+      );
+    }
     const santriRows = await query(`
       SELECT 
         id, nis, name, gender, class, asrama, kamar, 
@@ -215,6 +223,10 @@ export async function GET() {
 
 export async function PATCH(req: Request) {
   try {
+    const auth = verifyRequestAuth(req);
+    if (!auth.authorized) {
+      return NextResponse.json({ success: false, message: "Autentikasi diperlukan." }, { status: 401 });
+    }
     const { id, status } = await req.json();
     if (!id || !status) {
       return NextResponse.json({ success: false, message: "ID dan status diperlukan." }, { status: 400 });

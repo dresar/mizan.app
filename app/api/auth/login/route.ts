@@ -28,7 +28,7 @@ export async function POST(req: Request) {
 
     if (rows.length > 0) {
       const user = rows[0];
-      if (user.password !== password && password !== "RDS123" && password !== "RDS1234") {
+      if (user.password !== password) {
         return NextResponse.json(
           { success: false, message: "Kata sandi yang Anda masukkan salah." },
           { status: 401 }
@@ -93,7 +93,8 @@ export async function POST(req: Request) {
       path: "/",
       maxAge: 86400 * 7,
       sameSite: "lax",
-      httpOnly: false
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production"
     });
 
     response.cookies.set("mizan_auth", userProfile.role, {

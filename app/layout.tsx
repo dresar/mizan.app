@@ -1,7 +1,10 @@
 import type { Metadata, Viewport } from "next";
+import { Suspense } from "react";
 import "./globals.css";
 import { MizanProvider } from "@/lib/mizan-context";
 import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
+import { FeedbackModal } from "@/components/FeedbackModal";
+import { FeedbackButton } from "@/components/FeedbackButton";
 
 export const viewport: Viewport = {
   themeColor: "#1B4D3E",
@@ -49,6 +52,10 @@ export default function RootLayout({
         <MizanProvider>
           <ServiceWorkerRegister />
           {children}
+          <Suspense fallback={null}>
+            <FeedbackModal />
+            <FeedbackButton />
+          </Suspense>
         </MizanProvider>
       </body>
     </html>

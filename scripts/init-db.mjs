@@ -78,6 +78,24 @@ async function init() {
         date_key VARCHAR(16) DEFAULT 'today'
       );
 
+      CREATE TABLE IF NOT EXISTS feedbacks (
+        id VARCHAR(64) PRIMARY KEY,
+        type VARCHAR(16) NOT NULL,
+        category VARCHAR(64) NOT NULL,
+        title VARCHAR(255) NOT NULL,
+        description TEXT NOT NULL,
+        page_url VARCHAR(255),
+        user_id VARCHAR(64),
+        user_name VARCHAR(128),
+        user_role VARCHAR(32),
+        ai_analysis JSONB,
+        custom_prompt TEXT,
+        status VARCHAR(32) DEFAULT 'Baru',
+        admin_notes TEXT,
+        created_at TIMESTAMPTZ DEFAULT NOW(),
+        updated_at TIMESTAMPTZ DEFAULT NOW()
+      );
+
       CREATE TABLE IF NOT EXISTS app_settings (
         key VARCHAR(64) PRIMARY KEY,
         value JSONB NOT NULL

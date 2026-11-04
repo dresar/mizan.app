@@ -334,3 +334,72 @@ export const INITIAL_CATEGORIES: Kategori[] = [];
 export const INITIAL_PENILAIAN: PenilaianRecord[] = [];
 export const INITIAL_ABSENSI: AbsensiRecord[] = [];
 export const INITIAL_SETTINGS: AppSettings = DEFAULT_SETTINGS;
+
+export type FeedbackType = "SARAN" | "BUG";
+export type FeedbackStatus = "Baru" | "Ditinjau" | "Diproses" | "Selesai" | "Ditolak";
+export type FeedbackSeverity = "Rendah" | "Sedang" | "Tinggi" | "Kritis";
+
+export interface AIAnalysisResult {
+  summary: string;
+  rootCause: string;
+  affectedFiles: string[];
+  severity: FeedbackSeverity;
+  recommendationPrompt: string;
+  generatedAt: string;
+}
+
+export interface FeedbackRecord {
+  id: string;
+  type: FeedbackType;
+  category: string;
+  title: string;
+  description: string;
+  pageUrl?: string;
+  userId?: string;
+  userName?: string;
+  userRole?: string;
+  aiAnalysis?: AIAnalysisResult;
+  customPrompt?: string;
+  status: FeedbackStatus;
+  adminNotes?: string;
+  createdAt: string;
+  updatedAt?: string;
+}
+
+export const INITIAL_FEEDBACKS: FeedbackRecord[] = [
+  {
+    id: "fb-001",
+    type: "BUG",
+    category: "Absensi Sholat",
+    title: "Presensi sholat Subuh lambat tersimpan",
+    description: "Saat input presensi jamaah Subuh kelas 3A, proses submit butuh waktu lama dan status kadang ter-reset.",
+    pageUrl: "/guru/absen",
+    userId: "guru-01",
+    userName: "Ustadz Ahmad Fauzi",
+    userRole: "GURU",
+    status: "Baru",
+    createdAt: "2026-11-04 05:40:00",
+    aiAnalysis: {
+      summary: "Potensi delay transaksi koneksi database pada jam sibuk presensi subuh.",
+      rootCause: "Endpoint absensi memerlukan optimasi batch insert saat menerima multi-record santri.",
+      affectedFiles: ["app/api/absensi/route.ts", "lib/db.ts"],
+      severity: "Tinggi",
+      recommendationPrompt: "Optimalkan rute app/api/absensi/route.ts menggunakan parameterized batch insert dan connection retry dengan batas timeout 10 detik.",
+      generatedAt: "2026-11-04 05:40:15"
+    },
+    customPrompt: "Optimalkan rute app/api/absensi/route.ts menggunakan parameterized batch insert dan connection retry dengan batas timeout 10 detik."
+  },
+  {
+    id: "fb-002",
+    type: "SARAN",
+    category: "Rapor Santri",
+    title: "Filter asrama untuk unduh rapor PDF",
+    description: "Diharapkan penambahan filter asrama pada halaman rapor agar pembina asrama dapat mengunduh berkas santri binaan per gedung.",
+    pageUrl: "/admin/rapor",
+    userId: "admin-01",
+    userName: "Ustadz Ridwan",
+    userRole: "SUPER_ADMIN",
+    status: "Ditinjau",
+    createdAt: "2026-11-03 14:20:00"
+  }
+];

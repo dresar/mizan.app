@@ -4,6 +4,13 @@ import { verifyRequestAuth } from "@/lib/auth-server";
 
 export async function GET(req: Request) {
   try {
+    const auth = verifyRequestAuth(req);
+    if (!auth.authorized) {
+      return NextResponse.json(
+        { success: false, message: auth.message || "Autentikasi diperlukan." },
+        { status: 401 }
+      );
+    }
     const { searchParams } = new URL(req.url);
     const gender = searchParams.get("gender");
     const className = searchParams.get("class");

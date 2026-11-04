@@ -13,7 +13,8 @@ import {
   Download,
   Apple,
   Bell,
-  Menu
+  Menu,
+  MessageSquarePlus
 } from "lucide-react";
 import { useMizan } from "@/lib/mizan-context";
 import { Avatar } from "@/components/ui/Avatar";
@@ -27,7 +28,8 @@ export default function Header() {
     activeRole,
     settings,
     isMobileNavOpen,
-    setIsMobileNavOpen
+    setIsMobileNavOpen,
+    openFeedbackModal
   } = useMizan();
   const appLogo = settings?.appLogoUrl || "/logo.png";
 
@@ -187,6 +189,16 @@ export default function Header() {
         </div>
 
         <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => openFeedbackModal("SARAN")}
+            className="p-2 rounded-2xl bg-[#FAF7EE] text-[#172033] hover:bg-[#FAF7EE]/80 border border-[#C5A059]/30 transition-all focus:outline-none cursor-pointer"
+            aria-label="Kirim Masukan"
+            title="Kirim Masukan atau Lapor Bug"
+          >
+            <MessageSquarePlus className="w-4 h-4 text-[#A8833E]" />
+          </button>
+
           <div className="relative" ref={notifRef}>
             <button
               type="button"

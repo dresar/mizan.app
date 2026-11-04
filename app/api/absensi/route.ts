@@ -1,8 +1,16 @@
 import { NextResponse } from "next/server";
 import { query } from "@/lib/db";
+import { verifyRequestAuth } from "@/lib/auth-server";
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
+    const auth = verifyRequestAuth(req);
+    if (!auth.authorized) {
+      return NextResponse.json(
+        { success: false, message: auth.message || "Autentikasi diperlukan." },
+        { status: 401 }
+      );
+    }
     const rows = await query(`
       SELECT 
         id, santri_id as "santriId", santri_name as "santriName",
@@ -24,6 +32,13 @@ export async function GET() {
 
 export async function POST(req: Request) {
   try {
+    const auth = verifyRequestAuth(req, ["SUPER_ADMIN", "PENGASUHAN", "GURU"]);
+    if (!auth.authorized) {
+      return NextResponse.json(
+        { success: false, message: auth.message || "Akses ditolak: Memerlukan hak akses Guru atau Pengasuhan." },
+        { status: 403 }
+      );
+    }
     const { records } = await req.json();
 
     if (!records || !Array.isArray(records) || records.length === 0) {
@@ -179,6 +194,13 @@ export async function PUT(req: Request) {
 
 export async function DELETE(req: Request) {
   try {
+    const auth = verifyRequestAuth(req, ["SUPER_ADMIN", "PENGASUHAN"]);
+    if (!auth.authorized) {
+      return NextResponse.json(
+        { success: false, message: auth.message || "Akses ditolak: Hanya Pengasuhan atau Super Admin yang dapat menghapus absensi." },
+        { status: 403 }
+      );
+    }
     const { searchParams } = new URL(req.url);
     const id = searchParams.get("id");
     const idsParam = searchParams.get("ids");

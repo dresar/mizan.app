@@ -1,9 +1,17 @@
 import { NextResponse } from "next/server";
 import { query } from "@/lib/db";
 import { getWIBDate, getWIBTime } from "@/lib/date-utils";
+import { verifyRequestAuth } from "@/lib/auth-server";
 
 export async function POST(req: Request) {
   try {
+    const auth = verifyRequestAuth(req, ["SUPER_ADMIN", "PENGASUHAN", "GURU"]);
+    if (!auth.authorized) {
+      return NextResponse.json(
+        { success: false, message: auth.message || "Akses ditolak: Memerlukan hak akses Guru atau Pengasuhan." },
+        { status: 403 }
+      );
+    }
     const body = await req.json();
     if (!body.santriId) {
       return NextResponse.json({ success: false, message: "ID santri wajib diisi." }, { status: 400 });
@@ -106,6 +114,13 @@ export async function POST(req: Request) {
 
 export async function DELETE(req: Request) {
   try {
+    const auth = verifyRequestAuth(req, ["SUPER_ADMIN", "PENGASUHAN"]);
+    if (!auth.authorized) {
+      return NextResponse.json(
+        { success: false, message: auth.message || "Akses ditolak: Hanya Pengasuhan atau Super Admin yang dapat menghapus penilaian." },
+        { status: 403 }
+      );
+    }
     const { searchParams } = new URL(req.url);
     const id = searchParams.get("id");
     const idsParam = searchParams.get("ids");
@@ -169,6 +184,13 @@ export async function DELETE(req: Request) {
 
 export async function PUT(req: Request) {
   try {
+    const auth = verifyRequestAuth(req, ["SUPER_ADMIN", "PENGASUHAN", "GURU"]);
+    if (!auth.authorized) {
+      return NextResponse.json(
+        { success: false, message: auth.message || "Akses ditolak: Memerlukan hak akses Guru atau Pengasuhan." },
+        { status: 403 }
+      );
+    }
     const body = await req.json();
     const { id, action } = body;
     if (!id) {

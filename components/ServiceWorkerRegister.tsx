@@ -8,6 +8,18 @@ export function ServiceWorkerRegister() {
       return;
     }
 
+    if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
+      navigator.serviceWorker.getRegistrations().then((regs) => {
+        for (const r of regs) r.unregister();
+      });
+      if ("caches" in window) {
+        caches.keys().then((keys) => {
+          for (const k of keys) caches.delete(k);
+        });
+      }
+      return;
+    }
+
     navigator.serviceWorker.register("/sw.js").then((reg) => {
       reg.update();
       if (reg.waiting) {
@@ -50,10 +62,20 @@ export function ServiceWorkerRegister() {
         rawMsg.includes("failed to fetch dynamically imported module") ||
         rawMsg.includes("error loading dynamically imported module")
       ) {
+        if ("serviceWorker" in navigator) {
+          navigator.serviceWorker.getRegistrations().then((regs) => {
+            for (const r of regs) r.unregister();
+          });
+        }
+        if ("caches" in window) {
+          caches.keys().then((keys) => {
+            for (const k of keys) caches.delete(k);
+          });
+        }
         const reloadKey = "mizan_chunk_reload";
         const lastReload = sessionStorage.getItem(reloadKey);
         const now = Date.now();
-        if (!lastReload || now - parseInt(lastReload, 10) > 6000) {
+        if (!lastReload || now - parseInt(lastReload, 10) > 3000) {
           sessionStorage.setItem(reloadKey, String(now));
           window.location.reload();
         }

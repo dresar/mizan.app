@@ -16,7 +16,11 @@ import {
   StatusSantri,
   StatusAbsensi,
   DEFAULT_SETTINGS,
-  getSantriDisciplineStatus
+  getSantriDisciplineStatus,
+  FeedbackRecord,
+  FeedbackStatus,
+  FeedbackType,
+  INITIAL_FEEDBACKS
 } from "./mock-data";
 import { formatWIBDate, formatWIBDateTime, getWIBDate, getWIBTime } from "./date-utils";
 
@@ -93,6 +97,14 @@ interface MizanContextType {
   isDbConnected: boolean;
   isMobileNavOpen: boolean;
   setIsMobileNavOpen: (open: boolean) => void;
+  feedbackList: FeedbackRecord[];
+  addFeedback: (data: Omit<FeedbackRecord, "id" | "createdAt" | "status">) => Promise<{ success: boolean; data?: FeedbackRecord; message: string }>;
+  updateFeedbackStatus: (id: string, status: FeedbackStatus, adminNotes?: string) => Promise<{ success: boolean; message: string }>;
+  deleteFeedback: (id: string) => Promise<{ success: boolean; message: string }>;
+  isFeedbackModalOpen: boolean;
+  setIsFeedbackModalOpen: (open: boolean) => void;
+  feedbackInitialType: FeedbackType;
+  openFeedbackModal: (type?: FeedbackType) => void;
 }
 
 const MizanContext = createContext<MizanContextType | undefined>(undefined);
@@ -128,6 +140,14 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
   const [toasts, setToasts] = useState<ToastItem[]>([]);
   const [isMobileNavOpen, setIsMobileNavOpen] = useState<boolean>(false);
   const [isDbConnected, setIsDbConnected] = useState(false);
+  const [feedbackList, setFeedbackList] = useState<FeedbackRecord[]>(INITIAL_FEEDBACKS);
+  const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState<boolean>(false);
+  const [feedbackInitialType, setFeedbackInitialType] = useState<FeedbackType>("SARAN");
+
+  const openFeedbackModal = (type: FeedbackType = "SARAN") => {
+    setFeedbackInitialType(type);
+    setIsFeedbackModalOpen(true);
+  };
 
   const refreshData = async () => {
     try {
@@ -158,32 +178,9 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
           setActiveRole(authUser.role);
           setIsAuthenticated(true);
         } else {
-          let fallbackUser: UserProfile | null = null;
-          try {
-            const urlParams = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
-            const uParam = urlParams?.get("u") || urlParams?.get("user");
-            const storedUserId = localStorage.getItem(STORAGE_KEY_USER);
-            if (uParam && data.users) {
-              fallbackUser = data.users.find((u: any) => u.username?.toLowerCase() === uParam.toLowerCase()) || null;
-            }
-            if (!fallbackUser && storedUserId && data.users) {
-              fallbackUser = data.users.find((u: any) => u.id === storedUserId) || null;
-            }
-          } catch {
-            void 0;
-          }
-
-          if (fallbackUser) {
-            setCurrentUser(fallbackUser);
-            setActiveRole(fallbackUser.role);
-            setIsAuthenticated(true);
-          } else if (currentUser?.id && currentUser.username) {
-            void 0;
-          } else {
-            setCurrentUser(GUEST_USER);
-            setActiveRole(null);
-            setIsAuthenticated(false);
-          }
+          setCurrentUser(GUEST_USER);
+          setActiveRole(null);
+          setIsAuthenticated(false);
         }
         if (data.kelasList && data.kelasList.length > 0) setKelasList(data.kelasList);
         if (data.classList) setClassList(data.classList);
@@ -192,6 +189,17 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
         if (data.penilaianList) setPenilaianList(data.penilaianList);
         if (data.absensiList) setAbsensiList(data.absensiList);
         if (data.settings) setSettings(data.settings);
+        try {
+          const fbRes = await fetch("/api/feedback");
+          if (fbRes.ok) {
+            const fbData = await fbRes.json();
+            if (fbData.success && Array.isArray(fbData.data)) {
+              setFeedbackList(fbData.data);
+            }
+          }
+        } catch {
+          void 0;
+        }
       }
     } catch {
       setIsDbConnected(false);
@@ -876,6 +884,77 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const addFeedback = async (data: Omit<FeedbackRecord, "id" | "createdAt" | "status">): Promise<{ success: boolean; data?: FeedbackRecord; message: string }> => {
+    try {
+      const res = await fetch("/api/feedback", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      });
+      const resData = await res.json();
+      if (resData.success && resData.data) {
+        setFeedbackList((prev) => [resData.data, ...prev]);
+        showToast("Terkirim", "success");
+        return { success: true, data: resData.data, message: "Terkirim" };
+      }
+    } catch {
+      void 0;
+    }
+    const newFb: FeedbackRecord = {
+      ...data,
+      id: "fb-" + Date.now().toString(36),
+      status: "Baru",
+      createdAt: formatWIBDateTime(new Date())
+    };
+    setFeedbackList((prev) => [newFb, ...prev]);
+    showToast("Terkirim", "success");
+    return { success: true, data: newFb, message: "Terkirim" };
+  };
+
+  const updateFeedbackStatus = async (id: string, status: FeedbackStatus, adminNotes?: string): Promise<{ success: boolean; message: string }> => {
+    try {
+      const res = await fetch("/api/feedback", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, status, adminNotes })
+      });
+      const resData = await res.json();
+      if (resData.success) {
+        setFeedbackList((prev) =>
+          prev.map((f) => (f.id === id ? { ...f, status, adminNotes, updatedAt: formatWIBDateTime(new Date()) } : f))
+        );
+        showToast("Diperbarui", "success");
+        return { success: true, message: "Diperbarui" };
+      }
+    } catch {
+      void 0;
+    }
+    setFeedbackList((prev) =>
+      prev.map((f) => (f.id === id ? { ...f, status, adminNotes, updatedAt: formatWIBDateTime(new Date()) } : f))
+    );
+    showToast("Diperbarui", "success");
+    return { success: true, message: "Diperbarui" };
+  };
+
+  const deleteFeedback = async (id: string): Promise<{ success: boolean; message: string }> => {
+    try {
+      const res = await fetch(`/api/feedback?id=${encodeURIComponent(id)}`, {
+        method: "DELETE"
+      });
+      const resData = await res.json();
+      if (resData.success) {
+        setFeedbackList((prev) => prev.filter((f) => f.id !== id));
+        showToast("Dihapus", "success");
+        return { success: true, message: "Dihapus" };
+      }
+    } catch {
+      void 0;
+    }
+    setFeedbackList((prev) => prev.filter((f) => f.id !== id));
+    showToast("Dihapus", "success");
+    return { success: true, message: "Dihapus" };
+  };
+
   const deleteUserBulk = async (ids: string[]): Promise<{ success: boolean; message: string }> => {
     try {
       const res = await fetch(`/api/users?ids=${ids.join(",")}`, { method: "DELETE" });
@@ -949,7 +1028,15 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
         refreshData,
         isDbConnected,
         isMobileNavOpen,
-        setIsMobileNavOpen
+        setIsMobileNavOpen,
+        feedbackList,
+        addFeedback,
+        updateFeedbackStatus,
+        deleteFeedback,
+        isFeedbackModalOpen,
+        setIsFeedbackModalOpen,
+        feedbackInitialType,
+        openFeedbackModal
       }}
     >
       {children}
