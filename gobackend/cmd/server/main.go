@@ -210,6 +210,13 @@ func main() {
 				return c.SendFile(cfg.StaticWebDir + "/admin/kategori-pelanggaran/detail.html")
 			}
 
+			if strings.HasPrefix(reqPath, "admin/kelas/") {
+				if strings.HasSuffix(reqPath, ".txt") {
+					return c.SendFile(cfg.StaticWebDir + "/admin/kelas/detail.txt")
+				}
+				return c.SendFile(cfg.StaticWebDir + "/admin/kelas/detail.html")
+			}
+
 			if strings.HasPrefix(reqPath, "share/") {
 				if strings.HasSuffix(reqPath, ".txt") {
 					return c.SendFile(cfg.StaticWebDir + "/share/preview.txt")
