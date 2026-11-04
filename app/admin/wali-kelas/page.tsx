@@ -366,6 +366,11 @@ export default function AdminWaliKelasPage() {
             {paginatedTeachers.map((teacher) => {
               const studentsSample = teacher.studentsSample || [];
               const remainingCount = Math.max(0, teacher.studentsCount - studentsSample.length);
+              const defaultAvatar =
+                teacher.gender === "Putri"
+                  ? "/default-avatar-ustadzah.svg"
+                  : "/default-avatar-ustadz.svg";
+              const teacherPhoto = teacher.avatarUrl || defaultAvatar;
 
               return (
                 <div
@@ -373,30 +378,18 @@ export default function AdminWaliKelasPage() {
                   onClick={() => handleOpenDetail(teacher)}
                   className="group relative rounded-3xl overflow-hidden bg-white border border-[#E2EBF4] shadow-xs hover:shadow-2xl hover:border-[#1B4D3E]/40 hover:-translate-y-2 transition-all duration-500 flex flex-col justify-between cursor-pointer text-left"
                 >
-                  <div className="sheen-wrapper relative w-full aspect-square overflow-hidden bg-slate-100 shrink-0">
-                    {teacher.avatarUrl ? (
-                      <img
-                        src={teacher.avatarUrl}
-                        alt={teacher.name}
-                        className="w-full h-full object-cover object-top group-hover:scale-108 transition-transform duration-700 ease-out"
-                      />
-                    ) : (
-                      <div
-                        className={`w-full h-full flex flex-col items-center justify-center p-6 text-center select-none ${
-                          teacher.gender === "Putri"
-                            ? "bg-gradient-to-br from-[#FAF7EE] via-[#F3EBD8] to-[#E8DCBF]"
-                            : "bg-gradient-to-br from-[#ECFDF5] via-[#D1FAE5] to-[#A7F3D0]"
-                        }`}
-                      >
-                        <div className="w-20 h-20 rounded-2xl bg-white shadow-md flex items-center justify-center text-xl font-serif font-black text-[#1B4D3E] border border-[#C5A059]/40 group-hover:scale-110 transition-transform duration-500">
-                          {teacher.avatarInitials || "WB"}
-                        </div>
-                        <span className="text-[10px] font-bold tracking-wider uppercase text-[#1B4D3E]/70 mt-3 flex items-center gap-1">
-                          <GraduationCap className="w-3.5 h-3.5" />
-                          Wali Pembina
-                        </span>
-                      </div>
-                    )}
+                  <div className="sheen-wrapper relative w-full aspect-square overflow-hidden bg-[#0E271F] shrink-0">
+                    <img
+                      src={teacherPhoto}
+                      onError={(e) => {
+                        const target = e.currentTarget;
+                        if (target.src !== defaultAvatar && !target.src.endsWith(defaultAvatar)) {
+                          target.src = defaultAvatar;
+                        }
+                      }}
+                      alt={teacher.name}
+                      className="w-full h-full object-cover object-top group-hover:scale-108 transition-transform duration-700 ease-out"
+                    />
                     <div className="absolute inset-x-0 bottom-0 h-14 bg-gradient-to-t from-white via-white/50 to-transparent pointer-events-none" />
                   </div>
 
@@ -450,7 +443,7 @@ export default function AdminWaliKelasPage() {
                         <p className="text-xs text-[#64748B] flex items-center gap-1.5 pt-0.5 truncate">
                           <Building2 className="w-3.5 h-3.5 text-[#C5A059] shrink-0" />
                           <span className="truncate">
-                            {teacher.studentsCount} Santri • {teacher.reportsToday} Laporan
+                            {teacher.studentsCount} Santri â€¢ {teacher.reportsToday} Laporan
                           </span>
                         </p>
                       </div>
@@ -703,7 +696,7 @@ export default function AdminWaliKelasPage() {
                     >
                       {allPembina.map((t) => (
                         <option key={t.id} value={t.id}>
-                          {t.name} ({t.gender}) â€¢ Kelas saat ini: {t.assignedClass || "Belum Ada"}
+                          {t.name} ({t.gender}) Ã¢â‚¬Â¢ Kelas saat ini: {t.assignedClass || "Belum Ada"}
                         </option>
                       ))}
                     </select>
@@ -762,11 +755,11 @@ export default function AdminWaliKelasPage() {
                     </h3>
                     <div className="flex items-center gap-2 text-[11px] text-[#64748B] flex-wrap mt-0.5">
                       <span>Pembina Santri {activeTeacherDetail.gender}</span>
-                      <span>â€¢</span>
+                      <span>Ã¢â‚¬Â¢</span>
                       <span className="font-bold text-[#1B4D3E]">
                         Kelas: {activeTeacherDetail.assignedClass || "Belum Ditugaskan"}
                       </span>
-                      <span>â€¢</span>
+                      <span>Ã¢â‚¬Â¢</span>
                       <span className="font-mono text-[#94A3B8]">@{activeTeacherDetail.username}</span>
                     </div>
                   </div>
@@ -846,7 +839,7 @@ export default function AdminWaliKelasPage() {
                                   <td className="py-2.5 px-3 font-mono text-[#94A3B8]">{studentNumber}</td>
                                   <td className="py-2.5 px-3 font-mono text-[#64748B]">{s.nis}</td>
                                   <td className="py-2.5 px-3 font-bold text-[#172033]">{s.name}</td>
-                                  <td className="py-2.5 px-3 text-[#64748B]">{s.asrama || "-"} â€¢ {s.kamar || "-"}</td>
+                                  <td className="py-2.5 px-3 text-[#64748B]">{s.asrama || "-"} Ã¢â‚¬Â¢ {s.kamar || "-"}</td>
                                   <td className="py-2.5 px-3 text-center font-bold font-mono text-[#1B4D3E]">
                                     {s.currentScore.toFixed(3).replace(".", ",")}
                                   </td>

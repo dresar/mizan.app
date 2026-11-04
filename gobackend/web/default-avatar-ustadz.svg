@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0E271F"/>
+      <stop offset="50%" stop-color="#1B4D3E"/>
+      <stop offset="100%" stop-color="#286955"/>
+    </linearGradient>
+    <radialGradient id="lightGlow" cx="50%" cy="30%" r="60%">
+      <stop offset="0%" stop-color="#C5A059" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#C5A059" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="peciGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#0F1714"/>
+      <stop offset="50%" stop-color="#1F2A25"/>
+      <stop offset="100%" stop-color="#0F1714"/>
+    </linearGradient>
+    <linearGradient id="skinGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#F1CDB0"/>
+      <stop offset="100%" stop-color="#DFB291"/>
+    </linearGradient>
+    <linearGradient id="clothGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#E2EBF4"/>
+    </linearGradient>
+    <linearGradient id="goldTrim" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#A8833E"/>
+      <stop offset="50%" stop-color="#F3E0B5"/>
+      <stop offset="100%" stop-color="#A8833E"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="400" height="400" fill="url(#bgGrad)"/>
+  <circle cx="200" cy="160" r="180" fill="url(#lightGlow)"/>
+
+  <g stroke="#C5A059" stroke-width="1" fill="none" opacity="0.12">
+    <circle cx="200" cy="200" r="160"/>
+    <circle cx="200" cy="200" r="120"/>
+    <rect x="115" y="115" width="170" height="170" rx="12" transform="rotate(45 200 200)"/>
+    <rect x="115" y="115" width="170" height="170" rx="12"/>
+  </g>
+
+  <path d="M70 400 C80 320, 130 290, 175 280 L200 295 L225 280 C270 290, 320 320, 330 400 Z" fill="url(#clothGrad)"/>
+  <path d="M175 280 L200 340 L225 280 Z" fill="#CBD5E1"/>
+
+  <path d="M190 280 L190 400" stroke="#C5A059" stroke-width="3" stroke-dasharray="2 12" stroke-linecap="round"/>
+  <path d="M176 270 C185 285, 215 285, 224 270 L228 290 C215 305, 185 305, 172 290 Z" fill="url(#goldTrim)"/>
+
+  <path d="M180 230 L180 275 C180 286, 220 286, 220 275 L220 230 Z" fill="#DFB291"/>
+  <ellipse cx="200" cy="275" rx="20" ry="8" fill="#CBD5E1" opacity="0.4"/>
+
+  <path d="M145 180 C145 250, 255 250, 255 180 C255 130, 145 130, 145 180 Z" fill="url(#skinGrad)"/>
+
+  <path d="M140 185 C140 205, 150 205, 150 185 Z" fill="#DFB291"/>
+  <path d="M260 185 C260 205, 250 205, 250 185 Z" fill="#DFB291"/>
+
+  <path d="M135 155 C135 110, 265 110, 265 155 Z" fill="#172033" opacity="0.15"/>
+
+  <path d="M132 152 C134 100, 266 100, 268 152 L264 165 C240 160, 160 160, 136 165 Z" fill="url(#peciGrad)"/>
+  <path d="M136 165 C160 160, 240 160, 264 165" stroke="url(#goldTrim)" stroke-width="2.5" fill="none"/>
+
+  <circle cx="200" cy="385" r="5" fill="#C5A059" opacity="0.6"/>
+</svg>

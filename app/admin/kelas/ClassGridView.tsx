@@ -68,6 +68,11 @@ export function ClassGridView({
         const predikat = getPredikatBadge(cls.avgScore);
         const sampleStudents = cls.students || [];
         const remainingCount = Math.max(0, cls.studentCount - sampleStudents.length);
+        const defaultAvatar =
+          cls.gender === "Putri"
+            ? "/default-avatar-ustadzah.svg"
+            : "/default-avatar-ustadz.svg";
+        const teacherPhoto = cls.teacherAvatarUrl || defaultAvatar;
 
         return (
           <div
@@ -75,30 +80,18 @@ export function ClassGridView({
             onClick={() => router.push(`/admin/kelas/${cls.name}`)}
             className="group relative rounded-3xl overflow-hidden bg-white border border-[#E2EBF4] shadow-xs hover:shadow-2xl hover:border-[#1B4D3E]/40 hover:-translate-y-2 transition-all duration-500 flex flex-col justify-between cursor-pointer text-left"
           >
-            <div className="sheen-wrapper relative w-full aspect-square overflow-hidden bg-slate-100 shrink-0">
-              {cls.teacherAvatarUrl ? (
-                <img
-                  src={cls.teacherAvatarUrl}
-                  alt={cls.waliKelas}
-                  className="w-full h-full object-cover object-top group-hover:scale-108 transition-transform duration-700 ease-out"
-                />
-              ) : (
-                <div
-                  className={`w-full h-full flex flex-col items-center justify-center p-6 text-center select-none ${
-                    cls.gender === "Putri"
-                      ? "bg-gradient-to-br from-[#FAF7EE] via-[#F3EBD8] to-[#E8DCBF]"
-                      : "bg-gradient-to-br from-[#ECFDF5] via-[#D1FAE5] to-[#A7F3D0]"
-                  }`}
-                >
-                  <div className="w-20 h-20 rounded-2xl bg-white shadow-md flex items-center justify-center text-xl font-serif font-black text-[#1B4D3E] border border-[#C5A059]/40 group-hover:scale-110 transition-transform duration-500">
-                    {cls.teacherInitials}
-                  </div>
-                  <span className="text-[10px] font-bold tracking-wider uppercase text-[#1B4D3E]/70 mt-3 flex items-center gap-1">
-                    <GraduationCap className="w-3.5 h-3.5" />
-                    Wali Kelas
-                  </span>
-                </div>
-              )}
+            <div className="sheen-wrapper relative w-full aspect-square overflow-hidden bg-[#0E271F] shrink-0">
+              <img
+                src={teacherPhoto}
+                onError={(e) => {
+                  const target = e.currentTarget;
+                  if (target.src !== defaultAvatar && !target.src.endsWith(defaultAvatar)) {
+                    target.src = defaultAvatar;
+                  }
+                }}
+                alt={cls.waliKelas}
+                className="w-full h-full object-cover object-top group-hover:scale-108 transition-transform duration-700 ease-out"
+              />
               <div className="absolute inset-x-0 bottom-0 h-14 bg-gradient-to-t from-white via-white/50 to-transparent pointer-events-none" />
             </div>
 
@@ -210,7 +203,7 @@ export function ClassGridView({
                   <p className="text-xs text-[#64748B] flex items-center gap-1.5 pt-0.5 truncate">
                     <Building2 className="w-3.5 h-3.5 text-[#C5A059] shrink-0" />
                     <span className="truncate">
-                      {cls.asrama || "Asrama Binaan"} • {cls.studentCount} Santri
+                      {cls.asrama || "Asrama Binaan"} â€¢ {cls.studentCount} Santri
                     </span>
                   </p>
                 </div>

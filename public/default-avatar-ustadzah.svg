@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgGradPutri" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2D1B00"/>
+      <stop offset="50%" stop-color="#4A2E12"/>
+      <stop offset="100%" stop-color="#6B451B"/>
+    </linearGradient>
+    <radialGradient id="lightGlowPutri" cx="50%" cy="30%" r="60%">
+      <stop offset="0%" stop-color="#FDE68A" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#FDE68A" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="hijabGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FAF7EE"/>
+      <stop offset="60%" stop-color="#EFE6D2"/>
+      <stop offset="100%" stop-color="#DFD2B5"/>
+    </linearGradient>
+    <linearGradient id="skinGradPutri" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#F9DFC7"/>
+      <stop offset="100%" stop-color="#E8C3A4"/>
+    </linearGradient>
+    <linearGradient id="clothGradPutri" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#5B3819"/>
+      <stop offset="100%" stop-color="#3A220D"/>
+    </linearGradient>
+    <linearGradient id="goldTrimPutri" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#A8833E"/>
+      <stop offset="50%" stop-color="#FDE68A"/>
+      <stop offset="100%" stop-color="#A8833E"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="400" height="400" fill="url(#bgGradPutri)"/>
+  <circle cx="200" cy="160" r="180" fill="url(#lightGlowPutri)"/>
+
+  <g stroke="#FDE68A" stroke-width="1" fill="none" opacity="0.14">
+    <circle cx="200" cy="200" r="160"/>
+    <circle cx="200" cy="200" r="120"/>
+    <rect x="115" y="115" width="170" height="170" rx="12" transform="rotate(45 200 200)"/>
+    <rect x="115" y="115" width="170" height="170" rx="12"/>
+  </g>
+
+  <path d="M60 400 C75 330, 115 310, 160 300 C185 305, 215 305, 240 300 C285 310, 325 330, 340 400 Z" fill="url(#clothGradPutri)"/>
+
+  <path d="M100 400 C110 320, 140 280, 160 270 C140 250, 110 220, 110 165 C110 100, 150 85, 200 85 C250 85, 290 100, 290 165 C290 220, 260 250, 240 270 C260 280, 290 320, 300 400 Z" fill="url(#hijabGrad)"/>
+
+  <path d="M148 165 C148 220, 252 220, 252 165 C252 135, 230 120, 200 120 C170 120, 148 135, 148 165 Z" fill="url(#skinGradPutri)"/>
+
+  <path d="M148 150 C170 135, 230 135, 252 150 C245 130, 225 120, 200 120 C175 120, 155 130, 148 150 Z" fill="#C5A059" opacity="0.3"/>
+
+  <path d="M160 270 C180 295, 220 295, 240 270 C250 330, 225 385, 200 400 C175 385, 150 330, 160 270 Z" fill="#E4D7BE"/>
+  <path d="M200 270 L200 400" stroke="url(#goldTrimPutri)" stroke-width="2" stroke-linecap="round"/>
+
+  <circle cx="200" cy="275" r="4" fill="#C5A059"/>
+  <circle cx="200" cy="385" r="5" fill="#FDE68A" opacity="0.6"/>
+</svg>
