@@ -1,6 +1,7 @@
 package main
 
 import (
+	"crypto/subtle"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -21,6 +22,7 @@ import (
 	mizanserver "gobackend/internal/mcp"
 	"gobackend/internal/middleware"
 	"gobackend/internal/models"
+	"gobackend/internal/utils"
 )
 
 type EventPayload struct {
@@ -68,7 +70,38 @@ func main() {
 	mcpHandler := mcp.NewStreamableHTTPHandler(func(r *http.Request) *mcp.Server {
 		return mcpServer
 	}, nil)
-	app.All("/mcp*", adaptor.HTTPHandler(mcpHandler))
+
+	mcpAuth := func(c *fiber.Ctx) error {
+		mcpKey := os.Getenv("MCP_API_KEY")
+		if mcpKey == "" {
+			return utils.SendError(c, fiber.StatusUnauthorized, "Akses MCP dinonaktifkan")
+		}
+
+		authHeader := c.Get("Authorization")
+		var bearerToken string
+		if strings.HasPrefix(authHeader, "Bearer ") {
+			bearerToken = strings.TrimPrefix(authHeader, "Bearer ")
+			if len(bearerToken) == len(mcpKey) && subtle.ConstantTimeCompare([]byte(bearerToken), []byte(mcpKey)) == 1 {
+				return c.Next()
+			}
+		}
+
+		sessionToken := c.Cookies("mizan_session")
+		if sessionToken == "" && bearerToken != "" {
+			sessionToken = bearerToken
+		}
+
+		if sessionToken != "" {
+			payload, err := middleware.VerifySessionToken(sessionToken, cfg.SessionSecret)
+			if err == nil && payload.Role == models.RoleSuperAdmin {
+				return c.Next()
+			}
+		}
+
+		return utils.SendError(c, fiber.StatusUnauthorized, "Autentikasi MCP diperlukan")
+	}
+
+	app.All("/mcp*", mcpAuth, adaptor.HTTPHandler(mcpHandler))
 
 	app.Use("/ws", func(c *fiber.Ctx) error {
 		if !websocket.IsWebSocketUpgrade(c) {

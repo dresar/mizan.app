@@ -128,6 +128,18 @@ func TestSafeSQLReadSecurityGuards(t *testing.T) {
 			expectError: true,
 			errorMsg:    "terlarang",
 		},
+		{
+			name:        "Reject Query mentioning password column",
+			query:       "SELECT id, username, password FROM users",
+			expectError: true,
+			errorMsg:    "terlarang",
+		},
+		{
+			name:        "Reject Query with password in WHERE clause",
+			query:       "SELECT id FROM users WHERE password = 'secret'",
+			expectError: true,
+			errorMsg:    "terlarang",
+		},
 	}
 
 	for _, tc := range testCases {

@@ -39,6 +39,7 @@ var forbiddenTokens = map[string]struct{}{
 	"LO_IMPORT":            {},
 	"LO_UNLINK":            {},
 	"SET_CONFIG":           {},
+	"PASSWORD":             {},
 }
 
 func ValidateSafeSQLRead(rawQuery string) error {
