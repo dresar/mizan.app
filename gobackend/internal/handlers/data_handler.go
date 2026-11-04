@@ -1,0 +1,186 @@
+package handlers
+
+import (
+	"context"
+	"encoding/json"
+	"time"
+
+	"github.com/gofiber/fiber/v2"
+
+	"gobackend/internal/database"
+	"gobackend/internal/models"
+	"gobackend/internal/utils"
+)
+
+func GetData(c *fiber.Ctx) error {
+	pool := database.GetPool()
+	if pool == nil {
+		return utils.SendError(c, fiber.StatusServiceUnavailable, "Database belum terhubung")
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
+	defer cancel()
+
+	santriRows, err := pool.Query(ctx, `
+		SELECT 
+			id, nis, name, gender, class, asrama, kamar, 
+			base_score, current_score, status, avatar,
+			COALESCE(wali_name, ''), COALESCE(wali_phone, ''),
+			COALESCE(total_hadir, 28), COALESCE(total_alpa, 0)
+		FROM santri ORDER BY name ASC
+	`)
+	if err != nil {
+		return utils.SendError(c, fiber.StatusInternalServerError, err.Error())
+	}
+	defer santriRows.Close()
+
+	var santriList []models.Santri
+	for santriRows.Next() {
+		var s models.Santri
+		if err := santriRows.Scan(
+			&s.ID, &s.NIS, &s.Name, &s.Gender, &s.Class, &s.Asrama, &s.Kamar,
+			&s.BaseScore, &s.CurrentScore, &s.Status, &s.Avatar,
+			&s.WaliName, &s.WaliPhone, &s.TotalHadir, &s.TotalAlpa,
+		); err == nil {
+			santriList = append(santriList, s)
+		}
+	}
+
+	userRows, _ := pool.Query(ctx, `
+		SELECT 
+			id, username, name, role, COALESCE(role_title, ''), 
+			COALESCE(avatar_initials, ''), COALESCE(avatar_url, ''), 
+			gender, COALESCE(assigned_class, ''), is_active
+		FROM users 
+		WHERE is_active = true 
+		ORDER BY name ASC
+	`)
+	var userList []models.UserProfile
+	if userRows != nil {
+		defer userRows.Close()
+		for userRows.Next() {
+			var u models.UserProfile
+			if err := userRows.Scan(
+				&u.ID, &u.Username, &u.Name, &u.Role, &u.RoleTitle,
+				&u.AvatarInitials, &u.AvatarURL, &u.Gender, &u.AssignedClass, &u.IsActive,
+			); err == nil {
+				userList = append(userList, u)
+			}
+		}
+	}
+
+	classRows, _ := pool.Query(ctx, `
+		SELECT 
+			c.id, c.name, COALESCE(c.gender, 'Putra'),
+			COALESCE(c.wali_kelas, ''), COALESCE(c.guru_id, ''),
+			COUNT(s.id)::int, COALESCE(ROUND(AVG(s.current_score), 3), 70.000)
+		FROM classes c
+		LEFT JOIN santri s ON UPPER(s.class) = UPPER(c.name)
+		GROUP BY c.id, c.name, c.gender, c.wali_kelas, c.guru_id
+		ORDER BY c.name ASC
+	`)
+	var classList []models.ClassInfo
+	if classRows != nil {
+		defer classRows.Close()
+		for classRows.Next() {
+			var cl models.ClassInfo
+			if err := classRows.Scan(
+				&cl.ID, &cl.Name, &cl.Gender, &cl.WaliKelas, &cl.GuruID,
+				&cl.StudentCount, &cl.AvgScore,
+			); err == nil {
+				classList = append(classList, cl)
+			}
+		}
+	}
+
+	guruRows, _ := pool.Query(ctx, `
+		SELECT 
+			COALESCE(gm.id, 'guru-' || u.id), u.name, u.gender,
+			COALESCE(gm.assigned_class, u.assigned_class, '1A'),
+			COALESCE(gm.asrama, CASE WHEN u.gender = 'Putri' THEN 'Asrama Khadijah' ELSE 'Asrama Salman Al-Farisi' END),
+			COALESCE(gm.last_login, 'Aktif'),
+			COALESCE(gm.report_count_today, 0),
+			COALESCE(gm.status, 'Belum Lapor')
+		FROM users u
+		LEFT JOIN guru_monitoring gm ON (gm.name = u.name OR gm.id = u.id OR gm.id = 'guru-' || u.id)
+		WHERE u.role IN ('GURU', 'PENGASUHAN') AND u.is_active = true
+		ORDER BY u.name ASC
+	`)
+	var guruList []models.GuruMonitoring
+	if guruRows != nil {
+		defer guruRows.Close()
+		for guruRows.Next() {
+			var g models.GuruMonitoring
+			if err := guruRows.Scan(
+				&g.ID, &g.Name, &g.Gender, &g.AssignedClass, &g.Asrama,
+				&g.LastLogin, &g.ReportCountToday, &g.Status,
+			); err == nil {
+				guruList = append(guruList, g)
+			}
+		}
+	}
+
+	absRows, _ := pool.Query(ctx, `
+		SELECT 
+			id, santri_id, santri_name, santri_class, gender, guru_id,
+			guru_name, COALESCE(waktu_sholat, 'Subuh'), date, status, score_impact,
+			notes, to_char(created_at, 'HH24:MI WIB')
+		FROM absensi ORDER BY created_at DESC LIMIT 2000
+	`)
+	var absList []models.AbsensiRecord
+	if absRows != nil {
+		defer absRows.Close()
+		for absRows.Next() {
+			var a models.AbsensiRecord
+			if err := absRows.Scan(
+				&a.ID, &a.SantriID, &a.SantriName, &a.SantriClass, &a.Gender,
+				&a.GuruID, &a.GuruName, &a.WaktuSholat, &a.Date, &a.Status,
+				&a.ScoreImpact, &a.Notes, &a.CreatedAt,
+			); err == nil {
+				absList = append(absList, a)
+			}
+		}
+	}
+
+	penRows, _ := pool.Query(ctx, `
+		SELECT 
+			id, santri_id, santri_name, santri_class, guru_id,
+			guru_name, type, COALESCE(category, ''), unsur_name, indicator_text,
+			tingkat, score, notes, proof_file_name, proof_file_size,
+			to_char(created_at, 'YYYY-MM-DD HH24:MI:SS'), date_key
+		FROM penilaian ORDER BY created_at DESC LIMIT 300
+	`)
+	var penList []models.PenilaianRecord
+	if penRows != nil {
+		defer penRows.Close()
+		for penRows.Next() {
+			var p models.PenilaianRecord
+			if err := penRows.Scan(
+				&p.ID, &p.SantriID, &p.SantriName, &p.SantriClass, &p.GuruID,
+				&p.GuruName, &p.Type, &p.CategoryName, &p.UnsurName, &p.IndicatorText,
+				&p.Tingkat, &p.Score, &p.Notes, &p.ProofFileName, &p.ProofFileSize,
+				&p.CreatedAt, &p.DateKey,
+			); err == nil {
+				penList = append(penList, p)
+			}
+		}
+	}
+
+	var settingsMap map[string]interface{}
+	row := pool.QueryRow(ctx, `SELECT value FROM app_settings WHERE key = 'general' LIMIT 1`)
+	var rawSettings []byte
+	if err := row.Scan(&rawSettings); err == nil {
+		_ = json.Unmarshal(rawSettings, &settingsMap)
+	}
+
+	return c.JSON(fiber.Map{
+		"success":       true,
+		"santri":        santriList,
+		"users":         userList,
+		"classes":       classList,
+		"guruList":      guruList,
+		"absensiList":   absList,
+		"penilaianList": penList,
+		"settings":      settingsMap,
+	})
+}

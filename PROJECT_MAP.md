@@ -1,16 +1,17 @@
-# 🗺️ PROJECT_MAP: Mizan Apps
+﻿# 🗺️ PROJECT_MAP: Mizan Apps
 
 > **Protokol Hemat Token Aktif**: File ini adalah peta navigasi utama mizan.apps. Wajib dibaca sebelum membuka file repo lainnya. Jaga agar tetap ringkas dan di bawah 150 baris.
 
 ---
 
 ## 1. 🏗️ Tech Stack & Arsitektur
-- **Framework**: Next.js 16.4.3 (App Router, Turbopack, React 19.3.0, TypeScript 5).
+- **Frontend**: Next.js 16.4.3 (App Router, Turbopack, React 19.3.0, TypeScript 5) dikompilasi statis (`output: 'export'`) ke `gobackend/web`.
+- **Backend**: Golang Fiber v2 (`gobackend/`), alokasi memori ultra-rendah (1.5 MB RAM), latency <1ms.
+- **Realtime**: Bidirectional WebSocket Hub (`/ws` & `/api/broadcast`) dengan channel `absensi`, `penilaian`, `feedback`.
 - **Styling**: Tailwind CSS v4 (`@tailwindcss/turbopack`), Lucide React icons, Palet Mizan (Deep Green `#1B4D3E`, Gold `#C5A059`, Cream `#FAF7EE`).
-- **Database**: PostgreSQL (direct via `pg` connection pool with SSL in `lib/db.ts`).
-- **Reports & PDF**: `jspdf` (`lib/pdf-generator.ts`).
-- **PWA & Mobile**: Service Worker (`public/sw.js`, `components/ServiceWorkerRegister.tsx`), Bottom Nav (`components/BottomNav.tsx`), APK di `public/downloads/mizan.apk`, iOS IPA di `public/downloads/mizan.ipa`, Profile installer di `/api/download/ios-profile`.
-- **State & Context**: `lib/mizan-context.tsx` (Single Source of Truth, sinkronisasi DB).
+- **Database**: Neon Serverless PostgreSQL (`pgx/v5` connection pool dengan SSL di `gobackend/internal/database`).
+- **AI Bug Inspector**: Analisis kode read-only lokal di `gobackend/internal/handlers/feedback_handler.go` untuk pembuatan prompt perbaikan mandiri.
+- **Production Server**: Single binary Go mandiri (`gobackend/server.exe` / `mizan-server`) melayani API, WebSocket, dan frontend tanpa perlu Node.js di VPS.
 
 ---
 
@@ -18,69 +19,27 @@
 ```text
 mizan.apps/
 ├── app/
-│   ├── admin/                 # Admin Master
-│   │   ├── dashboard/         # Dashboard ringkasan pondok
-│   │   ├── santri/            # Manajemen santri, tambah, filter gender/status
-│   │   ├── kelas/             # Modern List/Grid view, Action Menu (3-dots), Modal Detail/Ubah/Wali/Hapus, avatar besar
-│   │   ├── wali-kelas/        # Penugasan wali kelas, paginasi max 20 (grid & tabel), & share statistik publik
-│   │   ├── absensi/           # Rekap absensi sholat 7 waktu & kegiatan
-│   │   ├── rapor/             # Modern List/Grid view rapor santri, kartu skor adab & cetak PDF massal/per santri
-│   │   ├── pengaturan-nilai/  # Bobot nilai & batas skor adab dinamis dari DB
-│   │   ├── kategori-pelanggaran/ # Modern List/Grid view kategori, unsur, dan indikator penilaian
-│   │   ├── feedback/          # Manajemen feedback & laporan bug, diagnosa AI Code Inspector & prompt rekomendasi
-│   │   └── users/             # Modern List/Grid view pengguna, tabel rapi, avatar w-12 h-12, sandi & hapus modal
-│   ├── guru/                  # Modul Ustadz / Pembina
-│   │   ├── dashboard/         # Ringkasan santri binaan & grafik laporan
-│   │   ├── absen/             # Presensi sholat berjamaah 7 waktu santri
-│   │   ├── input-penilaian/   # Pencatatan sikap (hasanah/sayyiah)
-│   │   ├── riwayat/           # Riwayat input pembinaan
-│   │   ├── santri/ & [id]/    # Profil lengkap santri & tombol Cetak/Unduh PDF/Bagikan
-│   │   └── profil/            # Profil ustadz, ganti password, avatar VPS, share profil
-│   ├── bk/                    # Modul Pengasuhan BK (dashboard, absen, history log lengkap presensi & pelanggaran/prestasi realtime WIB, profil, penilaian, santri/ & [id]/ profil & rapor)
-│   ├── ortu/ & dashboard/     # Portal Wali Santri (login stambuk & sandi RDS1234, skor akhlak, sholat 7 waktu, detail kejadian prestasi & pelanggaran, unduh rapor PDF & kontak pengasuhan)
-│   ├── santri/profil/         # Profil mandiri santri, skor adab & tombol Bagikan
+│   ├── admin/                 # Admin Master (dashboard, santri, kelas, wali-kelas, absensi, rapor, feedback, users)
+│   ├── guru/                  # Modul Ustadz / Pembina (dashboard, absen, input-penilaian, riwayat, santri, profil)
+│   ├── bk/                    # Modul Pengasuhan BK (dashboard, absen, history log lengkap, profil, penilaian, santri)
+│   ├── ortu/ & dashboard/     # Portal Wali Santri (login stambuk, skor akhlak, sholat 7 waktu, kejadian, rapor PDF)
+│   ├── santri/profil/         # Profil mandiri santri & skor adab
 │   ├── share/[id]/            # Halaman publik kartu share (stat-*) tanpa perlu login
-│   ├── login/                 # Autentikasi multi-role (login cepat 85 akun Ustadz/Ustadzah & BK dengan isolasi gender ketat)
-│   └── api/                   # REST API routes (auth, absensi, backup, data, feedback, feedback/analyze, penilaian, settings, share, santri, classes, users)
-├── components/                # UI Components
-│   ├── ShareCard.tsx          # Komponen kartu statistik soft-UI neumorphic (7-item recessed, dual-stat, verified)
-│   ├── ShareModal.tsx         # Modal share kompak (dropdown Jenis/Rentang/Sasaran, live preview, no-scroll)
-│   ├── FeedbackModal.tsx      # Modal saran/bug interaktif, diagnosa AI read-only & editor prompt teknis
-│   ├── FeedbackButton.tsx     # Floating button masukan & bug terpadu di semua akun
-│   ├── PrayerAttendanceChart.tsx # Grafik kehadiran sholat
-│   ├── PembinaReportChart.tsx # Grafik laporan pembina
-│   ├── Header.tsx, Sidebar.tsx, BottomNav.tsx, RoleShell.tsx, AnnouncementPopup.tsx
-│   └── ui/                    # Atomik (Card, Badge, Avatar, ScoreBar, Toast, Modal, DeleteModal)
-├── middleware.ts              # Edge server auth guard & role protection (/admin, /bk, /guru, /api/admin)
-├── lib/                       # auth-server.ts, db.ts, date-utils.ts (WIB Asia/Jakarta formatting), mizan-context.tsx, mock-data.ts, pdf-generator.ts, quick-accounts.ts, kop-surat-base64.ts
-└── public/                    # kop-surat.png, logo-raport.png, manifest.json, sw.js, favicon, icons, downloads/
+│   ├── login/                 # Autentikasi multi-role (login cepat 85 akun Ustadz/Ustadzah & BK dengan isolasi gender)
+│   └── (api/)                 # Cadangan rute API Next.js (semua endpoint production dilayani oleh Golang Fiber)
+├── components/                # UI Components (ShareCard, ShareModal, FeedbackModal, FeedbackButton, PrayerAttendanceChart)
+├── gobackend/                 # Core Fullstack Go Server (1.5 MB RAM, Fiber v2, WebSocket, pgx Neon, static web server)
+│   ├── PRD.md                 # Dokumentasi arsitektur, benchmark & endpoint API
+│   ├── cmd/server/main.go     # Entrypoint Go Fiber & static server
+│   ├── internal/              # Modular handlers, database, hub, middleware, models, utils (<500 lines, 0 comments)
+│   └── web/                   # Kompilasi frontend statis Next.js siap saji
+└── lib/                       # Helpers (db, types, utils, context, pdf)
 ```
 
 ---
 
-## 3. 🗄️ Skema Database PostgreSQL
-- `santri`: Data 249 santri & santriwati resmi pondok (113 Putra, 136 Putri di 12 kelas 1A-6A & 1B-6B).
-- `guru_monitoring`: Status keaktifan dan pelaporan guru pembina.
-- `categories`, `unsurs`, `indicators`: Hierarki poin pelanggaran dan kebaikan.
-- `penilaian`: Catatan sikap hasanah/sayyiah (santri_id, guru_name, type, score, notes, created_at [timestamp with time zone realtime], date_key).
-- `absensi`: Absensi sholat (santri_id, date, status [Hadir/Izin/Sakit/Alpa], waktu_sholat [Subuh..Tahajjud]).
-- `classes`: Data kelas & wali kelas (name, wali_kelas, guru_id, gender).
-- `app_settings`: Pengaturan bobot skor dinamis (base_score, max_score, penalty_limit, dll).
-- `public_shares`: Snapshot kartu share publik (id VARCHAR(64) PRIMARY KEY, title, type, period, scope, data JSONB).
-- `feedbacks`: Masukan & laporan bug (id VARCHAR(64) PRIMARY KEY, type, category, title, description, page_url, user_id, user_name, user_role, ai_analysis JSONB, custom_prompt, status, admin_notes, created_at, updated_at).
-
----
-
-## 4. 🚨 Aturan Baku Pengembangan (Wajib Dipatuhi)
-1. **NOKOMEN**: Dilarang keras menulis komentar (`//`, `/* */`, `{/* */}`) dalam kode apapun.
-2. **UI-Text (Single-Word)**: Setiap tombol aksi WAJIB 1 kata saja (`Bagikan`, `Unduh`, `Salin`, `Cetak`, `Tambah`, `Ubah`, `Detail`, `Simpan`, `Keluar`, `Buka`, `Tutup`).
-3. **Tanpa Hardcode & Zero Infrastructure Disclosure**: Dilarang membocorkan nama backend/hosting/database (Neon, PostgreSQL, VPS, Docker, API, server) pada antarmuka.
-4. **Hemat Token**: Utamakan pencarian simbol (`grep`/`ripgrep`) alih-alih membaca seluruh file. Dilarang membaca ulang file yang tidak berubah.
-
----
-
-## 5. 🚀 Menjalankan Server & Verifikasi
-- Dev Server: `npx next dev -p 3000`
-- Production Build: `npm run build`
-- Production Server: `setsid -f npx next start -p 3000 > /tmp/next-server.log 2>&1 &`
-- Verifikasi Endpoint: `curl -sI http://127.0.0.1:3000/share/stat-mvx9xtfy-wg8ov` (harus `200 OK`)
+## 3. 🛡️ Keamanan & Standar Koding
+- **Session Auth**: HMAC SHA-256 cookie session (`mizan_session`), dilarang plaintext password.
+- **Strict Anti-Komentar (/nokomen)**: Nol komentar kode di file `.go`, `.ts`, `.tsx`.
+- **Modular Code**: Maksimal 500 baris kode per file.
+- **Proteksi Rahasia**: File `.env` & `.env.local` dilarang di-push ke GitHub.

@@ -1,0 +1,519 @@
+﻿"use client";
+
+import React, { useState, useEffect, useMemo, Suspense } from "react";
+import Link from "next/link";
+import { useRouter, useParams } from "next/navigation";
+import {
+  ArrowLeft,
+  Printer,
+  Download,
+  Share2,
+  Award,
+  ShieldAlert,
+  CalendarCheck,
+  CheckCircle2,
+  Clock,
+  Phone,
+  User,
+  Scale,
+  FileText,
+  MessageSquare
+} from "lucide-react";
+import { useMizan } from "@/lib/mizan-context";
+import { RoleShell } from "@/components/RoleShell";
+import { Card, CardSub, CardInset } from "@/components/ui/Card";
+import { Avatar } from "@/components/ui/Avatar";
+import { Badge } from "@/components/ui/Badge";
+import { Pagination } from "@/components/ui/Pagination";
+import { generateSantriPdf, generateNotaPoinPdf, generateSuratPeringatanPdf } from "@/lib/pdf-generator";
+import { ShareModal } from "@/components/ShareModal";
+import { getSantriDisciplineStatus } from "@/lib/mock-data";
+
+function SantriDetailContent() {
+  const router = useRouter();
+  const params = useParams();
+  const santriId = (params?.id as string) || "santri-1";
+
+  const { accessibleSantriList, penilaianList, absensiList, currentUser, showToast, settings } = useMizan();
+  const isSuperAdmin = currentUser?.role === "SUPER_ADMIN";
+  const [printDate, setPrintDate] = useState("31 Oktober 2026");
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const [penilaianPage, setPenilaianPage] = useState(1);
+  const [absensiPage, setAbsensiPage] = useState(1);
+  const PENILAIAN_PAGE_SIZE = 8;
+  const ABSENSI_PAGE_SIZE = 12;
+
+  useEffect(() => {
+    try {
+      setPrintDate(
+        new Date().toLocaleDateString("id-ID", {
+          day: "numeric",
+          month: "long",
+          year: "numeric"
+        })
+      );
+    } catch {
+      void 0;
+    }
+  }, []);
+
+  const fallbackSantri = {
+    id: "santri-1",
+    nis: "20240801",
+    name: "Muhammad Zaki Pratama",
+    gender: "Putra" as const,
+    class: "1A",
+    baseScore: 70.0,
+    currentScore: 84.450,
+    status: "Baik" as const,
+    avatar: "MZ",
+    waliName: "H. Pratama",
+    waliPhone: "081234567891",
+    totalHadir: 28,
+    totalAlpa: 1
+  };
+
+  const santri = accessibleSantriList.find((s) => s.id === santriId) || accessibleSantriList[0] || fallbackSantri;
+
+  useEffect(() => {
+    if (santri && !isSuperAdmin && currentUser?.gender && santri.gender !== currentUser.gender) {
+      showToast("Akses dibatasi sesuai unit putra/putri", "error");
+      router.replace("/guru/santri");
+    }
+  }, [santri, isSuperAdmin, currentUser?.gender, router, showToast]);
+
+  const discipline = useMemo(() => {
+    if (!santri) return { status: "Aman", level: 0, label: "Aman", action: "", pic: "", badgeVariant: "baik" as const, color: "#065F46", bg: "bg-[#ECFDF5]" };
+    return getSantriDisciplineStatus(santri.currentScore, settings);
+  }, [santri, settings]);
+
+  const handleSendWhatsApp = () => {
+    if (!santri?.waliPhone) {
+      showToast("Nomor WhatsApp wali santri belum terdaftar", "error");
+      return;
+    }
+    const cleanPhone = santri.waliPhone.replace(/[^0-9]/g, "");
+    const formattedPhone = cleanPhone.startsWith("0") ? "62" + cleanPhone.substring(1) : cleanPhone;
+    const msg = 
+`Assalamu'alaikum Warahmatullahi Wabarakatuh.
+Yth. Bapak/Ibu Wali dari ${santri.name} (Kelas ${santri.class}),
+Pondok Pesantren Modern Raudhatussalam Mahato menginformasikan bahwa akumulasi poin adab ananda saat ini adalah ${santri.currentScore.toFixed(3)} Poin dengan status: ${discipline.label}.
+
+Tindakan resmi pondok:
+${discipline.action}
+
+Mohon kerja sama Bapak/Ibu demi pembinaan adab dan akhlak karimah ananda. Terima kasih.
+Wassalamu'alaikum Warahmatullahi Wabarakatuh.
+-- Bagian Pengasuhan Santri Raudhatussalam Mahato`;
+
+    const url = `https://wa.me/${formattedPhone}?text=${encodeURIComponent(msg)}`;
+    window.open(url, "_blank");
+  };
+
+  const handleCetakSP = async () => {
+    if (!santri) return;
+    try {
+      showToast(`Menyiapkan dokumen ${discipline.status}...`, "info");
+      await generateSuratPeringatanPdf(santri, discipline.status as any, currentUser?.name);
+      showToast(`Dokumen ${discipline.status} siap`, "success");
+    } catch {
+      showToast("Gagal mencetak surat peringatan", "error");
+    }
+  };
+
+  const handleCetakNota = async (record: any) => {
+    if (!santri) return;
+    try {
+      showToast("Menyiapkan nota pengesahan poin...", "info");
+      await generateNotaPoinPdf(santri, record, currentUser?.name);
+      showToast("Nota poin siap dicetak", "success");
+    } catch {
+      showToast("Gagal mencetak nota poin", "error");
+    }
+  };
+
+  const studentPenilaian = penilaianList.filter((p) => p.santriId === santri?.id);
+  const studentAbsensi = absensiList.filter((a) => a.santriId === santri?.id);
+
+  const totalPenilaianPages = Math.ceil(studentPenilaian.length / PENILAIAN_PAGE_SIZE) || 1;
+  const paginatedPenilaian = useMemo(() => {
+    const start = (penilaianPage - 1) * PENILAIAN_PAGE_SIZE;
+    return studentPenilaian.slice(start, start + PENILAIAN_PAGE_SIZE);
+  }, [studentPenilaian, penilaianPage]);
+
+  const totalAbsensiPages = Math.ceil(studentAbsensi.length / ABSENSI_PAGE_SIZE) || 1;
+  const paginatedAbsensi = useMemo(() => {
+    const start = (absensiPage - 1) * ABSENSI_PAGE_SIZE;
+    return studentAbsensi.slice(start, start + ABSENSI_PAGE_SIZE);
+  }, [studentAbsensi, absensiPage]);
+
+  const totalHasanah = studentPenilaian
+    .filter((p) => p.type === "HASANAH")
+    .reduce((sum, p) => sum + Math.abs(p.score), 0);
+
+  const totalSayyiah = studentPenilaian
+    .filter((p) => p.type === "SAYYIAH")
+    .reduce((sum, p) => sum + Math.abs(p.score), 0);
+
+  const formatScore = (score: number) => {
+    return score.toFixed(3).replace(".", ",");
+  };
+
+  const formatScoreWithSign = (score: number) => {
+    const formatted = Math.abs(score).toFixed(3).replace(".", ",");
+    return score >= 0 ? `+${formatted}` : `-${formatted}`;
+  };
+
+  const getPredikat = (score: number) => {
+    if (score >= 90) return { label: "MUMTAZ (ISTIMEWA)", color: "text-[#065F46] bg-[#ECFDF5] border-[#A7F3D0]" };
+    if (score >= 80) return { label: "JAYYID JIDDAN (SANGAT BAIK)", color: "text-[#1B4D3E] bg-[#E8F0EC] border-[#1B4D3E]/30" };
+    if (score >= 70) return { label: "JAYYID (BAIK)", color: "text-[#854D0E] bg-[#FEFCE8] border-[#FEF08A]" };
+    if (score >= 60) return { label: "MAQBUL (CUKUP)", color: "text-[#C2410C] bg-[#FFF7ED] border-[#FED7AA]" };
+    return { label: "RASIB / PEMBINAAN", color: "text-[#991B1B] bg-[#FEF2F2] border-[#FECACA]" };
+  };
+
+  const predikat = santri ? getPredikat(santri.currentScore) : getPredikat(70);
+
+  const handlePrint = () => {
+    window.print();
+  };
+
+  if (!santri) {
+    return (
+      <RoleShell>
+        <div className="p-8 text-center space-y-3">
+          <p className="text-sm font-bold text-[#64748B]">Santri tidak ditemukan.</p>
+          <button
+            type="button"
+            onClick={() => router.back()}
+            className="px-4 py-2 rounded-full mizan-btn-primary text-xs font-bold"
+          >
+            Kembali
+          </button>
+        </div>
+      </RoleShell>
+    );
+  }
+
+  return (
+    <RoleShell>
+      <div className="w-full space-y-4 overflow-x-hidden pb-36 print:p-0 print:m-0 print:max-w-none">
+        <div className="flex items-center justify-between gap-3 print:hidden">
+          <button
+            type="button"
+            onClick={() => router.back()}
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full mizan-btn-ghost text-xs font-bold"
+          >
+            <ArrowLeft className="w-3.5 h-3.5" />
+            <span>Kembali</span>
+          </button>
+
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setIsShareModalOpen(true)}
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white text-[#1B4D3E] border border-[#A7F3D0] hover:bg-[#ECFDF5] text-xs font-bold shadow-xs transition-colors"
+            >
+              <Share2 className="w-4 h-4 text-[#C5A059]" />
+              <span>Bagikan</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => generateSantriPdf(santri, studentPenilaian, studentAbsensi, printDate)}
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#1B4D3E] text-white text-xs font-bold shadow-md hover:bg-[#153e32] transition-colors"
+            >
+              <Download className="w-4 h-4" />
+              <span>Unduh</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={handlePrint}
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full mizan-card bg-white text-[#172033] border border-[#CBD5E1] text-xs font-bold hover:bg-[#F8FAFC] transition-colors"
+            >
+              <Printer className="w-4 h-4" />
+              <span>Cetak</span>
+            </button>
+          </div>
+        </div>
+
+        <div className="hidden print:block pb-2 mb-4">
+          <img src="/kop-surat.png" alt="Kop Surat Resmi" className="w-full object-contain" />
+          <p className="text-[10px] text-gray-500 text-right font-mono mt-1">
+            Dokumen Dicetak Pada: {printDate}
+          </p>
+        </div>
+
+        <Card className="p-4 sm:p-6 bg-white">
+          <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4">
+            <div className="w-20 h-20 rounded-3xl mizan-card flex items-center justify-center shrink-0">
+              <Avatar
+                initials={santri.avatar}
+                size="2xl"
+                variant={santri.gender === "Putra" ? "primary" : "gold"}
+              />
+            </div>
+
+            <div className="flex-1 text-center sm:text-left min-w-0">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div>
+                  <h1 className="text-lg sm:text-2xl font-serif font-black text-[#172033]">
+                    {santri.name}
+                  </h1>
+                  <p className="text-xs font-bold text-[#64748B] mt-0.5">
+                    NIS: {santri.nis} • Kelas {santri.class} • {santri.gender === "Putra" ? "Santri Putra" : "Santriwati Putri"}
+                  </p>
+                </div>
+
+                <div className="shrink-0">
+                  <span className={`text-xs font-black px-3 py-1 rounded-full mizan-pill inline-block border ${predikat.color}`}>
+                    {predikat.label}
+                  </span>
+                </div>
+              </div>
+
+              <div className="mt-3 pt-3 border-t border-[#E2EBF4] grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+                <CardInset className="p-2.5 text-center">
+                  <span className="text-[10px] text-[#94A3B8] font-bold uppercase block">
+                    Skor Akhlak
+                  </span>
+                  <span className="text-sm font-black font-mono text-[#1B4D3E] block mt-0.5">
+                    {formatScore(santri.currentScore)} / 99,000
+                  </span>
+                </CardInset>
+
+                <CardInset className="p-2.5 text-center">
+                  <span className="text-[10px] text-[#94A3B8] font-bold uppercase block">
+                    Akumulasi (+)
+                  </span>
+                  <span className="text-sm font-black font-mono text-[#065F46] block mt-0.5">
+                    +{formatScore(totalHasanah)}
+                  </span>
+                </CardInset>
+
+                <CardInset className="p-2.5 text-center">
+                  <span className="text-[10px] text-[#94A3B8] font-bold uppercase block">
+                    Akumulasi (-)
+                  </span>
+                  <span className="text-sm font-black font-mono text-[#991B1B] block mt-0.5">
+                    -{formatScore(totalSayyiah)}
+                  </span>
+                </CardInset>
+
+                <CardInset className="p-2.5 text-center">
+                  <span className="text-[10px] text-[#94A3B8] font-bold uppercase block">
+                    Kehadiran
+                  </span>
+                  <span className="text-sm font-black font-mono text-[#172033] block mt-0.5">
+                    {santri.totalHadir || 0} Hari ({santri.totalAlpa || 0} Alpa)
+                  </span>
+                </CardInset>
+              </div>
+
+              <div className="mt-3 text-[11px] text-[#64748B] flex items-center justify-between flex-wrap gap-2">
+                <span>Wali: {santri.waliName || "Bapak Santri"}</span>
+                <span className="flex items-center gap-1 font-mono">
+                  <Phone className="w-3 h-3 text-[#1B4D3E]" />
+                  {santri.waliPhone || "0812-xxxx-xxxx"}
+                </span>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        {discipline.level >= 1 && (
+          <div className={`p-4 rounded-2xl border flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs ${discipline.bg} ${
+            discipline.level >= 4 ? "border-red-300" : discipline.level >= 2 ? "border-orange-300" : "border-yellow-300"
+          }`}>
+            <div className="space-y-1">
+              <div className="flex items-center gap-2">
+                <ShieldAlert className="w-4 h-4 text-[#991B1B]" />
+                <span className="text-xs font-bold uppercase tracking-wider text-[#172033]">
+                  Status Ambang Batas: {discipline.label}
+                </span>
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-white text-[#172033] border border-[#CBD5E1]">
+                  P. Jawab: {discipline.pic}
+                </span>
+              </div>
+              <p className="text-xs text-[#475569]">
+                <strong className="text-[#172033]">Tindakan:</strong> {discipline.action}
+              </p>
+            </div>
+
+            <div className="flex items-center gap-2 shrink-0">
+              {discipline.level >= 2 && (
+                <button
+                  type="button"
+                  onClick={handleCetakSP}
+                  className="px-3 py-1.5 rounded-xl bg-[#1B4D3E] text-white text-xs font-bold hover:bg-[#153e32] flex items-center gap-1.5 shadow-2xs"
+                >
+                  <FileText className="w-3.5 h-3.5" />
+                  <span>Surat</span>
+                </button>
+              )}
+              {santri.waliPhone && (
+                <button
+                  type="button"
+                  onClick={handleSendWhatsApp}
+                  className="px-3 py-1.5 rounded-xl bg-[#065F46] text-white text-xs font-bold hover:bg-[#047857] flex items-center gap-1.5 shadow-2xs"
+                >
+                  <MessageSquare className="w-3.5 h-3.5" />
+                  <span>WhatsApp</span>
+                </button>
+              )}
+            </div>
+          </div>
+        )}
+
+        <Card className="p-4 space-y-3">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold text-[#172033] uppercase tracking-wider flex items-center gap-1.5">
+              <Award className="w-4 h-4 text-[#1B4D3E]" />
+              Riwayat Catatan Perilaku ({studentPenilaian.length})
+            </span>
+          </div>
+
+          {studentPenilaian.length === 0 ? (
+            <CardInset className="p-4 text-center text-xs text-[#64748B]">
+              Belum ada catatan pelanggaran atau prestasi khusus yang tercatat.
+            </CardInset>
+          ) : (
+            <div className="space-y-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                {paginatedPenilaian.map((item) => (
+                  <CardSub key={item.id} className="p-3 space-y-1.5">
+                    <div className="flex items-center justify-between gap-1">
+                      <span
+                        className={`text-[10px] font-mono font-black px-2 py-0.5 rounded-full mizan-pill ${
+                          item.type === "HASANAH"
+                            ? "bg-[#ECFDF5] text-[#065F46]"
+                            : "bg-[#FEF2F2] text-[#991B1B]"
+                        }`}
+                      >
+                        {formatScoreWithSign(item.score)}
+                      </span>
+                      <span className="text-[10px] text-[#94A3B8]">{item.createdAt}</span>
+                    </div>
+                    <p className="text-xs font-bold text-[#172033] line-clamp-2">
+                      {item.indicatorText}
+                    </p>
+                    {item.location && (
+                      <p className="text-[9px] text-[#64748B]">
+                        Tempat: {item.location} {item.witnessName ? `• Saksi: ${item.witnessName}` : ""}
+                      </p>
+                    )}
+                    {item.notes && (
+                      <p className="text-[11px] text-[#64748B] italic">
+                        &quot;{item.notes}&quot;
+                      </p>
+                    )}
+                    <div className="flex items-center justify-between gap-2 pt-1 border-t border-[#EEF2F6]">
+                      <span className="text-[10px] text-[#A8833E] font-medium">
+                        {item.guruName}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => handleCetakNota(item)}
+                        className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-[10px] font-bold text-[#1B4D3E] bg-[#EEF2F6] hover:bg-[#E2EBF4] transition-colors"
+                      >
+                        <FileText className="w-3 h-3" />
+                        <span>Nota</span>
+                      </button>
+                    </div>
+                  </CardSub>
+                ))}
+              </div>
+
+              <Pagination
+                currentPage={penilaianPage}
+                totalPages={totalPenilaianPages}
+                onPageChange={setPenilaianPage}
+                totalItems={studentPenilaian.length}
+                itemsPerPage={PENILAIAN_PAGE_SIZE}
+                itemName="catatan"
+              />
+            </div>
+          )}
+        </Card>
+
+        <Card className="p-4 space-y-3">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold text-[#172033] uppercase tracking-wider flex items-center gap-1.5">
+              <CalendarCheck className="w-4 h-4 text-[#1B4D3E]" />
+              Riwayat Absensi Harian ({studentAbsensi.length})
+            </span>
+          </div>
+
+          {studentAbsensi.length === 0 ? (
+            <CardInset className="p-4 text-center text-xs text-[#64748B]">
+              Belum ada data absensi individual.
+            </CardInset>
+          ) : (
+            <div className="space-y-3">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                {paginatedAbsensi.map((abs) => (
+                  <CardSub key={abs.id} className="p-2.5 text-center">
+                    <span className="text-[10px] text-[#94A3B8] block">{abs.date}</span>
+                    <span
+                      className={`text-xs font-bold block mt-0.5 ${
+                        abs.status === "Hadir"
+                          ? "text-[#065F46]"
+                          : abs.status === "Alpa"
+                          ? "text-[#991B1B]"
+                          : "text-[#854D0E]"
+                      }`}
+                    >
+                      {abs.status} ({formatScoreWithSign(abs.scoreImpact)})
+                    </span>
+                  </CardSub>
+                ))}
+              </div>
+
+              <Pagination
+                currentPage={absensiPage}
+                totalPages={totalAbsensiPages}
+                onPageChange={setAbsensiPage}
+                totalItems={studentAbsensi.length}
+                itemsPerPage={ABSENSI_PAGE_SIZE}
+                itemName="absensi"
+              />
+            </div>
+          )}
+        </Card>
+
+        <div className="hidden print:block pt-8 text-xs text-right space-y-12">
+          <div>
+            <p>Mahato, {printDate}</p>
+            <p className="font-bold">Pengasuhan Pondok Pesantren</p>
+          </div>
+          <div className="pt-8">
+            <p className="font-bold underline">( Ust. H. Ahmad Syukri, Lc. )</p>
+            <p className="text-[10px]">Super Admin Pengasuhan MIZAN</p>
+          </div>
+        </div>
+
+        <ShareModal
+          isOpen={isShareModalOpen}
+          onClose={() => setIsShareModalOpen(false)}
+          initialType="SANTRI"
+          targetSantri={santri}
+        />
+      </div>
+    </RoleShell>
+  );
+}
+
+export default function SantriDetailPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-[#F0F2F5] flex items-center justify-center p-6 text-xs text-[#5C6B64]">
+          Memuat profil santri...
+        </div>
+      }
+    >
+      <SantriDetailContent />
+    </Suspense>
+  );
+}

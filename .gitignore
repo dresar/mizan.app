@@ -20,6 +20,10 @@
 # production
 /build
 
+# binaries
+*.exe
+gobackend/server.exe
+
 # misc
 .DS_Store
 *.pem

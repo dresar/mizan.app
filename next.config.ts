@@ -9,14 +9,9 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
-  cacheComponents: true,
-  partialPrefetching: true,
-  headers: async () => [
-    {
-      source: "/:path*",
-      headers: securityHeaders,
-    },
-  ],
+  output: "export",
+  images: { unoptimized: true },
+  cacheComponents: false,
   turbopack: {
     rules: {
       "*.css": {
