@@ -208,7 +208,7 @@ export interface AppSettings {
 export const DEFAULT_SETTINGS: AppSettings = {
   defaultBaseScore: 70.0,
   minScoreBaik: 70.0,
-  minScorePerhatian: 51.0,
+  minScorePerhatian: 50.0,
   maxScore: 100.0,
   penaltyRingan: -0.05,
   penaltySedang: -0.1,
@@ -231,7 +231,7 @@ export const DEFAULT_SETTINGS: AppSettings = {
   popupTarget: "Semua",
   popupUpdatedAt: "",
   lisanThreshold: 69.0,
-  lisanMin: 51.0,
+  lisanMin: 50.0,
   sp1Threshold: 50.0,
   sp1Min: 36.0,
   sp2Threshold: 35.0,
@@ -248,7 +248,7 @@ export const DEFAULT_SETTINGS: AppSettings = {
 };
 
 export function getSantriDisciplineStatus(score: number, settings?: AppSettings) {
-  const lisanMin = settings?.lisanMin ?? 51.0;
+  const lisanMin = settings?.lisanMin ?? 50.0;
   const sp1Min = settings?.sp1Min ?? 36.0;
   const sp2Min = settings?.sp2Min ?? 21.0;
   const sp3Min = settings?.sp3Min ?? 6.0;

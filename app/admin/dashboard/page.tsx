@@ -8,33 +8,21 @@ import {
   TrendingUp,
   AlertTriangle,
   Award,
-  ShieldAlert,
-  CheckCircle2,
-  AlertCircle,
-  HelpCircle,
   Trophy,
-  Download,
-  Search
+  Download
 } from "lucide-react";
 import { useMizan } from "@/lib/mizan-context";
 import { RoleShell } from "@/components/RoleShell";
-import { Card, CardHeader, CardSub } from "@/components/ui/Card";
-import { Badge } from "@/components/ui/Badge";
+import { Card, CardSub } from "@/components/ui/Card";
 import { Avatar } from "@/components/ui/Avatar";
-import { Pagination } from "@/components/ui/Pagination";
-import { StatusGuru } from "@/lib/mock-data";
 import { PrayerAttendanceChart } from "@/components/PrayerAttendanceChart";
+import { NeedAttentionCard } from "./NeedAttentionCard";
+import { GuruMonitoringCard } from "./GuruMonitoringCard";
 
 export default function AdminDashboardPage() {
-  const { santriList, guruList, absensiList, setGuruStatus, settings } = useMizan();
+  const { santriList, guruList, absensiList, penilaianList, setGuruStatus, settings } = useMizan();
 
   const [leaderboardGender, setLeaderboardGender] = useState<"ALL" | "Putra" | "Putri">("ALL");
-  const [attentionGender, setAttentionGender] = useState<"ALL" | "Putra" | "Putri">("ALL");
-  const [guruSearch, setGuruSearch] = useState("");
-  const [guruGenderFilter, setGuruGenderFilter] = useState<"ALL" | "Putra" | "Putri">("ALL");
-  const [guruStatusFilter, setGuruStatusFilter] = useState<"ALL" | StatusGuru>("ALL");
-  const [guruCurrentPage, setGuruCurrentPage] = useState(1);
-  const GURU_PER_PAGE = 10;
 
   const totalSantri = santriList.length;
   const totalGuru = guruList.length;
@@ -42,24 +30,6 @@ export default function AdminDashboardPage() {
   const sudahLaporCount = useMemo(() => {
     return guruList.filter((g) => g.status === "Sudah Lapor").length;
   }, [guruList]);
-
-  const filteredGuruList = useMemo(() => {
-    return guruList.filter((g) => {
-      const matchSearch =
-        !guruSearch ||
-        g.name.toLowerCase().includes(guruSearch.toLowerCase()) ||
-        g.assignedClass.toLowerCase().includes(guruSearch.toLowerCase());
-      const matchGender = guruGenderFilter === "ALL" || g.gender === guruGenderFilter;
-      const matchStatus = guruStatusFilter === "ALL" || g.status === guruStatusFilter;
-      return matchSearch && matchGender && matchStatus;
-    });
-  }, [guruList, guruSearch, guruGenderFilter, guruStatusFilter]);
-
-  const totalGuruPages = Math.ceil(filteredGuruList.length / GURU_PER_PAGE) || 1;
-  const paginatedGuruList = useMemo(() => {
-    const start = (guruCurrentPage - 1) * GURU_PER_PAGE;
-    return filteredGuruList.slice(start, start + GURU_PER_PAGE);
-  }, [filteredGuruList, guruCurrentPage]);
 
   const avgScore = useMemo(() => {
     if (totalSantri === 0) return (settings.defaultBaseScore || 70).toFixed(3).replace(".", ",");
@@ -86,41 +56,9 @@ export default function AdminDashboardPage() {
     return [...putra, ...putri];
   }, [santriList, leaderboardGender]);
 
-  const needAttentionSantri = useMemo(() => {
-    let list = [...santriList];
-    if (attentionGender !== "ALL") {
-      return list
-        .filter((s) => s.gender === attentionGender)
-        .sort((a, b) => a.currentScore - b.currentScore)
-        .slice(0, 5);
-    }
-    const putra = list
-      .filter((s) => s.gender === "Putra")
-      .sort((a, b) => a.currentScore - b.currentScore)
-      .slice(0, 5);
-    const putri = list
-      .filter((s) => s.gender === "Putri")
-      .sort((a, b) => a.currentScore - b.currentScore)
-      .slice(0, 5);
-    return [...putra, ...putri];
-  }, [santriList, attentionGender]);
-
   const totalNeedAttentionCount = useMemo(() => {
-    const minBaik = settings.defaultBaseScore || 70;
-    return santriList.filter((s) => s.currentScore < minBaik || (s.status !== "Aman" && s.status !== "Baik")).length;
-  }, [santriList, settings.defaultBaseScore]);
-
-  const getGuruBadgeVariant = (status: StatusGuru) => {
-    if (status === "Sudah Lapor") return "sudah-lapor";
-    if (status === "Laporan Nihil") return "laporan-nihil";
-    return "belum-lapor";
-  };
-
-  const getGuruStatusIcon = (status: StatusGuru) => {
-    if (status === "Sudah Lapor") return <CheckCircle2 className="w-3.5 h-3.5 text-[#1B4D3E]" />;
-    if (status === "Laporan Nihil") return <AlertCircle className="w-3.5 h-3.5 text-[#854D0E]" />;
-    return <HelpCircle className="w-3.5 h-3.5 text-[#9B2C2C]" />;
-  };
+    return santriList.filter((s) => s.currentScore < 50).length;
+  }, [santriList]);
 
   const formatScore = (score: number) => {
     return Number(score).toFixed(3).replace(".", ",");
@@ -220,7 +158,7 @@ export default function AdminDashboardPage() {
               {totalNeedAttentionCount}
             </div>
             <p className="text-[10px] text-[#64748B] mt-1">
-              Skor di bawah {(settings.defaultBaseScore || 70).toFixed(3).replace(".", ",")}
+              Skor di bawah 50,000
             </p>
           </CardSub>
         </div>
@@ -326,205 +264,14 @@ export default function AdminDashboardPage() {
           </div>
         </Card>
 
-        <Card className="p-4 sm:p-5 space-y-4 bg-white">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-2 border-b border-[#E2E8F0]">
-            <div>
-              <div className="flex items-center gap-2">
-                <ShieldAlert className="w-4 h-4 text-red-600" />
-                <h2 className="text-xs sm:text-sm font-bold text-[#172033] uppercase tracking-wider">
-                  Santri Perlu Pembinaan Segera (Skor Terendah)
-                </h2>
-              </div>
-              <p className="text-[11px] text-[#64748B] mt-0.5">
-                5 Putra & 5 Putri dengan perolehan skor akhlak terendah yang memerlukan pembinaan intensif
-              </p>
-            </div>
+        <NeedAttentionCard santriList={santriList} />
 
-            <div className="inline-flex rounded-xl p-1 bg-[#EEF2F6] self-start sm:self-auto">
-              {(["ALL", "Putra", "Putri"] as const).map((g) => (
-                <button
-                  key={g}
-                  type="button"
-                  onClick={() => setAttentionGender(g)}
-                  className={`px-3 py-1 rounded-lg text-[10px] font-bold transition-all ${
-                    attentionGender === g
-                      ? "bg-white text-red-700 shadow-xs"
-                      : "text-[#64748B] hover:text-[#172033]"
-                  }`}
-                >
-                  {g === "ALL" ? "Semua" : g}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-            {needAttentionSantri.map((santri, idx) => {
-              const rank = idx + 1;
-              return (
-                <Link
-                  key={santri.id}
-                  href={`/guru/santri/${santri.id}`}
-                  className="p-3 rounded-2xl border border-red-200 bg-[#FEF2F2]/60 flex items-center justify-between gap-2.5 transition-all group hover:border-red-400 hover:bg-[#FEF2F2]"
-                >
-                  <div className="flex items-center gap-2.5 min-w-0">
-                    <div className="w-7 h-7 rounded-xl flex items-center justify-center font-bold text-xs shrink-0 bg-red-100 text-red-700">
-                      {rank}
-                    </div>
-
-                    <Avatar
-                      initials={santri.avatar}
-                      size="md"
-                      variant={santri.gender === "Putra" ? "primary" : "gold"}
-                    />
-
-                    <div className="min-w-0">
-                      <p className="text-xs font-bold text-[#172033] truncate group-hover:text-red-700 transition-colors">
-                        {santri.name}
-                      </p>
-                      <p className="text-[10px] text-[#64748B]">
-                        Kelas {santri.class} • {santri.gender}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="text-right shrink-0">
-                    <span className="text-xs font-black font-mono text-red-600 block">
-                      {formatScore(santri.currentScore)}
-                    </span>
-                    <span className="inline-flex items-center gap-1 text-[10px] font-bold text-red-700 bg-red-100 border border-red-200 px-2.5 py-0.5 rounded-full mt-1">
-                      <AlertTriangle className="w-3 h-3 text-red-600" />
-                      {santri.status || "Binaan"}
-                    </span>
-                  </div>
-                </Link>
-              );
-            })}
-            {needAttentionSantri.length === 0 && (
-              <div className="col-span-2 py-8 text-center text-xs text-[#065F46] bg-[#ECFDF5] rounded-2xl border border-[#A7F3D0]">
-                Alhamdulillah, tidak ada santri yang memerlukan pembinaan intensif.
-              </div>
-            )}
-          </div>
-        </Card>
-
-        <Card className="p-4 sm:p-5 space-y-3 bg-white">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-2.5">
-            <CardHeader
-              title="Deteksi Laporan Harian Asatidzah Hari Ini"
-              subtitle="Status pelaporan piket dan penegakan adab santri oleh masing-masing pembina"
-            />
-            <div className="flex items-center gap-1.5 flex-wrap">
-              <div className="relative">
-                <Search className="w-3.5 h-3.5 absolute left-2.5 top-2.5 text-[#94A3B8]" />
-                <input
-                  type="text"
-                  placeholder="Cari pembina / kelas..."
-                  value={guruSearch}
-                  onChange={(e) => {
-                    setGuruSearch(e.target.value);
-                    setGuruCurrentPage(1);
-                  }}
-                  className="pl-8 pr-2.5 py-1.5 text-xs bg-[#F8FAFC] border border-[#E2EBF4] rounded-xl text-[#172033] focus:outline-none focus:border-[#1B4D3E]"
-                />
-              </div>
-
-              <select
-                aria-label="Filter Gender Pembina"
-                value={guruGenderFilter}
-                onChange={(e) => {
-                  setGuruGenderFilter(e.target.value as any);
-                  setGuruCurrentPage(1);
-                }}
-                className="px-2 py-1.5 text-xs bg-[#F8FAFC] border border-[#E2EBF4] rounded-xl font-bold text-[#172033] focus:outline-none"
-              >
-                <option value="ALL">Semua Gender</option>
-                <option value="Putra">Ustadz (Putra)</option>
-                <option value="Putri">Ustadzah (Putri)</option>
-              </select>
-
-              <select
-                aria-label="Filter Status Laporan"
-                value={guruStatusFilter}
-                onChange={(e) => {
-                  setGuruStatusFilter(e.target.value as any);
-                  setGuruCurrentPage(1);
-                }}
-                className="px-2 py-1.5 text-xs bg-[#F8FAFC] border border-[#E2EBF4] rounded-xl font-bold text-[#172033] focus:outline-none"
-              >
-                <option value="ALL">Semua Status</option>
-                <option value="Sudah Lapor">Sudah Lapor</option>
-                <option value="Laporan Nihil">Laporan Nihil</option>
-                <option value="Belum Lapor">Belum Lapor</option>
-              </select>
-            </div>
-          </div>
-
-          <div className="overflow-x-auto -mx-4 sm:mx-0">
-            <table className="w-full text-left text-xs border-collapse">
-              <thead>
-                <tr className="border-b border-[#E2E8F0] bg-[#F8FAFC] text-[#64748B] font-semibold">
-                  <th className="py-2.5 px-3">Nama Pembina</th>
-                  <th className="py-2.5 px-3">Binaan Kelas</th>
-                  <th className="py-2.5 px-3">Aktivitas Terakhir</th>
-                  <th className="py-2.5 px-3 text-center">Laporan Hari Ini</th>
-                  <th className="py-2.5 px-3 text-center">Status</th>
-                  <th className="py-2.5 px-3 text-right">Ubah Status</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-[#E2E8F0]">
-                {paginatedGuruList.map((guru) => (
-                  <tr key={guru.id} className="hover:bg-[#F8FAFC] transition-colors">
-                    <td className="py-3 px-3 font-semibold text-[#172033]">
-                      {guru.name}
-                    </td>
-                    <td className="py-3 px-3 text-[#64748B]">
-                      Kelas {guru.assignedClass} ({guru.gender})
-                    </td>
-                    <td className="py-3 px-3 text-[#64748B]">{guru.lastLogin}</td>
-                    <td className="py-3 px-3 text-center font-bold text-[#172033]">
-                      {guru.reportCountToday}
-                    </td>
-                    <td className="py-3 px-3 text-center">
-                      <Badge variant={getGuruBadgeVariant(guru.status)}>
-                        {getGuruStatusIcon(guru.status)}
-                        <span>{guru.status}</span>
-                      </Badge>
-                    </td>
-                    <td className="py-3 px-3 text-right">
-                      <select
-                        aria-label={`Ubah status ${guru.name}`}
-                        value={guru.status}
-                        onChange={(e) => setGuruStatus(guru.id, e.target.value as StatusGuru)}
-                        className="text-[11px] bg-white border border-[#CBD5E1] rounded-lg px-2 py-1 text-[#172033] focus:outline-none focus:ring-1 focus:ring-[#1B4D3E]"
-                      >
-                        <option value="Sudah Lapor">Sudah Lapor</option>
-                        <option value="Laporan Nihil">Laporan Nihil</option>
-                        <option value="Belum Lapor">Belum Lapor</option>
-                      </select>
-                    </td>
-                  </tr>
-                ))}
-                {paginatedGuruList.length === 0 && (
-                  <tr>
-                    <td colSpan={6} className="py-8 text-center text-xs text-[#94A3B8]">
-                      Tidak ada pembina yang sesuai dengan kriteria filter
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-
-          <Pagination
-            currentPage={guruCurrentPage}
-            totalPages={totalGuruPages}
-            onPageChange={setGuruCurrentPage}
-            totalItems={filteredGuruList.length}
-            itemsPerPage={GURU_PER_PAGE}
-            itemName="pembina"
-          />
-        </Card>
+        <GuruMonitoringCard
+          guruList={guruList}
+          absensiList={absensiList}
+          penilaianList={penilaianList}
+          setGuruStatus={setGuruStatus}
+        />
       </div>
     </RoleShell>
   );
