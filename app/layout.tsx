@@ -5,6 +5,8 @@ import { MizanProvider } from "@/lib/mizan-context";
 import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
 import { FeedbackModal } from "@/components/FeedbackModal";
 import { FeedbackButton } from "@/components/FeedbackButton";
+import { TopProgressBar } from "@/components/TopProgressBar";
+import { InitialSplash } from "@/components/InitialSplash";
 
 export const viewport: Viewport = {
   themeColor: "#1B4D3E",
@@ -50,6 +52,8 @@ export default function RootLayout({
       </head>
       <body className="min-h-screen bg-[#F5F1E8] text-[#1C2826] font-sans antialiased selection:bg-[#C5A059]/30" suppressHydrationWarning>
         <MizanProvider>
+          <TopProgressBar />
+          <InitialSplash />
           <ServiceWorkerRegister />
           {children}
           <Suspense fallback={null}>

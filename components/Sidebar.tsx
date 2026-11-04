@@ -129,7 +129,8 @@ export function Sidebar() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`flex items-center gap-3 px-3.5 py-2.5 rounded-2xl transition-all text-xs ${
+                prefetch={true}
+                className={`flex items-center gap-3 px-3.5 py-2.5 rounded-2xl transition-all duration-150 active:scale-[0.98] text-xs ${
                   isActive
                     ? "bg-[#1B4D3E] text-white font-bold shadow-sm"
                     : "text-[#64748B] hover:text-[#172033] hover:bg-[#FAF7F2] font-semibold"
@@ -220,8 +221,9 @@ export function Sidebar() {
                   <Link
                     key={item.href}
                     href={item.href}
+                    prefetch={true}
                     onClick={() => setIsMobileNavOpen(false)}
-                    className={`flex items-center gap-3 px-3.5 py-2.5 rounded-2xl transition-all text-xs ${
+                    className={`flex items-center gap-3 px-3.5 py-2.5 rounded-2xl transition-all duration-150 active:scale-[0.98] text-xs ${
                       isActive
                         ? "bg-[#1B4D3E] text-white font-bold shadow-sm"
                         : "text-[#64748B] hover:text-[#172033] hover:bg-[#FAF7F2] font-semibold"

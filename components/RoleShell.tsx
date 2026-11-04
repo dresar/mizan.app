@@ -8,6 +8,7 @@ import { Sidebar } from "@/components/Sidebar";
 import { BottomNav } from "@/components/BottomNav";
 import { ToastContainer } from "@/components/ui/Toast";
 import { AnnouncementPopup } from "@/components/AnnouncementPopup";
+import { PageTransition } from "@/components/PageTransition";
 
 interface RoleShellProps {
   children: React.ReactNode;
@@ -66,11 +67,7 @@ export function RoleShell({ children }: RoleShellProps) {
   }, [isAuthLoading, isAuthenticated, currentUser, activeRole, pathname, router]);
 
   if (isAuthLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-[#F5F1E8]">
-        <div className="w-8 h-8 rounded-full border-2 border-[#1B4D3E] border-t-transparent animate-spin" />
-      </div>
-    );
+    return null;
   }
 
   if (!isAuthenticated || !currentUser?.id || !activeRole) {
@@ -109,7 +106,9 @@ export function RoleShell({ children }: RoleShellProps) {
       <div className="flex-1 flex w-full">
         <Sidebar />
         <main className="flex-1 min-w-0 p-2.5 sm:p-3.5 md:p-4 pb-36 md:pb-8 w-full overflow-x-hidden">
-          {children}
+          <PageTransition>
+            {children}
+          </PageTransition>
         </main>
       </div>
       <BottomNav />

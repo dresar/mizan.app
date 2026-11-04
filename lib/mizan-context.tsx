@@ -162,6 +162,16 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
       if (stored) {
         setReadNotifIds(JSON.parse(stored));
       }
+      const cached = localStorage.getItem("mizan_user_cache_v4");
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (parsed && parsed.id && parsed.role) {
+          setCurrentUser(parsed);
+          setActiveRole(parsed.role);
+          setIsAuthenticated(true);
+          setIsAuthLoading(false);
+        }
+      }
     } catch {
       void 0;
     }
@@ -200,10 +210,20 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
           setCurrentUser(authUser);
           setActiveRole(authUser.role);
           setIsAuthenticated(true);
+          try {
+            localStorage.setItem("mizan_user_cache_v4", JSON.stringify(authUser));
+          } catch {
+            void 0;
+          }
         } else {
           setCurrentUser(GUEST_USER);
           setActiveRole(null);
           setIsAuthenticated(false);
+          try {
+            localStorage.removeItem("mizan_user_cache_v4");
+          } catch {
+            void 0;
+          }
         }
         if (data.kelasList && data.kelasList.length > 0) setKelasList(data.kelasList);
         if (data.classList) setClassList(data.classList);
@@ -289,9 +309,11 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
     setCurrentUser(user);
     setActiveRole(user.role);
     setIsAuthenticated(true);
+    setIsAuthLoading(false);
     try {
       localStorage.setItem(STORAGE_KEY_ROLE, user.role);
       localStorage.setItem(STORAGE_KEY_USER, user.id);
+      localStorage.setItem("mizan_user_cache_v4", JSON.stringify(user));
       document.cookie = `mizan_auth=${user.role}; path=/; max-age=86400; SameSite=Lax`;
     } catch {
       void 0;
@@ -306,6 +328,8 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
     try {
       localStorage.removeItem(STORAGE_KEY_ROLE);
       localStorage.removeItem(STORAGE_KEY_USER);
+      localStorage.removeItem("mizan_user_cache_v4");
+      sessionStorage.removeItem("mizan_entered_app");
       document.cookie = "mizan_session=; path=/; max-age=0; SameSite=Lax";
       document.cookie = "mizan_auth=; path=/; max-age=0; SameSite=Lax";
       document.cookie = "mizan_uid=; path=/; max-age=0; SameSite=Lax";

@@ -10,9 +10,5 @@ export default function OrtuRootPage() {
     router.replace("/ortu/dashboard");
   }, [router]);
 
-  return (
-    <div className="min-h-screen bg-[#F5F1E8] flex items-center justify-center">
-      <div className="w-8 h-8 rounded-full border-2 border-[#1B4D3E] border-t-transparent animate-spin" />
-    </div>
-  );
+  return null;
 }

@@ -111,7 +111,7 @@ export default function Header() {
             </button>
           )}
 
-          <Link href={dashboardHref} className="flex items-center gap-2.5 group">
+          <Link href={dashboardHref} prefetch={true} className="flex items-center gap-2.5 group active:scale-[0.98] transition-transform">
             <div className="w-9 h-9 rounded-2xl mizan-card bg-[#1B4D3E] p-1 flex items-center justify-center shadow-xs group-hover:scale-105 transition-transform overflow-hidden">
               <Image src={appLogo} alt="Mizan Logo" width={36} height={36} className="w-full h-full object-contain" unoptimized />
             </div>
@@ -201,6 +201,7 @@ export default function Header() {
               <div className="pt-1 space-y-0.5 text-xs">
                 <Link
                   href={profileHref}
+                  prefetch={true}
                   onClick={() => setIsOpen(false)}
                   className="w-full px-3 py-2 rounded-xl text-[#172033] hover:bg-[#EEF2F6] font-semibold flex items-center gap-2.5 transition-colors"
                 >

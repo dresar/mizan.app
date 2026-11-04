@@ -172,6 +172,42 @@ button, a, input, select, textarea {
   animation: blobDrift 10s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+@keyframes mizanPageEnter {
+  0% {
+    opacity: 0;
+    transform: translateY(6px) scale(0.998);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.mizan-page-transition {
+  animation: mizanPageEnter 0.2s cubic-bezier(0.16, 1, 0.3, 1) both;
+  will-change: opacity, transform;
+  transform: translateZ(0);
+}
+
+@keyframes mizanProgressGlide {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.mizan-top-progress {
+  background: linear-gradient(90deg, #1B4D3E, #C5A059, #10B981, #C5A059, #1B4D3E);
+  background-size: 200% 200%;
+  animation: mizanProgressGlide 2s ease infinite;
+  box-shadow: 0 0 10px rgba(197, 160, 89, 0.6), 0 0 4px rgba(27, 77, 62, 0.4);
+}
+
 @media print {
   body {
     background-color: #ffffff !important;

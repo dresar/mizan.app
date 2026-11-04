@@ -15,22 +15,12 @@ function BkRedirectContent() {
     router.replace(`/bk/dashboard${query}`);
   }, [router, searchParams, currentUser]);
 
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-[#F5F1E8]">
-      <div className="w-8 h-8 rounded-full border-2 border-[#1B4D3E] border-t-transparent animate-spin" />
-    </div>
-  );
+  return null;
 }
 
 export default function BkIndexPage() {
   return (
-    <Suspense
-      fallback={
-        <div className="min-h-screen flex items-center justify-center bg-[#F5F1E8]">
-          <div className="w-8 h-8 rounded-full border-2 border-[#1B4D3E] border-t-transparent animate-spin" />
-        </div>
-      }
-    >
+    <Suspense fallback={null}>
       <BkRedirectContent />
     </Suspense>
   );
