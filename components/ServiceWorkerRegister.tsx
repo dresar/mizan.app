@@ -85,9 +85,19 @@ export function ServiceWorkerRegister() {
     window.addEventListener("error", handleChunkError);
     window.addEventListener("unhandledrejection", handleChunkError);
 
+    const handleVisibilityUpdate = () => {
+      if (!document.hidden && "serviceWorker" in navigator) {
+        navigator.serviceWorker.getRegistration().then((reg) => {
+          if (reg) reg.update();
+        });
+      }
+    };
+    document.addEventListener("visibilitychange", handleVisibilityUpdate);
+
     return () => {
       window.removeEventListener("error", handleChunkError);
       window.removeEventListener("unhandledrejection", handleChunkError);
+      document.removeEventListener("visibilitychange", handleVisibilityUpdate);
     };
   }, []);
 

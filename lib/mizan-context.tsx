@@ -170,6 +170,19 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
           setIsAuthLoading(false);
         }
       }
+      const offlineRaw = localStorage.getItem("mizan_offline_data_v1");
+      if (offlineRaw) {
+        const offlineData = JSON.parse(offlineRaw);
+        if (offlineData.santri) setSantriList(offlineData.santri);
+        if (offlineData.users) setUserList(offlineData.users);
+        if (offlineData.kelasList) setKelasList(offlineData.kelasList);
+        if (offlineData.classList) setClassList(offlineData.classList);
+        if (offlineData.guruList) setGuruList(offlineData.guruList);
+        if (offlineData.categories) setCategories(offlineData.categories);
+        if (offlineData.penilaianList) setPenilaianList(offlineData.penilaianList);
+        if (offlineData.absensiList) setAbsensiList(offlineData.absensiList);
+        if (offlineData.settings) setSettings(offlineData.settings);
+      }
     } catch {
       void 0;
     }
@@ -214,17 +227,28 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
           setUserList(data.users);
         }
 
+        try {
+          localStorage.setItem("mizan_offline_data_v1", JSON.stringify(data));
+        } catch {
+          void 0;
+        }
+
         let authUser: UserProfile | null = null;
+        let authRejected = false;
         try {
           const authRes = await fetch("/api/auth/me");
           if (authRes.ok) {
             const authData = await authRes.json();
             if (authData.authenticated && authData.user) {
               authUser = authData.user;
+            } else {
+              authRejected = true;
             }
+          } else if (authRes.status === 401) {
+            authRejected = true;
           }
         } catch {
-          authUser = null;
+          authRejected = false;
         }
 
         if (authUser) {
@@ -236,7 +260,7 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
           } catch {
             void 0;
           }
-        } else {
+        } else if (authRejected) {
           setCurrentUser(GUEST_USER);
           setActiveRole(null);
           setIsAuthenticated(false);
@@ -278,6 +302,23 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
       }
     } catch {
       setIsDbConnected(false);
+      try {
+        const offlineRaw = localStorage.getItem("mizan_offline_data_v1");
+        if (offlineRaw) {
+          const offlineData = JSON.parse(offlineRaw);
+          if (offlineData.santri) setSantriList(offlineData.santri);
+          if (offlineData.users) setUserList(offlineData.users);
+          if (offlineData.kelasList) setKelasList(offlineData.kelasList);
+          if (offlineData.classList) setClassList(offlineData.classList);
+          if (offlineData.guruList) setGuruList(offlineData.guruList);
+          if (offlineData.categories) setCategories(offlineData.categories);
+          if (offlineData.penilaianList) setPenilaianList(offlineData.penilaianList);
+          if (offlineData.absensiList) setAbsensiList(offlineData.absensiList);
+          if (offlineData.settings) setSettings(offlineData.settings);
+        }
+      } catch {
+        void 0;
+      }
     } finally {
       setIsAuthLoading(false);
     }
