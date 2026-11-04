@@ -6,6 +6,14 @@ import { useRouter } from "next/navigation";
 import { MoreVertical, Eye, Edit2, UserCheck, Trash2 } from "lucide-react";
 import { Avatar } from "@/components/ui/Avatar";
 
+export interface EnrichedClassStudent {
+  id: string;
+  name: string;
+  avatar: string;
+  avatarUrl?: string;
+  currentScore: number;
+}
+
 export interface EnrichedClassItem {
   id: string;
   name: string;
@@ -16,6 +24,8 @@ export interface EnrichedClassItem {
   teacherInitials: string;
   studentCount: number;
   avgScore: number;
+  asrama?: string;
+  students?: EnrichedClassStudent[];
 }
 
 interface ClassTableViewProps {

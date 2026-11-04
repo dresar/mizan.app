@@ -204,6 +204,32 @@ button, a, input, select, textarea {
   box-shadow: 0 0 10px rgba(197, 160, 89, 0.6), 0 0 4px rgba(27, 77, 62, 0.4);
 }
 
+@keyframes sheenSweep {
+  0% { transform: translateX(-150%) skewX(-20deg); }
+  100% { transform: translateX(250%) skewX(-20deg); }
+}
+
+.sheen-wrapper {
+  position: relative;
+  overflow: hidden;
+}
+
+.sheen-wrapper::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+  transform: translateX(-150%) skewX(-20deg);
+  pointer-events: none;
+}
+
+.group:hover .sheen-wrapper::after {
+  animation: sheenSweep 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 @media print {
   body {
     background-color: #ffffff !important;

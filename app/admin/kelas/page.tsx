@@ -31,7 +31,7 @@ export default function AdminKelasPage() {
     showToast
   } = useMizan();
 
-  const [viewMode, setViewMode] = useState<"list" | "grid">("list");
+  const [viewMode, setViewMode] = useState<"list" | "grid">("grid");
   const [selectedGender, setSelectedGender] = useState<"ALL" | "Putra" | "Putri">("ALL");
   const [searchQuery, setSearchQuery] = useState("");
   const [activeDropdownId, setActiveDropdownId] = useState<string | null>(null);
@@ -83,6 +83,10 @@ export default function AdminKelasPage() {
         (u) => u.assignedClass?.toUpperCase() === clsName.toUpperCase() && (u.role === "GURU" || u.role === "PENGASUHAN")
       );
 
+      const dominantAsrama =
+        students.find((s) => s.asrama)?.asrama ||
+        (defaultGender === "Putra" ? "Asrama Al-Farabi" : "Asrama Khadijah");
+
       return {
         id: matchDb?.id || `cls-${clsName.toLowerCase()}`,
         name: clsName,
@@ -94,7 +98,15 @@ export default function AdminKelasPage() {
           assignedTeacher?.avatarInitials ||
           (assignedTeacher?.name || matchDb?.waliKelas || "WK").slice(0, 2).toUpperCase(),
         studentCount: students.length,
-        avgScore: avg
+        avgScore: avg,
+        asrama: dominantAsrama,
+        students: students.slice(0, 5).map((s) => ({
+          id: s.id,
+          name: s.name,
+          avatar: s.avatar || s.name.slice(0, 2).toUpperCase(),
+          avatarUrl: s.avatarUrl,
+          currentScore: s.currentScore
+        }))
       };
     });
   }, [kelasList, classList, santriList, userList]);
