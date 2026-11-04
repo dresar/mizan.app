@@ -1,4 +1,4 @@
-﻿# 🗺️ PROJECT_MAP: Mizan Apps
+# 🗺️ PROJECT_MAP: Mizan Apps
 
 > **Protokol Hemat Token Aktif**: File ini adalah peta navigasi utama mizan.apps. Wajib dibaca sebelum membuka file repo lainnya. Jaga agar tetap ringkas dan di bawah 150 baris.
 
@@ -30,9 +30,13 @@ mizan.apps/
 ├── components/                # UI Components (Header, Sidebar, Modals, Charts, & components/ui design system hub)
 ├── gobackend/                 # Core Fullstack Go Server (1.5 MB RAM, Fiber v2, WebSocket, pgx Neon, static web server)
 │   ├── PRD.md                 # Dokumentasi arsitektur, benchmark & endpoint API
-│   ├── cmd/server/main.go     # Entrypoint Go Fiber & static server
-│   ├── internal/              # Modular handlers, database, hub, middleware, models, utils (<500 lines, 0 comments)
+│   ├── cmd/server/main.go     # Entrypoint Go Fiber (melayani API, static web & /mcp Streamable HTTP)
+│   ├── cmd/mcp/main.go        # Standalone MCP Server binary (`mizan-mcp`, stdio & HTTP transport)
+│   ├── internal/              # Handlers, database, hub, mcp, middleware, models, utils (<500 lines, 0 comments)
+│   ├── mizan-server           # Binary produksi Go Fiber backend aktif (PID aktif melayani port 3000)
+│   ├── mizan-mcp              # Binary produksi MCP server mandiri (JSON-RPC 2.0 stdio/HTTP)
 │   └── web/                   # Kompilasi frontend statis Next.js siap saji
+├── .agents/skills/            # Installed skills (mcp-builder, go-mcp-server-generator, golang-*)
 └── lib/                       # Helpers (db, types, utils, context, pdf)
 ```
 

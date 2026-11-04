@@ -24,6 +24,9 @@
 *.exe
 *.exe~
 gobackend/server.exe
+gobackend/mizan-server
+gobackend/mizan-mcp
+gobackend/server
 *.fiber.gz
 
 # misc
@@ -36,6 +39,7 @@ yarn-debug.log*
 yarn-error.log*
 next.log
 .agentpack/
+.codegraph/
 .pnpm-debug.log*
 
 # env files (can opt-in for committing if needed)

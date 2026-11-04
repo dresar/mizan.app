@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"net/http"
 	"os"
 	"runtime"
 	"strings"
@@ -10,11 +11,14 @@ import (
 
 	"github.com/gofiber/contrib/websocket"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/adaptor"
+	"github.com/modelcontextprotocol/go-sdk/mcp"
 
 	"gobackend/config"
 	"gobackend/internal/database"
 	"gobackend/internal/handlers"
 	"gobackend/internal/hub"
+	mizanserver "gobackend/internal/mcp"
 	"gobackend/internal/middleware"
 )
 
@@ -58,6 +62,12 @@ func main() {
 			"goroutines": runtime.NumGoroutine(),
 		})
 	})
+
+	mcpServer := mizanserver.NewMizanMCPServer(realtimeHub)
+	mcpHandler := mcp.NewStreamableHTTPHandler(func(r *http.Request) *mcp.Server {
+		return mcpServer
+	}, nil)
+	app.All("/mcp*", adaptor.HTTPHandler(mcpHandler))
 
 	app.Use("/ws", func(c *fiber.Ctx) error {
 		if websocket.IsWebSocketUpgrade(c) {
@@ -167,7 +177,7 @@ func main() {
 		})
 
 		app.Use(func(c *fiber.Ctx) error {
-			if strings.HasPrefix(c.Path(), "/api") || strings.HasPrefix(c.Path(), "/ws") {
+			if strings.HasPrefix(c.Path(), "/api") || strings.HasPrefix(c.Path(), "/ws") || strings.HasPrefix(c.Path(), "/mcp") {
 				return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
 					"success": false,
 					"error":   "Endpoint tidak ditemukan",

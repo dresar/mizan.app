@@ -2,6 +2,7 @@ package config
 
 import (
 	"os"
+	"path/filepath"
 
 	"github.com/joho/godotenv"
 )
@@ -19,6 +20,18 @@ func LoadConfig() *Config {
 	_ = godotenv.Load("../.env.local")
 	_ = godotenv.Load("../.env")
 	_ = godotenv.Load(".env")
+	_ = godotenv.Load(".env.local")
+
+	if exe, err := os.Executable(); err == nil {
+		exeDir := filepath.Dir(exe)
+		_ = godotenv.Load(filepath.Join(exeDir, ".env.local"))
+		_ = godotenv.Load(filepath.Join(exeDir, ".env"))
+		_ = godotenv.Load(filepath.Join(exeDir, "..", ".env.local"))
+		_ = godotenv.Load(filepath.Join(exeDir, "..", ".env"))
+	}
+
+	_ = godotenv.Load("/opt/data/home/mizan.apps/.env.local")
+	_ = godotenv.Load("/opt/data/home/mizan.apps/.env")
 
 	port := os.Getenv("PORT")
 	if port == "" {

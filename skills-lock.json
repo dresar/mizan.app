@@ -1,6 +1,12 @@
 {
   "version": 1,
   "skills": {
+    "go-mcp-server-generator": {
+      "source": "github/awesome-copilot",
+      "sourceType": "github",
+      "skillPath": "skills/go-mcp-server-generator/SKILL.md",
+      "computedHash": "96615e5275583ea9f3dbb747b059fd98e3b2bbfc7fe20ec59144c7447e1bbc86"
+    },
     "golang-benchmark": {
       "source": "samber/cc-skills-golang",
       "sourceType": "github",
@@ -276,6 +282,12 @@
       "sourceType": "github",
       "skillPath": "skills/golang-uber-fx/SKILL.md",
       "computedHash": "c0ae4d26ce226f31dc97777042f68ab9d2f549c1515b8d066e9b26e84c71563c"
+    },
+    "mcp-builder": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "skillPath": "skills/mcp-builder/SKILL.md",
+      "computedHash": "863dfe94bc38b62389884e78fee7f0a9c31bd74a6032f602eb84a66f4b8315c9"
     }
   }
 }
