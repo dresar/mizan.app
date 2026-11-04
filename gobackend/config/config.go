@@ -48,7 +48,24 @@ func LoadConfig() *Config {
 
 	webDir := os.Getenv("STATIC_WEB_DIR")
 	if webDir == "" {
-		webDir = "./web"
+		candidates := []string{
+			"./web",
+			"./gobackend/web",
+			"/opt/data/home/mizan.apps/gobackend/web",
+		}
+		if exe, err := os.Executable(); err == nil {
+			exeDir := filepath.Dir(exe)
+			candidates = append([]string{filepath.Join(exeDir, "web")}, candidates...)
+		}
+		for _, cand := range candidates {
+			if info, err := os.Stat(cand); err == nil && info.IsDir() {
+				webDir = cand
+				break
+			}
+		}
+		if webDir == "" {
+			webDir = "./web"
+		}
 	}
 
 	sumopodKey := os.Getenv("SUMOPOD_API_KEY")
