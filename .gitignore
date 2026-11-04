@@ -22,6 +22,7 @@
 
 # binaries
 *.exe
+*.exe~
 gobackend/server.exe
 *.fiber.gz
 

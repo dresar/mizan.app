@@ -89,7 +89,7 @@ export default function AdminNotificationPage() {
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  const [thresholdScore, setThresholdScore] = useState<number>(settings?.scoreThresholdWarning ?? 65);
+  const [thresholdScore, setThresholdScore] = useState<number>(settings?.minScorePerhatian ?? 65);
   const [thresholdAlpa, setThresholdAlpa] = useState<number>(3);
   const [isSavingSettings, setIsSavingSettings] = useState(false);
 
@@ -203,7 +203,7 @@ export default function AdminNotificationPage() {
     setIsSavingSettings(true);
     try {
       await updateSettings({
-        scoreThresholdWarning: thresholdScore
+        minScorePerhatian: thresholdScore
       });
       showToast("Pengaturan disimpan", "success");
     } finally {
@@ -242,7 +242,7 @@ export default function AdminNotificationPage() {
   };
 
   return (
-    <RoleShell allowedRoles={["SUPER_ADMIN"]}>
+    <RoleShell>
       <div className="w-full space-y-5 pb-36">
         <div className="mizan-card p-4 sm:p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
@@ -477,7 +477,7 @@ export default function AdminNotificationPage() {
                     <div className="flex items-center gap-2 self-end sm:self-center shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-[#F1F5F9] w-full sm:w-auto justify-end">
                       <button
                         type="button"
-                        onClick={() => toggleNotificationActive(item.id, item.isActive)}
+                        onClick={() => toggleNotificationActive(item.id, Boolean(item.isActive))}
                         className={`inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-bold transition-colors cursor-pointer border ${
                           item.isActive
                             ? "bg-emerald-50 text-emerald-800 border-emerald-200 hover:bg-emerald-100"

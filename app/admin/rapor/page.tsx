@@ -13,7 +13,6 @@ import {
   AlertTriangle,
   TrendingUp,
   RefreshCw,
-  Bell,
   List,
   LayoutGrid
 } from "lucide-react";
@@ -73,7 +72,6 @@ export default function AdminRaporPage() {
   const [selectedPredikat, setSelectedPredikat] = useState<string>("ALL");
   const [sortBy, setSortBy] = useState<"score_desc" | "score_asc" | "name_asc" | "nis_asc">("score_desc");
   const [selectedDetailSantri, setSelectedDetailSantri] = useState<Santri | null>(null);
-  const [isAlertBannerVisible, setIsAlertBannerVisible] = useState(true);
   const [isPrintingAll, setIsPrintingAll] = useState(false);
 
   const santriAnalytics = useMemo(() => {
@@ -255,37 +253,6 @@ export default function AdminRaporPage() {
             </button>
           </div>
         </div>
-
-        {isAlertBannerVisible && (
-          <div className="mizan-card p-3.5 sm:p-4 bg-[#FAF7EE] border-2 border-[#C5A059]/40 flex items-start justify-between gap-3 transition-all">
-            <div className="flex items-start gap-3 min-w-0">
-              <div className="w-8 h-8 rounded-xl bg-white border border-[#C5A059]/40 flex items-center justify-center shrink-0 text-[#A8833E] mt-0.5 shadow-2xs">
-                <Bell className="w-4 h-4" />
-              </div>
-              <div className="min-w-0">
-                <div className="flex items-center gap-2">
-                  <span className="text-xs font-black text-[#172033] tracking-tight">
-                    Notifikasi Evaluasi Rapor Santri
-                  </span>
-                  <span className="text-[9px] font-bold px-1.5 py-0.2 rounded bg-[#1B4D3E] text-white">
-                    Aktif
-                  </span>
-                </div>
-                <p className="text-[11px] text-[#64748B] mt-0.5 leading-relaxed">
-                  Terdapat <strong className="text-[#B91C1C] font-bold">{summary.attentionCount} santri</strong> dalam batas perhatian pembinaan khusus, dan <strong className="text-[#065F46] font-bold">{summary.mumtazCount} santri</strong> meraih predikat Mumtaz. Seluruh lembar rapor dapat langsung dicetak per santri atau massal.
-                </p>
-              </div>
-            </div>
-            <button
-              type="button"
-              onClick={() => setIsAlertBannerVisible(false)}
-              className="p-1 rounded-lg text-[#64748B] hover:text-[#172033] hover:bg-black/5 shrink-0 transition-colors"
-              aria-label="Tutup"
-            >
-              <X className="w-4 h-4" />
-            </button>
-          </div>
-        )}
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
           <CardSub className="p-4 bg-white">

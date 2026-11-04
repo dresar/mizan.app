@@ -138,6 +138,11 @@ func main() {
 	api.Delete("/feedback", handlers.DeleteFeedback)
 	api.Post("/feedback/analyze", handlers.AnalyzeFeedback(cfg))
 
+	api.Get("/notifications", handlers.GetNotifications)
+	api.Post("/notifications", handlers.CreateNotification(realtimeHub))
+	api.Patch("/notifications", handlers.UpdateNotification)
+	api.Delete("/notifications", handlers.DeleteNotification)
+
 	api.Get("/admin/backup", handlers.ExportBackup)
 	api.Post("/upload-avatar", handlers.UploadAvatar)
 

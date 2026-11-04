@@ -75,6 +75,19 @@ func ensureTables(ctx context.Context, pool *pgxpool.Pool) error {
 			data JSONB NOT NULL,
 			created_at TIMESTAMPTZ DEFAULT NOW()
 		);`,
+		`CREATE TABLE IF NOT EXISTS notifications (
+			id VARCHAR(64) PRIMARY KEY,
+			title VARCHAR(255) NOT NULL,
+			message TEXT NOT NULL,
+			time VARCHAR(64),
+			category VARCHAR(64) NOT NULL,
+			type VARCHAR(32) NOT NULL,
+			link VARCHAR(255),
+			is_active BOOLEAN DEFAULT true,
+			target_role VARCHAR(32) DEFAULT 'ALL',
+			created_at TIMESTAMPTZ DEFAULT NOW(),
+			updated_at TIMESTAMPTZ DEFAULT NOW()
+		);`,
 	}
 
 	for _, q := range queries {
