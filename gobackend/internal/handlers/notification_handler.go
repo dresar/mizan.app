@@ -18,68 +18,7 @@ import (
 
 var (
 	memNotifsLock sync.RWMutex
-	memNotifs     = []models.MizanNotification{
-		{
-			ID:         "notif-rapor-eval",
-			Title:      "Notifikasi Evaluasi Rapor Santri",
-			Message:    "Terdapat santri dalam batas perhatian pembinaan khusus dan peraih predikat Mumtaz. Seluruh lembar rapor dapat langsung dicetak per santri atau massal.",
-			Time:       "Baru saja",
-			Type:       "info",
-			Category:   "Evaluasi Rapor",
-			Link:       "/admin/rapor",
-			IsActive:   true,
-			TargetRole: "ALL",
-			CreatedAt:  "2026-11-04 08:00:00",
-		},
-		{
-			ID:         "notif-eval-santri",
-			Title:      "Evaluasi Pembinaan Santri",
-			Message:    "Terdapat santri dalam batas perhatian pembinaan adab khusus pondok yang memerlukan bimbingan konseling.",
-			Time:       "10m lalu",
-			Type:       "urgent",
-			Category:   "Peringatan Disiplin",
-			Link:       "/admin/santri",
-			IsActive:   true,
-			TargetRole: "ALL",
-			CreatedAt:  "2026-11-04 07:50:00",
-		},
-		{
-			ID:         "notif-sholat-today",
-			Title:      "Presensi Sholat Berjamaah",
-			Message:    "Data kehadiran sholat 7 waktu santri hari ini telah tercatat tertib oleh seluruh asatidzah pembina.",
-			Time:       "45m lalu",
-			Type:       "success",
-			Category:   "Presensi Sholat",
-			Link:       "/admin/absensi",
-			IsActive:   true,
-			TargetRole: "ALL",
-			CreatedAt:  "2026-11-04 07:15:00",
-		},
-		{
-			ID:         "notif-hasanah-baru",
-			Title:      "Apresiasi Capaian Hasanah",
-			Message:    "Catatan kebaikan dan prestasi baru santri berhasil dicatat oleh pembina kamar.",
-			Time:       "4j lalu",
-			Type:       "success",
-			Category:   "Peringatan Disiplin",
-			Link:       "/admin/kategori-pelanggaran",
-			IsActive:   true,
-			TargetRole: "ALL",
-			CreatedAt:  "2026-11-04 04:00:00",
-		},
-		{
-			ID:         "notif-jadwal-disiplin",
-			Title:      "Jadwal Evaluasi Disiplin Kamar",
-			Message:    "Pemeriksaan kedisiplinan dan kerapian kamar santri pekan ini oleh mudabbir pengasuhan.",
-			Time:       "1h lalu",
-			Type:       "warning",
-			Category:   "Peringatan Disiplin",
-			Link:       "/admin/wali-kelas",
-			IsActive:   true,
-			TargetRole: "ALL",
-			CreatedAt:  "2026-11-03 12:00:00",
-		},
-	}
+	memNotifs     = []models.MizanNotification{}
 )
 
 func GetNotifications(c *fiber.Ctx) error {
@@ -99,7 +38,7 @@ func GetNotifications(c *fiber.Ctx) error {
 		rows, err := pool.Query(ctx, query)
 		if err == nil {
 			defer rows.Close()
-			var list []models.MizanNotification
+			list := make([]models.MizanNotification, 0)
 			for rows.Next() {
 				var n models.MizanNotification
 				if err := rows.Scan(
@@ -110,19 +49,17 @@ func GetNotifications(c *fiber.Ctx) error {
 					list = append(list, n)
 				}
 			}
-			if len(list) > 0 {
-				return c.JSON(fiber.Map{
-					"success": true,
-					"data":    list,
-				})
-			}
+			return c.JSON(fiber.Map{
+				"success": true,
+				"data":    list,
+			})
 		}
 	}
 
 	memNotifsLock.RLock()
 	defer memNotifsLock.RUnlock()
 
-	var result []models.MizanNotification
+	result := make([]models.MizanNotification, 0)
 	for _, n := range memNotifs {
 		if showAll || n.IsActive {
 			result = append(result, n)

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import {
   MessageSquare,
   Bug,
@@ -46,6 +46,10 @@ export default function AdminFeedbackPage() {
   const [isUpdating, setIsUpdating] = useState<boolean>(false);
   const [isCopied, setIsCopied] = useState<boolean>(false);
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
+
+  useEffect(() => {
+    refreshData();
+  }, []);
 
   const stats = useMemo(() => {
     const total = feedbackList.length;

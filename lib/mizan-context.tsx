@@ -20,10 +20,8 @@ import {
   FeedbackRecord,
   FeedbackStatus,
   FeedbackType,
-  INITIAL_FEEDBACKS,
-  MizanNotification,
-  INITIAL_NOTIFICATIONS
-} from "./mock-data";
+    MizanNotification,
+  } from "./mock-data";
 import { formatWIBDate, formatWIBDateTime, getWIBDate, getWIBTime } from "./date-utils";
 
 export type { UserProfile, MizanNotification } from "./mock-data";
@@ -140,7 +138,7 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
   const [isAuthLoading, setIsAuthLoading] = useState<boolean>(true);
   const [userList, setUserList] = useState<UserProfile[]>([]);
   const [santriList, setSantriList] = useState<Santri[]>([]);
-  const [kelasList, setKelasList] = useState<string[]>(["1A", "1B", "1C", "1D", "2A", "2B"]);
+  const [kelasList, setKelasList] = useState<string[]>([]);
   const [classList, setClassList] = useState<ClassInfo[]>([]);
   const [categories, setCategories] = useState<Kategori[]>([]);
   const [guruList, setGuruList] = useState<GuruMonitoring[]>([]);
@@ -150,10 +148,10 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
   const [toasts, setToasts] = useState<ToastItem[]>([]);
   const [isMobileNavOpen, setIsMobileNavOpen] = useState<boolean>(false);
   const [isDbConnected, setIsDbConnected] = useState(false);
-  const [feedbackList, setFeedbackList] = useState<FeedbackRecord[]>(INITIAL_FEEDBACKS);
+  const [feedbackList, setFeedbackList] = useState<FeedbackRecord[]>([]);
   const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState<boolean>(false);
   const [feedbackInitialType, setFeedbackInitialType] = useState<FeedbackType>("SARAN");
-  const [notificationList, setNotificationList] = useState<MizanNotification[]>(INITIAL_NOTIFICATIONS);
+  const [notificationList, setNotificationList] = useState<MizanNotification[]>([]);
   const [readNotifIds, setReadNotifIds] = useState<string[]>([]);
 
   useEffect(() => {
