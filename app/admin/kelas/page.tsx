@@ -24,6 +24,7 @@ import { RoleShell } from "@/components/RoleShell";
 import { CardSub } from "@/components/ui/Card";
 import { Avatar } from "@/components/ui/Avatar";
 import { DeleteModal } from "@/components/ui/DeleteModal";
+import { Pagination } from "@/components/ui/Pagination";
 
 export default function AdminKelasPage() {
   const {
@@ -117,6 +118,21 @@ export default function AdminKelasPage() {
       return matchGender && matchSearch;
     });
   }, [enrichedClasses, selectedGender, searchQuery]);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const PAGE_SIZE = 20;
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, selectedGender]);
+
+  const totalPages = Math.max(1, Math.ceil(filteredClasses.length / PAGE_SIZE));
+  const safePage = Math.min(Math.max(1, currentPage), totalPages);
+
+  const paginatedClasses = useMemo(() => {
+    const start = (safePage - 1) * PAGE_SIZE;
+    return filteredClasses.slice(start, start + PAGE_SIZE);
+  }, [filteredClasses, safePage]);
 
   const modalStudents = useMemo(() => {
     if (!selectedDetailClass) return [];
@@ -456,14 +472,14 @@ export default function AdminKelasPage() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-[#E2EBF4]">
-                    {filteredClasses.map((cls, idx) => (
+                    {paginatedClasses.map((cls, idx) => (
                       <tr
                         key={cls.name}
                         onClick={() => setSelectedDetailClass(cls)}
                         className="hover:bg-[#FAF7EE]/60 transition-colors cursor-pointer group"
                       >
                         <td className="py-3.5 px-3.5 text-center font-mono font-bold text-[#64748B]">
-                          {idx + 1}
+                          {(safePage - 1) * PAGE_SIZE + idx + 1}
                         </td>
                         <td className="py-3.5 px-3.5">
                           <span className="font-serif font-black text-base text-[#172033] group-hover:text-[#1B4D3E] transition-colors">
@@ -595,8 +611,8 @@ export default function AdminKelasPage() {
               </div>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
-              {filteredClasses.map((cls) => (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-3.5">
+              {paginatedClasses.map((cls) => (
                 <div
                   key={cls.name}
                   onClick={() => setSelectedDetailClass(cls)}
@@ -729,6 +745,14 @@ export default function AdminKelasPage() {
               )}
             </div>
           )}
+                  <Pagination
+            currentPage={safePage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+            totalItems={filteredClasses.length}
+            itemsPerPage={PAGE_SIZE}
+            itemName="kelas"
+          />
         </div>
 
         {selectedDetailClass && (

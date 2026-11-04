@@ -20,11 +20,13 @@ import {
   FeedbackRecord,
   FeedbackStatus,
   FeedbackType,
-  INITIAL_FEEDBACKS
+  INITIAL_FEEDBACKS,
+  MizanNotification,
+  INITIAL_NOTIFICATIONS
 } from "./mock-data";
 import { formatWIBDate, formatWIBDateTime, getWIBDate, getWIBTime } from "./date-utils";
 
-export type { UserProfile } from "./mock-data";
+export type { UserProfile, MizanNotification } from "./mock-data";
 
 export interface ToastItem {
   id: string;
@@ -105,6 +107,14 @@ interface MizanContextType {
   setIsFeedbackModalOpen: (open: boolean) => void;
   feedbackInitialType: FeedbackType;
   openFeedbackModal: (type?: FeedbackType) => void;
+  notificationList: MizanNotification[];
+  readNotifIds: string[];
+  addNotification: (item: Omit<MizanNotification, "id" | "createdAt">) => Promise<{ success: boolean; message: string }>;
+  updateNotification: (id: string, updates: Partial<MizanNotification>) => Promise<{ success: boolean; message: string }>;
+  deleteNotification: (id: string) => Promise<{ success: boolean; message: string }>;
+  toggleNotificationActive: (id: string, currentActive: boolean) => Promise<{ success: boolean; message: string }>;
+  markNotificationAsRead: (id: string) => void;
+  markAllNotificationsAsRead: () => void;
 }
 
 const MizanContext = createContext<MizanContextType | undefined>(undefined);
@@ -143,6 +153,19 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
   const [feedbackList, setFeedbackList] = useState<FeedbackRecord[]>(INITIAL_FEEDBACKS);
   const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState<boolean>(false);
   const [feedbackInitialType, setFeedbackInitialType] = useState<FeedbackType>("SARAN");
+  const [notificationList, setNotificationList] = useState<MizanNotification[]>(INITIAL_NOTIFICATIONS);
+  const [readNotifIds, setReadNotifIds] = useState<string[]>([]);
+
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem("mizan_read_notifs");
+      if (stored) {
+        setReadNotifIds(JSON.parse(stored));
+      }
+    } catch {
+      void 0;
+    }
+  }, []);
 
   const openFeedbackModal = (type: FeedbackType = "SARAN") => {
     setFeedbackInitialType(type);
@@ -195,6 +218,17 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
             const fbData = await fbRes.json();
             if (fbData.success && Array.isArray(fbData.data)) {
               setFeedbackList(fbData.data);
+            }
+          }
+        } catch {
+          void 0;
+        }
+        try {
+          const notifRes = await fetch("/api/notifications?all=1");
+          if (notifRes.ok) {
+            const notifData = await notifRes.json();
+            if (notifData.success && Array.isArray(notifData.data)) {
+              setNotificationList(notifData.data);
             }
           }
         } catch {
@@ -972,6 +1006,101 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const markNotificationAsRead = (id: string) => {
+    setReadNotifIds((prev) => {
+      if (prev.includes(id)) return prev;
+      const next = [...prev, id];
+      try {
+        localStorage.setItem("mizan_read_notifs", JSON.stringify(next));
+      } catch {
+        void 0;
+      }
+      return next;
+    });
+  };
+
+  const markAllNotificationsAsRead = () => {
+    const allIds = notificationList.map((n) => n.id);
+    setReadNotifIds(allIds);
+    try {
+      localStorage.setItem("mizan_read_notifs", JSON.stringify(allIds));
+    } catch {
+      void 0;
+    }
+  };
+
+  const addNotification = async (item: Omit<MizanNotification, "id" | "createdAt">): Promise<{ success: boolean; message: string }> => {
+    try {
+      const res = await fetch("/api/notifications", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(item)
+      });
+      const data = await res.json();
+      if (data.success) {
+        if (data.data) {
+          setNotificationList((prev) => [data.data, ...prev.filter((n) => n.id !== data.data.id)]);
+        } else {
+          await refreshData();
+        }
+        showToast(data.message || "Notifikasi berhasil ditambahkan", "success");
+        return { success: true, message: data.message };
+      }
+      showToast(data.message || "Gagal menambah notifikasi", "error");
+      return { success: false, message: data.message };
+    } catch (e: any) {
+      showToast(e?.message || "Kesalahan jaringan", "error");
+      return { success: false, message: e?.message };
+    }
+  };
+
+  const updateNotification = async (id: string, updates: Partial<MizanNotification>): Promise<{ success: boolean; message: string }> => {
+    try {
+      const res = await fetch("/api/notifications", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, ...updates })
+      });
+      const data = await res.json();
+      if (data.success) {
+        setNotificationList((prev) =>
+          prev.map((n) => (n.id === id ? { ...n, ...updates } : n))
+        );
+        showToast(data.message || "Notifikasi berhasil diperbarui", "success");
+        return { success: true, message: data.message };
+      }
+      showToast(data.message || "Gagal memperbarui notifikasi", "error");
+      return { success: false, message: data.message };
+    } catch (e: any) {
+      showToast(e?.message || "Kesalahan jaringan", "error");
+      return { success: false, message: e?.message };
+    }
+  };
+
+  const deleteNotification = async (id: string): Promise<{ success: boolean; message: string }> => {
+    try {
+      const res = await fetch(`/api/notifications?id=${encodeURIComponent(id)}`, {
+        method: "DELETE"
+      });
+      const data = await res.json();
+      if (data.success) {
+        setNotificationList((prev) => prev.filter((n) => n.id !== id));
+        showToast(data.message || "Notifikasi dihapus", "success");
+        return { success: true, message: data.message };
+      }
+      showToast(data.message || "Gagal menghapus notifikasi", "error");
+      return { success: false, message: data.message };
+    } catch (e: any) {
+      showToast(e?.message || "Kesalahan jaringan", "error");
+      return { success: false, message: e?.message };
+    }
+  };
+
+  const toggleNotificationActive = async (id: string, currentActive: boolean): Promise<{ success: boolean; message: string }> => {
+    const nextActive = !currentActive;
+    return updateNotification(id, { isActive: nextActive });
+  };
+
   return (
     <MizanContext.Provider
       value={{
@@ -1036,7 +1165,15 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
         isFeedbackModalOpen,
         setIsFeedbackModalOpen,
         feedbackInitialType,
-        openFeedbackModal
+        openFeedbackModal,
+        notificationList,
+        readNotifIds,
+        addNotification,
+        updateNotification,
+        deleteNotification,
+        toggleNotificationActive,
+        markNotificationAsRead,
+        markAllNotificationsAsRead
       }}
     >
       {children}

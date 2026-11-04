@@ -29,94 +29,27 @@ export default function Header() {
     settings,
     isMobileNavOpen,
     setIsMobileNavOpen,
-    openFeedbackModal
+    openFeedbackModal,
+    notificationList,
+    readNotifIds,
+    markNotificationAsRead,
+    markAllNotificationsAsRead
   } = useMizan();
   const appLogo = settings?.appLogoUrl || "/logo.png";
 
   const [isOpen, setIsOpen] = useState(false);
   const [isNotifOpen, setIsNotifOpen] = useState(false);
-  const [readNotifIds, setReadNotifIds] = useState<string[]>([]);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const notifRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    try {
-      const stored = localStorage.getItem("mizan_read_notifs");
-      if (stored) {
-        setReadNotifIds(JSON.parse(stored));
-      }
-    } catch {
-      void 0;
-    }
-  }, []);
-
   const notifications: MizanNotification[] = useMemo(() => {
-    return [
-      {
-        id: "notif-eval-santri",
-        title: "Evaluasi Pembinaan Santri",
-        message: "Terdapat santri dalam batas perhatian pembinaan adab khusus pondok.",
-        time: "10m lalu",
-        type: "urgent",
-        link: activeRole === "PENGASUHAN" ? "/bk/santri" : "/admin/santri"
-      },
-      {
-        id: "notif-sholat-today",
-        title: "Presensi Sholat Berjamaah",
-        message: "Data kehadiran sholat 7 waktu santri hari ini telah tercatat tertib.",
-        time: "45m lalu",
-        type: "success",
-        link: activeRole === "PENGASUHAN" ? "/bk/history" : "/guru/absen"
-      },
-      {
-        id: "notif-rapor-master",
-        title: "Pembaruan Rapor Terpadu",
-        message: "Tabel rekapitulasi rapor santri dan santriwati siap diunduh & dicetak.",
-        time: "2j lalu",
-        type: "info",
-        link: "/admin/rapor"
-      },
-      {
-        id: "notif-hasanah-baru",
-        title: "Apresiasi Capaian Hasanah",
-        message: "Catatan kebaikan dan prestasi baru santri berhasil dicatat oleh pembina.",
-        time: "4j lalu",
-        type: "success",
-        link: activeRole === "PENGASUHAN" ? "/bk/history" : "/guru/riwayat"
-      },
-      {
-        id: "notif-jadwal-disiplin",
-        title: "Jadwal Evaluasi Disiplin",
-        message: "Pemeriksaan kedisiplinan dan kerapian kamar santri pekan ini oleh mudabbir.",
-        time: "1h lalu",
-        type: "warning",
-        link: activeRole === "SUPER_ADMIN" ? "/admin/wali-kelas" : "/guru/dashboard"
-      }
-    ];
-  }, [currentUser, activeRole]);
-
-  const handleMarkAsRead = (id: string) => {
-    setReadNotifIds((prev) => {
-      if (prev.includes(id)) return prev;
-      const next = [...prev, id];
-      try {
-        localStorage.setItem("mizan_read_notifs", JSON.stringify(next));
-      } catch {
-        void 0;
-      }
-      return next;
+    return (notificationList || []).filter((item) => {
+      if (!item.isActive) return false;
+      if (!item.targetRole || item.targetRole === "ALL") return true;
+      if (activeRole === "SUPER_ADMIN") return true;
+      return item.targetRole === activeRole;
     });
-  };
-
-  const handleMarkAllAsRead = () => {
-    const allIds = notifications.map((n) => n.id);
-    setReadNotifIds(allIds);
-    try {
-      localStorage.setItem("mizan_read_notifs", JSON.stringify(allIds));
-    } catch {
-      void 0;
-    }
-  };
+  }, [notificationList, activeRole]);
 
   const unreadCount = notifications.filter((n) => !readNotifIds.includes(n.id)).length;
 
@@ -219,8 +152,8 @@ export default function Header() {
               onClose={() => setIsNotifOpen(false)}
               notifications={notifications}
               readNotifIds={readNotifIds}
-              onMarkAsRead={handleMarkAsRead}
-              onMarkAllAsRead={handleMarkAllAsRead}
+              onMarkAsRead={markNotificationAsRead}
+              onMarkAllAsRead={markAllNotificationsAsRead}
             />
           </div>
 

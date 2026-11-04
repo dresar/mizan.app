@@ -636,7 +636,7 @@ export default function AdminSantriPage() {
             </div>
 
             {viewMode === "grid" ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-3">
               {paginatedSantri.map((santri) => {
                 const isSelected = selectedSantriIds.includes(santri.id);
                 return (

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 import {
   Users,
@@ -24,6 +24,7 @@ import { RoleShell } from "@/components/RoleShell";
 import { Card, CardSub } from "@/components/ui/Card";
 import { Avatar } from "@/components/ui/Avatar";
 import { DeleteModal } from "@/components/ui/DeleteModal";
+import { Pagination } from "@/components/ui/Pagination";
 import { Role } from "@/lib/mock-data";
 
 export default function AdminUsersPage() {
@@ -72,6 +73,21 @@ export default function AdminUsersPage() {
         (u.assignedClass && u.assignedClass.toLowerCase().includes(q))
     );
   }, [userList, searchQuery]);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const PAGE_SIZE = 20;
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery]);
+
+  const totalPages = Math.max(1, Math.ceil(filteredUsers.length / PAGE_SIZE));
+  const safePage = Math.min(Math.max(1, currentPage), totalPages);
+
+  const paginatedUsers = useMemo(() => {
+    const start = (safePage - 1) * PAGE_SIZE;
+    return filteredUsers.slice(start, start + PAGE_SIZE);
+  }, [filteredUsers, safePage]);
 
   const handleCreateUser = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -538,7 +554,7 @@ export default function AdminUsersPage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#E2E8F0]">
-                  {filteredUsers.map((user) => {
+                  {paginatedUsers.map((user) => {
                     const isSuper = user.role === "SUPER_ADMIN";
                     const isPutri = user.gender === "Putri";
                     const isEditingThisPwd = editingPasswordUserId === user.id;
@@ -670,8 +686,8 @@ export default function AdminUsersPage() {
               </table>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {filteredUsers.map((user) => {
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-3">
+              {paginatedUsers.map((user) => {
                 const isSuper = user.role === "SUPER_ADMIN";
                 const isPutri = user.gender === "Putri";
                 const isEditingThisPwd = editingPasswordUserId === user.id;
@@ -797,7 +813,15 @@ export default function AdminUsersPage() {
               )}
             </div>
           )}
-        </Card>
+                <Pagination
+          currentPage={safePage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+          totalItems={filteredUsers.length}
+          itemsPerPage={PAGE_SIZE}
+          itemName="pengguna"
+        />
+      </Card>
       </div>
 
       <DeleteModal

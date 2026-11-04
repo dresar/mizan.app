@@ -13,15 +13,8 @@ import {
   FileText,
   ChevronRight
 } from "lucide-react";
-
-export interface MizanNotification {
-  id: string;
-  title: string;
-  message: string;
-  time: string;
-  type: "urgent" | "warning" | "success" | "info";
-  link?: string;
-}
+import { MizanNotification } from "@/lib/mock-data";
+export type { MizanNotification };
 
 interface NotificationDrawerProps {
   isOpen: boolean;
@@ -263,19 +256,32 @@ export function NotificationDrawer({
           isMobileView ? "pb-8" : "pb-3"
         }`}
       >
-        <button
-          type="button"
-          onClick={onClose}
-          className="px-3.5 py-1.5 rounded-xl border border-[#D4C9B5] bg-white text-[#172033] text-xs font-bold hover:bg-[#FAF7EE] transition-colors"
-        >
-          Tutup
-        </button>
+        <div className="flex items-center gap-1.5">
+          <button
+            type="button"
+            onClick={() => {
+              router.push("/admin/notifikasi");
+              onClose();
+            }}
+            className="px-3 py-1.5 rounded-xl border border-[#C5A059]/40 bg-white text-[#1B4D3E] text-xs font-bold hover:bg-[#FAF7EE] transition-colors shadow-2xs flex items-center gap-1 cursor-pointer"
+          >
+            <span>Semua</span>
+            <ChevronRight className="w-3 h-3 text-[#A8833E]" />
+          </button>
+          <button
+            type="button"
+            onClick={onClose}
+            className="px-3.5 py-1.5 rounded-xl border border-[#D4C9B5] bg-white text-[#172033] text-xs font-bold hover:bg-[#FAF7EE] transition-colors cursor-pointer"
+          >
+            Tutup
+          </button>
+        </div>
 
         {unreadCount > 0 && (
           <button
             type="button"
             onClick={onMarkAllAsRead}
-            className="px-4 py-1.5 rounded-xl bg-[#1B4D3E] text-white text-xs font-bold hover:bg-[#153e32] transition-colors shadow-2xs"
+            className="px-4 py-1.5 rounded-xl bg-[#1B4D3E] text-white text-xs font-bold hover:bg-[#153e32] transition-colors shadow-2xs cursor-pointer"
           >
             Baca
           </button>

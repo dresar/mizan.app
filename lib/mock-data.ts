@@ -366,6 +366,98 @@ export interface FeedbackRecord {
   updatedAt?: string;
 }
 
+export type NotificationType = "urgent" | "warning" | "success" | "info";
+export type NotificationCategory = "Evaluasi Rapor" | "Presensi Sholat" | "Peringatan Disiplin" | "Pengumuman Pondok" | "Sistem";
+
+export interface MizanNotification {
+  id: string;
+  title: string;
+  message: string;
+  time: string;
+  type: NotificationType;
+  category?: NotificationCategory;
+  link?: string;
+  isActive?: boolean;
+  targetRole?: "ALL" | "SUPER_ADMIN" | "PENGASUHAN" | "GURU" | "ORTU";
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export const INITIAL_NOTIFICATIONS: MizanNotification[] = [
+  {
+    id: "notif-rapor-eval",
+    title: "Notifikasi Evaluasi Rapor Santri",
+    message: "Terdapat santri dalam batas perhatian pembinaan khusus dan peraih predikat Mumtaz. Seluruh lembar rapor dapat langsung dicetak per santri atau massal.",
+    time: "Baru saja",
+    type: "info",
+    category: "Evaluasi Rapor",
+    link: "/admin/rapor",
+    isActive: true,
+    targetRole: "ALL",
+    createdAt: "2026-11-04 08:00:00"
+  },
+  {
+    id: "notif-eval-santri",
+    title: "Evaluasi Pembinaan Santri",
+    message: "Terdapat santri dalam batas perhatian pembinaan adab khusus pondok yang memerlukan bimbingan konseling.",
+    time: "10m lalu",
+    type: "urgent",
+    category: "Peringatan Disiplin",
+    link: "/admin/santri",
+    isActive: true,
+    targetRole: "ALL",
+    createdAt: "2026-11-04 07:50:00"
+  },
+  {
+    id: "notif-sholat-today",
+    title: "Presensi Sholat Berjamaah",
+    message: "Data kehadiran sholat 7 waktu santri hari ini telah tercatat tertib oleh seluruh asatidzah pembina.",
+    time: "45m lalu",
+    type: "success",
+    category: "Presensi Sholat",
+    link: "/admin/absensi",
+    isActive: true,
+    targetRole: "ALL",
+    createdAt: "2026-11-04 07:15:00"
+  },
+  {
+    id: "notif-hasanah-baru",
+    title: "Apresiasi Capaian Hasanah",
+    message: "Catatan kebaikan dan prestasi baru santri berhasil dicatat oleh pembina kamar.",
+    time: "4j lalu",
+    type: "success",
+    category: "Peringatan Disiplin",
+    link: "/admin/kategori-pelanggaran",
+    isActive: true,
+    targetRole: "ALL",
+    createdAt: "2026-11-04 04:00:00"
+  },
+  {
+    id: "notif-jadwal-disiplin",
+    title: "Jadwal Evaluasi Disiplin Kamar",
+    message: "Pemeriksaan kedisiplinan dan kerapian kamar santri pekan ini oleh mudabbir pengasuhan.",
+    time: "1h lalu",
+    type: "warning",
+    category: "Peringatan Disiplin",
+    link: "/admin/wali-kelas",
+    isActive: true,
+    targetRole: "ALL",
+    createdAt: "2026-11-03 12:00:00"
+  },
+  {
+    id: "notif-pengumuman-ramadhan",
+    title: "Pengumuman Agenda Tarhib Ramadhan",
+    message: "Seluruh musyrif dan santri diharapkan berkumpul di Masjid Jami' bakda Isya untuk taushiyah dan pengarahan.",
+    time: "2h lalu",
+    type: "info",
+    category: "Pengumuman Pondok",
+    link: "/admin/dashboard",
+    isActive: true,
+    targetRole: "ALL",
+    createdAt: "2026-11-02 19:30:00"
+  }
+];
+
 export const INITIAL_FEEDBACKS: FeedbackRecord[] = [
   {
     id: "fb-001",

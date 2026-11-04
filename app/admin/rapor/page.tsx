@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import {
   Search,
   FileText,
@@ -21,6 +21,7 @@ import { useMizan } from "@/lib/mizan-context";
 import { RoleShell } from "@/components/RoleShell";
 import { CardSub } from "@/components/ui/Card";
 import { Avatar } from "@/components/ui/Avatar";
+import { Pagination } from "@/components/ui/Pagination";
 import { Santri, formatScore, formatScoreWithSign } from "@/lib/mock-data";
 import { generateSantriPdf } from "@/lib/pdf-generator";
 
@@ -153,6 +154,21 @@ export default function AdminRaporPage() {
       return 0;
     });
   }, [santriAnalytics, selectedGender, selectedClass, searchQuery, selectedPredikat, sortBy]);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const PAGE_SIZE = 20;
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, selectedGender, selectedClass, selectedPredikat, sortBy]);
+
+  const totalPages = Math.max(1, Math.ceil(filteredItems.length / PAGE_SIZE));
+  const safePage = Math.min(Math.max(1, currentPage), totalPages);
+
+  const paginatedItems = useMemo(() => {
+    const start = (safePage - 1) * PAGE_SIZE;
+    return filteredItems.slice(start, start + PAGE_SIZE);
+  }, [filteredItems, safePage]);
 
   const handlePrintSingle = (item: (typeof santriAnalytics)[0]) => {
     try {
@@ -469,7 +485,7 @@ export default function AdminRaporPage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#E2EBF4]">
-                  {filteredItems.map((item, index) => {
+                  {paginatedItems.map((item, index) => {
                     const s = item.santri;
                     return (
                       <tr
@@ -477,7 +493,7 @@ export default function AdminRaporPage() {
                         className="hover:bg-[#FAF7EE]/60 transition-colors group"
                       >
                         <td className="py-3 px-3.5 text-center font-mono font-bold text-[#64748B]">
-                          {index + 1}
+                          {(safePage - 1) * PAGE_SIZE + index + 1}
                         </td>
 
                         <td className="py-3 px-3.5">
@@ -616,8 +632,8 @@ export default function AdminRaporPage() {
             </div>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
-            {filteredItems.map((item) => {
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-3.5">
+            {paginatedItems.map((item) => {
               const s = item.santri;
               return (
                 <div
@@ -715,6 +731,15 @@ export default function AdminRaporPage() {
             )}
           </div>
         )}
+
+        <Pagination
+          currentPage={safePage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+          totalItems={filteredItems.length}
+          itemsPerPage={PAGE_SIZE}
+          itemName="santri"
+        />
 
         {selectedDetailSantri && activeDetailData && (
           <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4">
