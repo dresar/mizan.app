@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React from "react";
 import {
@@ -116,6 +116,7 @@ export function ShareCard({ cardData, cardRef, compact = false }: ShareCardProps
 
   return (
     <div
+      id="mizan-share-card-container"
       ref={cardRef}
       className={`w-full max-w-md mx-auto bg-[#F4F7FB] border border-[#E2E8F0] shadow-xl shadow-slate-200/60 transition-all font-sans text-[#1E293B] ${
         compact ? "p-4 rounded-[24px] space-y-3" : "p-6 sm:p-7 rounded-[32px] space-y-4"

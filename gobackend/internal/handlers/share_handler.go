@@ -3,6 +3,7 @@ package handlers
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -43,17 +44,20 @@ func GetShareCard(c *fiber.Ctx) error {
 	var dataMap map[string]interface{}
 	_ = json.Unmarshal(rawData, &dataMap)
 
+	shareObj := fiber.Map{
+		"id":        id,
+		"title":     title,
+		"type":      cardType,
+		"period":    period,
+		"scope":     scope,
+		"data":      dataMap,
+		"createdAt": utils.FormatWIBDateTime(createdAt),
+	}
+
 	return c.JSON(fiber.Map{
 		"success": true,
-		"card": fiber.Map{
-			"id":        id,
-			"title":     title,
-			"type":      cardType,
-			"period":    period,
-			"scope":     scope,
-			"data":      dataMap,
-			"createdAt": utils.FormatWIBDateTime(createdAt),
-		},
+		"share":   shareObj,
+		"card":    shareObj,
 	})
 }
 
@@ -66,8 +70,26 @@ func CreateShareCard(c *fiber.Ctx) error {
 		Scope  string                 `json:"scope"`
 		Data   map[string]interface{} `json:"data"`
 	}
-	if err := c.BodyParser(&req); err != nil || req.ID == "" {
+	if err := c.BodyParser(&req); err != nil {
 		return utils.SendError(c, fiber.StatusBadRequest, "Data share card tidak lengkap")
+	}
+
+	if req.ID == "" {
+		randomSuffix := fmt.Sprintf("%x", time.Now().UnixNano()%100000)
+		req.ID = fmt.Sprintf("stat-%s-%s", time.Now().Format("20060102150405"), randomSuffix)
+	}
+
+	if req.Title == "" {
+		req.Title = "Kartu Statistik Mizan"
+	}
+	if req.Type == "" {
+		req.Type = "SHOLAT"
+	}
+	if req.Period == "" {
+		req.Period = "HARI_INI"
+	}
+	if req.Scope == "" {
+		req.Scope = "ALL"
 	}
 
 	pool := database.GetPool()
@@ -92,5 +114,19 @@ func CreateShareCard(c *fiber.Ctx) error {
 		return utils.SendError(c, fiber.StatusInternalServerError, err.Error())
 	}
 
-	return utils.SendSuccess(c, fiber.Map{"id": req.ID}, "Kartu share berhasil disimpan")
+	shareObj := fiber.Map{
+		"id":     req.ID,
+		"title":  req.Title,
+		"type":   req.Type,
+		"period": req.Period,
+		"scope":  req.Scope,
+		"data":   req.Data,
+	}
+
+	return c.JSON(fiber.Map{
+		"success": true,
+		"share":   shareObj,
+		"card":    shareObj,
+		"message": "Kartu share berhasil disimpan",
+	})
 }
