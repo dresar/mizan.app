@@ -87,6 +87,9 @@ export async function middleware(req: NextRequest) {
       }
       return NextResponse.redirect(new URL("/guru/dashboard", req.url));
     }
+    if (pathname === "/") {
+      return NextResponse.redirect(new URL("/login", req.url));
+    }
     return NextResponse.next();
   }
 

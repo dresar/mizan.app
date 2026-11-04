@@ -4,6 +4,7 @@ export interface QuickAccount {
   role: "SUPER_ADMIN" | "PENGASUHAN" | "GURU";
   gender: "Putra" | "Putri";
   category: "Admin" | "BK Putra" | "BK Putri" | "Guru Putra" | "Guru Putri";
+  password?: string;
 }
 
 export const QUICK_ACCOUNTS: QuickAccount[] = [
