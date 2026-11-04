@@ -73,8 +73,11 @@ func ensureTables(ctx context.Context, pool *pgxpool.Pool) error {
 			period VARCHAR(64) NOT NULL,
 			scope VARCHAR(64) NOT NULL,
 			data JSONB NOT NULL,
-			created_at TIMESTAMPTZ DEFAULT NOW()
+			created_at TIMESTAMPTZ DEFAULT NOW(),
+			expires_at TIMESTAMPTZ
 		);`,
+		`ALTER TABLE public_shares ADD COLUMN IF NOT EXISTS expires_at TIMESTAMPTZ;`,
+		`UPDATE public_shares SET expires_at = NOW() + INTERVAL '30 days' WHERE expires_at IS NULL;`,
 		`CREATE TABLE IF NOT EXISTS notifications (
 			id VARCHAR(64) PRIMARY KEY,
 			title VARCHAR(255) NOT NULL,

@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useEffect, useState, useMemo, useRef } from "react";
 import { useParams } from "next/navigation";
@@ -39,6 +39,7 @@ function ShareContent() {
 
   const [shareData, setShareData] = useState<ShareRecord | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [errorMsg, setErrorMsg] = useState("");
   const [copied, setCopied] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
@@ -47,13 +48,23 @@ function ShareContent() {
     if (!shareId) return;
 
     fetch(`/api/share?id=${shareId}`)
-      .then((res) => res.json())
+      .then(async (res) => {
+        if (res.status === 410) {
+          setErrorMsg("Kartu berbagi ini telah kedaluwarsa.");
+          return null;
+        }
+        if (!res.ok) {
+          setErrorMsg("Kartu berbagi tidak ditemukan atau tautan tidak valid.");
+          return null;
+        }
+        return res.json();
+      })
       .then((res) => {
-        if (res.success && res.share) {
+        if (res && res.success && res.share) {
           setShareData(res.share);
         }
       })
-      .catch(() => void 0)
+      .catch(() => setErrorMsg("Kendala memuat kartu berbagi."))
       .finally(() => setIsLoading(false));
   }, [shareId]);
 
@@ -240,10 +251,10 @@ function ShareContent() {
         <div className="max-w-md w-full bg-white p-6 rounded-3xl border border-[#E2E8F0] text-center space-y-3 shadow-sm">
           <AlertTriangle className="w-10 h-10 text-[#C5A059] mx-auto" />
           <h1 className="text-base font-serif font-black text-[#172033]">
-            Statistik Tidak Ditemukan
+            {errorMsg.includes("kedaluwarsa") ? "Kartu Berbagi Kedaluwarsa" : "Statistik Tidak Ditemukan"}
           </h1>
           <p className="text-xs text-[#64748B]">
-            Tautan statistik publik yang Anda tuju mungkin sudah kedaluwarsa atau tidak valid.
+            {errorMsg || "Tautan statistik publik yang Anda tuju mungkin sudah kedaluwarsa atau tidak valid."}
           </p>
         </div>
       </div>

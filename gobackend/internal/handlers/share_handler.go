@@ -2,8 +2,11 @@ package handlers
 
 import (
 	"context"
+	"crypto/rand"
 	"encoding/json"
 	"fmt"
+	"os"
+	"strconv"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -29,16 +32,21 @@ func GetShareCard(c *fiber.Ctx) error {
 	var title, cardType, period, scope string
 	var rawData []byte
 	var createdAt time.Time
+	var expiresAt *time.Time
 
 	err := pool.QueryRow(ctx, `
-		SELECT title, type, period, scope, data, created_at
+		SELECT title, type, period, scope, data, created_at, expires_at
 		FROM public_shares
 		WHERE id = $1
 		LIMIT 1
-	`, id).Scan(&title, &cardType, &period, &scope, &rawData, &createdAt)
+	`, id).Scan(&title, &cardType, &period, &scope, &rawData, &createdAt, &expiresAt)
 
 	if err != nil {
 		return utils.SendError(c, fiber.StatusNotFound, "Kartu share tidak ditemukan")
+	}
+
+	if expiresAt != nil && time.Now().After(*expiresAt) {
+		return utils.SendError(c, fiber.StatusGone, "Kartu berbagi ini telah kedaluwarsa")
 	}
 
 	var dataMap map[string]interface{}
@@ -54,6 +62,10 @@ func GetShareCard(c *fiber.Ctx) error {
 		"createdAt": utils.FormatWIBDateTime(createdAt),
 	}
 
+	if expiresAt != nil {
+		shareObj["expiresAt"] = utils.FormatWIBDateTime(*expiresAt)
+	}
+
 	return c.JSON(fiber.Map{
 		"success": true,
 		"share":   shareObj,
@@ -63,7 +75,6 @@ func GetShareCard(c *fiber.Ctx) error {
 
 func CreateShareCard(c *fiber.Ctx) error {
 	var req struct {
-		ID     string                 `json:"id"`
 		Title  string                 `json:"title"`
 		Type   string                 `json:"type"`
 		Period string                 `json:"period"`
@@ -74,10 +85,11 @@ func CreateShareCard(c *fiber.Ctx) error {
 		return utils.SendError(c, fiber.StatusBadRequest, "Data share card tidak lengkap")
 	}
 
-	if req.ID == "" {
-		randomSuffix := fmt.Sprintf("%x", time.Now().UnixNano()%100000)
-		req.ID = fmt.Sprintf("stat-%s-%s", time.Now().Format("20060102150405"), randomSuffix)
+	b := make([]byte, 16)
+	if _, err := rand.Read(b); err != nil {
+		return utils.SendError(c, fiber.StatusInternalServerError, "Gagal membuat ID share")
 	}
+	shareID := fmt.Sprintf("stat-%x", b)
 
 	if req.Title == "" {
 		req.Title = "Kartu Statistik Mizan"
@@ -92,6 +104,14 @@ func CreateShareCard(c *fiber.Ctx) error {
 		req.Scope = "ALL"
 	}
 
+	expiryDays := 30
+	if envDays := os.Getenv("SHARE_EXPIRY_DAYS"); envDays != "" {
+		if d, err := strconv.Atoi(envDays); err == nil && d > 0 {
+			expiryDays = d
+		}
+	}
+	expiresAt := time.Now().Add(time.Duration(expiryDays) * 24 * time.Hour)
+
 	pool := database.GetPool()
 	if pool == nil {
 		return utils.SendError(c, fiber.StatusServiceUnavailable, "Database belum terhubung")
@@ -103,24 +123,22 @@ func CreateShareCard(c *fiber.Ctx) error {
 	defer cancel()
 
 	_, err := pool.Exec(ctx, `
-		INSERT INTO public_shares (id, title, type, period, scope, data, created_at)
-		VALUES ($1, $2, $3, $4, $5, $6, NOW())
-		ON CONFLICT (id) DO UPDATE SET
-			title = EXCLUDED.title,
-			data = EXCLUDED.data
-	`, req.ID, req.Title, req.Type, req.Period, req.Scope, rawBytes)
+		INSERT INTO public_shares (id, title, type, period, scope, data, created_at, expires_at)
+		VALUES ($1, $2, $3, $4, $5, $6, NOW(), $7)
+	`, shareID, req.Title, req.Type, req.Period, req.Scope, rawBytes, expiresAt)
 
 	if err != nil {
 		return utils.SendError(c, fiber.StatusInternalServerError, err.Error())
 	}
 
 	shareObj := fiber.Map{
-		"id":     req.ID,
-		"title":  req.Title,
-		"type":   req.Type,
-		"period": req.Period,
-		"scope":  req.Scope,
-		"data":   req.Data,
+		"id":        shareID,
+		"title":     req.Title,
+		"type":      req.Type,
+		"period":    req.Period,
+		"scope":     req.Scope,
+		"data":      req.Data,
+		"expiresAt": utils.FormatWIBDateTime(expiresAt),
 	}
 
 	return c.JSON(fiber.Map{
