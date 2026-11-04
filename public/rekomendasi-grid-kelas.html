@@ -1,0 +1,1449 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>5 Rekomendasi Desain Grid Card Kelas & Wali Santri - Mizan Apps</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      background-color: #F5F1E8;
+      color: #172033;
+    }
+    .font-serif-title {
+      font-family: 'Playfair Display', Georgia, serif;
+    }
+    .mizan-shadow {
+      box-shadow: 0 10px 30px -5px rgba(27, 77, 62, 0.08), 0 4px 12px -2px rgba(0, 0, 0, 0.04);
+    }
+    .mizan-shadow-hover:hover {
+      box-shadow: 0 20px 35px -8px rgba(27, 77, 62, 0.16), 0 6px 16px -3px rgba(0, 0, 0, 0.06);
+      transform: translateY(-2px);
+    }
+    .glass-card {
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+    @keyframes sheenSweep {
+      0% { transform: translateX(-150%) skewX(-20deg); }
+      100% { transform: translateX(250%) skewX(-20deg); }
+    }
+    .sheen-wrapper {
+      position: relative;
+      overflow: hidden;
+    }
+    .sheen-wrapper::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 60%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+      transform: translateX(-150%) skewX(-20deg);
+      pointer-events: none;
+    }
+    .group:hover .sheen-wrapper::after {
+      animation: sheenSweep 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .avatar-stack-avatar {
+      transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease;
+    }
+    .avatar-stack-avatar:hover {
+      transform: translateY(-5px) scale(1.25);
+      z-index: 30;
+      box-shadow: 0 8px 15px -3px rgba(0, 0, 0, 0.2);
+    }
+  </style>
+</head>
+<body class="min-h-screen pb-24">
+
+  <!-- Header Showcase -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-[#E2EBF4] shadow-xs px-4 sm:px-8 py-3.5">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-2xl bg-[#1B4D3E] flex items-center justify-center text-[#C5A059] font-black text-xl shadow-xs">
+          M
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#FAF7EE] text-[#A8833E] border border-[#C5A059]/40">
+              Showcase Desain Grid
+            </span>
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#ECFDF5] text-[#065F46]">
+              5 Rekomendasi
+            </span>
+          </div>
+          <h1 class="text-base sm:text-lg font-serif-title font-black text-[#172033] tracking-tight">
+            Eksplorasi Tampilan Card Kelas & Wali Santri
+          </h1>
+        </div>
+      </div>
+
+      <!-- Quick Selector Pills -->
+      <div class="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 text-xs font-bold no-scrollbar">
+        <button onclick="filterDesign('ALL')" id="btn-all" class="tab-btn px-3 py-1.5 rounded-xl bg-[#1B4D3E] text-white transition-all cursor-pointer">
+          Semua
+        </button>
+        <button onclick="filterDesign('opt1')" id="btn-opt1" class="tab-btn px-3 py-1.5 rounded-xl bg-white border border-[#D4C9B5] text-[#172033] hover:bg-[#FAF7EE] transition-all cursor-pointer">
+          1. Hero Overlay
+        </button>
+        <button onclick="filterDesign('opt2')" id="btn-opt2" class="tab-btn px-3 py-1.5 rounded-xl bg-white border border-[#D4C9B5] text-[#172033] hover:bg-[#FAF7EE] transition-all cursor-pointer">
+          2. Floating Glass
+        </button>
+        <button onclick="filterDesign('opt3')" id="btn-opt3" class="tab-btn px-3 py-1.5 rounded-xl bg-white border border-[#D4C9B5] text-[#172033] hover:bg-[#FAF7EE] transition-all cursor-pointer">
+          3. Editorial
+        </button>
+        <button onclick="filterDesign('opt4')" id="btn-opt4" class="tab-btn px-3 py-1.5 rounded-xl bg-white border border-[#D4C9B5] text-[#172033] hover:bg-[#FAF7EE] transition-all cursor-pointer">
+          4. Split 1:1 (Revisi)
+        </button>
+        <button onclick="filterDesign('opt5')" id="btn-opt5" class="tab-btn px-3 py-1.5 rounded-xl bg-white border border-[#D4C9B5] text-[#172033] hover:bg-[#FAF7EE] transition-all cursor-pointer">
+          5. Dual Profile
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Banner Info -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-8 pt-6 space-y-8">
+    <div class="bg-white rounded-3xl p-5 sm:p-6 border border-[#E2EBF4] shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div class="space-y-1">
+        <span class="text-xs font-bold text-[#A8833E] uppercase tracking-wider">Panduan Pemilihan</span>
+        <h2 class="text-lg sm:text-xl font-serif-title font-black text-[#172033]">
+          Pilih Konsep Card Yang Paling Nyaman Dilihat
+        </h2>
+        <p class="text-xs text-[#64748B] max-w-2xl leading-relaxed">
+          Semua opsi di bawah ini menampilkan foto profil Wali Kelas dan santri binaan dengan gradasi halus sesuai arahan Anda. Klik tombol <strong>Pilih</strong> pada konsep yang Anda sukai untuk mengonfirmasi pilihan.
+        </p>
+      </div>
+      <div id="selection-box" class="p-3.5 rounded-2xl bg-[#FAF7EE] border border-[#C5A059]/40 shrink-0 text-center space-y-1">
+        <span class="text-[11px] text-[#64748B] block font-bold">Pilihan Saat Ini:</span>
+        <span id="chosen-label" class="text-xs font-black text-[#1B4D3E] block px-3 py-1 rounded-lg bg-white border border-[#D4C9B5]">
+          Belum Ada Pilihan
+        </span>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- OPSI 1: Hero Photo Overlay with Gentle Gradient -->
+    <!-- ========================================== -->
+    <section id="section-opt1" class="design-section space-y-3">
+      <div class="flex items-center justify-between">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="w-6 h-6 rounded-full bg-[#1B4D3E] text-white text-xs font-black flex items-center justify-center">1</span>
+            <h3 class="text-base sm:text-lg font-serif-title font-black text-[#172033]">
+              Opsi 1: Hero Photo Overlay (Ide Utama Anda)
+            </h3>
+          </div>
+          <p class="text-xs text-[#64748B] ml-8">
+            Foto Wali Kelas di bagian atas dengan gradasi gelap halus di bawahnya untuk teks nama & kelas. Bagian bawah memuat santri stack dan skor.
+          </p>
+        </div>
+        <button onclick="selectChoice('Opsi 1: Hero Photo Overlay')" class="px-3.5 py-1.5 rounded-xl bg-[#1B4D3E] text-white hover:bg-[#153e32] text-xs font-bold transition-all shadow-xs cursor-pointer">
+          Pilih
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- Card 1 -->
+        <div class="bg-white rounded-3xl overflow-hidden border border-[#E2EBF4] mizan-shadow mizan-shadow-hover transition-all flex flex-col justify-between group">
+          <div>
+            <!-- Image Area with Gradient Overlay -->
+            <div class="relative h-44 w-full overflow-hidden bg-slate-800">
+              <img src="/uploads/avatars/avatar-user-bk-fatihuddin-1793543044709.jpg" onerror="this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500&auto=format&fit=crop&q=80'" alt="Wali Kelas" class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300">
+              <!-- Gradient Overlay at Bottom of Image -->
+              <div class="absolute inset-0 bg-gradient-to-t from-[#0F172A]/90 via-[#0F172A]/40 to-transparent"></div>
+
+              <!-- Top Badges -->
+              <div class="absolute top-3 inset-x-3 flex items-center justify-between">
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-white/90 backdrop-blur-xs text-[#1B4D3E] shadow-xs">
+                  Kelas 1A
+                </span>
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#ECFDF5] text-[#065F46] border border-[#A7F3D0]">
+                  Putra
+                </span>
+              </div>
+
+              <!-- Bottom Text Overlay on Image -->
+              <div class="absolute bottom-2.5 inset-x-3 text-white space-y-0.5">
+                <span class="text-[9px] font-bold uppercase tracking-wider text-[#C5A059] block">Wali Kelas</span>
+                <h4 class="text-xs font-black truncate leading-tight">Ustadz M. Fatihuddin, S.Pd.I</h4>
+                <p class="text-[10px] text-slate-300">Pembina Asrama Al-Farabi</p>
+              </div>
+            </div>
+
+            <!-- Card Body: Santri & Metrics -->
+            <div class="p-3.5 space-y-3">
+              <div class="flex items-center justify-between text-xs">
+                <span class="text-[11px] font-bold text-[#64748B]">Santri Terdaftar</span>
+                <span class="font-mono font-black text-[#172033]">32 Santri</span>
+              </div>
+
+              <!-- Santri Avatar Stack -->
+              <div class="flex items-center justify-between p-2 rounded-2xl bg-[#FAF7EE] border border-[#C5A059]/20">
+                <div class="flex -space-x-2 overflow-hidden">
+                  <div class="inline-block h-6 w-6 rounded-full ring-2 ring-white bg-[#1B4D3E] text-white text-[9px] font-bold flex items-center justify-center">AF</div>
+                  <div class="inline-block h-6 w-6 rounded-full ring-2 ring-white bg-[#C5A059] text-white text-[9px] font-bold flex items-center justify-center">RZ</div>
+                  <div class="inline-block h-6 w-6 rounded-full ring-2 ring-white bg-[#065F46] text-white text-[9px] font-bold flex items-center justify-center">HD</div>
+                  <div class="inline-block h-6 w-6 rounded-full ring-2 ring-white bg-slate-400 text-white text-[9px] font-bold flex items-center justify-center">+29</div>
+                </div>
+                <span class="text-[10px] font-bold text-[#A8833E]">Anggota Kelas</span>
+              </div>
+
+              <div class="flex items-center justify-between pt-1 font-mono">
+                <span class="text-[11px] text-[#64748B] font-semibold">Rata-Rata Skor</span>
+                <span class="text-xs font-black px-2 py-0.5 rounded-lg bg-[#ECFDF5] text-[#065F46]">
+                  88.50 Mumtaz
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card Actions (Single Word) -->
+          <div class="px-3.5 pb-3.5 pt-1 border-t border-[#F1F5F9] flex items-center justify-end gap-1.5">
+            <button class="px-3 py-1.5 rounded-xl border border-[#D4C9B5] text-[#172033] hover:bg-[#FAF7EE] text-xs font-bold transition-colors">
+              Ubah
+            </button>
+            <button class="px-3.5 py-1.5 rounded-xl bg-[#1B4D3E] text-white hover:bg-[#153e32] text-xs font-bold transition-colors shadow-2xs">
+              Detail
+            </button>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="bg-white rounded-3xl overflow-hidden border border-[#E2EBF4] mizan-shadow mizan-shadow-hover transition-all flex flex-col justify-between group">
+          <div>
+            <div class="relative h-44 w-full overflow-hidden bg-slate-800">
+              <img src="/uploads/avatars/avatar-user-bk-willy-1793546553020.jpg" onerror="this.src='https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&auto=format&fit=crop&q=80'" alt="Wali Kelas" class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300">
+              <div class="absolute inset-0 bg-gradient-to-t from-[#0F172A]/90 via-[#0F172A]/40 to-transparent"></div>
+              <div class="absolute top-3 inset-x-3 flex items-center justify-between">
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-white/90 backdrop-blur-xs text-[#1B4D3E]">
+                  Kelas 2A
+                </span>
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#ECFDF5] text-[#065F46] border border-[#A7F3D0]">
+                  Putra
+                </span>
+              </div>
+              <div class="absolute bottom-2.5 inset-x-3 text-white space-y-0.5">
+                <span class="text-[9px] font-bold uppercase tracking-wider text-[#C5A059] block">Wali Kelas</span>
+                <h4 class="text-xs font-black truncate leading-tight">Ustadz Willy Pratama, M.Pd</h4>
+                <p class="text-[10px] text-slate-300">Pembina Asrama Ibnu Sina</p>
+              </div>
+            </div>
+            <div class="p-3.5 space-y-3">
+              <div class="flex items-center justify-between text-xs">
+                <span class="text-[11px] font-bold text-[#64748B]">Santri Terdaftar</span>
+                <span class="font-mono font-black text-[#172033]">30 Santri</span>
+              </div>
+              <div class="flex items-center justify-between p-2 rounded-2xl bg-[#FAF7EE] border border-[#C5A059]/20">
+                <div class="flex -space-x-2 overflow-hidden">
+                  <div class="inline-block h-6 w-6 rounded-full ring-2 ring-white bg-[#1B4D3E] text-white text-[9px] font-bold flex items-center justify-center">WP</div>
+                  <div class="inline-block h-6 w-6 rounded-full ring-2 ring-white bg-[#C5A059] text-white text-[9px] font-bold flex items-center justify-center">FR</div>
+                  <div class="inline-block h-6 w-6 rounded-full ring-2 ring-white bg-[#065F46] text-white text-[9px] font-bold flex items-center justify-center">SY</div>
+                  <div class="inline-block h-6 w-6 rounded-full ring-2 ring-white bg-slate-400 text-white text-[9px] font-bold flex items-center justify-center">+27</div>
+                </div>
+                <span class="text-[10px] font-bold text-[#A8833E]">Anggota Kelas</span>
+              </div>
+              <div class="flex items-center justify-between pt-1 font-mono">
+                <span class="text-[11px] text-[#64748B] font-semibold">Rata-Rata Skor</span>
+                <span class="text-xs font-black px-2 py-0.5 rounded-lg bg-[#E8F0EC] text-[#1B4D3E]">
+                  83.40 Jayyid
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="px-3.5 pb-3.5 pt-1 border-t border-[#F1F5F9] flex items-center justify-end gap-1.5">
+            <button class="px-3 py-1.5 rounded-xl border border-[#D4C9B5] text-[#172033] hover:bg-[#FAF7EE] text-xs font-bold transition-colors">
+              Ubah
+            </button>
+            <button class="px-3.5 py-1.5 rounded-xl bg-[#1B4D3E] text-white hover:bg-[#153e32] text-xs font-bold transition-colors shadow-2xs">
+              Detail
+            </button>
+          </div>
+        </div>
+
+        <!-- Card 3 (Putri) -->
+        <div class="bg-white rounded-3xl overflow-hidden border border-[#E2EBF4] mizan-shadow mizan-shadow-hover transition-all flex flex-col justify-between group">
+          <div>
+            <div class="relative h-44 w-full overflow-hidden bg-slate-800">
+              <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=500&auto=format&fit=crop&q=80" alt="Wali Kelas" class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300">
+              <div class="absolute inset-0 bg-gradient-to-t from-[#0F172A]/90 via-[#0F172A]/40 to-transparent"></div>
+              <div class="absolute top-3 inset-x-3 flex items-center justify-between">
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-white/90 backdrop-blur-xs text-[#A8833E]">
+                  Kelas 1C
+                </span>
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#FAF7EE] text-[#A8833E] border border-[#C5A059]/40">
+                  Putri
+                </span>
+              </div>
+              <div class="absolute bottom-2.5 inset-x-3 text-white space-y-0.5">
+                <span class="text-[9px] font-bold uppercase tracking-wider text-[#C5A059] block">Wali Kelas</span>
+                <h4 class="text-xs font-black truncate leading-tight">Ustadzah Nurul Hidayah, S.Ag</h4>
+                <p class="text-[10px] text-slate-300">Pembina Asrama Khadijah</p>
+              </div>
+            </div>
+            <div class="p-3.5 space-y-3">
+              <div class="flex items-center justify-between text-xs">
+                <span class="text-[11px] font-bold text-[#64748B]">Santriwati Terdaftar</span>
+                <span class="font-mono font-black text-[#172033]">28 Santri</span>
+              </div>
+              <div class="flex items-center justify-between p-2 rounded-2xl bg-[#FAF7EE] border border-[#C5A059]/20">
+                <div class="flex -space-x-2 overflow-hidden">
+                  <div class="inline-block h-6 w-6 rounded-full ring-2 ring-white bg-[#A8833E] text-white text-[9px] font-bold flex items-center justify-center">NH</div>
+                  <div class="inline-block h-6 w-6 rounded-full ring-2 ring-white bg-[#C5A059] text-white text-[9px] font-bold flex items-center justify-center">AS</div>
+                  <div class="inline-block h-6 w-6 rounded-full ring-2 ring-white bg-[#065F46] text-white text-[9px] font-bold flex items-center justify-center">FT</div>
+                  <div class="inline-block h-6 w-6 rounded-full ring-2 ring-white bg-slate-400 text-white text-[9px] font-bold flex items-center justify-center">+25</div>
+                </div>
+                <span class="text-[10px] font-bold text-[#A8833E]">Anggota Kelas</span>
+              </div>
+              <div class="flex items-center justify-between pt-1 font-mono">
+                <span class="text-[11px] text-[#64748B] font-semibold">Rata-Rata Skor</span>
+                <span class="text-xs font-black px-2 py-0.5 rounded-lg bg-[#ECFDF5] text-[#065F46]">
+                  91.20 Mumtaz
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="px-3.5 pb-3.5 pt-1 border-t border-[#F1F5F9] flex items-center justify-end gap-1.5">
+            <button class="px-3 py-1.5 rounded-xl border border-[#D4C9B5] text-[#172033] hover:bg-[#FAF7EE] text-xs font-bold transition-colors">
+              Ubah
+            </button>
+            <button class="px-3.5 py-1.5 rounded-xl bg-[#1B4D3E] text-white hover:bg-[#153e32] text-xs font-bold transition-colors shadow-2xs">
+              Detail
+            </button>
+          </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="bg-white rounded-3xl overflow-hidden border border-[#E2EBF4] mizan-shadow mizan-shadow-hover transition-all flex flex-col justify-between group">
+          <div>
+            <div class="relative h-44 w-full overflow-hidden bg-slate-800">
+              <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=500&auto=format&fit=crop&q=80" alt="Wali Kelas" class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300">
+              <div class="absolute inset-0 bg-gradient-to-t from-[#0F172A]/90 via-[#0F172A]/40 to-transparent"></div>
+              <div class="absolute top-3 inset-x-3 flex items-center justify-between">
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-white/90 backdrop-blur-xs text-[#1B4D3E]">
+                  Kelas 3B
+                </span>
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#ECFDF5] text-[#065F46] border border-[#A7F3D0]">
+                  Putra
+                </span>
+              </div>
+              <div class="absolute bottom-2.5 inset-x-3 text-white space-y-0.5">
+                <span class="text-[9px] font-bold uppercase tracking-wider text-[#C5A059] block">Wali Kelas</span>
+                <h4 class="text-xs font-black truncate leading-tight">Ustadz Ridwan Hakim, Lc.</h4>
+                <p class="text-[10px] text-slate-300">Pembina Asrama Al-Ghazali</p>
+              </div>
+            </div>
+            <div class="p-3.5 space-y-3">
+              <div class="flex items-center justify-between text-xs">
+                <span class="text-[11px] font-bold text-[#64748B]">Santri Terdaftar</span>
+                <span class="font-mono font-black text-[#172033]">31 Santri</span>
+              </div>
+              <div class="flex items-center justify-between p-2 rounded-2xl bg-[#FAF7EE] border border-[#C5A059]/20">
+                <div class="flex -space-x-2 overflow-hidden">
+                  <div class="inline-block h-6 w-6 rounded-full ring-2 ring-white bg-[#1B4D3E] text-white text-[9px] font-bold flex items-center justify-center">RH</div>
+                  <div class="inline-block h-6 w-6 rounded-full ring-2 ring-white bg-[#C5A059] text-white text-[9px] font-bold flex items-center justify-center">AM</div>
+                  <div class="inline-block h-6 w-6 rounded-full ring-2 ring-white bg-[#065F46] text-white text-[9px] font-bold flex items-center justify-center">IK</div>
+                  <div class="inline-block h-6 w-6 rounded-full ring-2 ring-white bg-slate-400 text-white text-[9px] font-bold flex items-center justify-center">+28</div>
+                </div>
+                <span class="text-[10px] font-bold text-[#A8833E]">Anggota Kelas</span>
+              </div>
+              <div class="flex items-center justify-between pt-1 font-mono">
+                <span class="text-[11px] text-[#64748B] font-semibold">Rata-Rata Skor</span>
+                <span class="text-xs font-black px-2 py-0.5 rounded-lg bg-[#ECFDF5] text-[#065F46]">
+                  86.80 Mumtaz
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="px-3.5 pb-3.5 pt-1 border-t border-[#F1F5F9] flex items-center justify-end gap-1.5">
+            <button class="px-3 py-1.5 rounded-xl border border-[#D4C9B5] text-[#172033] hover:bg-[#FAF7EE] text-xs font-bold transition-colors">
+              Ubah
+            </button>
+            <button class="px-3.5 py-1.5 rounded-xl bg-[#1B4D3E] text-white hover:bg-[#153e32] text-xs font-bold transition-colors shadow-2xs">
+              Detail
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- OPSI 2: Glassmorphism Floating Island -->
+    <!-- ========================================== -->
+    <section id="section-opt2" class="design-section space-y-3 pt-6 border-t border-[#E2EBF4]">
+      <div class="flex items-center justify-between">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="w-6 h-6 rounded-full bg-[#C5A059] text-white text-xs font-black flex items-center justify-center">2</span>
+            <h3 class="text-base sm:text-lg font-serif-title font-black text-[#172033]">
+              Opsi 2: Glassmorphism Floating Island Card
+            </h3>
+          </div>
+          <p class="text-xs text-[#64748B] ml-8">
+            Banner foto di atas dengan kartu pulau melayang (floating glass card) yang menonjol keluar, memberikan kedalaman 3D modern.
+          </p>
+        </div>
+        <button onclick="selectChoice('Opsi 2: Glassmorphism Floating Island')" class="px-3.5 py-1.5 rounded-xl bg-[#1B4D3E] text-white hover:bg-[#153e32] text-xs font-bold transition-all shadow-xs cursor-pointer">
+          Pilih
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- Card 1 -->
+        <div class="bg-white rounded-3xl overflow-hidden border border-[#E2EBF4] mizan-shadow mizan-shadow-hover transition-all flex flex-col justify-between group">
+          <div>
+            <!-- Cover Photo with Badge -->
+            <div class="relative h-32 w-full bg-slate-800 overflow-hidden">
+              <img src="/uploads/avatars/avatar-user-bk-fatihuddin-1793543044709.jpg" onerror="this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500&auto=format&fit=crop&q=80'" alt="Wali" class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-300">
+              <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+              <div class="absolute top-2.5 right-2.5">
+                <span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-[#ECFDF5] text-[#065F46] border border-[#A7F3D0]">
+                  Putra
+                </span>
+              </div>
+            </div>
+
+            <!-- Floating Island Info Overlapping Photo -->
+            <div class="-mt-7 px-3.5 relative z-10 space-y-3">
+              <div class="glass-card p-3 rounded-2xl border border-white/80 shadow-md flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-[#1B4D3E] text-white font-black text-sm flex items-center justify-center shrink-0 shadow-2xs">
+                  1A
+                </div>
+                <div class="min-w-0">
+                  <h4 class="text-xs font-black text-[#172033] truncate">Kelas 1A Putra</h4>
+                  <p class="text-[10px] text-[#A8833E] font-bold truncate">Ustd. M. Fatihuddin</p>
+                </div>
+              </div>
+
+              <!-- Metrics -->
+              <div class="space-y-2 pt-1 text-xs">
+                <div class="flex items-center justify-between text-[11px]">
+                  <span class="text-[#64748B]">Kehadiran Sholat</span>
+                  <span class="font-bold text-[#065F46]">98.5% Tertib</span>
+                </div>
+                <div class="w-full bg-[#E2EBF4] h-1.5 rounded-full overflow-hidden">
+                  <div class="bg-[#1B4D3E] h-full rounded-full" style="width: 88%"></div>
+                </div>
+                <div class="flex items-center justify-between pt-1 font-mono">
+                  <span class="text-[10px] text-[#64748B]">32 Santri Binaan</span>
+                  <span class="text-xs font-black text-[#1B4D3E]">88.50 Poin</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="p-3.5 pt-3 border-t border-[#F1F5F9] flex items-center justify-end gap-1.5 mt-3">
+            <button class="px-3 py-1.5 rounded-xl border border-[#D4C9B5] text-[#172033] text-xs font-bold hover:bg-[#FAF7EE] transition-colors">
+              Wali
+            </button>
+            <button class="px-3.5 py-1.5 rounded-xl bg-[#1B4D3E] text-white text-xs font-bold hover:bg-[#153e32] transition-colors shadow-2xs">
+              Detail
+            </button>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="bg-white rounded-3xl overflow-hidden border border-[#E2EBF4] mizan-shadow mizan-shadow-hover transition-all flex flex-col justify-between group">
+          <div>
+            <div class="relative h-32 w-full bg-slate-800 overflow-hidden">
+              <img src="/uploads/avatars/avatar-user-bk-willy-1793546553020.jpg" onerror="this.src='https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&auto=format&fit=crop&q=80'" alt="Wali" class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-300">
+              <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+              <div class="absolute top-2.5 right-2.5">
+                <span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-[#ECFDF5] text-[#065F46] border border-[#A7F3D0]">
+                  Putra
+                </span>
+              </div>
+            </div>
+
+            <div class="-mt-7 px-3.5 relative z-10 space-y-3">
+              <div class="glass-card p-3 rounded-2xl border border-white/80 shadow-md flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-[#1B4D3E] text-white font-black text-sm flex items-center justify-center shrink-0 shadow-2xs">
+                  2A
+                </div>
+                <div class="min-w-0">
+                  <h4 class="text-xs font-black text-[#172033] truncate">Kelas 2A Putra</h4>
+                  <p class="text-[10px] text-[#A8833E] font-bold truncate">Ustd. Willy Pratama</p>
+                </div>
+              </div>
+
+              <div class="space-y-2 pt-1 text-xs">
+                <div class="flex items-center justify-between text-[11px]">
+                  <span class="text-[#64748B]">Kehadiran Sholat</span>
+                  <span class="font-bold text-[#065F46]">96.0% Tertib</span>
+                </div>
+                <div class="w-full bg-[#E2EBF4] h-1.5 rounded-full overflow-hidden">
+                  <div class="bg-[#1B4D3E] h-full rounded-full" style="width: 83%"></div>
+                </div>
+                <div class="flex items-center justify-between pt-1 font-mono">
+                  <span class="text-[10px] text-[#64748B]">30 Santri Binaan</span>
+                  <span class="text-xs font-black text-[#1B4D3E]">83.40 Poin</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="p-3.5 pt-3 border-t border-[#F1F5F9] flex items-center justify-end gap-1.5 mt-3">
+            <button class="px-3 py-1.5 rounded-xl border border-[#D4C9B5] text-[#172033] text-xs font-bold hover:bg-[#FAF7EE] transition-colors">
+              Wali
+            </button>
+            <button class="px-3.5 py-1.5 rounded-xl bg-[#1B4D3E] text-white text-xs font-bold hover:bg-[#153e32] transition-colors shadow-2xs">
+              Detail
+            </button>
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="bg-white rounded-3xl overflow-hidden border border-[#E2EBF4] mizan-shadow mizan-shadow-hover transition-all flex flex-col justify-between group">
+          <div>
+            <div class="relative h-32 w-full bg-slate-800 overflow-hidden">
+              <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=500&auto=format&fit=crop&q=80" alt="Wali" class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-300">
+              <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+              <div class="absolute top-2.5 right-2.5">
+                <span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-[#FAF7EE] text-[#A8833E] border border-[#C5A059]/40">
+                  Putri
+                </span>
+              </div>
+            </div>
+
+            <div class="-mt-7 px-3.5 relative z-10 space-y-3">
+              <div class="glass-card p-3 rounded-2xl border border-white/80 shadow-md flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-[#C5A059] text-white font-black text-sm flex items-center justify-center shrink-0 shadow-2xs">
+                  1C
+                </div>
+                <div class="min-w-0">
+                  <h4 class="text-xs font-black text-[#172033] truncate">Kelas 1C Putri</h4>
+                  <p class="text-[10px] text-[#A8833E] font-bold truncate">Ustdzh. Nurul Hidayah</p>
+                </div>
+              </div>
+
+              <div class="space-y-2 pt-1 text-xs">
+                <div class="flex items-center justify-between text-[11px]">
+                  <span class="text-[#64748B]">Kehadiran Sholat</span>
+                  <span class="font-bold text-[#065F46]">99.2% Tertib</span>
+                </div>
+                <div class="w-full bg-[#E2EBF4] h-1.5 rounded-full overflow-hidden">
+                  <div class="bg-[#C5A059] h-full rounded-full" style="width: 91%"></div>
+                </div>
+                <div class="flex items-center justify-between pt-1 font-mono">
+                  <span class="text-[10px] text-[#64748B]">28 Santriwati</span>
+                  <span class="text-xs font-black text-[#C5A059]">91.20 Poin</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="p-3.5 pt-3 border-t border-[#F1F5F9] flex items-center justify-end gap-1.5 mt-3">
+            <button class="px-3 py-1.5 rounded-xl border border-[#D4C9B5] text-[#172033] text-xs font-bold hover:bg-[#FAF7EE] transition-colors">
+              Wali
+            </button>
+            <button class="px-3.5 py-1.5 rounded-xl bg-[#1B4D3E] text-white text-xs font-bold hover:bg-[#153e32] transition-colors shadow-2xs">
+              Detail
+            </button>
+          </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="bg-white rounded-3xl overflow-hidden border border-[#E2EBF4] mizan-shadow mizan-shadow-hover transition-all flex flex-col justify-between group">
+          <div>
+            <div class="relative h-32 w-full bg-slate-800 overflow-hidden">
+              <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=500&auto=format&fit=crop&q=80" alt="Wali" class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-300">
+              <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+              <div class="absolute top-2.5 right-2.5">
+                <span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-[#ECFDF5] text-[#065F46] border border-[#A7F3D0]">
+                  Putra
+                </span>
+              </div>
+            </div>
+
+            <div class="-mt-7 px-3.5 relative z-10 space-y-3">
+              <div class="glass-card p-3 rounded-2xl border border-white/80 shadow-md flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-[#1B4D3E] text-white font-black text-sm flex items-center justify-center shrink-0 shadow-2xs">
+                  3B
+                </div>
+                <div class="min-w-0">
+                  <h4 class="text-xs font-black text-[#172033] truncate">Kelas 3B Putra</h4>
+                  <p class="text-[10px] text-[#A8833E] font-bold truncate">Ustd. Ridwan Hakim</p>
+                </div>
+              </div>
+
+              <div class="space-y-2 pt-1 text-xs">
+                <div class="flex items-center justify-between text-[11px]">
+                  <span class="text-[#64748B]">Kehadiran Sholat</span>
+                  <span class="font-bold text-[#065F46]">97.8% Tertib</span>
+                </div>
+                <div class="w-full bg-[#E2EBF4] h-1.5 rounded-full overflow-hidden">
+                  <div class="bg-[#1B4D3E] h-full rounded-full" style="width: 86%"></div>
+                </div>
+                <div class="flex items-center justify-between pt-1 font-mono">
+                  <span class="text-[10px] text-[#64748B]">31 Santri Binaan</span>
+                  <span class="text-xs font-black text-[#1B4D3E]">86.80 Poin</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="p-3.5 pt-3 border-t border-[#F1F5F9] flex items-center justify-end gap-1.5 mt-3">
+            <button class="px-3 py-1.5 rounded-xl border border-[#D4C9B5] text-[#172033] text-xs font-bold hover:bg-[#FAF7EE] transition-colors">
+              Wali
+            </button>
+            <button class="px-3.5 py-1.5 rounded-xl bg-[#1B4D3E] text-white text-xs font-bold hover:bg-[#153e32] transition-colors shadow-2xs">
+              Detail
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- OPSI 3: Editorial Pesantren Minimalist -->
+    <!-- ========================================== -->
+    <section id="section-opt3" class="design-section space-y-3 pt-6 border-t border-[#E2EBF4]">
+      <div class="flex items-center justify-between">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="w-6 h-6 rounded-full bg-[#065F46] text-white text-xs font-black flex items-center justify-center">3</span>
+            <h3 class="text-base sm:text-lg font-serif-title font-black text-[#172033]">
+              Opsi 3: Editorial Pesantren (Elegan & Berwibawa)
+            </h3>
+          </div>
+          <p class="text-xs text-[#64748B] ml-8">
+            Gaya tipografi editorial pesantren modern. Foto profil bulat berbingkai emas, gradasi latar cream hangat, dan 4 kotak metrik statistik santri.
+          </p>
+        </div>
+        <button onclick="selectChoice('Opsi 3: Editorial Pesantren Minimalist')" class="px-3.5 py-1.5 rounded-xl bg-[#1B4D3E] text-white hover:bg-[#153e32] text-xs font-bold transition-all shadow-xs cursor-pointer">
+          Pilih
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- Card 1 -->
+        <div class="bg-white rounded-3xl p-4 border border-[#E2EBF4] mizan-shadow mizan-shadow-hover transition-all flex flex-col justify-between">
+          <div class="space-y-3.5">
+            <!-- Header with circular photo and class badge -->
+            <div class="flex items-start justify-between gap-3">
+              <div class="flex items-center gap-3">
+                <div class="relative w-14 h-14 rounded-2xl overflow-hidden ring-2 ring-[#C5A059]/40 shadow-xs shrink-0">
+                  <img src="/uploads/avatars/avatar-user-bk-fatihuddin-1793543044709.jpg" onerror="this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500&auto=format&fit=crop&q=80'" alt="Wali" class="w-full h-full object-cover">
+                  <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
+                </div>
+                <div class="min-w-0">
+                  <span class="text-[10px] font-bold text-[#A8833E] uppercase tracking-wider block">Wali Kelas</span>
+                  <h4 class="text-xs font-bold text-[#172033] truncate">Ust. M. Fatihuddin</h4>
+                  <span class="text-[10px] text-[#64748B] block truncate">Asrama Al-Farabi</span>
+                </div>
+              </div>
+
+              <span class="px-2.5 py-1 rounded-xl text-xs font-black bg-[#1B4D3E] text-white shrink-0 shadow-2xs">
+                1A
+              </span>
+            </div>
+
+            <!-- 4 Mini Metrics Box -->
+            <div class="grid grid-cols-2 gap-2 text-center">
+              <div class="p-2 rounded-xl bg-[#FAF7EE] border border-[#C5A059]/20">
+                <span class="text-[9px] font-bold text-[#64748B] uppercase block">Santri</span>
+                <span class="text-xs font-mono font-black text-[#172033]">32 Anak</span>
+              </div>
+              <div class="p-2 rounded-xl bg-[#ECFDF5] border border-[#A7F3D0]">
+                <span class="text-[9px] font-bold text-[#065F46] uppercase block">Skor Adab</span>
+                <span class="text-xs font-mono font-black text-[#065F46]">88.50</span>
+              </div>
+              <div class="p-2 rounded-xl bg-slate-50 border border-slate-200">
+                <span class="text-[9px] font-bold text-[#64748B] uppercase block">Gender</span>
+                <span class="text-xs font-bold text-[#172033]">Putra</span>
+              </div>
+              <div class="p-2 rounded-xl bg-amber-50 border border-amber-200">
+                <span class="text-[9px] font-bold text-amber-800 uppercase block">Predikat</span>
+                <span class="text-xs font-bold text-amber-800">Mumtaz</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="pt-3 mt-3 border-t border-[#F1F5F9] flex items-center justify-end gap-1.5">
+            <button class="px-3 py-1.5 rounded-xl border border-[#D4C9B5] text-[#172033] text-xs font-bold hover:bg-[#FAF7EE] transition-colors">
+              Ubah
+            </button>
+            <button class="px-3.5 py-1.5 rounded-xl bg-[#1B4D3E] text-white text-xs font-bold hover:bg-[#153e32] transition-colors shadow-2xs">
+              Buka
+            </button>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="bg-white rounded-3xl p-4 border border-[#E2EBF4] mizan-shadow mizan-shadow-hover transition-all flex flex-col justify-between">
+          <div class="space-y-3.5">
+            <div class="flex items-start justify-between gap-3">
+              <div class="flex items-center gap-3">
+                <div class="relative w-14 h-14 rounded-2xl overflow-hidden ring-2 ring-[#C5A059]/40 shadow-xs shrink-0">
+                  <img src="/uploads/avatars/avatar-user-bk-willy-1793546553020.jpg" onerror="this.src='https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&auto=format&fit=crop&q=80'" alt="Wali" class="w-full h-full object-cover">
+                  <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
+                </div>
+                <div class="min-w-0">
+                  <span class="text-[10px] font-bold text-[#A8833E] uppercase tracking-wider block">Wali Kelas</span>
+                  <h4 class="text-xs font-bold text-[#172033] truncate">Ust. Willy Pratama</h4>
+                  <span class="text-[10px] text-[#64748B] block truncate">Asrama Ibnu Sina</span>
+                </div>
+              </div>
+              <span class="px-2.5 py-1 rounded-xl text-xs font-black bg-[#1B4D3E] text-white shrink-0 shadow-2xs">
+                2A
+              </span>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2 text-center">
+              <div class="p-2 rounded-xl bg-[#FAF7EE] border border-[#C5A059]/20">
+                <span class="text-[9px] font-bold text-[#64748B] uppercase block">Santri</span>
+                <span class="text-xs font-mono font-black text-[#172033]">30 Anak</span>
+              </div>
+              <div class="p-2 rounded-xl bg-[#ECFDF5] border border-[#A7F3D0]">
+                <span class="text-[9px] font-bold text-[#065F46] uppercase block">Skor Adab</span>
+                <span class="text-xs font-mono font-black text-[#065F46]">83.40</span>
+              </div>
+              <div class="p-2 rounded-xl bg-slate-50 border border-slate-200">
+                <span class="text-[9px] font-bold text-[#64748B] uppercase block">Gender</span>
+                <span class="text-xs font-bold text-[#172033]">Putra</span>
+              </div>
+              <div class="p-2 rounded-xl bg-emerald-50 border border-emerald-200">
+                <span class="text-[9px] font-bold text-emerald-800 uppercase block">Predikat</span>
+                <span class="text-xs font-bold text-emerald-800">Jayyid</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="pt-3 mt-3 border-t border-[#F1F5F9] flex items-center justify-end gap-1.5">
+            <button class="px-3 py-1.5 rounded-xl border border-[#D4C9B5] text-[#172033] text-xs font-bold hover:bg-[#FAF7EE] transition-colors">
+              Ubah
+            </button>
+            <button class="px-3.5 py-1.5 rounded-xl bg-[#1B4D3E] text-white text-xs font-bold hover:bg-[#153e32] transition-colors shadow-2xs">
+              Buka
+            </button>
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="bg-white rounded-3xl p-4 border border-[#E2EBF4] mizan-shadow mizan-shadow-hover transition-all flex flex-col justify-between">
+          <div class="space-y-3.5">
+            <div class="flex items-start justify-between gap-3">
+              <div class="flex items-center gap-3">
+                <div class="relative w-14 h-14 rounded-2xl overflow-hidden ring-2 ring-[#C5A059]/40 shadow-xs shrink-0">
+                  <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=500&auto=format&fit=crop&q=80" alt="Wali" class="w-full h-full object-cover">
+                  <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
+                </div>
+                <div class="min-w-0">
+                  <span class="text-[10px] font-bold text-[#A8833E] uppercase tracking-wider block">Wali Kelas</span>
+                  <h4 class="text-xs font-bold text-[#172033] truncate">Ustdzh. Nurul H.</h4>
+                  <span class="text-[10px] text-[#64748B] block truncate">Asrama Khadijah</span>
+                </div>
+              </div>
+              <span class="px-2.5 py-1 rounded-xl text-xs font-black bg-[#C5A059] text-white shrink-0 shadow-2xs">
+                1C
+              </span>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2 text-center">
+              <div class="p-2 rounded-xl bg-[#FAF7EE] border border-[#C5A059]/20">
+                <span class="text-[9px] font-bold text-[#64748B] uppercase block">Santriwati</span>
+                <span class="text-xs font-mono font-black text-[#172033]">28 Anak</span>
+              </div>
+              <div class="p-2 rounded-xl bg-[#ECFDF5] border border-[#A7F3D0]">
+                <span class="text-[9px] font-bold text-[#065F46] uppercase block">Skor Adab</span>
+                <span class="text-xs font-mono font-black text-[#065F46]">91.20</span>
+              </div>
+              <div class="p-2 rounded-xl bg-slate-50 border border-slate-200">
+                <span class="text-[9px] font-bold text-[#64748B] uppercase block">Gender</span>
+                <span class="text-xs font-bold text-[#A8833E]">Putri</span>
+              </div>
+              <div class="p-2 rounded-xl bg-amber-50 border border-amber-200">
+                <span class="text-[9px] font-bold text-amber-800 uppercase block">Predikat</span>
+                <span class="text-xs font-bold text-amber-800">Mumtaz</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="pt-3 mt-3 border-t border-[#F1F5F9] flex items-center justify-end gap-1.5">
+            <button class="px-3 py-1.5 rounded-xl border border-[#D4C9B5] text-[#172033] text-xs font-bold hover:bg-[#FAF7EE] transition-colors">
+              Ubah
+            </button>
+            <button class="px-3.5 py-1.5 rounded-xl bg-[#1B4D3E] text-white text-xs font-bold hover:bg-[#153e32] transition-colors shadow-2xs">
+              Buka
+            </button>
+          </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="bg-white rounded-3xl p-4 border border-[#E2EBF4] mizan-shadow mizan-shadow-hover transition-all flex flex-col justify-between">
+          <div class="space-y-3.5">
+            <div class="flex items-start justify-between gap-3">
+              <div class="flex items-center gap-3">
+                <div class="relative w-14 h-14 rounded-2xl overflow-hidden ring-2 ring-[#C5A059]/40 shadow-xs shrink-0">
+                  <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=500&auto=format&fit=crop&q=80" alt="Wali" class="w-full h-full object-cover">
+                  <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
+                </div>
+                <div class="min-w-0">
+                  <span class="text-[10px] font-bold text-[#A8833E] uppercase tracking-wider block">Wali Kelas</span>
+                  <h4 class="text-xs font-bold text-[#172033] truncate">Ust. Ridwan Hakim</h4>
+                  <span class="text-[10px] text-[#64748B] block truncate">Asrama Al-Ghazali</span>
+                </div>
+              </div>
+              <span class="px-2.5 py-1 rounded-xl text-xs font-black bg-[#1B4D3E] text-white shrink-0 shadow-2xs">
+                3B
+              </span>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2 text-center">
+              <div class="p-2 rounded-xl bg-[#FAF7EE] border border-[#C5A059]/20">
+                <span class="text-[9px] font-bold text-[#64748B] uppercase block">Santri</span>
+                <span class="text-xs font-mono font-black text-[#172033]">31 Anak</span>
+              </div>
+              <div class="p-2 rounded-xl bg-[#ECFDF5] border border-[#A7F3D0]">
+                <span class="text-[9px] font-bold text-[#065F46] uppercase block">Skor Adab</span>
+                <span class="text-xs font-mono font-black text-[#065F46]">86.80</span>
+              </div>
+              <div class="p-2 rounded-xl bg-slate-50 border border-slate-200">
+                <span class="text-[9px] font-bold text-[#64748B] uppercase block">Gender</span>
+                <span class="text-xs font-bold text-[#172033]">Putra</span>
+              </div>
+              <div class="p-2 rounded-xl bg-amber-50 border border-amber-200">
+                <span class="text-[9px] font-bold text-amber-800 uppercase block">Predikat</span>
+                <span class="text-xs font-bold text-amber-800">Mumtaz</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="pt-3 mt-3 border-t border-[#F1F5F9] flex items-center justify-end gap-1.5">
+            <button class="px-3 py-1.5 rounded-xl border border-[#D4C9B5] text-[#172033] text-xs font-bold hover:bg-[#FAF7EE] transition-colors">
+              Ubah
+            </button>
+            <button class="px-3.5 py-1.5 rounded-xl bg-[#1B4D3E] text-white text-xs font-bold hover:bg-[#153e32] transition-colors shadow-2xs">
+              Buka
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="section-opt4" class="design-section space-y-4 pt-6 border-t border-[#E2EBF4]">
+      <div class="flex items-center justify-between">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="w-6 h-6 rounded-full bg-[#1B4D3E] text-white text-xs font-black flex items-center justify-center">4</span>
+            <h3 class="text-base sm:text-lg font-serif-title font-black text-[#172033]">
+              Opsi 4: Split 1:1 Photo & Clean Info Card (Revisi Sesuai Arahan)
+            </h3>
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#ECFDF5] text-[#065F46] border border-[#A7F3D0]">
+              Pilihan Favorit
+            </span>
+          </div>
+          <p class="text-xs text-[#64748B] ml-8 mt-1">
+            Proporsi 1:1 pada bagian foto atas tanpa penumpukan badge sama sekali di atas wajah. Seluruh badge identitas kelas, santri, metrik adab, dan tombol aksi terpusat rapi di area bawah dengan animasi sheen sweep dan avatar hover-pop modern.
+          </p>
+        </div>
+        <button onclick="selectChoice('Opsi 4: Split 1:1 Photo & Clean Info Card')" class="px-4 py-2 rounded-xl bg-[#1B4D3E] text-white hover:bg-[#153e32] text-xs font-bold transition-all shadow-xs cursor-pointer active:scale-95">
+          Pilih
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div class="group relative rounded-3xl overflow-hidden bg-white border border-[#E2EBF4] shadow-xs hover:shadow-2xl hover:border-[#1B4D3E]/40 hover:-translate-y-2 transition-all duration-500 flex flex-col justify-between cursor-pointer">
+          <div class="sheen-wrapper relative w-full aspect-square overflow-hidden bg-slate-100">
+            <img src="/uploads/avatars/avatar-user-bk-fatihuddin-1793543044709.jpg" onerror="this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500&auto=format&fit=crop&q=80'" alt="Ustadz M. Fatihuddin" class="w-full h-full object-cover object-top group-hover:scale-108 transition-transform duration-700 ease-out">
+            <div class="absolute inset-x-0 bottom-0 h-14 bg-gradient-to-t from-white via-white/50 to-transparent pointer-events-none"></div>
+          </div>
+
+          <div class="p-4 sm:p-5 flex flex-col justify-between flex-1 bg-white space-y-3.5">
+            <div class="space-y-2.5">
+              <div class="flex items-center justify-between gap-2 flex-wrap">
+                <div class="flex items-center gap-1.5">
+                  <span class="px-2.5 py-1 rounded-xl text-xs font-black bg-[#1B4D3E]/10 text-[#1B4D3E] border border-[#1B4D3E]/20">
+                    Kelas 1A
+                  </span>
+                  <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#ECFDF5] text-[#065F46] border border-[#A7F3D0]">
+                    Putra
+                  </span>
+                </div>
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#FAF7EE] text-[#A8833E] border border-[#C5A059]/40 flex items-center gap-1">
+                  <span class="w-1.5 h-1.5 rounded-full bg-[#C5A059] animate-pulse"></span>
+                  Mumtaz
+                </span>
+              </div>
+
+              <div>
+                <span class="text-[9px] font-extrabold uppercase tracking-widest text-[#C5A059] block">Wali Kelas</span>
+                <h4 class="text-sm sm:text-base font-black text-[#172033] group-hover:text-[#1B4D3E] transition-colors truncate">
+                  Ustadz M. Fatihuddin
+                </h4>
+                <p class="text-xs text-[#64748B] flex items-center gap-1.5 pt-0.5">
+                  <svg class="w-3.5 h-3.5 text-[#C5A059] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                  <span class="truncate">Asrama Al-Farabi • 32 Santri</span>
+                </p>
+              </div>
+            </div>
+
+            <div class="pt-3 border-t border-[#E2EBF4] flex items-center justify-between">
+              <div>
+                <span class="text-[9px] font-bold uppercase tracking-wider text-[#64748B] block mb-1">Santri Binaan</span>
+                <div class="flex -space-x-2 overflow-visible">
+                  <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&auto=format&fit=crop&q=80" alt="Santri" class="avatar-stack-avatar relative inline-block h-7 w-7 rounded-full ring-2 ring-white object-cover shadow-xs cursor-pointer">
+                  <img src="https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=100&auto=format&fit=crop&q=80" alt="Santri" class="avatar-stack-avatar relative inline-block h-7 w-7 rounded-full ring-2 ring-white object-cover shadow-xs cursor-pointer">
+                  <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?w=100&auto=format&fit=crop&q=80" alt="Santri" class="avatar-stack-avatar relative inline-block h-7 w-7 rounded-full ring-2 ring-white object-cover shadow-xs cursor-pointer">
+                  <div class="avatar-stack-avatar relative inline-block h-7 w-7 rounded-full ring-2 ring-white bg-[#1B4D3E] text-white text-[9px] font-black flex items-center justify-center shadow-xs cursor-pointer">
+                    +29
+                  </div>
+                </div>
+              </div>
+
+              <div class="text-right">
+                <span class="text-[9px] font-bold uppercase tracking-wider text-[#64748B] block mb-1">Rata-Rata</span>
+                <span class="text-xs font-mono font-black text-[#1B4D3E] bg-[#ECFDF5] border border-[#A7F3D0] px-2.5 py-1 rounded-xl shadow-xs inline-block">
+                  88.50
+                </span>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-3 gap-1.5 pt-1">
+              <button class="py-2 rounded-xl bg-[#1B4D3E] text-white hover:bg-[#153e32] text-xs font-bold text-center transition-all shadow-xs active:scale-95 cursor-pointer">
+                Detail
+              </button>
+              <button class="py-2 rounded-xl bg-[#FAF7EE] text-[#A8833E] hover:bg-[#F3EBD8] border border-[#C5A059]/40 text-xs font-bold text-center transition-all shadow-xs active:scale-95 cursor-pointer">
+                Ubah
+              </button>
+              <button class="py-2 rounded-xl bg-slate-50 text-slate-700 hover:bg-slate-100 border border-slate-200 text-xs font-bold text-center transition-all shadow-xs active:scale-95 cursor-pointer">
+                Wali
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="group relative rounded-3xl overflow-hidden bg-white border border-[#E2EBF4] shadow-xs hover:shadow-2xl hover:border-[#1B4D3E]/40 hover:-translate-y-2 transition-all duration-500 flex flex-col justify-between cursor-pointer">
+          <div class="sheen-wrapper relative w-full aspect-square overflow-hidden bg-slate-100">
+            <img src="/uploads/avatars/avatar-user-bk-willy-1793546553020.jpg" onerror="this.src='https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&auto=format&fit=crop&q=80'" alt="Ustadz Willy Pratama" class="w-full h-full object-cover object-top group-hover:scale-108 transition-transform duration-700 ease-out">
+            <div class="absolute inset-x-0 bottom-0 h-14 bg-gradient-to-t from-white via-white/50 to-transparent pointer-events-none"></div>
+          </div>
+
+          <div class="p-4 sm:p-5 flex flex-col justify-between flex-1 bg-white space-y-3.5">
+            <div class="space-y-2.5">
+              <div class="flex items-center justify-between gap-2 flex-wrap">
+                <div class="flex items-center gap-1.5">
+                  <span class="px-2.5 py-1 rounded-xl text-xs font-black bg-[#1B4D3E]/10 text-[#1B4D3E] border border-[#1B4D3E]/20">
+                    Kelas 2A
+                  </span>
+                  <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#ECFDF5] text-[#065F46] border border-[#A7F3D0]">
+                    Putra
+                  </span>
+                </div>
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#ECFDF5] text-[#065F46] border border-[#A7F3D0] flex items-center gap-1">
+                  <span class="w-1.5 h-1.5 rounded-full bg-[#10B981] animate-pulse"></span>
+                  Jayyid
+                </span>
+              </div>
+
+              <div>
+                <span class="text-[9px] font-extrabold uppercase tracking-widest text-[#C5A059] block">Wali Kelas</span>
+                <h4 class="text-sm sm:text-base font-black text-[#172033] group-hover:text-[#1B4D3E] transition-colors truncate">
+                  Ustadz Willy Pratama
+                </h4>
+                <p class="text-xs text-[#64748B] flex items-center gap-1.5 pt-0.5">
+                  <svg class="w-3.5 h-3.5 text-[#C5A059] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                  <span class="truncate">Asrama Ibnu Sina • 30 Santri</span>
+                </p>
+              </div>
+            </div>
+
+            <div class="pt-3 border-t border-[#E2EBF4] flex items-center justify-between">
+              <div>
+                <span class="text-[9px] font-bold uppercase tracking-wider text-[#64748B] block mb-1">Santri Binaan</span>
+                <div class="flex -space-x-2 overflow-visible">
+                  <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100&auto=format&fit=crop&q=80" alt="Santri" class="avatar-stack-avatar relative inline-block h-7 w-7 rounded-full ring-2 ring-white object-cover shadow-xs cursor-pointer">
+                  <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&auto=format&fit=crop&q=80" alt="Santri" class="avatar-stack-avatar relative inline-block h-7 w-7 rounded-full ring-2 ring-white object-cover shadow-xs cursor-pointer">
+                  <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=100&auto=format&fit=crop&q=80" alt="Santri" class="avatar-stack-avatar relative inline-block h-7 w-7 rounded-full ring-2 ring-white object-cover shadow-xs cursor-pointer">
+                  <div class="avatar-stack-avatar relative inline-block h-7 w-7 rounded-full ring-2 ring-white bg-[#1B4D3E] text-white text-[9px] font-black flex items-center justify-center shadow-xs cursor-pointer">
+                    +27
+                  </div>
+                </div>
+              </div>
+
+              <div class="text-right">
+                <span class="text-[9px] font-bold uppercase tracking-wider text-[#64748B] block mb-1">Rata-Rata</span>
+                <span class="text-xs font-mono font-black text-[#1B4D3E] bg-[#ECFDF5] border border-[#A7F3D0] px-2.5 py-1 rounded-xl shadow-xs inline-block">
+                  83.40
+                </span>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-3 gap-1.5 pt-1">
+              <button class="py-2 rounded-xl bg-[#1B4D3E] text-white hover:bg-[#153e32] text-xs font-bold text-center transition-all shadow-xs active:scale-95 cursor-pointer">
+                Detail
+              </button>
+              <button class="py-2 rounded-xl bg-[#FAF7EE] text-[#A8833E] hover:bg-[#F3EBD8] border border-[#C5A059]/40 text-xs font-bold text-center transition-all shadow-xs active:scale-95 cursor-pointer">
+                Ubah
+              </button>
+              <button class="py-2 rounded-xl bg-slate-50 text-slate-700 hover:bg-slate-100 border border-slate-200 text-xs font-bold text-center transition-all shadow-xs active:scale-95 cursor-pointer">
+                Wali
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="group relative rounded-3xl overflow-hidden bg-white border border-[#E2EBF4] shadow-xs hover:shadow-2xl hover:border-[#C5A059]/50 hover:-translate-y-2 transition-all duration-500 flex flex-col justify-between cursor-pointer">
+          <div class="sheen-wrapper relative w-full aspect-square overflow-hidden bg-slate-100">
+            <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=500&auto=format&fit=crop&q=80" alt="Ustdzh. Nurul Hidayah" class="w-full h-full object-cover object-top group-hover:scale-108 transition-transform duration-700 ease-out">
+            <div class="absolute inset-x-0 bottom-0 h-14 bg-gradient-to-t from-white via-white/50 to-transparent pointer-events-none"></div>
+          </div>
+
+          <div class="p-4 sm:p-5 flex flex-col justify-between flex-1 bg-white space-y-3.5">
+            <div class="space-y-2.5">
+              <div class="flex items-center justify-between gap-2 flex-wrap">
+                <div class="flex items-center gap-1.5">
+                  <span class="px-2.5 py-1 rounded-xl text-xs font-black bg-[#FAF7EE] text-[#A8833E] border border-[#C5A059]/40">
+                    Kelas 1C
+                  </span>
+                  <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#FAF7EE] text-[#A8833E] border border-[#C5A059]/40">
+                    Putri
+                  </span>
+                </div>
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#FAF7EE] text-[#A8833E] border border-[#C5A059]/40 flex items-center gap-1">
+                  <span class="w-1.5 h-1.5 rounded-full bg-[#C5A059] animate-pulse"></span>
+                  Mumtaz
+                </span>
+              </div>
+
+              <div>
+                <span class="text-[9px] font-extrabold uppercase tracking-widest text-[#C5A059] block">Wali Kelas</span>
+                <h4 class="text-sm sm:text-base font-black text-[#172033] group-hover:text-[#A8833E] transition-colors truncate">
+                  Ustdzh. Nurul Hidayah
+                </h4>
+                <p class="text-xs text-[#64748B] flex items-center gap-1.5 pt-0.5">
+                  <svg class="w-3.5 h-3.5 text-[#C5A059] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                  <span class="truncate">Asrama Khadijah • 28 Santriwati</span>
+                </p>
+              </div>
+            </div>
+
+            <div class="pt-3 border-t border-[#E2EBF4] flex items-center justify-between">
+              <div>
+                <span class="text-[9px] font-bold uppercase tracking-wider text-[#64748B] block mb-1">Santriwati Binaan</span>
+                <div class="flex -space-x-2 overflow-visible">
+                  <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80" alt="Santriwati" class="avatar-stack-avatar relative inline-block h-7 w-7 rounded-full ring-2 ring-white object-cover shadow-xs cursor-pointer">
+                  <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&auto=format&fit=crop&q=80" alt="Santriwati" class="avatar-stack-avatar relative inline-block h-7 w-7 rounded-full ring-2 ring-white object-cover shadow-xs cursor-pointer">
+                  <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=100&auto=format&fit=crop&q=80" alt="Santriwati" class="avatar-stack-avatar relative inline-block h-7 w-7 rounded-full ring-2 ring-white object-cover shadow-xs cursor-pointer">
+                  <div class="avatar-stack-avatar relative inline-block h-7 w-7 rounded-full ring-2 ring-white bg-[#C5A059] text-white text-[9px] font-black flex items-center justify-center shadow-xs cursor-pointer">
+                    +25
+                  </div>
+                </div>
+              </div>
+
+              <div class="text-right">
+                <span class="text-[9px] font-bold uppercase tracking-wider text-[#64748B] block mb-1">Rata-Rata</span>
+                <span class="text-xs font-mono font-black text-[#A8833E] bg-[#FAF7EE] border border-[#C5A059]/40 px-2.5 py-1 rounded-xl shadow-xs inline-block">
+                  91.20
+                </span>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-3 gap-1.5 pt-1">
+              <button class="py-2 rounded-xl bg-[#1B4D3E] text-white hover:bg-[#153e32] text-xs font-bold text-center transition-all shadow-xs active:scale-95 cursor-pointer">
+                Detail
+              </button>
+              <button class="py-2 rounded-xl bg-[#FAF7EE] text-[#A8833E] hover:bg-[#F3EBD8] border border-[#C5A059]/40 text-xs font-bold text-center transition-all shadow-xs active:scale-95 cursor-pointer">
+                Ubah
+              </button>
+              <button class="py-2 rounded-xl bg-slate-50 text-slate-700 hover:bg-slate-100 border border-slate-200 text-xs font-bold text-center transition-all shadow-xs active:scale-95 cursor-pointer">
+                Wali
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="group relative rounded-3xl overflow-hidden bg-white border border-[#E2EBF4] shadow-xs hover:shadow-2xl hover:border-[#1B4D3E]/40 hover:-translate-y-2 transition-all duration-500 flex flex-col justify-between cursor-pointer">
+          <div class="sheen-wrapper relative w-full aspect-square overflow-hidden bg-slate-100">
+            <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=500&auto=format&fit=crop&q=80" alt="Ustadz Ridwan Hakim" class="w-full h-full object-cover object-top group-hover:scale-108 transition-transform duration-700 ease-out">
+            <div class="absolute inset-x-0 bottom-0 h-14 bg-gradient-to-t from-white via-white/50 to-transparent pointer-events-none"></div>
+          </div>
+
+          <div class="p-4 sm:p-5 flex flex-col justify-between flex-1 bg-white space-y-3.5">
+            <div class="space-y-2.5">
+              <div class="flex items-center justify-between gap-2 flex-wrap">
+                <div class="flex items-center gap-1.5">
+                  <span class="px-2.5 py-1 rounded-xl text-xs font-black bg-[#1B4D3E]/10 text-[#1B4D3E] border border-[#1B4D3E]/20">
+                    Kelas 3B
+                  </span>
+                  <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#ECFDF5] text-[#065F46] border border-[#A7F3D0]">
+                    Putra
+                  </span>
+                </div>
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#ECFDF5] text-[#065F46] border border-[#A7F3D0] flex items-center gap-1">
+                  <span class="w-1.5 h-1.5 rounded-full bg-[#10B981] animate-pulse"></span>
+                  Jayyid
+                </span>
+              </div>
+
+              <div>
+                <span class="text-[9px] font-extrabold uppercase tracking-widest text-[#C5A059] block">Wali Kelas</span>
+                <h4 class="text-sm sm:text-base font-black text-[#172033] group-hover:text-[#1B4D3E] transition-colors truncate">
+                  Ustadz Ridwan Hakim
+                </h4>
+                <p class="text-xs text-[#64748B] flex items-center gap-1.5 pt-0.5">
+                  <svg class="w-3.5 h-3.5 text-[#C5A059] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                  <span class="truncate">Asrama Al-Ghazali • 31 Santri</span>
+                </p>
+              </div>
+            </div>
+
+            <div class="pt-3 border-t border-[#E2EBF4] flex items-center justify-between">
+              <div>
+                <span class="text-[9px] font-bold uppercase tracking-wider text-[#64748B] block mb-1">Santri Binaan</span>
+                <div class="flex -space-x-2 overflow-visible">
+                  <img src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=100&auto=format&fit=crop&q=80" alt="Santri" class="avatar-stack-avatar relative inline-block h-7 w-7 rounded-full ring-2 ring-white object-cover shadow-xs cursor-pointer">
+                  <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop&q=80" alt="Santri" class="avatar-stack-avatar relative inline-block h-7 w-7 rounded-full ring-2 ring-white object-cover shadow-xs cursor-pointer">
+                  <img src="https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=100&auto=format&fit=crop&q=80" alt="Santri" class="avatar-stack-avatar relative inline-block h-7 w-7 rounded-full ring-2 ring-white object-cover shadow-xs cursor-pointer">
+                  <div class="avatar-stack-avatar relative inline-block h-7 w-7 rounded-full ring-2 ring-white bg-[#1B4D3E] text-white text-[9px] font-black flex items-center justify-center shadow-xs cursor-pointer">
+                    +28
+                  </div>
+                </div>
+              </div>
+
+              <div class="text-right">
+                <span class="text-[9px] font-bold uppercase tracking-wider text-[#64748B] block mb-1">Rata-Rata</span>
+                <span class="text-xs font-mono font-black text-[#1B4D3E] bg-[#ECFDF5] border border-[#A7F3D0] px-2.5 py-1 rounded-xl shadow-xs inline-block">
+                  86.80
+                </span>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-3 gap-1.5 pt-1">
+              <button class="py-2 rounded-xl bg-[#1B4D3E] text-white hover:bg-[#153e32] text-xs font-bold text-center transition-all shadow-xs active:scale-95 cursor-pointer">
+                Detail
+              </button>
+              <button class="py-2 rounded-xl bg-[#FAF7EE] text-[#A8833E] hover:bg-[#F3EBD8] border border-[#C5A059]/40 text-xs font-bold text-center transition-all shadow-xs active:scale-95 cursor-pointer">
+                Ubah
+              </button>
+              <button class="py-2 rounded-xl bg-slate-50 text-slate-700 hover:bg-slate-100 border border-slate-200 text-xs font-bold text-center transition-all shadow-xs active:scale-95 cursor-pointer">
+                Wali
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- OPSI 5: Dual Profile Duo (Wali + Santri Teladan) -->
+    <!-- ========================================== -->
+    <section id="section-opt5" class="design-section space-y-3 pt-6 border-t border-[#E2EBF4]">
+      <div class="flex items-center justify-between">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="w-6 h-6 rounded-full bg-[#1B4D3E] text-white text-xs font-black flex items-center justify-center">5</span>
+            <h3 class="text-base sm:text-lg font-serif-title font-black text-[#172033]">
+              Opsi 5: Dual Profile Duo Card (Wali & Ketua Kelas)
+            </h3>
+          </div>
+          <p class="text-xs text-[#64748B] ml-8">
+            Menampilkan kolase berdampingan antara Wali Kelas dan Ketua Kelas/Santri Berprestasi dengan gradasi diagonal halus di atasnya.
+          </p>
+        </div>
+        <button onclick="selectChoice('Opsi 5: Dual Profile Duo Card')" class="px-3.5 py-1.5 rounded-xl bg-[#1B4D3E] text-white hover:bg-[#153e32] text-xs font-bold transition-all shadow-xs cursor-pointer">
+          Pilih
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- Card 1 -->
+        <div class="bg-white rounded-3xl overflow-hidden border border-[#E2EBF4] mizan-shadow mizan-shadow-hover transition-all flex flex-col justify-between group">
+          <div>
+            <!-- Dual Banner -->
+            <div class="relative h-36 w-full flex overflow-hidden">
+              <!-- Wali Photo -->
+              <div class="w-1/2 h-full relative">
+                <img src="/uploads/avatars/avatar-user-bk-fatihuddin-1793543044709.jpg" onerror="this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500&auto=format&fit=crop&q=80'" alt="Wali" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+                <span class="absolute bottom-1.5 left-2 text-[9px] font-black text-white truncate max-w-[90%]">Ust. Fatihuddin</span>
+                <span class="absolute top-2 left-2 px-1.5 py-0.2 rounded bg-[#1B4D3E] text-white text-[8px] font-bold">Wali</span>
+              </div>
+              <!-- Santri Leader Photo -->
+              <div class="w-1/2 h-full relative border-l border-white/20">
+                <img src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=500&auto=format&fit=crop&q=80" alt="Ketua Kelas" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+                <span class="absolute bottom-1.5 left-2 text-[9px] font-black text-white truncate max-w-[90%]">M. Al-Farizi</span>
+                <span class="absolute top-2 right-2 px-1.5 py-0.2 rounded bg-[#C5A059] text-white text-[8px] font-bold">Ketua</span>
+              </div>
+            </div>
+
+            <!-- Body -->
+            <div class="p-3.5 space-y-2.5">
+              <div class="flex items-center justify-between">
+                <h4 class="text-sm font-serif-title font-black text-[#172033]">Kelas 1A Putra</h4>
+                <span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-[#ECFDF5] text-[#065F46]">
+                  32 Santri
+                </span>
+              </div>
+              <p class="text-[11px] text-[#64748B] leading-tight">
+                Asrama Al-Farabi • Evaluasi adab dan sholat 7 waktu tertib terkendali.
+              </p>
+              <div class="pt-2 border-t border-[#F1F5F9] flex items-center justify-between font-mono">
+                <span class="text-[10px] text-[#64748B] font-bold">Skor Rata-Rata</span>
+                <span class="text-xs font-black text-[#1B4D3E] bg-[#ECFDF5] px-2 py-0.5 rounded-lg">
+                  88.50 Mumtaz
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="p-3.5 pt-2 border-t border-[#F1F5F9] flex items-center justify-end gap-1.5">
+            <button class="px-3 py-1.5 rounded-xl border border-[#D4C9B5] text-[#172033] text-xs font-bold hover:bg-[#FAF7EE] transition-colors">
+              Ubah
+            </button>
+            <button class="px-3.5 py-1.5 rounded-xl bg-[#1B4D3E] text-white text-xs font-bold hover:bg-[#153e32] transition-colors shadow-2xs">
+              Detail
+            </button>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="bg-white rounded-3xl overflow-hidden border border-[#E2EBF4] mizan-shadow mizan-shadow-hover transition-all flex flex-col justify-between group">
+          <div>
+            <div class="relative h-36 w-full flex overflow-hidden">
+              <div class="w-1/2 h-full relative">
+                <img src="/uploads/avatars/avatar-user-bk-willy-1793546553020.jpg" onerror="this.src='https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&auto=format&fit=crop&q=80'" alt="Wali" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+                <span class="absolute bottom-1.5 left-2 text-[9px] font-black text-white truncate max-w-[90%]">Ust. Willy</span>
+                <span class="absolute top-2 left-2 px-1.5 py-0.2 rounded bg-[#1B4D3E] text-white text-[8px] font-bold">Wali</span>
+              </div>
+              <div class="w-1/2 h-full relative border-l border-white/20">
+                <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=500&auto=format&fit=crop&q=80" alt="Ketua Kelas" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+                <span class="absolute bottom-1.5 left-2 text-[9px] font-black text-white truncate max-w-[90%]">Haidar Ali</span>
+                <span class="absolute top-2 right-2 px-1.5 py-0.2 rounded bg-[#C5A059] text-white text-[8px] font-bold">Ketua</span>
+              </div>
+            </div>
+
+            <div class="p-3.5 space-y-2.5">
+              <div class="flex items-center justify-between">
+                <h4 class="text-sm font-serif-title font-black text-[#172033]">Kelas 2A Putra</h4>
+                <span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-[#ECFDF5] text-[#065F46]">
+                  30 Santri
+                </span>
+              </div>
+              <p class="text-[11px] text-[#64748B] leading-tight">
+                Asrama Ibnu Sina • Nilai kedisiplinan dan kerapian asrama konsisten baik.
+              </p>
+              <div class="pt-2 border-t border-[#F1F5F9] flex items-center justify-between font-mono">
+                <span class="text-[10px] text-[#64748B] font-bold">Skor Rata-Rata</span>
+                <span class="text-xs font-black text-[#1B4D3E] bg-[#E8F0EC] px-2 py-0.5 rounded-lg">
+                  83.40 Jayyid
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="p-3.5 pt-2 border-t border-[#F1F5F9] flex items-center justify-end gap-1.5">
+            <button class="px-3 py-1.5 rounded-xl border border-[#D4C9B5] text-[#172033] text-xs font-bold hover:bg-[#FAF7EE] transition-colors">
+              Ubah
+            </button>
+            <button class="px-3.5 py-1.5 rounded-xl bg-[#1B4D3E] text-white text-xs font-bold hover:bg-[#153e32] transition-colors shadow-2xs">
+              Detail
+            </button>
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="bg-white rounded-3xl overflow-hidden border border-[#E2EBF4] mizan-shadow mizan-shadow-hover transition-all flex flex-col justify-between group">
+          <div>
+            <div class="relative h-36 w-full flex overflow-hidden">
+              <div class="w-1/2 h-full relative">
+                <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=500&auto=format&fit=crop&q=80" alt="Wali" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+                <span class="absolute bottom-1.5 left-2 text-[9px] font-black text-white truncate max-w-[90%]">Ustdz. Nurul</span>
+                <span class="absolute top-2 left-2 px-1.5 py-0.2 rounded bg-[#C5A059] text-white text-[8px] font-bold">Wali</span>
+              </div>
+              <div class="w-1/2 h-full relative border-l border-white/20">
+                <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=500&auto=format&fit=crop&q=80" alt="Ketua Kelas" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+                <span class="absolute bottom-1.5 left-2 text-[9px] font-black text-white truncate max-w-[90%]">Zahra S.</span>
+                <span class="absolute top-2 right-2 px-1.5 py-0.2 rounded bg-[#C5A059] text-white text-[8px] font-bold">Ketua</span>
+              </div>
+            </div>
+
+            <div class="p-3.5 space-y-2.5">
+              <div class="flex items-center justify-between">
+                <h4 class="text-sm font-serif-title font-black text-[#172033]">Kelas 1C Putri</h4>
+                <span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-[#FAF7EE] text-[#A8833E]">
+                  28 Santri
+                </span>
+              </div>
+              <p class="text-[11px] text-[#64748B] leading-tight">
+                Asrama Khadijah • Prestasi tahfidz dan ketertiban asrama tertinggi.
+              </p>
+              <div class="pt-2 border-t border-[#F1F5F9] flex items-center justify-between font-mono">
+                <span class="text-[10px] text-[#64748B] font-bold">Skor Rata-Rata</span>
+                <span class="text-xs font-black text-[#C5A059] bg-[#FAF7EE] px-2 py-0.5 rounded-lg border border-[#C5A059]/30">
+                  91.20 Mumtaz
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="p-3.5 pt-2 border-t border-[#F1F5F9] flex items-center justify-end gap-1.5">
+            <button class="px-3 py-1.5 rounded-xl border border-[#D4C9B5] text-[#172033] text-xs font-bold hover:bg-[#FAF7EE] transition-colors">
+              Ubah
+            </button>
+            <button class="px-3.5 py-1.5 rounded-xl bg-[#1B4D3E] text-white text-xs font-bold hover:bg-[#153e32] transition-colors shadow-2xs">
+              Detail
+            </button>
+          </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="bg-white rounded-3xl overflow-hidden border border-[#E2EBF4] mizan-shadow mizan-shadow-hover transition-all flex flex-col justify-between group">
+          <div>
+            <div class="relative h-36 w-full flex overflow-hidden">
+              <div class="w-1/2 h-full relative">
+                <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=500&auto=format&fit=crop&q=80" alt="Wali" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+                <span class="absolute bottom-1.5 left-2 text-[9px] font-black text-white truncate max-w-[90%]">Ust. Ridwan</span>
+                <span class="absolute top-2 left-2 px-1.5 py-0.2 rounded bg-[#1B4D3E] text-white text-[8px] font-bold">Wali</span>
+              </div>
+              <div class="w-1/2 h-full relative border-l border-white/20">
+                <img src="https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?w=500&auto=format&fit=crop&q=80" alt="Ketua Kelas" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+                <span class="absolute bottom-1.5 left-2 text-[9px] font-black text-white truncate max-w-[90%]">Bilal Ramadhan</span>
+                <span class="absolute top-2 right-2 px-1.5 py-0.2 rounded bg-[#C5A059] text-white text-[8px] font-bold">Ketua</span>
+              </div>
+            </div>
+
+            <div class="p-3.5 space-y-2.5">
+              <div class="flex items-center justify-between">
+                <h4 class="text-sm font-serif-title font-black text-[#172033]">Kelas 3B Putra</h4>
+                <span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-[#ECFDF5] text-[#065F46]">
+                  31 Santri
+                </span>
+              </div>
+              <p class="text-[11px] text-[#64748B] leading-tight">
+                Asrama Al-Ghazali • Kedisiplinan sholat berjamaah dan adab lisan sangat baik.
+              </p>
+              <div class="pt-2 border-t border-[#F1F5F9] flex items-center justify-between font-mono">
+                <span class="text-[10px] text-[#64748B] font-bold">Skor Rata-Rata</span>
+                <span class="text-xs font-black text-[#1B4D3E] bg-[#ECFDF5] px-2 py-0.5 rounded-lg">
+                  86.80 Mumtaz
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="p-3.5 pt-2 border-t border-[#F1F5F9] flex items-center justify-end gap-1.5">
+            <button class="px-3 py-1.5 rounded-xl border border-[#D4C9B5] text-[#172033] text-xs font-bold hover:bg-[#FAF7EE] transition-colors">
+              Ubah
+            </button>
+            <button class="px-3.5 py-1.5 rounded-xl bg-[#1B4D3E] text-white text-xs font-bold hover:bg-[#153e32] transition-colors shadow-2xs">
+              Detail
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Ringkasan Perbandingan -->
+    <div class="p-5 sm:p-6 rounded-3xl bg-white border border-[#E2EBF4] shadow-sm space-y-4">
+      <h3 class="text-base font-serif-title font-black text-[#172033]">
+        Perbandingan Karakter 5 Desain Grid
+      </h3>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs border-collapse">
+          <thead>
+            <tr class="border-b border-[#E2EBF4] text-[#64748B] uppercase tracking-wider text-[10px]">
+              <th class="py-2.5 px-3">Desain</th>
+              <th class="py-2.5 px-3">Fokus Visual</th>
+              <th class="py-2.5 px-3">Teks di Atas Gambar</th>
+              <th class="py-2.5 px-3">Elemen Santri</th>
+              <th class="py-2.5 px-3">Kelebihan Utama</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-[#F1F5F9]">
+            <tr>
+              <td class="py-3 px-3 font-bold text-[#1B4D3E]">1. Hero Photo Overlay</td>
+              <td class="py-3 px-3 text-[#475569]">Foto wali kelas separuh atas (~160px)</td>
+              <td class="py-3 px-3 font-semibold text-emerald-800">Gradasi gelap lembut di bawah foto</td>
+              <td class="py-3 px-3">Avatar stack 4 santri + count</td>
+              <td class="py-3 px-3 font-semibold text-[#172033]">Paling seimbang & sesuai permintaan awal Anda</td>
+            </tr>
+            <tr>
+              <td class="py-3 px-3 font-bold text-[#C5A059]">2. Floating Glass</td>
+              <td class="py-3 px-3 text-[#475569]">Banner foto + pulau kaca melayang</td>
+              <td class="py-3 px-3">Badge mengambang di atas foto</td>
+              <td class="py-3 px-3">Progress bar presensi & skor</td>
+              <td class="py-3 px-3 font-semibold text-[#172033]">Modern, mewah, kesan 3D kekinian</td>
+            </tr>
+            <tr>
+              <td class="py-3 px-3 font-bold text-[#065F46]">3. Editorial Minimalist</td>
+              <td class="py-3 px-3 text-[#475569]">Foto profil bulat bingkai emas</td>
+              <td class="py-3 px-3">Bersih di kartu cream</td>
+              <td class="py-3 px-3">4 Kotak metrik ringkas 2x2</td>
+              <td class="py-3 px-3 font-semibold text-[#172033]">Sangat rapi, formal, data terbaca cepat</td>
+            </tr>
+            <tr class="bg-[#ECFDF5]/50">
+              <td class="py-3 px-3 font-bold text-[#1B4D3E]">4. Split 1:1 (Revisi Pilihan)</td>
+              <td class="py-3 px-3 text-[#475569]">Setengah foto 1:1 bersih tanpa badge</td>
+              <td class="py-3 px-3 font-semibold text-emerald-800">Tanpa teks/badge di atas gambar (semua di kartu bawah)</td>
+              <td class="py-3 px-3">Avatar stack hover-pop + Skor adab</td>
+              <td class="py-3 px-3 font-semibold text-[#172033]">Sesuai revisi: Foto wajah ustadz bersih, sheen sweep, info rapi</td>
+            </tr>
+            <tr>
+              <td class="py-3 px-3 font-bold text-[#1B4D3E]">5. Dual Profile</td>
+              <td class="py-3 px-3 text-[#475569]">Foto Wali & Ketua berdampingan</td>
+              <td class="py-3 px-3">Nama di dasar masing-masing foto</td>
+              <td class="py-3 px-3">Menyorot figur santri teladan</td>
+              <td class="py-3 px-3 font-semibold text-[#172033]">Memberikan apresiasi nyata pada santri binaan</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    function filterDesign(id) {
+      const sections = document.querySelectorAll('.design-section');
+      const buttons = document.querySelectorAll('.tab-btn');
+      
+      buttons.forEach(btn => {
+        btn.classList.remove('bg-[#1B4D3E]', 'text-white');
+        btn.classList.add('bg-white', 'text-[#172033]', 'border', 'border-[#D4C9B5]');
+      });
+
+      if (id === 'ALL') {
+        sections.forEach(sec => sec.style.display = 'block');
+        document.getElementById('btn-all').classList.add('bg-[#1B4D3E]', 'text-white');
+        document.getElementById('btn-all').classList.remove('bg-white', 'text-[#172033]');
+      } else {
+        sections.forEach(sec => sec.style.display = 'none');
+        const target = document.getElementById('section-' + id);
+        if (target) {
+          target.style.display = 'block';
+        }
+        const activeBtn = document.getElementById('btn-' + id);
+        if (activeBtn) {
+          activeBtn.classList.add('bg-[#1B4D3E]', 'text-white');
+          activeBtn.classList.remove('bg-white', 'text-[#172033]');
+        }
+      }
+    }
+
+    function selectChoice(label) {
+      document.getElementById('chosen-label').innerText = label;
+      document.getElementById('chosen-label').classList.add('bg-[#ECFDF5]', 'text-[#065F46]', 'border-[#A7F3D0]');
+      
+      const toast = document.createElement('div');
+      toast.className = 'fixed bottom-5 right-5 bg-[#1B4D3E] text-white px-4 py-2.5 rounded-2xl text-xs font-bold shadow-2xl z-50 flex items-center gap-2 animate-bounce';
+      toast.innerHTML = '<span>Tersimpan: ' + label + '</span>';
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 2500);
+    }
+  </script>
+</body>
+</html>
