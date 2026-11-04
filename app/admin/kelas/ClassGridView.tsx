@@ -65,8 +65,6 @@ export function ClassGridView({
     <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-4 md:gap-5">
       {classes.map((cls) => {
         const predikat = getPredikatBadge(cls.avgScore);
-        const sampleStudents = cls.students || [];
-        const remainingCount = Math.max(0, cls.studentCount - sampleStudents.length);
         const defaultAvatar =
           cls.gender === "Putri"
             ? "/default-avatar-ustadzah.svg"
@@ -94,15 +92,15 @@ export function ClassGridView({
               <div className="absolute inset-x-0 bottom-0 h-10 sm:h-14 bg-gradient-to-t from-white via-white/50 to-transparent pointer-events-none" />
             </div>
 
-            <div className="p-2.5 sm:p-4 md:p-5 flex flex-col justify-between flex-1 bg-white space-y-2.5 sm:space-y-3.5">
-              <div className="space-y-1.5 sm:space-y-2.5">
-                <div className="flex items-center justify-between gap-1 flex-wrap">
-                  <div className="flex items-center gap-1 sm:gap-1.5 flex-wrap">
-                    <span className="px-1.5 sm:px-2.5 py-0.5 sm:py-1 rounded-lg sm:rounded-xl text-[10px] sm:text-xs font-black bg-[#1B4D3E]/10 text-[#1B4D3E] border border-[#1B4D3E]/20">
+            <div className="p-2.5 sm:p-4 flex flex-col justify-between flex-1 bg-white space-y-2.5">
+              <div className="space-y-1 sm:space-y-1.5">
+                <div className="flex items-center justify-between gap-1">
+                  <div className="flex items-center gap-1 truncate">
+                    <span className="px-2 py-0.5 rounded-lg text-[10px] sm:text-xs font-black bg-[#1B4D3E]/10 text-[#1B4D3E] border border-[#1B4D3E]/20 truncate">
                       Kelas {cls.name}
                     </span>
                     <span
-                      className={`px-1.5 sm:px-2 py-0.5 rounded-md sm:rounded-full text-[8px] sm:text-[10px] font-bold border ${
+                      className={`px-1.5 sm:px-2 py-0.5 rounded-md sm:rounded-full text-[8px] sm:text-[10px] font-bold border shrink-0 ${
                         cls.gender === "Putra"
                           ? "bg-[#ECFDF5] text-[#065F46] border-[#A7F3D0]"
                           : "bg-[#FAF7EE] text-[#A8833E] border-[#C5A059]/40"
@@ -112,7 +110,7 @@ export function ClassGridView({
                     </span>
                   </div>
 
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-1 shrink-0">
                     <span
                       className={`px-1.5 sm:px-2 py-0.5 rounded-md sm:rounded-full text-[8px] sm:text-[10px] font-bold border flex items-center gap-1 ${predikat.badgeClass}`}
                     >
@@ -196,64 +194,21 @@ export function ClassGridView({
                   <span className="text-[8px] sm:text-[9px] font-extrabold uppercase tracking-widest text-[#C5A059] block">
                     Wali Kelas
                   </span>
-                  <h4 className="text-xs sm:text-sm md:text-base font-black text-[#172033] group-hover:text-[#1B4D3E] transition-colors truncate">
+                  <h4 className="text-xs sm:text-sm font-black text-[#172033] group-hover:text-[#1B4D3E] transition-colors truncate mt-0.5">
                     {cls.waliKelas}
                   </h4>
                   <p className="text-[10px] sm:text-xs text-[#64748B] flex items-center gap-1 pt-0.5 truncate">
                     <Building2 className="w-3 h-3 text-[#C5A059] shrink-0" />
-                    <span className="truncate">{cls.asrama || "Asrama Binaan"}</span>
-                    <span className="w-1 h-1 rounded-full bg-slate-300 shrink-0 inline-block" />
-                    <span className="shrink-0">{cls.studentCount} Santri</span>
+                    <span>{cls.studentCount} Santri Terdaftar</span>
                   </p>
                 </div>
               </div>
 
-              <div className="pt-2 sm:pt-3 border-t border-[#E2EBF4] flex items-center justify-between gap-1">
-                <div className="min-w-0">
-                  <span className="text-[8px] sm:text-[9px] font-bold uppercase tracking-wider text-[#64748B] block mb-0.5 sm:mb-1 truncate">
-                    Santri Binaan
-                  </span>
-                  <div className="flex -space-x-1.5 sm:-space-x-2 overflow-visible">
-                    {sampleStudents.slice(0, 3).map((st) => (
-                      <div
-                        key={st.id}
-                        title={st.name}
-                        className="relative inline-block h-5 w-5 sm:h-7 sm:w-7 rounded-full ring-1.5 sm:ring-2 ring-white object-cover shadow-2xs transition-transform duration-200 hover:-translate-y-1 hover:scale-125 hover:z-20 cursor-pointer overflow-hidden bg-slate-200 shrink-0"
-                      >
-                        {st.avatarUrl ? (
-                          <img
-                            src={st.avatarUrl}
-                            alt={st.name}
-                            className="w-full h-full object-cover"
-                          />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center bg-[#FAF7EE] text-[#A8833E] text-[7px] sm:text-[8px] font-bold">
-                            {st.avatar}
-                          </div>
-                        )}
-                      </div>
-                    ))}
-                    {sampleStudents.length === 0 && (
-                      <div className="inline-block h-5 w-5 sm:h-7 sm:w-7 rounded-full ring-1.5 sm:ring-2 ring-white bg-slate-100 text-slate-400 text-[7px] sm:text-[8px] font-bold flex items-center justify-center">
-                        0
-                      </div>
-                    )}
-                    {remainingCount > 0 && (
-                      <div className="relative inline-block h-5 w-5 sm:h-7 sm:w-7 rounded-full ring-1.5 sm:ring-2 ring-white bg-[#1B4D3E] text-white text-[7px] sm:text-[9px] font-black flex items-center justify-center shadow-2xs transition-transform duration-200 hover:-translate-y-1 hover:scale-125 hover:z-20 cursor-pointer shrink-0">
-                        +{remainingCount}
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                <div className="text-right shrink-0">
-                  <span className="text-[8px] sm:text-[9px] font-bold uppercase tracking-wider text-[#64748B] block mb-0.5 sm:mb-1">
-                    Rata-Rata
-                  </span>
-                  <span className="text-[10px] sm:text-xs font-mono font-black text-[#1B4D3E] bg-[#ECFDF5] border border-[#A7F3D0] px-1.5 sm:px-2.5 py-0.5 sm:py-1 rounded-lg sm:rounded-xl shadow-2xs inline-block">
-                    {formatDecimal(cls.avgScore)}
-                  </span>
-                </div>
+              <div className="pt-2 border-t border-[#E2EBF4] flex items-center justify-between text-[10px] sm:text-xs">
+                <span className="text-[#64748B] font-medium">Rata-Rata</span>
+                <span className="font-mono font-bold text-[#1B4D3E] bg-[#ECFDF5] border border-[#A7F3D0] px-1.5 sm:px-2 py-0.5 rounded-lg shadow-2xs">
+                  {formatDecimal(cls.avgScore)}
+                </span>
               </div>
 
               <div
