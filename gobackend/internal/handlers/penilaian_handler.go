@@ -41,6 +41,16 @@ func GetPenilaian(c *fiber.Ctx) error {
 		args = append(args, santriID)
 		sql += fmt.Sprintf(" AND santri_id = $%d", len(args))
 	}
+
+	roleVal := c.Locals("role")
+	role, _ := roleVal.(models.Role)
+	if role == models.RoleOrtu {
+		userIDVal := c.Locals("user_id")
+		userID, _ := userIDVal.(string)
+		santriIDFromUser := strings.TrimPrefix(userID, "ortu-")
+		args = append(args, santriIDFromUser)
+		sql += fmt.Sprintf(" AND (santri_id = $%d OR santri_id IN (SELECT id FROM santri WHERE id = $%d))", len(args), len(args))
+	}
 	sql += " ORDER BY created_at DESC LIMIT 300"
 
 	rows, err := pool.Query(ctx, sql, args...)

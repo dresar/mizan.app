@@ -20,6 +20,7 @@ import (
 	"gobackend/internal/hub"
 	mizanserver "gobackend/internal/mcp"
 	"gobackend/internal/middleware"
+	"gobackend/internal/models"
 )
 
 type EventPayload struct {
@@ -70,10 +71,26 @@ func main() {
 	app.All("/mcp*", adaptor.HTTPHandler(mcpHandler))
 
 	app.Use("/ws", func(c *fiber.Ctx) error {
-		if websocket.IsWebSocketUpgrade(c) {
-			return c.Next()
+		if !websocket.IsWebSocketUpgrade(c) {
+			return fiber.ErrUpgradeRequired
 		}
-		return fiber.ErrUpgradeRequired
+		token := c.Cookies("mizan_session")
+		if token == "" {
+			authHeader := c.Get("Authorization")
+			if strings.HasPrefix(authHeader, "Bearer ") {
+				token = strings.TrimPrefix(authHeader, "Bearer ")
+			}
+		}
+		if token == "" {
+			token = c.Query("token")
+		}
+		if token == "" {
+			return fiber.ErrUnauthorized
+		}
+		if _, err := middleware.VerifySessionToken(token, cfg.SessionSecret); err != nil {
+			return fiber.ErrUnauthorized
+		}
+		return c.Next()
 	})
 
 	app.Get("/ws", websocket.New(func(c *websocket.Conn) {
@@ -102,61 +119,63 @@ func main() {
 
 	api := app.Group("/api")
 
-	api.Get("/data", handlers.GetData)
-
 	api.Post("/auth/login", handlers.Login(cfg))
 	api.Get("/auth/me", handlers.GetMe(cfg))
+	api.Get("/share", handlers.GetShareCard)
+
+	api.Use(middleware.AuthRequired(cfg.SessionSecret))
+
+	api.Get("/data", handlers.GetData)
 	api.Post("/auth/update-password", handlers.UpdatePassword)
 
 	api.Get("/santri", handlers.GetSantri)
-	api.Post("/santri", handlers.CreateSantri)
-	api.Patch("/santri", handlers.UpdateSantri)
-	api.Delete("/santri", handlers.DeleteSantri)
+	api.Post("/santri", middleware.RequireRoles(models.RoleSuperAdmin, models.RolePengasuhan, models.RoleGuru), handlers.CreateSantri)
+	api.Patch("/santri", middleware.RequireRoles(models.RoleSuperAdmin, models.RolePengasuhan, models.RoleGuru), handlers.UpdateSantri)
+	api.Delete("/santri", middleware.RequireRoles(models.RoleSuperAdmin), handlers.DeleteSantri)
 
 	api.Get("/classes", handlers.GetClasses)
-	api.Post("/classes", handlers.CreateClass)
-	api.Patch("/classes", handlers.UpdateClass)
-	api.Delete("/classes", handlers.DeleteClass)
+	api.Post("/classes", middleware.RequireRoles(models.RoleSuperAdmin), handlers.CreateClass)
+	api.Patch("/classes", middleware.RequireRoles(models.RoleSuperAdmin), handlers.UpdateClass)
+	api.Delete("/classes", middleware.RequireRoles(models.RoleSuperAdmin), handlers.DeleteClass)
 
 	api.Get("/categories", handlers.GetCategories)
-	api.Post("/categories", handlers.CreateCategory)
-	api.Post("/categories/unsur", handlers.CreateUnsur)
+	api.Post("/categories", middleware.RequireRoles(models.RoleSuperAdmin), handlers.CreateCategory)
+	api.Post("/categories/unsur", middleware.RequireRoles(models.RoleSuperAdmin), handlers.CreateUnsur)
 
 	api.Get("/absensi", handlers.GetAbsensi)
-	api.Post("/absensi", handlers.CreateAbsensi(realtimeHub))
-	api.Patch("/absensi", handlers.UpdateAbsensi(realtimeHub))
-	api.Delete("/absensi", handlers.DeleteAbsensi)
+	api.Post("/absensi", middleware.RequireRoles(models.RoleSuperAdmin, models.RolePengasuhan, models.RoleGuru), handlers.CreateAbsensi(realtimeHub))
+	api.Patch("/absensi", middleware.RequireRoles(models.RoleSuperAdmin, models.RolePengasuhan, models.RoleGuru), handlers.UpdateAbsensi(realtimeHub))
+	api.Delete("/absensi", middleware.RequireRoles(models.RoleSuperAdmin, models.RolePengasuhan, models.RoleGuru), handlers.DeleteAbsensi)
 
 	api.Get("/penilaian", handlers.GetPenilaian)
-	api.Post("/penilaian", handlers.CreatePenilaian(realtimeHub))
-	api.Delete("/penilaian", handlers.DeletePenilaian)
+	api.Post("/penilaian", middleware.RequireRoles(models.RoleSuperAdmin, models.RolePengasuhan, models.RoleGuru), handlers.CreatePenilaian(realtimeHub))
+	api.Delete("/penilaian", middleware.RequireRoles(models.RoleSuperAdmin, models.RolePengasuhan, models.RoleGuru), handlers.DeletePenilaian)
 
-	api.Get("/users", handlers.GetUsers)
-	api.Post("/users", handlers.CreateUser)
-	api.Patch("/users", handlers.UpdateUser)
-	api.Delete("/users", handlers.DeleteUser)
+	api.Get("/users", middleware.RequireRoles(models.RoleSuperAdmin, models.RolePengasuhan, models.RoleGuru), handlers.GetUsers)
+	api.Post("/users", middleware.RequireRoles(models.RoleSuperAdmin), handlers.CreateUser)
+	api.Patch("/users", middleware.RequireRoles(models.RoleSuperAdmin), handlers.UpdateUser)
+	api.Delete("/users", middleware.RequireRoles(models.RoleSuperAdmin), handlers.DeleteUser)
 
 	api.Get("/settings", handlers.GetSettings)
-	api.Post("/settings", handlers.UpdateSettings)
+	api.Post("/settings", middleware.RequireRoles(models.RoleSuperAdmin), handlers.UpdateSettings)
 
-	api.Get("/share", handlers.GetShareCard)
 	api.Post("/share", handlers.CreateShareCard)
 
 	api.Get("/feedback", handlers.GetFeedback)
 	api.Post("/feedback", handlers.CreateFeedback(realtimeHub))
-	api.Patch("/feedback", handlers.UpdateFeedbackStatus)
-	api.Delete("/feedback", handlers.DeleteFeedback)
-	api.Post("/feedback/analyze", handlers.AnalyzeFeedback(cfg))
+	api.Patch("/feedback", middleware.RequireRoles(models.RoleSuperAdmin, models.RolePengasuhan, models.RoleGuru), handlers.UpdateFeedbackStatus)
+	api.Delete("/feedback", middleware.RequireRoles(models.RoleSuperAdmin), handlers.DeleteFeedback)
+	api.Post("/feedback/analyze", middleware.RequireRoles(models.RoleSuperAdmin, models.RolePengasuhan, models.RoleGuru), handlers.AnalyzeFeedback(cfg))
 
 	api.Get("/notifications", handlers.GetNotifications)
-	api.Post("/notifications", handlers.CreateNotification(realtimeHub))
-	api.Patch("/notifications", handlers.UpdateNotification)
-	api.Delete("/notifications", handlers.DeleteNotification)
+	api.Post("/notifications", middleware.RequireRoles(models.RoleSuperAdmin), handlers.CreateNotification(realtimeHub))
+	api.Patch("/notifications", middleware.RequireRoles(models.RoleSuperAdmin), handlers.UpdateNotification)
+	api.Delete("/notifications", middleware.RequireRoles(models.RoleSuperAdmin), handlers.DeleteNotification)
 
-	api.Get("/admin/backup", handlers.ExportBackup)
+	api.Get("/admin/backup", middleware.RequireRoles(models.RoleSuperAdmin), handlers.ExportBackup)
 	api.Post("/upload-avatar", handlers.UploadAvatar)
 
-	api.Post("/broadcast", func(c *fiber.Ctx) error {
+	api.Post("/broadcast", middleware.RequireRoles(models.RoleSuperAdmin, models.RolePengasuhan, models.RoleGuru), func(c *fiber.Ctx) error {
 		var payload EventPayload
 		if err := c.BodyParser(&payload); err != nil {
 			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Payload tidak valid"})

@@ -46,6 +46,18 @@ func GetSantri(c *fiber.Ctx) error {
 		sql += fmt.Sprintf(" AND class = $%d", len(args))
 	}
 
+	roleVal := c.Locals("role")
+	role, _ := roleVal.(models.Role)
+	if role == models.RoleOrtu {
+		userIDVal := c.Locals("user_id")
+		userID, _ := userIDVal.(string)
+		santriID := strings.TrimPrefix(userID, "ortu-")
+		usernameVal := c.Locals("username")
+		username, _ := usernameVal.(string)
+		args = append(args, santriID, username)
+		sql += fmt.Sprintf(" AND (id = $%d OR LOWER(nis) = LOWER($%d))", len(args)-1, len(args))
+	}
+
 	sql += " ORDER BY name ASC"
 
 	rows, err := pool.Query(ctx, sql, args...)

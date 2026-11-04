@@ -98,3 +98,19 @@ func AuthRequired(secret string) fiber.Handler {
 		return c.Next()
 	}
 }
+
+func RequireRoles(allowedRoles ...models.Role) fiber.Handler {
+	return func(c *fiber.Ctx) error {
+		roleVal := c.Locals("role")
+		role, ok := roleVal.(models.Role)
+		if !ok {
+			return utils.SendError(c, fiber.StatusForbidden, "Akses ditolak")
+		}
+		for _, r := range allowedRoles {
+			if r == role {
+				return c.Next()
+			}
+		}
+		return utils.SendError(c, fiber.StatusForbidden, "Akses ditolak: Anda tidak memiliki wewenang")
+	}
+}

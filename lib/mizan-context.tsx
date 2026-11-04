@@ -180,9 +180,32 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
     setIsFeedbackModalOpen(true);
   };
 
+  const handleUnauthorized = () => {
+    setIsAuthenticated(false);
+    setCurrentUser(GUEST_USER);
+    setActiveRole(null);
+    try {
+      localStorage.removeItem("mizan_user_cache_v4");
+      localStorage.removeItem(STORAGE_KEY_ROLE);
+      localStorage.removeItem(STORAGE_KEY_USER);
+    } catch {
+      void 0;
+    }
+    if (typeof window !== "undefined") {
+      const path = window.location.pathname;
+      if (!path.startsWith("/login") && !path.startsWith("/share") && path !== "/") {
+        window.location.href = "/login";
+      }
+    }
+  };
+
   const refreshData = async () => {
     try {
       const res = await fetch("/api/data");
+      if (res.status === 401) {
+        handleUnauthorized();
+        return;
+      }
       const data = await res.json();
       if (data.success) {
         setIsDbConnected(true);

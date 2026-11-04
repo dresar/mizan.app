@@ -20,6 +20,7 @@ type UserProfile struct {
 	Gender         string `json:"gender"`
 	AssignedClass  string `json:"assignedClass"`
 	IsActive       bool   `json:"isActive"`
+	SantriID       string `json:"santriId,omitempty"`
 }
 
 type UserWithPassword struct {

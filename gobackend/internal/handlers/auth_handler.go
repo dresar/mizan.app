@@ -94,6 +94,7 @@ func Login(cfg *config.Config) fiber.Handler {
 				Gender:         santri.Gender,
 				AssignedClass:  santri.Class,
 				IsActive:       true,
+				SantriID:       santri.ID,
 			}
 		}
 

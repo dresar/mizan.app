@@ -106,9 +106,16 @@ export default function OrtuDashboardPage() {
   }, [currentUser]);
 
   const selectedSantri = useMemo(() => {
-    if (!selectedSantriId || !santriList.length) return null;
-    return santriList.find((s) => s.id === selectedSantriId) || null;
-  }, [selectedSantriId, santriList]);
+    if (!santriList.length) return null;
+    if (selectedSantriId) {
+      const match = santriList.find((s) => s.id === selectedSantriId);
+      if (match) return match;
+    }
+    if (currentUser?.role === "ORTU" && santriList.length === 1) {
+      return santriList[0];
+    }
+    return null;
+  }, [selectedSantriId, santriList, currentUser]);
 
   const handleSelectSantri = (santri: Santri) => {
     setSelectedSantriId(santri.id);
