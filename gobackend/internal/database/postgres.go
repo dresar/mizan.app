@@ -2,11 +2,15 @@ package database
 
 import (
 	"context"
+	_ "embed"
 	"fmt"
 	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 )
+
+//go:embed schema.sql
+var schemaSQL string
 
 var globalPool *pgxpool.Pool
 
@@ -48,49 +52,13 @@ func GetPool() *pgxpool.Pool {
 }
 
 func ensureTables(ctx context.Context, pool *pgxpool.Pool) error {
+	if schemaSQL != "" {
+		_, _ = pool.Exec(ctx, schemaSQL)
+	}
+
 	queries := []string{
-		`CREATE TABLE IF NOT EXISTS feedbacks (
-			id VARCHAR(64) PRIMARY KEY,
-			type VARCHAR(16) NOT NULL,
-			category VARCHAR(64) NOT NULL,
-			title VARCHAR(255) NOT NULL,
-			description TEXT NOT NULL,
-			page_url VARCHAR(255),
-			user_id VARCHAR(64),
-			user_name VARCHAR(128),
-			user_role VARCHAR(32),
-			ai_analysis JSONB,
-			custom_prompt TEXT,
-			status VARCHAR(32) DEFAULT 'Baru',
-			admin_notes TEXT,
-			created_at TIMESTAMPTZ DEFAULT NOW(),
-			updated_at TIMESTAMPTZ DEFAULT NOW()
-		);`,
-		`CREATE TABLE IF NOT EXISTS public_shares (
-			id VARCHAR(64) PRIMARY KEY,
-			title VARCHAR(255) NOT NULL,
-			type VARCHAR(32) NOT NULL,
-			period VARCHAR(64) NOT NULL,
-			scope VARCHAR(64) NOT NULL,
-			data JSONB NOT NULL,
-			created_at TIMESTAMPTZ DEFAULT NOW(),
-			expires_at TIMESTAMPTZ
-		);`,
 		`ALTER TABLE public_shares ADD COLUMN IF NOT EXISTS expires_at TIMESTAMPTZ;`,
 		`UPDATE public_shares SET expires_at = NOW() + INTERVAL '30 days' WHERE expires_at IS NULL;`,
-		`CREATE TABLE IF NOT EXISTS notifications (
-			id VARCHAR(64) PRIMARY KEY,
-			title VARCHAR(255) NOT NULL,
-			message TEXT NOT NULL,
-			time VARCHAR(64),
-			category VARCHAR(64) NOT NULL,
-			type VARCHAR(32) NOT NULL,
-			link VARCHAR(255),
-			is_active BOOLEAN DEFAULT true,
-			target_role VARCHAR(32) DEFAULT 'ALL',
-			created_at TIMESTAMPTZ DEFAULT NOW(),
-			updated_at TIMESTAMPTZ DEFAULT NOW()
-		);`,
 	}
 
 	for _, q := range queries {
