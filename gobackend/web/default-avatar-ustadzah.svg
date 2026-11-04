@@ -1,26 +1,31 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="100%" height="100%">
   <defs>
     <linearGradient id="bgGradPutri" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#2D1B00"/>
-      <stop offset="50%" stop-color="#4A2E12"/>
-      <stop offset="100%" stop-color="#6B451B"/>
+      <stop offset="0%" stop-color="#26170A"/>
+      <stop offset="50%" stop-color="#3D2612"/>
+      <stop offset="100%" stop-color="#59391D"/>
     </linearGradient>
-    <radialGradient id="lightGlowPutri" cx="50%" cy="30%" r="60%">
+    <radialGradient id="lightGlowPutri" cx="50%" cy="35%" r="65%">
       <stop offset="0%" stop-color="#FDE68A" stop-opacity="0.3"/>
+      <stop offset="60%" stop-color="#FDE68A" stop-opacity="0.05"/>
       <stop offset="100%" stop-color="#FDE68A" stop-opacity="0"/>
     </radialGradient>
     <linearGradient id="hijabGrad" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#FAF7EE"/>
-      <stop offset="60%" stop-color="#EFE6D2"/>
+      <stop offset="50%" stop-color="#EFE6D2"/>
       <stop offset="100%" stop-color="#DFD2B5"/>
     </linearGradient>
+    <linearGradient id="hijabShadow" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#D4C4A3"/>
+      <stop offset="100%" stop-color="#BAA67D"/>
+    </linearGradient>
     <linearGradient id="skinGradPutri" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#F9DFC7"/>
-      <stop offset="100%" stop-color="#E8C3A4"/>
+      <stop offset="0%" stop-color="#F7DFCB"/>
+      <stop offset="100%" stop-color="#E7C2A1"/>
     </linearGradient>
     <linearGradient id="clothGradPutri" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#5B3819"/>
-      <stop offset="100%" stop-color="#3A220D"/>
+      <stop offset="0%" stop-color="#4A2E16"/>
+      <stop offset="100%" stop-color="#2D1A09"/>
     </linearGradient>
     <linearGradient id="goldTrimPutri" x1="0%" y1="0%" x2="100%" y2="0%">
       <stop offset="0%" stop-color="#A8833E"/>
@@ -30,26 +35,26 @@
   </defs>
 
   <rect width="400" height="400" fill="url(#bgGradPutri)"/>
-  <circle cx="200" cy="160" r="180" fill="url(#lightGlowPutri)"/>
+  <circle cx="200" cy="180" r="180" fill="url(#lightGlowPutri)"/>
 
   <g stroke="#FDE68A" stroke-width="1" fill="none" opacity="0.14">
-    <circle cx="200" cy="200" r="160"/>
-    <circle cx="200" cy="200" r="120"/>
-    <rect x="115" y="115" width="170" height="170" rx="12" transform="rotate(45 200 200)"/>
-    <rect x="115" y="115" width="170" height="170" rx="12"/>
+    <circle cx="200" cy="190" r="160"/>
+    <circle cx="200" cy="190" r="120"/>
+    <rect x="120" y="110" width="160" height="160" rx="12" transform="rotate(45 200 190)"/>
+    <rect x="120" y="110" width="160" height="160" rx="12"/>
   </g>
 
-  <path d="M60 400 C75 330, 115 310, 160 300 C185 305, 215 305, 240 300 C285 310, 325 330, 340 400 Z" fill="url(#clothGradPutri)"/>
+  <path d="M40 400 C60 310, 110 280, 155 270 C185 275, 215 275, 245 270 C290 280, 340 310, 360 400 Z" fill="url(#clothGradPutri)"/>
 
-  <path d="M100 400 C110 320, 140 280, 160 270 C140 250, 110 220, 110 165 C110 100, 150 85, 200 85 C250 85, 290 100, 290 165 C290 220, 260 250, 240 270 C260 280, 290 320, 300 400 Z" fill="url(#hijabGrad)"/>
+  <path d="M85 400 C95 300, 125 255, 150 245 C128 225, 105 190, 105 140 C105 85, 145 70, 200 70 C255 70, 295 85, 295 140 C295 190, 272 225, 250 245 C275 255, 305 300, 315 400 Z" fill="url(#hijabGrad)"/>
 
-  <path d="M148 165 C148 220, 252 220, 252 165 C252 135, 230 120, 200 120 C170 120, 148 135, 148 165 Z" fill="url(#skinGradPutri)"/>
+  <path d="M142 145 C142 205, 258 205, 258 145 C258 115, 235 100, 200 100 C165 100, 142 115, 142 145 Z" fill="url(#skinGradPutri)"/>
 
-  <path d="M148 150 C170 135, 230 135, 252 150 C245 130, 225 120, 200 120 C175 120, 155 130, 148 150 Z" fill="#C5A059" opacity="0.3"/>
+  <path d="M142 135 C165 118, 235 118, 258 135 C250 115, 230 102, 200 102 C170 102, 150 115, 142 135 Z" fill="#C5A059" opacity="0.25"/>
 
-  <path d="M160 270 C180 295, 220 295, 240 270 C250 330, 225 385, 200 400 C175 385, 150 330, 160 270 Z" fill="#E4D7BE"/>
-  <path d="M200 270 L200 400" stroke="url(#goldTrimPutri)" stroke-width="2" stroke-linecap="round"/>
+  <path d="M152 245 C175 275, 225 275, 248 245 C260 310, 230 375, 200 400 C170 375, 140 310, 152 245 Z" fill="url(#hijabShadow)"/>
+  <path d="M200 245 L200 400" stroke="url(#goldTrimPutri)" stroke-width="2.5" stroke-linecap="round"/>
 
-  <circle cx="200" cy="275" r="4" fill="#C5A059"/>
-  <circle cx="200" cy="385" r="5" fill="#FDE68A" opacity="0.6"/>
+  <circle cx="200" cy="252" r="4.5" fill="#C5A059"/>
+  <circle cx="200" cy="390" r="4" fill="#FDE68A" opacity="0.6"/>
 </svg>
