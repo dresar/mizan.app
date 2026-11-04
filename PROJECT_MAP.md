@@ -27,7 +27,7 @@ mizan.apps/
 │   ├── share/[id]/            # Halaman publik kartu share (stat-*) tanpa perlu login
 │   ├── login/                 # Autentikasi multi-role (login cepat 85 akun Ustadz/Ustadzah & BK dengan isolasi gender)
 │   └── (api/)                 # Cadangan rute API Next.js (semua endpoint production dilayani oleh Golang Fiber)
-├── components/                # UI Components (ShareCard, ShareModal, FeedbackModal, FeedbackButton, PrayerAttendanceChart)
+├── components/                # UI Components (Header, Sidebar, Modals, Charts, & components/ui design system hub)
 ├── gobackend/                 # Core Fullstack Go Server (1.5 MB RAM, Fiber v2, WebSocket, pgx Neon, static web server)
 │   ├── PRD.md                 # Dokumentasi arsitektur, benchmark & endpoint API
 │   ├── cmd/server/main.go     # Entrypoint Go Fiber & static server
