@@ -1,5 +1,7 @@
 "use client";
 
+import { Portal } from "@/components/ui/Portal";
+
 import React from "react";
 import { GraduationCap, Edit2, UserCheck, X } from "lucide-react";
 
@@ -31,7 +33,8 @@ export function AddClassModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
+    <Portal>
+      <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
       <div className="bg-white w-full max-w-lg rounded-3xl shadow-2xl border border-[#E2EBF4] p-5 space-y-4">
         <div className="flex items-center justify-between pb-2 border-b border-[#E2E8F0]">
           <div className="flex items-center gap-2">
@@ -123,7 +126,8 @@ export function AddClassModal({
           </div>
         </form>
       </div>
-    </div>
+      </div>
+    </Portal>
   );
 }
 
@@ -157,7 +161,8 @@ export function EditClassModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
+    <Portal>
+      <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
       <div className="bg-white w-full max-w-lg rounded-3xl shadow-2xl border border-[#E2EBF4] p-5 space-y-4">
         <div className="flex items-center justify-between pb-2 border-b border-[#E2E8F0]">
           <div className="flex items-center gap-2">
@@ -249,7 +254,8 @@ export function EditClassModal({
           </div>
         </form>
       </div>
-    </div>
+      </div>
+    </Portal>
   );
 }
 
@@ -277,7 +283,8 @@ export function AssignWaliModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
+    <Portal>
+      <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
       <div className="bg-white w-full max-w-lg rounded-3xl shadow-2xl border border-blue-200 p-5 space-y-4">
         <div className="flex items-center justify-between pb-2 border-b border-blue-200">
           <div className="flex items-center gap-2">
@@ -334,6 +341,7 @@ export function AssignWaliModal({
           </div>
         </form>
       </div>
-    </div>
+      </div>
+    </Portal>
   );
 }

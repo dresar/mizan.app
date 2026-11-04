@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { useMizan } from "@/lib/mizan-context";
 import { FeedbackType, FeedbackSeverity, AIAnalysisResult } from "@/lib/mock-data";
+import { Portal } from "@/components/ui/Portal";
 
 const CATEGORY_OPTIONS = [
   "Absensi Sholat",
@@ -183,10 +184,11 @@ export function FeedbackModal() {
   };
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/50 backdrop-blur-xs select-none"
-      onClick={handleClose}
-    >
+    <Portal>
+      <div
+        className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/50 backdrop-blur-xs select-none"
+        onClick={handleClose}
+      >
       <div
         className="w-full max-w-xl max-h-[90vh] bg-white rounded-3xl border border-[#E2EBF4] shadow-2xl flex flex-col overflow-hidden text-[#172033] animate-in fade-in zoom-in-95 duration-150"
         onClick={(e) => e.stopPropagation()}
@@ -399,5 +401,6 @@ export function FeedbackModal() {
         </form>
       </div>
     </div>
+    </Portal>
   );
 }

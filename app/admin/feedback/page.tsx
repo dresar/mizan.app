@@ -24,6 +24,7 @@ import {
 } from "lucide-react";
 import { useMizan } from "@/lib/mizan-context";
 import { RoleShell } from "@/components/RoleShell";
+import { Portal } from "@/components/ui/Portal";
 import { FeedbackRecord, FeedbackStatus, FeedbackType, FeedbackSeverity } from "@/lib/mock-data";
 
 export default function AdminFeedbackPage() {
@@ -346,10 +347,11 @@ export default function AdminFeedbackPage() {
         </div>
 
         {selectedFeedback && (
-          <div
-            className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/50 backdrop-blur-xs select-none"
-            onClick={() => setSelectedFeedback(null)}
-          >
+          <Portal>
+            <div
+              className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/50 backdrop-blur-xs select-none"
+              onClick={() => setSelectedFeedback(null)}
+            >
             <div
               className="w-full max-w-2xl max-h-[92vh] bg-white rounded-3xl border border-[#E2EBF4] shadow-2xl flex flex-col overflow-hidden text-[#172033] animate-in fade-in zoom-in-95 duration-150"
               onClick={(e) => e.stopPropagation()}
@@ -519,37 +521,40 @@ export default function AdminFeedbackPage() {
               </div>
             </div>
           </div>
+          </Portal>
         )}
 
         {deleteConfirmId && (
-          <div
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs select-none"
-            onClick={() => setDeleteConfirmId(null)}
-          >
+          <Portal>
             <div
-              className="w-full max-w-sm bg-white rounded-3xl p-5 border border-[#E2EBF4] shadow-2xl space-y-3"
-              onClick={(e) => e.stopPropagation()}
+              className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs select-none"
+              onClick={() => setDeleteConfirmId(null)}
             >
-              <h4 className="text-sm font-bold text-[#172033]">Hapus Feedback</h4>
-              <p className="text-xs text-[#64748B]">Apakah Anda yakin ingin menghapus data masukan ini?</p>
-              <div className="flex justify-end gap-2 pt-2">
-                <button
-                  type="button"
-                  onClick={() => setDeleteConfirmId(null)}
-                  className="px-3.5 py-1.5 rounded-xl border border-[#CBD5E1] text-xs font-bold text-[#64748B] hover:bg-[#F8FAFC] cursor-pointer"
-                >
-                  Batal
-                </button>
-                <button
-                  type="button"
-                  onClick={() => handleDelete(deleteConfirmId)}
-                  className="px-4 py-1.5 rounded-xl bg-rose-700 text-white text-xs font-bold hover:bg-rose-800 cursor-pointer"
-                >
-                  Hapus
-                </button>
+              <div
+                className="w-full max-w-sm bg-white rounded-3xl p-5 border border-[#E2EBF4] shadow-2xl space-y-3"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <h4 className="text-sm font-bold text-[#172033]">Hapus Feedback</h4>
+                <p className="text-xs text-[#64748B]">Apakah Anda yakin ingin menghapus data masukan ini?</p>
+                <div className="flex justify-end gap-2 pt-2">
+                  <button
+                    type="button"
+                    onClick={() => setDeleteConfirmId(null)}
+                    className="px-3.5 py-1.5 rounded-xl border border-[#CBD5E1] text-xs font-bold text-[#64748B] hover:bg-[#F8FAFC] cursor-pointer"
+                  >
+                    Batal
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleDelete(deleteConfirmId)}
+                    className="px-4 py-1.5 rounded-xl bg-rose-700 text-white text-xs font-bold hover:bg-rose-800 cursor-pointer"
+                  >
+                    Hapus
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
+          </Portal>
         )}
       </div>
     </RoleShell>

@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useMemo } from "react";
 import Link from "next/link";
@@ -12,6 +12,7 @@ import {
 import { useMizan } from "@/lib/mizan-context";
 import { Santri, UserProfile } from "@/lib/mock-data";
 import { ShareCard, ShareCardData } from "@/components/ShareCard";
+import { Portal } from "@/components/ui/Portal";
 
 interface ShareModalProps {
   isOpen: boolean;
@@ -358,7 +359,8 @@ export function ShareModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4">
+    <Portal>
+      <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4">
       <div className="w-full max-w-lg bg-white rounded-[28px] border border-[#E2E8F0] shadow-2xl p-4 sm:p-5 space-y-3.5 max-h-[92vh] flex flex-col justify-between">
         <div className="flex items-center justify-between pb-2 border-b border-[#F1F5F9]">
           <div className="flex items-center gap-2">
@@ -508,6 +510,7 @@ export function ShareModal({
           )}
         </div>
       </div>
-    </div>
+      </div>
+    </Portal>
   );
 }
