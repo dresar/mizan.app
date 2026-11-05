@@ -37,6 +37,10 @@ interface ClassTableViewProps {
   onOpenEditClass: (cls: EnrichedClassItem) => void;
   onOpenEditWali: (cls: EnrichedClassItem) => void;
   onDeleteClass: (name: string) => void;
+  isBulkDeleteMode?: boolean;
+  selectedClassNames?: string[];
+  onToggleSelectClass?: (name: string) => void;
+  onSelectAllClasses?: () => void;
 }
 
 export function ClassTableView({
@@ -47,7 +51,11 @@ export function ClassTableView({
   onToggleDropdown,
   onOpenEditClass,
   onOpenEditWali,
-  onDeleteClass
+  onDeleteClass,
+  isBulkDeleteMode = false,
+  selectedClassNames = [],
+  onToggleSelectClass,
+  onSelectAllClasses
 }: ClassTableViewProps) {
   const router = useRouter();
   const formatDecimal = (val: number) => val.toFixed(3).replace(".", ",");
@@ -58,6 +66,16 @@ export function ClassTableView({
         <table className="w-full text-left border-collapse text-xs">
           <thead>
             <tr className="border-b border-[#E2EBF4] bg-[#F8FAFC] text-[#64748B] font-bold text-[10px] uppercase tracking-wider">
+              {isBulkDeleteMode && (
+                <th className="py-3 px-3.5 w-10 text-center">
+                  <input
+                    type="checkbox"
+                    checked={classes.length > 0 && classes.every((c) => selectedClassNames.includes(c.name))}
+                    onChange={onSelectAllClasses}
+                    className="w-4 h-4 rounded text-[#1B4D3E] accent-[#1B4D3E] cursor-pointer"
+                  />
+                </th>
+              )}
               <th className="py-3 px-3.5 w-12 text-center">No</th>
               <th className="py-3 px-3.5">Nama Kelas</th>
               <th className="py-3 px-3.5 text-center">Gender</th>
@@ -74,6 +92,19 @@ export function ClassTableView({
                 onClick={() => router.push(`/admin/kelas/${cls.name}`)}
                 className="hover:bg-[#FAF7EE]/60 transition-colors cursor-pointer group"
               >
+                {isBulkDeleteMode && (
+                  <td
+                    className="py-3.5 px-3.5 text-center"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={selectedClassNames.includes(cls.name)}
+                      onChange={() => onToggleSelectClass?.(cls.name)}
+                      className="w-4 h-4 rounded text-[#1B4D3E] accent-[#1B4D3E] cursor-pointer"
+                    />
+                  </td>
+                )}
                 <td className="py-3.5 px-3.5 text-center font-mono font-bold text-[#64748B]">
                   {(safePage - 1) * pageSize + idx + 1}
                 </td>

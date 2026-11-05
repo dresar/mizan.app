@@ -175,3 +175,131 @@ CREATE INDEX IF NOT EXISTS idx_absensi_santri_id ON absensi (santri_id);
 CREATE INDEX IF NOT EXISTS idx_absensi_date ON absensi (date);
 CREATE INDEX IF NOT EXISTS idx_penilaian_santri_id ON penilaian (santri_id);
 CREATE INDEX IF NOT EXISTS idx_public_shares_expires_at ON public_shares (expires_at);
+
+CREATE TABLE IF NOT EXISTS tahfidz_records (
+    id VARCHAR(64) PRIMARY KEY,
+    santri_id VARCHAR(64) NOT NULL,
+    santri_name VARCHAR(128) NOT NULL,
+    gender VARCHAR(16) NOT NULL,
+    surah_name VARCHAR(64) NOT NULL,
+    ayat_start INTEGER NOT NULL,
+    ayat_end INTEGER NOT NULL,
+    halaman NUMERIC(4,1) DEFAULT 1.0,
+    juz INTEGER NOT NULL,
+    predikat VARCHAR(32) NOT NULL,
+    target_juz INTEGER DEFAULT 3,
+    realisasi_juz NUMERIC(5,2) DEFAULT 0,
+    catatan_ustadz TEXT,
+    ustadz_id VARCHAR(64),
+    ustadz_name VARCHAR(128),
+    date VARCHAR(32) NOT NULL,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS kesehatan_records (
+    id VARCHAR(64) PRIMARY KEY,
+    santri_id VARCHAR(64) NOT NULL,
+    santri_name VARCHAR(128) NOT NULL,
+    gender VARCHAR(16) NOT NULL,
+    tanggal VARCHAR(32) NOT NULL,
+    keluhan TEXT NOT NULL,
+    diagnosa TEXT NOT NULL,
+    tindakan_obat TEXT NOT NULL,
+    status_rawat VARCHAR(32) DEFAULT 'Rawat Jalan',
+    petugas_nama VARCHAR(128) NOT NULL,
+    catatan TEXT,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS perizinan_records (
+    id VARCHAR(64) PRIMARY KEY,
+    santri_id VARCHAR(64) NOT NULL,
+    santri_name VARCHAR(128) NOT NULL,
+    santri_class VARCHAR(32) NOT NULL,
+    gender VARCHAR(16) NOT NULL,
+    jenis_izin VARCHAR(64) NOT NULL,
+    alasan TEXT NOT NULL,
+    tgl_keluar VARCHAR(32) NOT NULL,
+    tgl_kembali VARCHAR(32) NOT NULL,
+    status VARCHAR(32) DEFAULT 'MENUNGGU',
+    diajukan_oleh VARCHAR(128) NOT NULL,
+    disetujui_oleh VARCHAR(128),
+    qr_code_token VARCHAR(64) UNIQUE,
+    bukti_surat_url TEXT,
+    waktu_keluar_riil TIMESTAMPTZ,
+    waktu_kembali_riil TIMESTAMPTZ,
+    petugas_gerbang VARCHAR(128),
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS sambangan_records (
+    id VARCHAR(64) PRIMARY KEY,
+    santri_id VARCHAR(64) NOT NULL,
+    santri_name VARCHAR(128) NOT NULL,
+    gender VARCHAR(16) NOT NULL,
+    wali_name VARCHAR(128) NOT NULL,
+    tanggal_sambang VARCHAR(32) NOT NULL,
+    sesi_waktu VARCHAR(32) NOT NULL,
+    jumlah_pengunjung INTEGER DEFAULT 2,
+    status VARCHAR(32) DEFAULT 'TERKONFIRMASI',
+    catatan TEXT,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS transaksi_keuangan (
+    id VARCHAR(64) PRIMARY KEY,
+    santri_id VARCHAR(64) NOT NULL,
+    santri_name VARCHAR(128) NOT NULL,
+    gender VARCHAR(16) NOT NULL,
+    kategori VARCHAR(32) NOT NULL,
+    jenis VARCHAR(16) NOT NULL,
+    nominal NUMERIC(12,2) NOT NULL,
+    saldo_terakhir NUMERIC(12,2) NOT NULL DEFAULT 0,
+    deskripsi TEXT NOT NULL,
+    metode_pembayaran VARCHAR(32) DEFAULT 'CASH',
+    referensi_kode VARCHAR(64),
+    petugas_id VARCHAR(64),
+    petugas_nama VARCHAR(128),
+    tanggal VARCHAR(32) NOT NULL,
+    status VARCHAR(32) DEFAULT 'BERHASIL',
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS tagihan_spp (
+    id VARCHAR(64) PRIMARY KEY,
+    santri_id VARCHAR(64) NOT NULL,
+    santri_name VARCHAR(128) NOT NULL,
+    gender VARCHAR(16) NOT NULL,
+    bulan VARCHAR(32) NOT NULL,
+    tahun INTEGER NOT NULL,
+    nominal NUMERIC(12,2) NOT NULL,
+    status VARCHAR(32) DEFAULT 'BELUM_LUNAS',
+    jatuh_tempo VARCHAR(32) NOT NULL,
+    tgl_bayar VARCHAR(32),
+    kuitansi_nomor VARCHAR(64),
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS catatan_musyrif (
+    id VARCHAR(64) PRIMARY KEY,
+    santri_id VARCHAR(64) NOT NULL,
+    santri_name VARCHAR(128) NOT NULL,
+    gender VARCHAR(16) NOT NULL,
+    musyrif_id VARCHAR(64) NOT NULL,
+    musyrif_name VARCHAR(128) NOT NULL,
+    periode VARCHAR(32) NOT NULL,
+    adab_sosial_skor VARCHAR(16) DEFAULT 'Baik',
+    kemandirian_skor VARCHAR(16) DEFAULT 'Baik',
+    kebersihan_kamar_skor VARCHAR(16) DEFAULT 'Baik',
+    catatan_perkembangan TEXT NOT NULL,
+    rekomendasi_untuk_wali TEXT,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_tahfidz_santri_id ON tahfidz_records (santri_id);
+CREATE INDEX IF NOT EXISTS idx_kesehatan_santri_id ON kesehatan_records (santri_id);
+CREATE INDEX IF NOT EXISTS idx_perizinan_santri_id ON perizinan_records (santri_id);
+CREATE INDEX IF NOT EXISTS idx_perizinan_qr_token ON perizinan_records (qr_code_token);
+CREATE INDEX IF NOT EXISTS idx_transaksi_santri_id ON transaksi_keuangan (santri_id);
+CREATE INDEX IF NOT EXISTS idx_tagihan_spp_santri_id ON tagihan_spp (santri_id);
+CREATE INDEX IF NOT EXISTS idx_catatan_musyrif_santri_id ON catatan_musyrif (santri_id);

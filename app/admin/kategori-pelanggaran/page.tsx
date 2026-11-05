@@ -15,6 +15,7 @@ import {
 import { useMizan } from "@/lib/mizan-context";
 import { RoleShell } from "@/components/RoleShell";
 import { Card } from "@/components/ui/Card";
+import { INITIAL_CATEGORIES } from "@/lib/mock-data";
 
 const CATEGORY_COLORS: Record<string, { bg: string; text: string; border: string; lightBg: string }> = {
   A: { bg: "bg-[#1B4D3E]", text: "text-[#1B4D3E]", border: "border-[#1B4D3E]/30", lightBg: "bg-[#ECFDF5]" },
@@ -29,8 +30,12 @@ export default function AdminKategoriPelanggaranPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [viewMode, setViewMode] = useState<"list" | "grid">("list");
 
+  const effectiveCategories = useMemo(() => {
+    return categories && categories.length > 0 ? categories : INITIAL_CATEGORIES;
+  }, [categories]);
+
   const categoriesOverview = useMemo(() => {
-    return categories.map((cat) => {
+    return effectiveCategories.map((cat) => {
       const unsursCount = cat.unsurs.length;
       let totalIndicators = 0;
       let hasanahCount = 0;
@@ -68,7 +73,7 @@ export default function AdminKategoriPelanggaranPage() {
         colorScheme
       };
     });
-  }, [categories]);
+  }, [effectiveCategories]);
 
   const filteredCategories = useMemo(() => {
     const q = searchQuery.toLowerCase().trim();
@@ -82,14 +87,14 @@ export default function AdminKategoriPelanggaranPage() {
   }, [categoriesOverview, searchQuery]);
 
   const totalAllUnsurs = useMemo(() => {
-    return categories.reduce((sum, c) => sum + c.unsurs.length, 0);
-  }, [categories]);
+    return effectiveCategories.reduce((sum, c) => sum + c.unsurs.length, 0);
+  }, [effectiveCategories]);
 
   const totalAllIndicators = useMemo(() => {
-    return categories.reduce((sum, c) => {
+    return effectiveCategories.reduce((sum, c) => {
       return sum + c.unsurs.reduce((uSum, u) => uSum + u.indicators.length, 0);
     }, 0);
-  }, [categories]);
+  }, [effectiveCategories]);
 
   return (
     <RoleShell>
@@ -136,7 +141,7 @@ export default function AdminKategoriPelanggaranPage() {
               Total Kategori
             </span>
             <div className="text-xl font-black font-mono text-[#172033] mt-0.5">
-              {categories.length} <span className="text-xs font-normal text-[#94A3B8]">Kategori</span>
+              {effectiveCategories.length} <span className="text-xs font-normal text-[#94A3B8]">Kategori</span>
             </div>
           </div>
 

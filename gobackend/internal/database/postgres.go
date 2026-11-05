@@ -59,6 +59,14 @@ func ensureTables(ctx context.Context, pool *pgxpool.Pool) error {
 	queries := []string{
 		`ALTER TABLE public_shares ADD COLUMN IF NOT EXISTS expires_at TIMESTAMPTZ;`,
 		`UPDATE public_shares SET expires_at = NOW() + INTERVAL '30 days' WHERE expires_at IS NULL;`,
+		`ALTER TABLE santri ADD COLUMN IF NOT EXISTS musyrif_id VARCHAR(64) DEFAULT '';`,
+		`ALTER TABLE santri ADD COLUMN IF NOT EXISTS musyrif_name VARCHAR(128) DEFAULT '';`,
+		`ALTER TABLE santri ADD COLUMN IF NOT EXISTS musyrif_phone VARCHAR(32) DEFAULT '';`,
+		`ALTER TABLE santri ADD COLUMN IF NOT EXISTS riwayat_alergi TEXT DEFAULT '';`,
+		`ALTER TABLE santri ADD COLUMN IF NOT EXISTS riwayat_penyakit TEXT DEFAULT '';`,
+		`ALTER TABLE santri ADD COLUMN IF NOT EXISTS daily_pocket_limit NUMERIC(12,2) DEFAULT 25000;`,
+		`ALTER TABLE santri ADD COLUMN IF NOT EXISTS pocket_balance NUMERIC(12,2) DEFAULT 0;`,
+		`ALTER TABLE santri ADD COLUMN IF NOT EXISTS current_health_status VARCHAR(32) DEFAULT 'Sehat';`,
 	}
 
 	for _, q := range queries {

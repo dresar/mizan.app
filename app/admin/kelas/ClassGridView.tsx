@@ -19,6 +19,9 @@ interface ClassGridViewProps {
   onOpenEditClass: (cls: EnrichedClassItem) => void;
   onOpenEditWali: (cls: EnrichedClassItem) => void;
   onDeleteClass: (name: string) => void;
+  isBulkDeleteMode?: boolean;
+  selectedClassNames?: string[];
+  onToggleSelectClass?: (name: string) => void;
 }
 
 export function ClassGridView({
@@ -27,7 +30,10 @@ export function ClassGridView({
   onToggleDropdown,
   onOpenEditClass,
   onOpenEditWali,
-  onDeleteClass
+  onDeleteClass,
+  isBulkDeleteMode = false,
+  selectedClassNames = [],
+  onToggleSelectClass
 }: ClassGridViewProps) {
   const router = useRouter();
   const formatDecimal = (val: number) => val.toFixed(2).replace(".", ",");
@@ -78,6 +84,19 @@ export function ClassGridView({
             className="group relative rounded-2xl sm:rounded-3xl overflow-hidden bg-white border border-[#E2EBF4] shadow-2xs hover:shadow-2xl hover:border-[#1B4D3E]/40 hover:-translate-y-1.5 transition-all duration-500 flex flex-col justify-between cursor-pointer text-left"
           >
             <div className="sheen-wrapper relative w-full aspect-square overflow-hidden bg-[#0E271F] shrink-0">
+              {isBulkDeleteMode && (
+                <div
+                  onClick={(e) => e.stopPropagation()}
+                  className="absolute top-2 left-2 z-10 p-1.5 rounded-xl bg-white/90 backdrop-blur-xs border border-white/60 shadow-xs animate-in fade-in zoom-in-95 duration-150"
+                >
+                  <input
+                    type="checkbox"
+                    checked={selectedClassNames.includes(cls.name)}
+                    onChange={() => onToggleSelectClass?.(cls.name)}
+                    className="w-4 h-4 rounded text-[#1B4D3E] accent-[#1B4D3E] cursor-pointer"
+                  />
+                </div>
+              )}
               <img
                 src={teacherPhoto}
                 onError={(e) => {

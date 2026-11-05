@@ -30,7 +30,11 @@ func GetSantri(c *fiber.Ctx) error {
 			id, nis, name, gender, class, asrama, kamar, 
 			base_score, current_score, status, avatar,
 			COALESCE(wali_name, ''), COALESCE(wali_phone, ''),
-			COALESCE(total_hadir, 28), COALESCE(total_alpa, 0)
+			COALESCE(total_hadir, 28), COALESCE(total_alpa, 0),
+			COALESCE(musyrif_id, ''), COALESCE(musyrif_name, ''), COALESCE(musyrif_phone, ''),
+			COALESCE(riwayat_alergi, ''), COALESCE(riwayat_penyakit, ''),
+			COALESCE(daily_pocket_limit, 25000), COALESCE(pocket_balance, 0),
+			COALESCE(current_health_status, 'Sehat')
 		FROM santri
 		WHERE 1=1
 	`
@@ -73,6 +77,9 @@ func GetSantri(c *fiber.Ctx) error {
 			&s.ID, &s.NIS, &s.Name, &s.Gender, &s.Class, &s.Asrama, &s.Kamar,
 			&s.BaseScore, &s.CurrentScore, &s.Status, &s.Avatar,
 			&s.WaliName, &s.WaliPhone, &s.TotalHadir, &s.TotalAlpa,
+			&s.MusyrifID, &s.MusyrifName, &s.MusyrifPhone,
+			&s.RiwayatAlergi, &s.RiwayatPenyakit,
+			&s.DailyPocketLimit, &s.PocketBalance, &s.CurrentHealthStatus,
 		); err == nil {
 			list = append(list, s)
 		}
@@ -202,9 +209,19 @@ func UpdateSantri(c *fiber.Ctx) error {
 			current_score = CASE WHEN $6 > 0 THEN $6 ELSE current_score END,
 			status = COALESCE(NULLIF($7, ''), status),
 			wali_name = COALESCE(NULLIF($8, ''), wali_name),
-			wali_phone = COALESCE(NULLIF($9, ''), wali_phone)
-		WHERE id = $10
-	`, s.Name, s.Gender, s.Class, s.Asrama, s.Kamar, s.CurrentScore, s.Status, s.WaliName, s.WaliPhone, s.ID)
+			wali_phone = COALESCE(NULLIF($9, ''), wali_phone),
+			musyrif_id = COALESCE(NULLIF($10, ''), musyrif_id),
+			musyrif_name = COALESCE(NULLIF($11, ''), musyrif_name),
+			musyrif_phone = COALESCE(NULLIF($12, ''), musyrif_phone),
+			riwayat_alergi = COALESCE(NULLIF($13, ''), riwayat_alergi),
+			riwayat_penyakit = COALESCE(NULLIF($14, ''), riwayat_penyakit),
+			daily_pocket_limit = CASE WHEN $15 > 0 THEN $15 ELSE daily_pocket_limit END,
+			pocket_balance = CASE WHEN $16 >= 0 THEN $16 ELSE pocket_balance END,
+			current_health_status = COALESCE(NULLIF($17, ''), current_health_status)
+		WHERE id = $18
+	`, s.Name, s.Gender, s.Class, s.Asrama, s.Kamar, s.CurrentScore, s.Status, s.WaliName, s.WaliPhone,
+		s.MusyrifID, s.MusyrifName, s.MusyrifPhone, s.RiwayatAlergi, s.RiwayatPenyakit,
+		s.DailyPocketLimit, s.PocketBalance, s.CurrentHealthStatus, s.ID)
 	if err != nil {
 		return utils.SendError(c, fiber.StatusInternalServerError, err.Error())
 	}

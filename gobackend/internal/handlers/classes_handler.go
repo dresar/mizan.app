@@ -135,7 +135,12 @@ func UpdateClass(c *fiber.Ctx) error {
 
 func DeleteClass(c *fiber.Ctx) error {
 	name := c.Query("name")
-	if name == "" {
+	var req struct {
+		Names []string `json:"names"`
+	}
+	_ = c.BodyParser(&req)
+
+	if name == "" && len(req.Names) == 0 {
 		return utils.SendError(c, fiber.StatusBadRequest, "Nama kelas dibutuhkan")
 	}
 
@@ -146,6 +151,14 @@ func DeleteClass(c *fiber.Ctx) error {
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
+
+	if len(req.Names) > 0 {
+		_, err := pool.Exec(ctx, "DELETE FROM classes WHERE name = ANY($1)", req.Names)
+		if err != nil {
+			return utils.SendError(c, fiber.StatusInternalServerError, err.Error())
+		}
+		return utils.SendSuccess(c, nil, "Kelas berhasil dihapus")
+	}
 
 	_, err := pool.Exec(ctx, "DELETE FROM classes WHERE name = $1", name)
 	if err != nil {

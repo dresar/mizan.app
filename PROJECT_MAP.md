@@ -19,7 +19,7 @@
 ```text
 mizan.apps/
 ├── app/
-│   ├── admin/                 # Admin Master (dashboard, santri, kelas, wali-kelas, absensi, rapor, feedback, users, users/tambah)
+│   ├── admin/                 # Admin Master (dashboard, santri, kelas, wali-kelas, wali-kelas/tugaskan, absensi, rapor, feedback, users, users/tambah)
 │   ├── guru/                  # Modul Ustadz / Pembina (dashboard, absen, input-penilaian, riwayat, santri, profil)
 │   ├── bk/                    # Modul Pengasuhan BK (dashboard, absen, history log lengkap, profil, penilaian, santri)
 │   ├── ortu/ & dashboard/     # Portal Wali Santri (login stambuk, skor akhlak, sholat 7 waktu, kejadian, rapor PDF)

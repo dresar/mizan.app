@@ -7,7 +7,7 @@ import { ArrowLeft, Save } from "lucide-react";
 import { useMizan } from "@/lib/mizan-context";
 import { RoleShell } from "@/components/RoleShell";
 import { Card } from "@/components/ui/Card";
-import { KategoriUtama, Tingkat, IndikatorType } from "@/lib/mock-data";
+import { KategoriUtama, Tingkat, IndikatorType, INITIAL_CATEGORIES } from "@/lib/mock-data";
 
 function IndikatorFormContent() {
   const router = useRouter();
@@ -21,6 +21,8 @@ function IndikatorFormContent() {
     showToast
   } = useMizan();
 
+  const effectiveCategories = categories && categories.length > 0 ? categories : INITIAL_CATEGORIES;
+
   const [formData, setFormData] = useState<{
     id?: string;
     kategoriName: KategoriUtama;
@@ -31,8 +33,8 @@ function IndikatorFormContent() {
     score: number;
     keterangan?: string;
   }>({
-    kategoriName: (categories[0]?.name as KategoriUtama) || "Kedisiplinan",
-    unsurId: categories[0]?.unsurs[0]?.id || "",
+    kategoriName: (effectiveCategories[0]?.name as KategoriUtama) || "Kedisiplinan",
+    unsurId: effectiveCategories[0]?.unsurs[0]?.id || "",
     text: "",
     type: "HASANAH",
     tingkat: "Sedang",
@@ -41,10 +43,10 @@ function IndikatorFormContent() {
   });
 
   useEffect(() => {
-    if (!editId || categories.length === 0) return;
+    if (!editId || effectiveCategories.length === 0) return;
 
     const timer = setTimeout(() => {
-      for (const cat of categories) {
+      for (const cat of effectiveCategories) {
         for (const uns of cat.unsurs) {
           const found = uns.indicators.find((ind) => ind.id === editId);
           if (found) {
@@ -65,7 +67,7 @@ function IndikatorFormContent() {
     }, 0);
 
     return () => clearTimeout(timer);
-  }, [editId, categories]);
+  }, [editId, effectiveCategories]);
 
   const handleTypeChange = (type: IndikatorType) => {
     const defaultScore = type === "HASANAH" ? 0.150 : -0.050;
@@ -116,7 +118,7 @@ function IndikatorFormContent() {
     router.push("/admin/kategori-pelanggaran");
   };
 
-  const activeCategory = categories.find((c) => c.name === formData.kategoriName) || categories[0];
+  const activeCategory = effectiveCategories.find((c) => c.name === formData.kategoriName) || effectiveCategories[0];
 
   return (
     <div className="w-full space-y-4 pb-36">
@@ -188,7 +190,7 @@ function IndikatorFormContent() {
                   }}
                   className="w-full px-3.5 py-2.5 text-xs bg-[#EEF2F6] border border-transparent rounded-xl focus:bg-white focus:border-[#1B4D3E] focus:outline-none text-[#172033] font-semibold"
                 >
-                  {categories.map((c) => (
+                  {effectiveCategories.map((c) => (
                     <option key={c.code} value={c.name}>
                       {c.code}. {c.name}
                     </option>

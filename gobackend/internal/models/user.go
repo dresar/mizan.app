@@ -7,6 +7,7 @@ const (
 	RolePengasuhan Role = "PENGASUHAN"
 	RoleGuru       Role = "GURU"
 	RoleOrtu       Role = "ORTU"
+	RoleSatpam     Role = "SATPAM"
 )
 
 type UserProfile struct {

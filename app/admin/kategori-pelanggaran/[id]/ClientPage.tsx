@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useEffect, useMemo, Suspense } from "react";
 import Link from "next/link";
@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { useMizan } from "@/lib/mizan-context";
 import { RoleShell } from "@/components/RoleShell";
+import { INITIAL_CATEGORIES } from "@/lib/mock-data";
 import { Card } from "@/components/ui/Card";
 import { DeleteModal } from "@/components/ui/DeleteModal";
 import { Tingkat, IndikatorType } from "@/lib/mock-data";
@@ -44,15 +45,19 @@ function CategoryDetailContent() {
   const [deleteModalState, setDeleteModalState] = useState<{ isOpen: boolean; indId?: string; indText?: string }>({ isOpen: false });
   const UNSURS_PER_PAGE = 10;
 
+  const effectiveCategories = useMemo(() => {
+    return categories && categories.length > 0 ? categories : INITIAL_CATEGORIES;
+  }, [categories]);
+
   const currentCategory = useMemo(() => {
     return (
-      categories.find(
+      effectiveCategories.find(
         (c) =>
           c.code.toLowerCase() === categoryId.toLowerCase() ||
           c.name.toLowerCase() === categoryId.toLowerCase()
       ) || null
     );
-  }, [categories, categoryId]);
+  }, [effectiveCategories, categoryId]);
 
   const categoryStats = useMemo(() => {
     if (!currentCategory) {

@@ -23,7 +23,9 @@ import {
   MoreVertical,
   SlidersHorizontal,
   Eye,
-  ChevronDown
+  ChevronDown,
+  Trash2,
+  Check
 } from "lucide-react";
 import { useMizan } from "@/lib/mizan-context";
 import { UserProfile, Santri } from "@/lib/mock-data";
@@ -33,6 +35,7 @@ import { Avatar } from "@/components/ui/Avatar";
 import { Badge } from "@/components/ui/Badge";
 import { Pagination } from "@/components/ui/Pagination";
 import { ShareModal } from "@/components/ShareModal";
+import { DeleteModal } from "@/components/ui/DeleteModal";
 import { PhotoViewerModal, PhotoItem } from "@/components/PhotoViewerModal";
 
 export default function AdminWaliKelasPage() {
@@ -45,6 +48,8 @@ export default function AdminWaliKelasPage() {
     penilaianList,
     updateUser,
     updateClass,
+    deleteUser,
+    deleteUserBulk,
     showToast
   } = useMizan();
 
@@ -55,13 +60,22 @@ export default function AdminWaliKelasPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const PAGE_SIZE = 20;
 
+  const [isBulkDeleteMode, setIsBulkDeleteMode] = useState(false);
+  const [selectedTeacherIds, setSelectedTeacherIds] = useState<string[]>([]);
+  const [deleteModalState, setDeleteModalState] = useState<{
+    isOpen: boolean;
+    ids: string[];
+    name?: string;
+    count?: number;
+    isLoading?: boolean;
+  }>({
+    isOpen: false,
+    ids: []
+  });
+
   const [activeTeacherDetail, setActiveTeacherDetail] = useState<UserProfile | null>(null);
   const [detailPage, setDetailPage] = useState(1);
   const DETAIL_PAGE_SIZE = 20;
-
-  const [isAssigning, setIsAssigning] = useState(false);
-  const [assignTeacherId, setAssignTeacherId] = useState("");
-  const [assignClassName, setAssignClassName] = useState("");
 
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [selectedTeacherToShare, setSelectedTeacherToShare] = useState<UserProfile | null>(null);
@@ -193,62 +207,46 @@ export default function AdminWaliKelasPage() {
     return new Set(allPembina.map((t) => t.assignedClass).filter(Boolean)).size;
   }, [allPembina]);
 
-  const handleOpenAssign = (teacher?: typeof enrichedTeachers[0]) => {
-    if (teacher) {
-      setAssignTeacherId(teacher.id);
-      setAssignClassName(teacher.assignedClass || "");
-    } else {
-      setAssignTeacherId(allPembina[0]?.id || "");
-      setAssignClassName(allPembina[0]?.assignedClass || "");
-    }
-    setIsAssigning(true);
+  const toggleSelectTeacher = (id: string) => {
+    setSelectedTeacherIds((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+    );
   };
 
-  const selectedAssignTeacher = useMemo(() => {
-    return allPembina.find((t) => t.id === assignTeacherId) || allPembina[0] || null;
-  }, [allPembina, assignTeacherId]);
-
-  const selectedAssignClassObj = useMemo(() => {
-    if (!assignClassName) return null;
-    return classList.find((c) => c.name.toUpperCase() === assignClassName.toUpperCase()) || null;
-  }, [classList, assignClassName]);
-
-  const selectedClassSantriCount = useMemo(() => {
-    if (!assignClassName) return 0;
-    return santriList.filter((s) => s.class.toUpperCase() === assignClassName.toUpperCase()).length;
-  }, [santriList, assignClassName]);
-
-  const handleSaveAssign = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!assignTeacherId) {
-      showToast("Pilih guru pembina terlebih dahulu", "error");
-      return;
+  const handleSelectAllTeachers = () => {
+    const pageIds = paginatedTeachers.map((t) => t.id);
+    const isAllSelected = pageIds.length > 0 && pageIds.every((id) => selectedTeacherIds.includes(id));
+    if (isAllSelected) {
+      setSelectedTeacherIds((prev) => prev.filter((id) => !pageIds.includes(id)));
+    } else {
+      setSelectedTeacherIds((prev) => Array.from(new Set([...prev, ...pageIds])));
     }
+  };
 
-    const teacher = allPembina.find((t) => t.id === assignTeacherId);
-    if (!teacher) return;
+  const handleOpenDeleteBulk = () => {
+    if (selectedTeacherIds.length === 0) return;
+    setDeleteModalState({
+      isOpen: true,
+      ids: selectedTeacherIds,
+      count: selectedTeacherIds.length
+    });
+  };
 
-    const previousClass = teacher.assignedClass;
-
-    await updateUser(assignTeacherId, { assignedClass: assignClassName });
-
-    if (previousClass && previousClass !== assignClassName) {
-      await updateClass(previousClass, {
-        waliKelas: "",
-        guruId: ""
-      });
+  const handleConfirmDelete = async () => {
+    if (deleteModalState.ids.length === 0) return;
+    setDeleteModalState((prev) => ({ ...prev, isLoading: true }));
+    try {
+      if (deleteModalState.ids.length === 1) {
+        await deleteUser(deleteModalState.ids[0]);
+      } else {
+        await deleteUserBulk(deleteModalState.ids);
+      }
+      setSelectedTeacherIds((prev) => prev.filter((id) => !deleteModalState.ids.includes(id)));
+      setIsBulkDeleteMode(false);
+      setDeleteModalState({ isOpen: false, ids: [] });
+    } finally {
+      setDeleteModalState((prev) => ({ ...prev, isLoading: false }));
     }
-
-    if (assignClassName) {
-      await updateClass(assignClassName, {
-        waliKelas: teacher.name,
-        guruId: teacher.id,
-        gender: teacher.gender
-      });
-    }
-
-    showToast(`Penugasan ${teacher.name} berhasil disimpan`, "success");
-    setIsAssigning(false);
   };
 
   const handleOpenDetail = (teacher: UserProfile) => {
@@ -319,14 +317,13 @@ export default function AdminWaliKelasPage() {
               <span>Bagikan</span>
             </button>
 
-            <button
-              type="button"
-              onClick={() => handleOpenAssign()}
+            <Link
+              href="/admin/wali-kelas/tugaskan"
               className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl mizan-btn-primary text-xs font-bold shadow-xs cursor-pointer"
             >
-              <Plus className="w-3.5 h-3.5" />
+              <UserCheck className="w-3.5 h-3.5" />
               <span>Tugaskan</span>
-            </button>
+            </Link>
           </div>
         </div>
 
@@ -534,6 +531,63 @@ export default function AdminWaliKelasPage() {
           </div>
         </div>
 
+        <div className="flex items-center justify-between gap-3 px-1 py-1">
+          <div className="flex items-center gap-2">
+            {!isBulkDeleteMode ? (
+              <button
+                type="button"
+                onClick={() => setIsBulkDeleteMode(true)}
+                className="px-3 py-1.5 rounded-xl text-xs font-bold border border-[#E2E8F0] bg-white text-[#64748B] hover:text-red-600 hover:border-red-200 hover:bg-red-50/50 transition-all flex items-center gap-1.5 shadow-2xs cursor-pointer active:scale-95"
+              >
+                <Trash2 className="w-3.5 h-3.5 text-red-500" />
+                <span>Hapus Massal</span>
+              </button>
+            ) : (
+              <div className="flex items-center gap-2 animate-in fade-in duration-150">
+                <button
+                  type="button"
+                  onClick={handleSelectAllTeachers}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-bold border transition-colors flex items-center gap-1.5 cursor-pointer active:scale-95 ${
+                    paginatedTeachers.length > 0 && paginatedTeachers.every((t) => selectedTeacherIds.includes(t.id))
+                      ? "bg-[#1B4D3E] text-white border-[#1B4D3E]"
+                      : "bg-white text-gray-700 border-gray-200 hover:bg-gray-50"
+                  }`}
+                >
+                  <Check className="w-3.5 h-3.5" />
+                  <span>{paginatedTeachers.length > 0 && paginatedTeachers.every((t) => selectedTeacherIds.includes(t.id)) ? "Batal Semua" : "Pilih Semua"}</span>
+                </button>
+                {selectedTeacherIds.length > 0 && (
+                  <span className="text-xs text-[#64748B] font-medium">
+                    {selectedTeacherIds.length} terpilih
+                  </span>
+                )}
+                {selectedTeacherIds.length > 0 && (
+                  <button
+                    type="button"
+                    onClick={handleOpenDeleteBulk}
+                    className="px-3.5 py-1.5 rounded-xl bg-red-600 text-white text-xs font-bold hover:bg-red-700 transition-colors flex items-center gap-1.5 shadow-xs cursor-pointer active:scale-95"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                    <span>Hapus ({selectedTeacherIds.length})</span>
+                  </button>
+                )}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsBulkDeleteMode(false);
+                    setSelectedTeacherIds([]);
+                  }}
+                  className="px-2.5 py-1.5 rounded-xl text-xs font-bold border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 transition-colors flex items-center gap-1 cursor-pointer active:scale-95"
+                  title="Batalkan penghapusan massal"
+                >
+                  <X className="w-3.5 h-3.5" />
+                  <span>Batal</span>
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+
         {viewMode === "grid" ? (
           <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-4 md:gap-5">
             {paginatedTeachers.map((teacher) => {
@@ -557,6 +611,19 @@ export default function AdminWaliKelasPage() {
                     className="sheen-wrapper relative w-full aspect-square overflow-hidden bg-[#0E271F] shrink-0 cursor-pointer"
                     title="Klik untuk melihat foto"
                   >
+                    {isBulkDeleteMode && (
+                      <div
+                        onClick={(e) => e.stopPropagation()}
+                        className="absolute top-2 left-2 z-10 p-1.5 rounded-xl bg-white/90 backdrop-blur-xs border border-white/60 shadow-xs animate-in fade-in zoom-in-95 duration-150"
+                      >
+                        <input
+                          type="checkbox"
+                          checked={selectedTeacherIds.includes(teacher.id)}
+                          onChange={() => toggleSelectTeacher(teacher.id)}
+                          className="w-4 h-4 rounded text-[#1B4D3E] accent-[#1B4D3E] cursor-pointer"
+                        />
+                      </div>
+                    )}
                     <img
                       src={teacherPhoto}
                       onError={(e) => {
@@ -626,13 +693,12 @@ export default function AdminWaliKelasPage() {
                       >
                         Detail
                       </button>
-                      <button
-                        type="button"
-                        onClick={() => handleOpenAssign(teacher)}
-                        className="py-1.5 sm:py-2 rounded-lg sm:rounded-xl bg-[#FAF7EE] text-[#A8833E] hover:bg-[#F3EBD8] border border-[#C5A059]/40 text-[10px] sm:text-xs font-bold text-center transition-all shadow-2xs active:scale-95 cursor-pointer truncate"
+                      <Link
+                        href={`/admin/wali-kelas/tugaskan?teacherId=${teacher.id}`}
+                        className="py-1.5 sm:py-2 rounded-lg sm:rounded-xl bg-[#FAF7EE] text-[#A8833E] hover:bg-[#F3EBD8] border border-[#C5A059]/40 text-[10px] sm:text-xs font-bold text-center transition-all shadow-2xs active:scale-95 cursor-pointer truncate flex items-center justify-center"
                       >
                         Ubah
-                      </button>
+                      </Link>
                       <button
                         type="button"
                         onClick={() => {
@@ -655,6 +721,16 @@ export default function AdminWaliKelasPage() {
               <table className="w-full text-left text-xs border-collapse">
                 <thead>
                   <tr className="border-b border-[#E2E8F0] bg-[#F8FAFC] text-[#64748B] font-semibold text-[11px]">
+                    {isBulkDeleteMode && (
+                      <th className="py-3.5 px-3.5 w-10 text-center">
+                        <input
+                          type="checkbox"
+                          checked={paginatedTeachers.length > 0 && paginatedTeachers.every((t) => selectedTeacherIds.includes(t.id))}
+                          onChange={handleSelectAllTeachers}
+                          className="w-4 h-4 rounded text-[#1B4D3E] accent-[#1B4D3E] cursor-pointer"
+                        />
+                      </th>
+                    )}
                     {visibleColumns.no && <th className="py-3.5 px-3.5">No</th>}
                     {visibleColumns.teacher && <th className="py-3.5 px-3.5">Wali Kelas / Pembina</th>}
                     {visibleColumns.gender && <th className="py-3.5 px-3.5">Gender</th>}
@@ -685,6 +761,16 @@ export default function AdminWaliKelasPage() {
 
                     return (
                       <tr key={teacher.id} className="hover:bg-[#F8FAFC] transition-colors">
+                        {isBulkDeleteMode && (
+                          <td className="py-3 px-3.5 text-center">
+                            <input
+                              type="checkbox"
+                              checked={selectedTeacherIds.includes(teacher.id)}
+                              onChange={() => toggleSelectTeacher(teacher.id)}
+                              className="w-4 h-4 rounded text-[#1B4D3E] accent-[#1B4D3E] cursor-pointer"
+                            />
+                          </td>
+                        )}
                         {visibleColumns.no && (
                           <td className="py-3 px-3.5 font-mono text-[#94A3B8] text-xs">
                             {rowNumber}
@@ -828,17 +914,14 @@ export default function AdminWaliKelasPage() {
                                     <Eye className="w-3.5 h-3.5 text-[#1B4D3E]" />
                                     <span>Detail Lengkap</span>
                                   </button>
-                                  <button
-                                    type="button"
-                                    onClick={() => {
-                                      setActiveActionMenuId(null);
-                                      handleOpenAssign(teacher);
-                                    }}
+                                  <Link
+                                    href={`/admin/wali-kelas/tugaskan?teacherId=${teacher.id}`}
+                                    onClick={() => setActiveActionMenuId(null)}
                                     className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-[#172033] hover:bg-[#FAF7EE] hover:text-[#C5A059] text-left transition-colors cursor-pointer"
                                   >
                                     <Edit2 className="w-3.5 h-3.5 text-[#C5A059]" />
                                     <span>Tugaskan Kelas</span>
-                                  </button>
+                                  </Link>
                                   <button
                                     type="button"
                                     onClick={() => {
@@ -879,184 +962,6 @@ export default function AdminWaliKelasPage() {
           itemsPerPage={PAGE_SIZE}
           itemName="wali kelas"
         />
-
-        {isAssigning && (
-          <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4">
-            <div className="w-full max-w-lg bg-white rounded-[28px] border border-[#E2E8F0] shadow-2xl p-4 sm:p-6 space-y-4 animate-in fade-in zoom-in-95 duration-150">
-              <div className="flex items-center justify-between pb-3 border-b border-[#F1F5F9]">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-9 h-9 rounded-2xl bg-[#ECFDF5] border border-[#A7F3D0] flex items-center justify-center text-[#065F46] shrink-0">
-                    <UserCheck className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <h2 className="text-sm font-serif font-black text-[#172033]">
-                      Penugasan Wali Kelas & Pembina
-                    </h2>
-                    <p className="text-[10px] text-[#64748B]">
-                      Atur dan sinkronisasikan kelas binaan untuk ustadz atau ustadzah
-                    </p>
-                  </div>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setIsAssigning(false)}
-                  className="p-1.5 rounded-xl text-[#64748B] hover:text-[#172033] hover:bg-slate-100 transition-colors"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
-
-              <form onSubmit={handleSaveAssign} className="space-y-4">
-                <div className="space-y-3">
-                  <div>
-                    <label className="block text-[11px] font-bold text-[#475569] uppercase mb-1">
-                      Pilih Guru Pembina
-                    </label>
-                    <select
-                      value={assignTeacherId}
-                      onChange={(e) => {
-                        const newId = e.target.value;
-                        setAssignTeacherId(newId);
-                        const found = allPembina.find((t) => t.id === newId);
-                        if (found) {
-                          setAssignClassName(found.assignedClass || "");
-                        }
-                      }}
-                      className="w-full p-2.5 text-xs bg-[#FAF7EE] border border-[#E2EBF4] rounded-xl text-[#172033] font-semibold focus:outline-none focus:border-[#1B4D3E] transition-colors"
-                    >
-                      {allPembina.map((t) => (
-                        <option key={t.id} value={t.id}>
-                          {t.name} ({t.gender === "Putra" ? "L" : "P"}) {t.assignedClass ? `• ${t.assignedClass}` : "• Bebas Tugas"}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  {selectedAssignTeacher && (
-                    <div className="p-3 rounded-2xl bg-[#F8FAFC] border border-[#E2E8F0] flex items-center justify-between gap-3">
-                      <div className="flex items-center gap-2.5 min-w-0">
-                        <div
-                          className={`w-9 h-9 rounded-xl border flex items-center justify-center font-bold text-xs shrink-0 ${
-                            selectedAssignTeacher.gender === "Putra"
-                              ? "bg-[#ECFDF5] border-[#A7F3D0] text-[#065F46]"
-                              : "bg-[#FAF7EE] border-[#C5A059]/40 text-[#A8833E]"
-                          }`}
-                        >
-                          {selectedAssignTeacher.avatarInitials || "MZ"}
-                        </div>
-                        <div className="min-w-0">
-                          <h4 className="text-xs font-bold text-[#172033] truncate">
-                            {selectedAssignTeacher.name}
-                          </h4>
-                          <p className="text-[10px] text-[#64748B] font-mono truncate">
-                            @{selectedAssignTeacher.username || selectedAssignTeacher.id} • {selectedAssignTeacher.role === "GURU" ? "Guru Kelas" : "Pengasuhan BK"}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-1.5 shrink-0">
-                        <span
-                          className={`px-2 py-0.5 rounded-full text-[10px] font-bold border ${
-                            selectedAssignTeacher.gender === "Putra"
-                              ? "bg-[#ECFDF5] text-[#065F46] border-[#A7F3D0]"
-                              : "bg-[#FAF7EE] text-[#A8833E] border-[#C5A059]/40"
-                          }`}
-                        >
-                          {selectedAssignTeacher.gender === "Putra" ? "L" : "P"}
-                        </span>
-                        {selectedAssignTeacher.assignedClass ? (
-                          <span className="px-2 py-0.5 rounded-md font-mono text-[10px] font-bold bg-[#1B4D3E]/10 text-[#1B4D3E] border border-[#1B4D3E]/20">
-                            {selectedAssignTeacher.assignedClass}
-                          </span>
-                        ) : (
-                          <span className="px-2 py-0.5 rounded-md text-[10px] font-bold bg-slate-100 text-slate-500">
-                            Bebas
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  )}
-
-                  <div>
-                    <label className="block text-[11px] font-bold text-[#475569] uppercase mb-1">
-                      Ruang Kelas Binaan yang Ditugaskan
-                    </label>
-                    <select
-                      value={assignClassName}
-                      onChange={(e) => setAssignClassName(e.target.value)}
-                      className="w-full p-2.5 text-xs bg-[#FAF7EE] border border-[#E2EBF4] rounded-xl text-[#172033] font-semibold focus:outline-none focus:border-[#1B4D3E] transition-colors"
-                    >
-                      <option value="">Bebas Tugas (Lepas Penugasan Kelas)</option>
-                      {kelasList.map((cls) => (
-                        <option key={cls} value={cls}>
-                          {cls}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  {assignClassName ? (
-                    <div className="p-3.5 rounded-2xl bg-[#FAF7EE]/70 border border-[#E2E8F0] space-y-2">
-                      <div className="flex items-center justify-between text-xs">
-                        <div className="flex items-center gap-2">
-                          <span className="px-2.5 py-1 rounded-lg font-mono font-black bg-[#1B4D3E] text-white text-xs">
-                            {assignClassName}
-                          </span>
-                          <span className="font-bold text-[#172033]">
-                            {selectedClassSantriCount} Santri Terdaftar
-                          </span>
-                        </div>
-                        {selectedAssignClassObj && (
-                          <span
-                            className={`px-2 py-0.5 rounded-full text-[10px] font-bold border ${
-                              selectedAssignClassObj.gender === "Putra"
-                                ? "bg-[#ECFDF5] text-[#065F46] border-[#A7F3D0]"
-                                : "bg-[#FAF7EE] text-[#A8833E] border-[#C5A059]/40"
-                            }`}
-                          >
-                            Kelas {selectedAssignClassObj.gender === "Putra" ? "L" : "P"}
-                          </span>
-                        )}
-                      </div>
-
-                      {selectedAssignClassObj?.waliKelas &&
-                      selectedAssignClassObj.waliKelas !== selectedAssignTeacher?.name ? (
-                        <p className="text-[11px] text-[#A8833E] bg-amber-50 border border-amber-200 p-2 rounded-xl">
-                          Wali sebelumnya: <span className="font-bold">{selectedAssignClassObj.waliKelas}</span> (akan dialihkan ke {selectedAssignTeacher?.name})
-                        </p>
-                      ) : (
-                        <p className="text-[10px] text-[#64748B]">
-                          Wali kelas saat ini: {selectedAssignClassObj?.waliKelas || "Tersedia (Kosong)"}
-                        </p>
-                      )}
-                    </div>
-                  ) : (
-                    <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 text-[11px] text-[#64748B] flex items-center gap-2">
-                      <Building2 className="w-4 h-4 text-[#94A3B8] shrink-0" />
-                      <span>Guru berstatus bebas tugas (tidak memiliki tanggung jawab kelas binaan khusus).</span>
-                    </div>
-                  )}
-                </div>
-
-                <div className="flex items-center justify-end gap-2 pt-3 border-t border-[#F1F5F9]">
-                  <button
-                    type="button"
-                    onClick={() => setIsAssigning(false)}
-                    className="px-4 py-2 rounded-xl text-xs font-bold text-[#64748B] bg-[#F1F5F9] hover:bg-[#E2E8F0] transition-colors"
-                  >
-                    Batal
-                  </button>
-                  <button
-                    type="submit"
-                    className="inline-flex items-center gap-1.5 px-5 py-2 rounded-xl text-xs font-bold text-white bg-[#1B4D3E] hover:bg-[#143B2F] shadow-xs transition-colors cursor-pointer"
-                  >
-                    <CheckCircle2 className="w-3.5 h-3.5" />
-                    <span>Simpan Penugasan</span>
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        )}
 
         {activeTeacherDetail && (
           <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4">
@@ -1246,6 +1151,15 @@ export default function AdminWaliKelasPage() {
           items={photoItems}
           currentIndex={photoViewerIndex}
           onIndexChange={setPhotoViewerIndex}
+        />
+
+        <DeleteModal
+          isOpen={deleteModalState.isOpen}
+          onClose={() => setDeleteModalState({ isOpen: false, ids: [] })}
+          onConfirm={handleConfirmDelete}
+          title="Hapus Akun Pembina"
+          message={`Apakah Anda yakin ingin menghapus ${deleteModalState.count || deleteModalState.ids.length} akun pembina terpilih? Tindakan ini tidak dapat dibatalkan.`}
+          isLoading={deleteModalState.isLoading}
         />
       </div>
     </RoleShell>

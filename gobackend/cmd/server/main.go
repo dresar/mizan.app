@@ -158,6 +158,8 @@ func main() {
 	api.Get("/data", middleware.OptionalAuth(cfg.SessionSecret), handlers.GetData)
 	api.Get("/feedback", middleware.OptionalAuth(cfg.SessionSecret), handlers.GetFeedback)
 	api.Get("/notifications", middleware.OptionalAuth(cfg.SessionSecret), handlers.GetNotifications)
+	api.Get("/classes", handlers.GetClasses)
+	api.Get("/categories", handlers.GetCategories)
 
 	api.Use(middleware.AuthRequired(cfg.SessionSecret))
 
@@ -168,12 +170,10 @@ func main() {
 	api.Patch("/santri", middleware.RequireRoles(models.RoleSuperAdmin, models.RolePengasuhan, models.RoleGuru), handlers.UpdateSantri)
 	api.Delete("/santri", middleware.RequireRoles(models.RoleSuperAdmin), handlers.DeleteSantri)
 
-	api.Get("/classes", handlers.GetClasses)
 	api.Post("/classes", middleware.RequireRoles(models.RoleSuperAdmin), handlers.CreateClass)
 	api.Patch("/classes", middleware.RequireRoles(models.RoleSuperAdmin), handlers.UpdateClass)
 	api.Delete("/classes", middleware.RequireRoles(models.RoleSuperAdmin), handlers.DeleteClass)
 
-	api.Get("/categories", handlers.GetCategories)
 	api.Post("/categories", middleware.RequireRoles(models.RoleSuperAdmin), handlers.CreateCategory)
 	api.Post("/categories/unsur", middleware.RequireRoles(models.RoleSuperAdmin), handlers.CreateUnsur)
 
@@ -195,6 +195,32 @@ func main() {
 	api.Post("/settings", middleware.RequireRoles(models.RoleSuperAdmin), handlers.UpdateSettings)
 
 	api.Post("/share", handlers.CreateShareCard)
+
+	api.Get("/monitoring/tahfidz", handlers.GetTahfidz)
+	api.Post("/monitoring/tahfidz", middleware.RequireRoles(models.RoleSuperAdmin, models.RolePengasuhan), handlers.CreateTahfidz(realtimeHub))
+	api.Delete("/monitoring/tahfidz", middleware.RequireRoles(models.RoleSuperAdmin, models.RolePengasuhan), handlers.DeleteTahfidz)
+
+	api.Get("/monitoring/kesehatan", handlers.GetKesehatan)
+	api.Post("/monitoring/kesehatan", middleware.RequireRoles(models.RoleSuperAdmin, models.RolePengasuhan), handlers.CreateKesehatan(realtimeHub))
+	api.Delete("/monitoring/kesehatan", middleware.RequireRoles(models.RoleSuperAdmin, models.RolePengasuhan), handlers.DeleteKesehatan)
+
+	api.Get("/monitoring/perizinan", handlers.GetPerizinan)
+	api.Post("/monitoring/perizinan", middleware.RequireRoles(models.RoleSuperAdmin, models.RolePengasuhan, models.RoleOrtu), handlers.CreatePerizinan(realtimeHub))
+	api.Patch("/monitoring/perizinan/approve", middleware.RequireRoles(models.RoleSuperAdmin, models.RolePengasuhan), handlers.ApprovePerizinan(realtimeHub))
+	api.Post("/monitoring/perizinan/verify", middleware.RequireRoles(models.RoleSuperAdmin, models.RolePengasuhan, models.RoleSatpam), handlers.VerifyPerizinanQR(realtimeHub))
+
+	api.Get("/monitoring/sambangan", handlers.GetSambangan)
+	api.Post("/monitoring/sambangan", middleware.RequireRoles(models.RoleSuperAdmin, models.RolePengasuhan, models.RoleOrtu), handlers.CreateSambangan(realtimeHub))
+
+	api.Get("/monitoring/catatan-musyrif", handlers.GetCatatanMusyrif)
+	api.Post("/monitoring/catatan-musyrif", middleware.RequireRoles(models.RoleSuperAdmin, models.RolePengasuhan), handlers.CreateCatatanMusyrif(realtimeHub))
+
+	api.Get("/monitoring/keuangan", middleware.RequireRoles(models.RoleSuperAdmin, models.RolePengasuhan, models.RoleOrtu), handlers.GetKeuangan)
+	api.Post("/monitoring/keuangan", middleware.RequireRoles(models.RoleSuperAdmin, models.RolePengasuhan), handlers.CreateTransaksiKeuangan(realtimeHub))
+
+	api.Get("/monitoring/spp", middleware.RequireRoles(models.RoleSuperAdmin, models.RolePengasuhan, models.RoleOrtu), handlers.GetTagihanSPP)
+	api.Post("/monitoring/spp", middleware.RequireRoles(models.RoleSuperAdmin, models.RolePengasuhan), handlers.CreateTagihanSPP(realtimeHub))
+	api.Patch("/monitoring/spp/pay", middleware.RequireRoles(models.RoleSuperAdmin, models.RolePengasuhan), handlers.PayTagihanSPP(realtimeHub))
 
 	api.Post("/feedback", handlers.CreateFeedback(realtimeHub))
 	api.Patch("/feedback", middleware.RequireRoles(models.RoleSuperAdmin, models.RolePengasuhan, models.RoleGuru), handlers.UpdateFeedbackStatus)

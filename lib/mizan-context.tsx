@@ -21,7 +21,8 @@ import {
   FeedbackStatus,
   FeedbackType,
   MizanNotification,
-  INITIAL_CLASSES
+  INITIAL_CLASSES,
+  INITIAL_CATEGORIES
 } from "./mock-data";
 import { formatWIBDate, formatWIBDateTime, getWIBDate, getWIBTime } from "./date-utils";
 
@@ -80,6 +81,7 @@ interface MizanContextType {
   addClass: (newClass: string, gender?: "Putra" | "Putri", waliKelas?: string, guruId?: string) => Promise<{ success: boolean; message: string }>;
   updateClass: (name: string, data: { newName?: string; gender?: "Putra" | "Putri"; waliKelas?: string; guruId?: string }) => Promise<{ success: boolean; message: string }>;
   removeClass: (className: string) => void;
+  removeClassBulk: (classNames: string[]) => Promise<{ success: boolean; message: string }>;
   settings: AppSettings;
   updateSettings: (newSettings: Partial<AppSettings>, options?: { applyToSantri?: boolean; applyToIndicators?: boolean }) => Promise<{ success: boolean; message: string }>;
   toasts: ToastItem[];
@@ -141,7 +143,7 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
   const [santriList, setSantriList] = useState<Santri[]>([]);
   const [kelasList, setKelasList] = useState<string[]>(INITIAL_CLASSES);
   const [classList, setClassList] = useState<ClassInfo[]>([]);
-  const [categories, setCategories] = useState<Kategori[]>([]);
+  const [categories, setCategories] = useState<Kategori[]>(INITIAL_CATEGORIES);
   const [guruList, setGuruList] = useState<GuruMonitoring[]>([]);
   const [penilaianList, setPenilaianList] = useState<PenilaianRecord[]>([]);
   const [absensiList, setAbsensiList] = useState<AbsensiRecord[]>([]);
@@ -185,7 +187,9 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
         }
         if (offlineData.classList) setClassList(offlineData.classList);
         if (offlineData.guruList) setGuruList(offlineData.guruList);
-        if (offlineData.categories) setCategories(offlineData.categories);
+        if (offlineData.categories && Array.isArray(offlineData.categories) && offlineData.categories.length > 0) {
+          setCategories(offlineData.categories);
+        }
         if (offlineData.penilaianList) setPenilaianList(offlineData.penilaianList);
         if (offlineData.absensiList) setAbsensiList(offlineData.absensiList);
         if (offlineData.settings) setSettings(offlineData.settings);
@@ -308,7 +312,9 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
           setKelasList(derivedClasses as string[]);
         }
         if (data.guruList) setGuruList(data.guruList);
-        if (data.categories) setCategories(data.categories);
+        if (data.categories && Array.isArray(data.categories) && data.categories.length > 0) {
+          setCategories(data.categories);
+        }
         if (data.penilaianList) setPenilaianList(data.penilaianList);
         if (data.absensiList) setAbsensiList(data.absensiList);
         if (data.settings) setSettings(data.settings);
@@ -335,6 +341,17 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
           } catch {
             void 0;
           }
+          try {
+            const catRes = await fetch("/api/categories", { headers, credentials: "include" });
+            if (catRes.ok) {
+              const catData = await catRes.json();
+              if (catData.success && Array.isArray(catData.categories) && catData.categories.length > 0) {
+                setCategories(catData.categories);
+              }
+            }
+          } catch {
+            void 0;
+          }
         }
       }
     } catch {
@@ -354,7 +371,9 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
         }
           if (offlineData.classList) setClassList(offlineData.classList);
           if (offlineData.guruList) setGuruList(offlineData.guruList);
-          if (offlineData.categories) setCategories(offlineData.categories);
+          if (offlineData.categories && Array.isArray(offlineData.categories) && offlineData.categories.length > 0) {
+            setCategories(offlineData.categories);
+          }
           if (offlineData.penilaianList) setPenilaianList(offlineData.penilaianList);
           if (offlineData.absensiList) setAbsensiList(offlineData.absensiList);
           if (offlineData.settings) setSettings(offlineData.settings);
@@ -876,6 +895,26 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
     showToast(`Kelas ${className} dihapus`, "info");
   };
 
+  const removeClassBulk = async (classNames: string[]): Promise<{ success: boolean; message: string }> => {
+    setKelasList((prev) => prev.filter((c) => !classNames.includes(c)));
+    setClassList((prev) => prev.filter((c) => !classNames.includes(c.name)));
+
+    try {
+      const res = await fetch("/api/classes", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ names: classNames })
+      });
+      const data = await res.json();
+      await refreshData();
+      showToast(data.message || `${classNames.length} kelas dihapus`, "info");
+      return { success: true, message: data.message || "Berhasil dihapus" };
+    } catch (err: any) {
+      showToast(err.message || "Gagal menghapus kelas", "error");
+      return { success: false, message: err.message || "Gagal" };
+    }
+  };
+
   const setGuruStatus = (guruId: string, status: StatusGuru) => {
     setGuruList((prev) => prev.map((g) => (g.id === guruId ? { ...g, status } : g)));
     fetch("/api/data", {
@@ -1289,6 +1328,7 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
         addClass,
         updateClass,
         removeClass,
+        removeClassBulk,
         settings,
         updateSettings,
         toasts,

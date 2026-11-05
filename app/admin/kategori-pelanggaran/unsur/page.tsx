@@ -7,12 +7,14 @@ import { ArrowLeft, Save } from "lucide-react";
 import { useMizan } from "@/lib/mizan-context";
 import { RoleShell } from "@/components/RoleShell";
 import { Card } from "@/components/ui/Card";
+import { INITIAL_CATEGORIES } from "@/lib/mock-data";
 
 export default function TambahUnsurPage() {
   const router = useRouter();
   const { categories, addUnsurToCategory, showToast } = useMizan();
+  const effectiveCategories = categories && categories.length > 0 ? categories : INITIAL_CATEGORIES;
 
-  const [targetCategory, setTargetCategory] = useState<string>(categories[0]?.name || "");
+  const [targetCategory, setTargetCategory] = useState<string>(effectiveCategories[0]?.name || "Kedisiplinan");
   const [unsurName, setUnsurName] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -64,7 +66,7 @@ export default function TambahUnsurPage() {
                 onChange={(e) => setTargetCategory(e.target.value)}
                 className="w-full px-3.5 py-2.5 text-xs bg-[#EEF2F6] border border-transparent rounded-xl focus:bg-white focus:border-[#1B4D3E] focus:outline-none text-[#172033] font-semibold"
               >
-                {categories.map((c) => (
+                {effectiveCategories.map((c) => (
                   <option key={c.code} value={c.name}>
                     {c.code}. {c.name}
                   </option>

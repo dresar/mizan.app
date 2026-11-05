@@ -58,7 +58,11 @@ func GetData(c *fiber.Ctx) error {
 				id, nis, name, gender, class, asrama, kamar, 
 				base_score, current_score, status, avatar,
 				COALESCE(wali_name, ''), COALESCE(wali_phone, ''),
-				COALESCE(total_hadir, 28), COALESCE(total_alpa, 0)
+				COALESCE(total_hadir, 28), COALESCE(total_alpa, 0),
+				COALESCE(musyrif_id, ''), COALESCE(musyrif_name, ''), COALESCE(musyrif_phone, ''),
+				COALESCE(riwayat_alergi, ''), COALESCE(riwayat_penyakit, ''),
+				COALESCE(daily_pocket_limit, 25000), COALESCE(pocket_balance, 0),
+				COALESCE(current_health_status, 'Sehat')
 			FROM santri 
 			WHERE id = $1 OR LOWER(nis) = LOWER($2)
 			ORDER BY name ASC
@@ -75,6 +79,9 @@ func GetData(c *fiber.Ctx) error {
 				&s.ID, &s.NIS, &s.Name, &s.Gender, &s.Class, &s.Asrama, &s.Kamar,
 				&s.BaseScore, &s.CurrentScore, &s.Status, &s.Avatar,
 				&s.WaliName, &s.WaliPhone, &s.TotalHadir, &s.TotalAlpa,
+				&s.MusyrifID, &s.MusyrifName, &s.MusyrifPhone,
+				&s.RiwayatAlergi, &s.RiwayatPenyakit,
+				&s.DailyPocketLimit, &s.PocketBalance, &s.CurrentHealthStatus,
 			); err == nil {
 				santriList = append(santriList, s)
 			}
@@ -154,7 +161,11 @@ func GetData(c *fiber.Ctx) error {
 			id, nis, name, gender, class, asrama, kamar, 
 			base_score, current_score, status, avatar,
 			COALESCE(wali_name, ''), COALESCE(wali_phone, ''),
-			COALESCE(total_hadir, 28), COALESCE(total_alpa, 0)
+			COALESCE(total_hadir, 28), COALESCE(total_alpa, 0),
+			COALESCE(musyrif_id, ''), COALESCE(musyrif_name, ''), COALESCE(musyrif_phone, ''),
+			COALESCE(riwayat_alergi, ''), COALESCE(riwayat_penyakit, ''),
+			COALESCE(daily_pocket_limit, 25000), COALESCE(pocket_balance, 0),
+			COALESCE(current_health_status, 'Sehat')
 		FROM santri ORDER BY name ASC
 	`)
 	if err != nil {
@@ -169,6 +180,9 @@ func GetData(c *fiber.Ctx) error {
 			&s.ID, &s.NIS, &s.Name, &s.Gender, &s.Class, &s.Asrama, &s.Kamar,
 			&s.BaseScore, &s.CurrentScore, &s.Status, &s.Avatar,
 			&s.WaliName, &s.WaliPhone, &s.TotalHadir, &s.TotalAlpa,
+			&s.MusyrifID, &s.MusyrifName, &s.MusyrifPhone,
+			&s.RiwayatAlergi, &s.RiwayatPenyakit,
+			&s.DailyPocketLimit, &s.PocketBalance, &s.CurrentHealthStatus,
 		); err == nil {
 			santriList = append(santriList, s)
 		}
@@ -306,6 +320,70 @@ func GetData(c *fiber.Ctx) error {
 		kelasListStrings = append(kelasListStrings, c.Name)
 	}
 
+	type rawUnsur struct {
+		id, catName, name, uType string
+	}
+	var allUnsurs []rawUnsur
+	unsurRows, _ := pool.Query(ctx, "SELECT id, category_name, name, COALESCE(type, 'HASANAH') FROM unsurs ORDER BY id ASC")
+	if unsurRows != nil {
+		defer unsurRows.Close()
+		for unsurRows.Next() {
+			var u rawUnsur
+			if err := unsurRows.Scan(&u.id, &u.catName, &u.name, &u.uType); err == nil {
+				allUnsurs = append(allUnsurs, u)
+			}
+		}
+	}
+
+	type rawInd struct {
+		id, unsurID, text, iType, tingkat string
+		score                             float64
+	}
+	var allInds []rawInd
+	indRows, _ := pool.Query(ctx, "SELECT id, unsur_id, text, type, default_score, tingkat FROM indicators ORDER BY id ASC")
+	if indRows != nil {
+		defer indRows.Close()
+		for indRows.Next() {
+			var i rawInd
+			if err := indRows.Scan(&i.id, &i.unsurID, &i.text, &i.iType, &i.score, &i.tingkat); err == nil {
+				allInds = append(allInds, i)
+			}
+		}
+	}
+
+	var categoriesList []models.Kategori
+	catRows, _ := pool.Query(ctx, "SELECT id, code, name FROM categories ORDER BY code ASC")
+	if catRows != nil {
+		defer catRows.Close()
+		for catRows.Next() {
+			var cat models.Kategori
+			if err := catRows.Scan(&cat.ID, &cat.Code, &cat.Name); err == nil {
+				for _, u := range allUnsurs {
+					if u.catName == cat.Name {
+						unsur := models.Unsur{
+							ID:   u.id,
+							Name: u.name,
+							Type: u.uType,
+						}
+						for _, ind := range allInds {
+							if ind.unsurID == u.id {
+								unsur.Indicators = append(unsur.Indicators, models.Indikator{
+									ID:           ind.id,
+									Text:         ind.text,
+									Type:         ind.iType,
+									DefaultScore: ind.score,
+									Tingkat:      ind.tingkat,
+								})
+							}
+						}
+						cat.Unsurs = append(cat.Unsurs, unsur)
+					}
+				}
+				categoriesList = append(categoriesList, cat)
+			}
+		}
+	}
+
 	return c.JSON(fiber.Map{
 		"success":       true,
 		"santri":        santriList,
@@ -316,6 +394,7 @@ func GetData(c *fiber.Ctx) error {
 		"guruList":      guruList,
 		"absensiList":   absList,
 		"penilaianList": penList,
+		"categories":    categoriesList,
 		"settings":      settingsMap,
 	})
 }

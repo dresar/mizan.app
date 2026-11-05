@@ -1,4 +1,4 @@
-export type Role = "SUPER_ADMIN" | "PENGASUHAN" | "GURU" | "ORTU";
+export type Role = "SUPER_ADMIN" | "PENGASUHAN" | "GURU" | "ORTU" | "SATPAM";
 
 export type WaktuSholat =
   | "Subuh"
@@ -63,6 +63,7 @@ export function formatScoreWithSign(score: number): string {
 }
 
 export interface Kategori {
+  id?: string;
   code: string;
   name: string;
   unsurs: Unsur[];
@@ -100,6 +101,134 @@ export interface Santri {
   waliPhone?: string;
   totalHadir?: number;
   totalAlpa?: number;
+  musyrifId?: string;
+  musyrifName?: string;
+  musyrifPhone?: string;
+  riwayatAlergi?: string;
+  riwayatPenyakit?: string;
+  dailyPocketLimit?: number;
+  pocketBalance?: number;
+  currentHealthStatus?: string;
+}
+
+export interface TahfidzRecord {
+  id: string;
+  santriId: string;
+  santriName: string;
+  gender: "Putra" | "Putri";
+  surahName: string;
+  ayatStart: number;
+  ayatEnd: number;
+  halaman?: number;
+  juz: number;
+  predikat: string;
+  targetJuz?: number;
+  realisasiJuz?: number;
+  catatanUstadz?: string;
+  ustadzId?: string;
+  ustadzName?: string;
+  date: string;
+  createdAt?: string;
+}
+
+export interface KesehatanRecord {
+  id: string;
+  santriId: string;
+  santriName: string;
+  gender: "Putra" | "Putri";
+  tanggal: string;
+  keluhan: string;
+  diagnosa: string;
+  tindakanObat: string;
+  statusRawat: "Rawat Jalan" | "Istirahat di Kamar" | "Rawat Inap Klinik" | "Rujuk RS" | string;
+  petugasNama: string;
+  catatan?: string;
+  createdAt?: string;
+}
+
+export interface PerizinanRecord {
+  id: string;
+  santriId: string;
+  santriName: string;
+  santriClass: string;
+  gender: "Putra" | "Putri";
+  jenisIzin: "Pulang" | "Keluar Sebentar" | "Sakit" | "Acara Pondok / Lomba" | string;
+  alasan: string;
+  tglKeluar: string;
+  tglKembali: string;
+  status: "MENUNGGU" | "DISETUJUI" | "DITOLAK" | "BERJALAN" | "SELESAI" | "TERLAMBAT";
+  diajukanOleh: string;
+  disetujuiOleh?: string;
+  qrCodeToken: string;
+  buktiSuratUrl?: string;
+  waktuKeluarRiil?: string;
+  waktuKembaliRiil?: string;
+  petugasGerbang?: string;
+  createdAt?: string;
+}
+
+export interface SambanganRecord {
+  id: string;
+  santriId: string;
+  santriName: string;
+  gender: "Putra" | "Putri";
+  waliName: string;
+  tanggalSambang: string;
+  sesiWaktu: string;
+  jumlahPengunjung: number;
+  status: "TERKONFIRMASI" | "BATAL" | "SELESAI";
+  catatan?: string;
+  createdAt?: string;
+}
+
+export interface TransaksiKeuangan {
+  id: string;
+  santriId: string;
+  santriName: string;
+  gender: "Putra" | "Putri";
+  kategori: "UANG_SAKU" | "SPP" | "ASRAMA" | "KESEHATAN" | string;
+  jenis: "IN" | "OUT";
+  nominal: number;
+  saldoTerakhir: number;
+  deskripsi: string;
+  metodePembayaran: "CASH" | "TRANSFER" | "QRIS" | "KOPERASI" | string;
+  referensiKode?: string;
+  petugasId?: string;
+  petugasNama?: string;
+  tanggal: string;
+  status: "BERHASIL" | "PENDING" | "BATAL";
+  createdAt?: string;
+}
+
+export interface TagihanSPP {
+  id: string;
+  santriId: string;
+  santriName: string;
+  gender: "Putra" | "Putri";
+  bulan: string;
+  tahun: number;
+  nominal: number;
+  status: "LUNAS" | "BELUM_LUNAS" | "CICIL";
+  jatuhTempo: string;
+  tglBayar?: string;
+  kuitansiNomor?: string;
+  createdAt?: string;
+}
+
+export interface CatatanMusyrif {
+  id: string;
+  santriId: string;
+  santriName: string;
+  gender: "Putra" | "Putri";
+  musyrifId: string;
+  musyrifName: string;
+  periode: string;
+  adabSosialSkor: "Sangat Baik" | "Baik" | "Cukup" | "Butuh Perhatian";
+  kemandirianSkor: "Sangat Baik" | "Baik" | "Cukup" | "Butuh Perhatian";
+  kebersihanKamarSkor: "Sangat Baik" | "Baik" | "Cukup" | "Butuh Perhatian";
+  catatanPerkembangan: string;
+  rekomendasiUntukWali?: string;
+  createdAt?: string;
 }
 
 export interface GuruMonitoring {
@@ -333,7 +462,92 @@ export const INITIAL_CLASSES: string[] = [
 export const INITIAL_USERS: UserProfile[] = [];
 export const INITIAL_SANTRI: Santri[] = [];
 export const INITIAL_GURU: GuruMonitoring[] = [];
-export const INITIAL_CATEGORIES: Kategori[] = [];
+export const INITIAL_CATEGORIES: Kategori[] = [
+  {
+    id: "cat-a",
+    code: "A",
+    name: "Kedisiplinan",
+    unsurs: [
+      {
+        id: "pres-a-1",
+        name: "1. Selalu tepat waktu sholat berjama'ah (1 bulan penuh)",
+        type: "HASANAH",
+        indicators: [
+          { id: "ind-pres-a1-1", text: "Disiplin", type: "HASANAH", defaultScore: 0.05, tingkat: "Sedang" },
+          { id: "ind-pres-a1-2", text: "Ketaatan/Kepatuhan", type: "HASANAH", defaultScore: 0.05, tingkat: "Sedang" }
+        ]
+      },
+      {
+        id: "unsur-a-1",
+        name: "1. Keterlambatan masuk sholat berjama'ah",
+        type: "SAYYIAH",
+        indicators: [
+          { id: "ind-a1-1", text: "Terlambat sholat masbuk 1 rakaat", type: "SAYYIAH", defaultScore: -0.05, tingkat: "Ringan" }
+        ]
+      }
+    ]
+  },
+  {
+    id: "cat-b",
+    code: "B",
+    name: "Adab/Ta'zim",
+    unsurs: [
+      {
+        id: "unsur-b-1",
+        name: "1. Berbicara kotor atau kasar",
+        type: "SAYYIAH",
+        indicators: [
+          { id: "ind-b1-1", text: "Mengucapkan kata kotor kepada teman", type: "SAYYIAH", defaultScore: -0.1, tingkat: "Sedang" }
+        ]
+      }
+    ]
+  },
+  {
+    id: "cat-c",
+    code: "C",
+    name: "Kemandirian & Kebersihan",
+    unsurs: [
+      {
+        id: "unsur-c-1",
+        name: "1. Menjaga kebersihan kamar dan lingkungan",
+        type: "HASANAH",
+        indicators: [
+          { id: "ind-c1-1", text: "Kamar terbersih mingguan", type: "HASANAH", defaultScore: 0.1, tingkat: "Berat" }
+        ]
+      }
+    ]
+  },
+  {
+    id: "cat-d",
+    code: "D",
+    name: "Ubudiyah/Ibadah",
+    unsurs: [
+      {
+        id: "unsur-d-1",
+        name: "1. Rajin sholat tahajjud & dhuha",
+        type: "HASANAH",
+        indicators: [
+          { id: "ind-d1-1", text: "Sholat tahajjud rutin", type: "HASANAH", defaultScore: 0.1, tingkat: "Berat" }
+        ]
+      }
+    ]
+  },
+  {
+    id: "cat-e",
+    code: "E",
+    name: "Prestasi Akademik, Bahasa & Kepemimpinan",
+    unsurs: [
+      {
+        id: "unsur-e-1",
+        name: "1. Prestasi bahasa dan pidato",
+        type: "HASANAH",
+        indicators: [
+          { id: "ind-e1-1", text: "Juara pidato bahasa Arab/Inggris", type: "HASANAH", defaultScore: 0.25, tingkat: "Berat" }
+        ]
+      }
+    ]
+  }
+];
 export const INITIAL_PENILAIAN: PenilaianRecord[] = [];
 export const INITIAL_ABSENSI: AbsensiRecord[] = [];
 export const INITIAL_SETTINGS: AppSettings = DEFAULT_SETTINGS;

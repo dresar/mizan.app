@@ -7,7 +7,10 @@ import {
   Plus,
   Search,
   List,
-  LayoutGrid
+  LayoutGrid,
+  Trash2,
+  Check,
+  X
 } from "lucide-react";
 import { useMizan } from "@/lib/mizan-context";
 import { RoleShell } from "@/components/RoleShell";
@@ -28,6 +31,7 @@ export default function AdminKelasPage() {
     addClass,
     updateClass,
     removeClass,
+    removeClassBulk,
     showToast
   } = useMizan();
 
@@ -35,6 +39,9 @@ export default function AdminKelasPage() {
   const [selectedGender, setSelectedGender] = useState<"ALL" | "Putra" | "Putri">("ALL");
   const [searchQuery, setSearchQuery] = useState("");
   const [activeDropdownId, setActiveDropdownId] = useState<string | null>(null);
+
+  const [isBulkDeleteMode, setIsBulkDeleteMode] = useState(false);
+  const [selectedClassNames, setSelectedClassNames] = useState<string[]>([]);
 
   const [isAddingClass, setIsAddingClass] = useState(false);
   const [newClassName, setNewClassName] = useState("");
@@ -51,7 +58,13 @@ export default function AdminKelasPage() {
   const [targetWaliClass, setTargetWaliClass] = useState<EnrichedClassItem | null>(null);
   const [quickWaliId, setQuickWaliId] = useState("");
 
-  const [deleteModalState, setDeleteModalState] = useState<{ isOpen: boolean; name?: string }>({ isOpen: false });
+  const [deleteModalState, setDeleteModalState] = useState<{
+    isOpen: boolean;
+    name?: string;
+    names?: string[];
+    count?: number;
+    isLoading?: boolean;
+  }>({ isOpen: false });
 
   useEffect(() => {
     const handleClickOutside = () => setActiveDropdownId(null);
@@ -215,15 +228,50 @@ export default function AdminKelasPage() {
     }
   };
 
+  const toggleSelectClass = (name: string) => {
+    setSelectedClassNames((prev) =>
+      prev.includes(name) ? prev.filter((item) => item !== name) : [...prev, name]
+    );
+  };
+
+  const handleSelectAllClasses = () => {
+    const pageNames = paginatedClasses.map((c) => c.name);
+    const isAllSelected = pageNames.length > 0 && pageNames.every((n) => selectedClassNames.includes(n));
+    if (isAllSelected) {
+      setSelectedClassNames((prev) => prev.filter((n) => !pageNames.includes(n)));
+    } else {
+      setSelectedClassNames((prev) => Array.from(new Set([...prev, ...pageNames])));
+    }
+  };
+
+  const handleOpenDeleteBulk = () => {
+    if (selectedClassNames.length === 0) return;
+    setDeleteModalState({
+      isOpen: true,
+      names: selectedClassNames,
+      count: selectedClassNames.length
+    });
+  };
+
   const handleDeleteClassByName = (name: string) => {
     setDeleteModalState({ isOpen: true, name });
   };
 
   const handleConfirmDeleteClass = async () => {
-    if (!deleteModalState.name) return;
-    await removeClass(deleteModalState.name);
-    setActiveDropdownId(null);
-    setDeleteModalState({ isOpen: false });
+    setDeleteModalState((prev) => ({ ...prev, isLoading: true }));
+    try {
+      if (deleteModalState.names && deleteModalState.names.length > 0) {
+        await removeClassBulk(deleteModalState.names);
+        setSelectedClassNames((prev) => prev.filter((n) => !deleteModalState.names?.includes(n)));
+        setIsBulkDeleteMode(false);
+      } else if (deleteModalState.name) {
+        await removeClass(deleteModalState.name);
+      }
+      setActiveDropdownId(null);
+      setDeleteModalState({ isOpen: false });
+    } finally {
+      setDeleteModalState((prev) => ({ ...prev, isLoading: false }));
+    }
   };
 
   return (
@@ -350,6 +398,63 @@ export default function AdminKelasPage() {
             </div>
           </div>
 
+          <div className="flex items-center justify-between gap-3 px-1 py-1">
+            <div className="flex items-center gap-2">
+              {!isBulkDeleteMode ? (
+                <button
+                  type="button"
+                  onClick={() => setIsBulkDeleteMode(true)}
+                  className="px-3 py-1.5 rounded-xl text-xs font-bold border border-[#E2E8F0] bg-white text-[#64748B] hover:text-red-600 hover:border-red-200 hover:bg-red-50/50 transition-all flex items-center gap-1.5 shadow-2xs cursor-pointer active:scale-95"
+                >
+                  <Trash2 className="w-3.5 h-3.5 text-red-500" />
+                  <span>Hapus Massal</span>
+                </button>
+              ) : (
+                <div className="flex items-center gap-2 animate-in fade-in duration-150">
+                  <button
+                    type="button"
+                    onClick={handleSelectAllClasses}
+                    className={`px-3 py-1.5 rounded-xl text-xs font-bold border transition-colors flex items-center gap-1.5 cursor-pointer active:scale-95 ${
+                      paginatedClasses.length > 0 && paginatedClasses.every((c) => selectedClassNames.includes(c.name))
+                        ? "bg-[#1B4D3E] text-white border-[#1B4D3E]"
+                        : "bg-white text-gray-700 border-gray-200 hover:bg-gray-50"
+                    }`}
+                  >
+                    <Check className="w-3.5 h-3.5" />
+                    <span>{paginatedClasses.length > 0 && paginatedClasses.every((c) => selectedClassNames.includes(c.name)) ? "Batal Semua" : "Pilih Semua"}</span>
+                  </button>
+                  {selectedClassNames.length > 0 && (
+                    <span className="text-xs text-[#64748B] font-medium">
+                      {selectedClassNames.length} terpilih
+                    </span>
+                  )}
+                  {selectedClassNames.length > 0 && (
+                    <button
+                      type="button"
+                      onClick={handleOpenDeleteBulk}
+                      className="px-3.5 py-1.5 rounded-xl bg-red-600 text-white text-xs font-bold hover:bg-red-700 transition-colors flex items-center gap-1.5 shadow-xs cursor-pointer active:scale-95"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                      <span>Hapus ({selectedClassNames.length})</span>
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsBulkDeleteMode(false);
+                      setSelectedClassNames([]);
+                    }}
+                    className="px-2.5 py-1.5 rounded-xl text-xs font-bold border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 transition-colors flex items-center gap-1 cursor-pointer active:scale-95"
+                    title="Batalkan penghapusan massal"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                    <span>Batal</span>
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+
           {viewMode === "list" ? (
             <ClassTableView
               classes={paginatedClasses}
@@ -360,6 +465,10 @@ export default function AdminKelasPage() {
               onOpenEditClass={handleOpenEditClass}
               onOpenEditWali={handleOpenEditWali}
               onDeleteClass={handleDeleteClassByName}
+              isBulkDeleteMode={isBulkDeleteMode}
+              selectedClassNames={selectedClassNames}
+              onToggleSelectClass={toggleSelectClass}
+              onSelectAllClasses={handleSelectAllClasses}
             />
           ) : (
             <ClassGridView
@@ -369,6 +478,9 @@ export default function AdminKelasPage() {
               onOpenEditClass={handleOpenEditClass}
               onOpenEditWali={handleOpenEditWali}
               onDeleteClass={handleDeleteClassByName}
+              isBulkDeleteMode={isBulkDeleteMode}
+              selectedClassNames={selectedClassNames}
+              onToggleSelectClass={toggleSelectClass}
             />
           )}
 
@@ -432,7 +544,14 @@ export default function AdminKelasPage() {
         onClose={() => setDeleteModalState({ isOpen: false })}
         onConfirm={handleConfirmDeleteClass}
         title="Hapus Kelas"
-        message={deleteModalState.name ? `Yakin ingin menghapus Kelas ${deleteModalState.name}?` : undefined}
+        message={
+          deleteModalState.names && deleteModalState.names.length > 0
+            ? `Apakah Anda yakin ingin menghapus ${deleteModalState.names.length} kelas terpilih? Tindakan ini tidak dapat dibatalkan.`
+            : deleteModalState.name
+            ? `Apakah Anda yakin ingin menghapus Kelas ${deleteModalState.name}? Tindakan ini tidak dapat dibatalkan.`
+            : undefined
+        }
+        isLoading={deleteModalState.isLoading}
       />
     </RoleShell>
   );
