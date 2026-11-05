@@ -62,6 +62,8 @@ export default function AdminAbsensiPage() {
   } = useMizan();
 
   const [selectedAbsensiIds, setSelectedAbsensiIds] = useState<string[]>([]);
+  const [isBulkDeleteModeSession, setIsBulkDeleteModeSession] = useState(false);
+  const [isBulkDeleteModeLog, setIsBulkDeleteModeLog] = useState(false);
   const [deleteModalState, setDeleteModalState] = useState<{
     isOpen: boolean;
     ids: string[];
@@ -348,6 +350,8 @@ export default function AdminAbsensiPage() {
         await deleteAbsensiBulk(deleteModalState.ids);
       }
       setSelectedAbsensiIds((prev) => prev.filter((id) => !deleteModalState.ids.includes(id)));
+      setIsBulkDeleteModeSession(false);
+      setIsBulkDeleteModeLog(false);
       setDeleteModalState({ isOpen: false, ids: [] });
     } finally {
       setDeleteModalState((prev) => ({ ...prev, isLoading: false }));
@@ -893,35 +897,56 @@ export default function AdminAbsensiPage() {
               </div>
 
               <div className="flex items-center justify-between gap-3 px-1 py-1">
-                <div className="flex items-center gap-2">
+                {!isBulkDeleteModeSession ? (
                   <button
                     type="button"
-                    onClick={() => handleSelectAllAbsensi(filteredSessionRecords)}
-                    className={`px-3 py-1 rounded-xl text-[11px] font-bold border transition-colors flex items-center gap-1.5 ${
-                      filteredSessionRecords.length > 0 && filteredSessionRecords.every((i) => selectedAbsensiIds.includes(i.id))
-                        ? "bg-[#1B4D3E] text-white border-[#1B4D3E]"
-                        : "bg-white text-gray-700 border-gray-200 hover:bg-gray-50"
-                    }`}
+                    onClick={() => setIsBulkDeleteModeSession(true)}
+                    className="px-3 py-1 rounded-xl text-[11px] font-bold border border-[#E2E8F0] bg-white text-[#64748B] hover:text-red-600 hover:border-red-200 hover:bg-red-50/50 transition-all flex items-center gap-1.5 shadow-2xs cursor-pointer active:scale-95"
                   >
-                    <Check className="w-3.5 h-3.5" />
-                    <span>{filteredSessionRecords.length > 0 && filteredSessionRecords.every((i) => selectedAbsensiIds.includes(i.id)) ? "Batal" : "Pilih Semua"}</span>
+                    <Trash2 className="w-3.5 h-3.5 text-red-500" />
+                    <span>Hapus Massal</span>
                   </button>
-                  {selectedAbsensiIds.length > 0 && (
-                    <span className="text-[11px] text-[#64748B] font-medium">
-                      {selectedAbsensiIds.length} terpilih
-                    </span>
-                  )}
-                </div>
-
-                {selectedAbsensiIds.length > 0 && (
-                  <button
-                    type="button"
-                    onClick={handleOpenDeleteBulk}
-                    className="px-3 py-1 rounded-xl bg-red-600 text-white text-[11px] font-bold hover:bg-red-700 transition-colors flex items-center gap-1.5 shadow-xs"
-                  >
-                    <Trash2 className="w-3.5 h-3.5" />
-                    <span>Hapus ({selectedAbsensiIds.length})</span>
-                  </button>
+                ) : (
+                  <div className="flex items-center gap-2 animate-in fade-in duration-150">
+                    <button
+                      type="button"
+                      onClick={() => handleSelectAllAbsensi(filteredSessionRecords)}
+                      className={`px-3 py-1 rounded-xl text-[11px] font-bold border transition-colors flex items-center gap-1.5 cursor-pointer active:scale-95 ${
+                        filteredSessionRecords.length > 0 && filteredSessionRecords.every((i) => selectedAbsensiIds.includes(i.id))
+                          ? "bg-[#1B4D3E] text-white border-[#1B4D3E]"
+                          : "bg-white text-gray-700 border-gray-200 hover:bg-gray-50"
+                      }`}
+                    >
+                      <Check className="w-3.5 h-3.5" />
+                      <span>{filteredSessionRecords.length > 0 && filteredSessionRecords.every((i) => selectedAbsensiIds.includes(i.id)) ? "Batal Semua" : "Pilih Semua"}</span>
+                    </button>
+                    {selectedAbsensiIds.length > 0 && (
+                      <span className="text-[11px] text-[#64748B] font-medium">
+                        {selectedAbsensiIds.length} terpilih
+                      </span>
+                    )}
+                    {selectedAbsensiIds.length > 0 && (
+                      <button
+                        type="button"
+                        onClick={handleOpenDeleteBulk}
+                        className="px-3 py-1 rounded-xl bg-red-600 text-white text-[11px] font-bold hover:bg-red-700 transition-colors flex items-center gap-1.5 shadow-xs cursor-pointer active:scale-95"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                        <span>Hapus ({selectedAbsensiIds.length})</span>
+                      </button>
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsBulkDeleteModeSession(false);
+                        setSelectedAbsensiIds([]);
+                      }}
+                      className="px-2 py-1 rounded-xl text-[11px] font-bold border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 transition-colors flex items-center gap-1 cursor-pointer active:scale-95"
+                    >
+                      <X className="w-3 h-3" />
+                      <span>Batal</span>
+                    </button>
+                  </div>
                 )}
               </div>
 
@@ -939,13 +964,15 @@ export default function AdminAbsensiPage() {
                       }`}
                     >
                       <div className="flex items-center gap-3">
-                        <input
-                          type="checkbox"
-                          checked={isSelected}
-                          onChange={() => toggleSelectAbsensi(item.id)}
-                          className="w-4 h-4 rounded text-[#1B4D3E] accent-[#1B4D3E] cursor-pointer shrink-0"
-                          aria-label={`Pilih ${item.santriName}`}
-                        />
+                        {isBulkDeleteModeSession && (
+                          <input
+                            type="checkbox"
+                            checked={isSelected}
+                            onChange={() => toggleSelectAbsensi(item.id)}
+                            className="w-4 h-4 rounded text-[#1B4D3E] accent-[#1B4D3E] cursor-pointer shrink-0 animate-in fade-in duration-150"
+                            aria-label={`Pilih ${item.santriName}`}
+                          />
+                        )}
                         <div className="w-9 h-9 rounded-xl bg-[#EEF2F6] text-[#172033] flex items-center justify-center font-bold text-xs shrink-0">
                           {item.santriName.substring(0, 2).toUpperCase()}
                         </div>
@@ -1158,31 +1185,54 @@ export default function AdminAbsensiPage() {
                   </p>
                 </div>
 
-                <div className="flex items-center gap-2">
+                {!isBulkDeleteModeLog ? (
                   <button
                     type="button"
-                    onClick={() => handleSelectAllAbsensi(filteredLogRecords)}
-                    className={`px-2.5 py-1 rounded-xl text-[10px] font-bold border transition-colors flex items-center gap-1 ${
-                      filteredLogRecords.length > 0 && filteredLogRecords.every((i) => selectedAbsensiIds.includes(i.id))
-                        ? "bg-[#1B4D3E] text-white border-[#1B4D3E]"
-                        : "bg-white text-gray-700 border-gray-200 hover:bg-gray-50"
-                    }`}
+                    onClick={() => setIsBulkDeleteModeLog(true)}
+                    className="px-2.5 py-1 rounded-xl text-[10px] font-bold border border-[#E2E8F0] bg-white text-[#64748B] hover:text-red-600 hover:border-red-200 hover:bg-red-50/50 transition-all flex items-center gap-1 shadow-2xs cursor-pointer active:scale-95"
                   >
-                    <Check className="w-3 h-3" />
-                    <span>{filteredLogRecords.length > 0 && filteredLogRecords.every((i) => selectedAbsensiIds.includes(i.id)) ? "Batal" : "Pilih Semua"}</span>
+                    <Trash2 className="w-3 h-3 text-red-500" />
+                    <span>Hapus Massal</span>
                   </button>
-
-                  {selectedAbsensiIds.length > 0 && (
+                ) : (
+                  <div className="flex items-center gap-2 animate-in fade-in duration-150">
                     <button
                       type="button"
-                      onClick={handleOpenDeleteBulk}
-                      className="px-2.5 py-1 rounded-xl bg-red-600 text-white text-[10px] font-bold hover:bg-red-700 transition-colors flex items-center gap-1 shadow-xs"
+                      onClick={() => handleSelectAllAbsensi(filteredLogRecords)}
+                      className={`px-2.5 py-1 rounded-xl text-[10px] font-bold border transition-colors flex items-center gap-1 cursor-pointer active:scale-95 ${
+                        filteredLogRecords.length > 0 && filteredLogRecords.every((i) => selectedAbsensiIds.includes(i.id))
+                          ? "bg-[#1B4D3E] text-white border-[#1B4D3E]"
+                          : "bg-white text-gray-700 border-gray-200 hover:bg-gray-50"
+                      }`}
                     >
-                      <Trash2 className="w-3 h-3" />
-                      <span>Hapus ({selectedAbsensiIds.length})</span>
+                      <Check className="w-3 h-3" />
+                      <span>{filteredLogRecords.length > 0 && filteredLogRecords.every((i) => selectedAbsensiIds.includes(i.id)) ? "Batal Semua" : "Pilih Semua"}</span>
                     </button>
-                  )}
-                </div>
+
+                    {selectedAbsensiIds.length > 0 && (
+                      <button
+                        type="button"
+                        onClick={handleOpenDeleteBulk}
+                        className="px-2.5 py-1 rounded-xl bg-red-600 text-white text-[10px] font-bold hover:bg-red-700 transition-colors flex items-center gap-1 shadow-xs cursor-pointer active:scale-95"
+                      >
+                        <Trash2 className="w-3 h-3" />
+                        <span>Hapus ({selectedAbsensiIds.length})</span>
+                      </button>
+                    )}
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsBulkDeleteModeLog(false);
+                        setSelectedAbsensiIds([]);
+                      }}
+                      className="px-2 py-1 rounded-xl text-[10px] font-bold border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 transition-colors flex items-center gap-1 cursor-pointer active:scale-95"
+                    >
+                      <X className="w-3 h-3" />
+                      <span>Batal</span>
+                    </button>
+                  </div>
+                )}
               </div>
 
               <div className="divide-y divide-[#E2EBF4] max-h-[600px] overflow-y-auto pr-1">
@@ -1198,13 +1248,15 @@ export default function AdminAbsensiPage() {
                       }`}
                     >
                       <div className="flex items-center gap-3">
-                        <input
-                          type="checkbox"
-                          checked={isSelected}
-                          onChange={() => toggleSelectAbsensi(item.id)}
-                          className="w-4 h-4 rounded text-[#1B4D3E] accent-[#1B4D3E] cursor-pointer shrink-0"
-                          aria-label={`Pilih ${item.santriName}`}
-                        />
+                        {isBulkDeleteModeLog && (
+                          <input
+                            type="checkbox"
+                            checked={isSelected}
+                            onChange={() => toggleSelectAbsensi(item.id)}
+                            className="w-4 h-4 rounded text-[#1B4D3E] accent-[#1B4D3E] cursor-pointer shrink-0 animate-in fade-in duration-150"
+                            aria-label={`Pilih ${item.santriName}`}
+                          />
+                        )}
                         <div className="w-8 h-8 rounded-xl bg-[#EEF2F6] flex items-center justify-center shrink-0">
                           {getPrayerIcon((item.waktuSholat || "Subuh") as WaktuSholat)}
                         </div>

@@ -55,6 +55,7 @@ export default function AdminSantriPage() {
   } = useMizan();
 
   const [selectedSantriIds, setSelectedSantriIds] = useState<string[]>([]);
+  const [isBulkDeleteMode, setIsBulkDeleteMode] = useState(false);
   const [deleteModalState, setDeleteModalState] = useState<{
     isOpen: boolean;
     ids: string[];
@@ -430,6 +431,7 @@ export default function AdminSantriPage() {
         await deleteSantriBulk(deleteModalState.ids);
       }
       setSelectedSantriIds((prev) => prev.filter((id) => !deleteModalState.ids.includes(id)));
+      setIsBulkDeleteMode(false);
       setDeleteModalState({ isOpen: false, ids: [] });
     } finally {
       setDeleteModalState((prev) => ({ ...prev, isLoading: false }));
@@ -636,36 +638,61 @@ export default function AdminSantriPage() {
           <div className="space-y-3">
             <div className="flex items-center justify-between gap-3 px-1 py-1">
               <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={handleSelectAll}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-bold border transition-colors flex items-center gap-1.5 ${
-                    paginatedSantri.length > 0 && paginatedSantri.every((s) => selectedSantriIds.includes(s.id))
-                      ? "bg-[#1B4D3E] text-white border-[#1B4D3E]"
-                      : "bg-white text-gray-700 border-gray-200 hover:bg-gray-50"
-                  }`}
-                >
-                  <Check className="w-3.5 h-3.5" />
-                  <span>{paginatedSantri.length > 0 && paginatedSantri.every((s) => selectedSantriIds.includes(s.id)) ? "Batal" : "Pilih"}</span>
-                </button>
-                {selectedSantriIds.length > 0 && (
-                  <span className="text-xs text-[#64748B] font-medium">
-                    {selectedSantriIds.length} terpilih
-                  </span>
+                {!isBulkDeleteMode ? (
+                  <button
+                    type="button"
+                    onClick={() => setIsBulkDeleteMode(true)}
+                    className="px-3 py-1.5 rounded-xl text-xs font-bold border border-[#E2E8F0] bg-white text-[#64748B] hover:text-red-600 hover:border-red-200 hover:bg-red-50/50 transition-all flex items-center gap-1.5 shadow-2xs cursor-pointer active:scale-95"
+                  >
+                    <Trash2 className="w-3.5 h-3.5 text-red-500" />
+                    <span>Hapus Massal</span>
+                  </button>
+                ) : (
+                  <div className="flex items-center gap-2 animate-in fade-in duration-150">
+                    <button
+                      type="button"
+                      onClick={handleSelectAll}
+                      className={`px-3 py-1.5 rounded-xl text-xs font-bold border transition-colors flex items-center gap-1.5 cursor-pointer active:scale-95 ${
+                        paginatedSantri.length > 0 && paginatedSantri.every((s) => selectedSantriIds.includes(s.id))
+                          ? "bg-[#1B4D3E] text-white border-[#1B4D3E]"
+                          : "bg-white text-gray-700 border-gray-200 hover:bg-gray-50"
+                      }`}
+                    >
+                      <Check className="w-3.5 h-3.5" />
+                      <span>{paginatedSantri.length > 0 && paginatedSantri.every((s) => selectedSantriIds.includes(s.id)) ? "Batal Semua" : "Pilih Semua"}</span>
+                    </button>
+                    {selectedSantriIds.length > 0 && (
+                      <span className="text-xs text-[#64748B] font-medium">
+                        {selectedSantriIds.length} terpilih
+                      </span>
+                    )}
+                    {selectedSantriIds.length > 0 && (
+                      <button
+                        type="button"
+                        onClick={handleOpenDeleteBulk}
+                        className="px-3.5 py-1.5 rounded-xl bg-red-600 text-white text-xs font-bold hover:bg-red-700 transition-colors flex items-center gap-1.5 shadow-xs cursor-pointer active:scale-95"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                        <span>Hapus ({selectedSantriIds.length})</span>
+                      </button>
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsBulkDeleteMode(false);
+                        setSelectedSantriIds([]);
+                      }}
+                      className="px-2.5 py-1.5 rounded-xl text-xs font-bold border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 transition-colors flex items-center gap-1 cursor-pointer active:scale-95"
+                      title="Batalkan penghapusan massal"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                      <span>Batal</span>
+                    </button>
+                  </div>
                 )}
               </div>
 
               <div className="flex items-center gap-2">
-                {selectedSantriIds.length > 0 && (
-                  <button
-                    type="button"
-                    onClick={handleOpenDeleteBulk}
-                    className="px-3.5 py-1.5 rounded-xl bg-red-600 text-white text-xs font-bold hover:bg-red-700 transition-colors flex items-center gap-1.5 shadow-xs"
-                  >
-                    <Trash2 className="w-3.5 h-3.5" />
-                    <span>Hapus ({selectedSantriIds.length})</span>
-                  </button>
-                )}
 
                 <div className="flex items-center p-0.5 rounded-xl bg-white border border-[#E2EBF4] shadow-2xs">
                   <button
@@ -773,10 +800,10 @@ export default function AdminSantriPage() {
                       className="sheen-wrapper relative w-full aspect-square overflow-hidden bg-[#0E271F] shrink-0 cursor-pointer"
                       title="Klik untuk melihat foto"
                     >
-                      {visibleSantriColumns.checkbox && (
+                      {isBulkDeleteMode && visibleSantriColumns.checkbox && (
                         <div
                           onClick={(e) => e.stopPropagation()}
-                          className="absolute top-2 left-2 z-10 p-1.5 rounded-xl bg-white/90 backdrop-blur-xs border border-white/60 shadow-xs"
+                          className="absolute top-2 left-2 z-10 p-1.5 rounded-xl bg-white/90 backdrop-blur-xs border border-white/60 shadow-xs animate-in fade-in zoom-in-95 duration-150"
                         >
                           <input
                             type="checkbox"
@@ -932,12 +959,12 @@ export default function AdminSantriPage() {
                       }`}
                     >
                       <div className="flex items-center gap-3 min-w-0">
-                        {visibleSantriColumns.checkbox && (
+                        {isBulkDeleteMode && visibleSantriColumns.checkbox && (
                           <input
                             type="checkbox"
                             checked={isSelected}
                             onChange={() => toggleSelectSantri(santri.id)}
-                            className="w-4 h-4 rounded text-[#1B4D3E] accent-[#1B4D3E] cursor-pointer shrink-0"
+                            className="w-4 h-4 rounded text-[#1B4D3E] accent-[#1B4D3E] cursor-pointer shrink-0 animate-in fade-in duration-150"
                             aria-label={`Pilih ${santri.name}`}
                           />
                         )}

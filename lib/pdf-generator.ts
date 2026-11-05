@@ -2,18 +2,13 @@ import { jsPDF } from "jspdf";
 import { Santri, PenilaianRecord, AbsensiRecord } from "./mock-data";
 import { KOP_SURAT_BASE64 } from "./kop-surat-base64";
 
-export async function generateSantriPdf(
+export function renderSantriReportPage(
+  doc: jsPDF,
   santri: Santri,
   penilaianList: PenilaianRecord[] = [],
   absensiList: AbsensiRecord[] = [],
   printDate = "1 November 2026"
-): Promise<void> {
-  const doc = new jsPDF({
-    orientation: "portrait",
-    unit: "mm",
-    format: "a4"
-  });
-
+): void {
   const pageWidth = 210;
   const pageHeight = 297;
   const margin = 14;
@@ -267,9 +262,80 @@ export async function generateSantriPdf(
   doc.text("Pembina Kedisiplinan Asrama", leftSignX, signY + 30);
   doc.text("Super Admin Pengasuhan MIZAN", rightSignX, signY + 30);
 
+}
+
+export async function generateSantriPdf(
+  santri: Santri,
+  penilaianList: PenilaianRecord[] = [],
+  absensiList: AbsensiRecord[] = [],
+  printDate = "1 November 2026"
+): Promise<void> {
+  const doc = new jsPDF({
+    orientation: "portrait",
+    unit: "mm",
+    format: "a4"
+  });
+
+  renderSantriReportPage(doc, santri, penilaianList, absensiList, printDate);
+
   const safeName = (santri.name || "Santri").replace(/[^a-zA-Z0-9]/g, "_");
   const safeNis = santri.nis || "000";
   const filename = `Rapor_Akhlak_${safeName}_${safeNis}.pdf`;
+
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  const blob = doc.output("blob");
+  const blobUrl = URL.createObjectURL(blob);
+  const anchor = document.createElement("a");
+  anchor.href = blobUrl;
+  anchor.download = filename;
+  anchor.target = "_blank";
+  anchor.rel = "noopener noreferrer";
+  document.body.appendChild(anchor);
+  anchor.click();
+
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+  if (isIOS) {
+    window.open(blobUrl, "_blank");
+  }
+
+  setTimeout(() => {
+    if (anchor.parentNode) {
+      document.body.removeChild(anchor);
+    }
+    URL.revokeObjectURL(blobUrl);
+  }, 4000);
+}
+
+export async function generateClassBulkPdf(
+  className: string,
+  santriList: Santri[],
+  allPenilaian: PenilaianRecord[] = [],
+  allAbsensi: AbsensiRecord[] = [],
+  printDate = "1 November 2026"
+): Promise<void> {
+  if (!santriList || santriList.length === 0) return;
+
+  const doc = new jsPDF({
+    orientation: "portrait",
+    unit: "mm",
+    format: "a4"
+  });
+
+  for (let i = 0; i < santriList.length; i++) {
+    const s = santriList[i];
+    if (i > 0) {
+      doc.addPage();
+    }
+    const sPenilaian = allPenilaian.filter((p) => p.santriId === s.id);
+    const sAbsensi = allAbsensi.filter((a) => a.santriId === s.id);
+    renderSantriReportPage(doc, s, sPenilaian, sAbsensi, printDate);
+  }
+
+  const cleanClassName = className.replace(/[^a-zA-Z0-9]/g, "_");
+  const filename = `Rapor_Lengkap_Kelas_${cleanClassName}_MIZAN.pdf`;
 
   if (typeof window === "undefined") {
     return;

@@ -326,7 +326,10 @@ export function getSantriDisciplineStatus(score: number, settings?: AppSettings)
   };
 }
 
-export const INITIAL_CLASSES: string[] = [];
+export const INITIAL_CLASSES: string[] = [
+  "1A", "1B", "2A", "2B", "3A", "3B",
+  "4A", "4B", "5A", "5B", "6A", "6B"
+];
 export const INITIAL_USERS: UserProfile[] = [];
 export const INITIAL_SANTRI: Santri[] = [];
 export const INITIAL_GURU: GuruMonitoring[] = [];

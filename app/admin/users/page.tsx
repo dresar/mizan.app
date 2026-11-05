@@ -33,6 +33,7 @@ export default function AdminUsersPage() {
   const [viewMode, setViewMode] = useState<"list" | "grid">("list");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedUserIds, setSelectedUserIds] = useState<string[]>([]);
+  const [isBulkDeleteMode, setIsBulkDeleteMode] = useState(false);
   const [deleteModalState, setDeleteModalState] = useState<{
     isOpen: boolean;
     ids: string[];
@@ -181,6 +182,7 @@ export default function AdminUsersPage() {
         await deleteUserBulk(deleteModalState.ids);
       }
       setSelectedUserIds((prev) => prev.filter((id) => !deleteModalState.ids.includes(id)));
+      setIsBulkDeleteMode(false);
       setDeleteModalState({ isOpen: false, ids: [] });
     } finally {
       setDeleteModalState((prev) => ({ ...prev, isLoading: false }));
@@ -503,28 +505,54 @@ export default function AdminUsersPage() {
                 </button>
               </div>
 
-              <button
-                type="button"
-                onClick={handleSelectAllUsers}
-                className={`px-3 py-1.5 rounded-xl text-xs font-bold border transition-colors flex items-center gap-1.5 ${
-                  selectedUserIds.length > 0 && selectedUserIds.length === filteredUsers.length
-                    ? "bg-[#1B4D3E] text-white border-[#1B4D3E]"
-                    : "bg-white text-gray-700 border-gray-200 hover:bg-gray-50"
-                }`}
-              >
-                <Check className="w-3.5 h-3.5" />
-                <span>{selectedUserIds.length === filteredUsers.length && filteredUsers.length > 0 ? "Batal" : "Pilih"}</span>
-              </button>
-
-              {selectedUserIds.length > 0 && (
+              {!isBulkDeleteMode ? (
                 <button
                   type="button"
-                  onClick={handleOpenDeleteBulk}
-                  className="px-3.5 py-1.5 rounded-xl bg-red-600 text-white text-xs font-bold hover:bg-red-700 transition-colors flex items-center gap-1.5 shadow-xs"
+                  onClick={() => setIsBulkDeleteMode(true)}
+                  className="px-3 py-1.5 rounded-xl text-xs font-bold border border-[#E2E8F0] bg-white text-[#64748B] hover:text-red-600 hover:border-red-200 hover:bg-red-50/50 transition-all flex items-center gap-1.5 shadow-2xs cursor-pointer active:scale-95"
                 >
-                  <Trash2 className="w-3.5 h-3.5" />
-                  <span>Hapus</span>
+                  <Trash2 className="w-3.5 h-3.5 text-red-500" />
+                  <span>Hapus Massal</span>
                 </button>
+              ) : (
+                <div className="flex items-center gap-2 animate-in fade-in duration-150">
+                  <button
+                    type="button"
+                    onClick={handleSelectAllUsers}
+                    className={`px-3 py-1.5 rounded-xl text-xs font-bold border transition-colors flex items-center gap-1.5 cursor-pointer active:scale-95 ${
+                      selectedUserIds.length > 0 && selectedUserIds.length === filteredUsers.length
+                        ? "bg-[#1B4D3E] text-white border-[#1B4D3E]"
+                        : "bg-white text-gray-700 border-gray-200 hover:bg-gray-50"
+                    }`}
+                  >
+                    <Check className="w-3.5 h-3.5" />
+                    <span>{selectedUserIds.length === filteredUsers.length && filteredUsers.length > 0 ? "Batal Semua" : "Pilih Semua"}</span>
+                  </button>
+
+                  {selectedUserIds.length > 0 && (
+                    <button
+                      type="button"
+                      onClick={handleOpenDeleteBulk}
+                      className="px-3.5 py-1.5 rounded-xl bg-red-600 text-white text-xs font-bold hover:bg-red-700 transition-colors flex items-center gap-1.5 shadow-xs cursor-pointer active:scale-95"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                      <span>Hapus ({selectedUserIds.length})</span>
+                    </button>
+                  )}
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsBulkDeleteMode(false);
+                      setSelectedUserIds([]);
+                    }}
+                    className="px-2.5 py-1.5 rounded-xl text-xs font-bold border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 transition-colors flex items-center gap-1 cursor-pointer active:scale-95"
+                    title="Batalkan penghapusan massal"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                    <span>Batal</span>
+                  </button>
+                </div>
               )}
             </div>
           </div>
@@ -545,9 +573,11 @@ export default function AdminUsersPage() {
               <table className="w-full text-left text-xs border-collapse">
                 <thead>
                   <tr className="border-b border-[#E2E8F0] bg-[#F8FAFC] text-[#64748B] font-bold text-[10px] uppercase tracking-wider">
-                    <th className="py-3 px-3 w-10 text-center">
-                      <span className="sr-only">Pilih</span>
-                    </th>
+                    {isBulkDeleteMode && (
+                      <th className="py-3 px-3 w-10 text-center animate-in fade-in duration-150">
+                        <span className="sr-only">Pilih</span>
+                      </th>
+                    )}
                     <th className="py-3 px-3.5">Pengguna</th>
                     <th className="py-3 px-3.5">Username</th>
                     <th className="py-3 px-3.5">Peran</th>
@@ -569,15 +599,17 @@ export default function AdminUsersPage() {
                           isSelected ? "bg-red-50/20" : ""
                         }`}
                       >
-                        <td className="py-3 px-3 text-center">
-                          <input
-                            type="checkbox"
-                            checked={isSelected}
-                            onChange={() => toggleSelectUser(user.id)}
-                            className="w-4 h-4 rounded text-[#1B4D3E] accent-[#1B4D3E] cursor-pointer"
-                            aria-label={`Pilih ${user.name}`}
-                          />
-                        </td>
+                        {isBulkDeleteMode && (
+                          <td className="py-3 px-3 text-center animate-in fade-in duration-150">
+                            <input
+                              type="checkbox"
+                              checked={isSelected}
+                              onChange={() => toggleSelectUser(user.id)}
+                              className="w-4 h-4 rounded text-[#1B4D3E] accent-[#1B4D3E] cursor-pointer"
+                              aria-label={`Pilih ${user.name}`}
+                            />
+                          </td>
+                        )}
                         <td className="py-3 px-3.5">
                           <div className="flex items-center gap-3">
                             <Avatar
@@ -704,13 +736,15 @@ export default function AdminUsersPage() {
                   >
                     <div className="flex items-start justify-between gap-2.5">
                       <div className="flex items-start gap-3 min-w-0">
-                        <input
-                          type="checkbox"
-                          checked={isSelected}
-                          onChange={() => toggleSelectUser(user.id)}
-                          className="w-4 h-4 rounded text-[#1B4D3E] accent-[#1B4D3E] cursor-pointer shrink-0 mt-3"
-                          aria-label={`Pilih ${user.name}`}
-                        />
+                        {isBulkDeleteMode && (
+                          <input
+                            type="checkbox"
+                            checked={isSelected}
+                            onChange={() => toggleSelectUser(user.id)}
+                            className="w-4 h-4 rounded text-[#1B4D3E] accent-[#1B4D3E] cursor-pointer shrink-0 mt-3 animate-in fade-in duration-150"
+                            aria-label={`Pilih ${user.name}`}
+                          />
+                        )}
                         <Avatar
                           src={user.avatarUrl}
                           initials={user.avatarInitials}

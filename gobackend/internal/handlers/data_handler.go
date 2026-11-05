@@ -301,11 +301,18 @@ func GetData(c *fiber.Ctx) error {
 		_ = json.Unmarshal(rawSettings, &settingsMap)
 	}
 
+	var kelasListStrings []string
+	for _, c := range classList {
+		kelasListStrings = append(kelasListStrings, c.Name)
+	}
+
 	return c.JSON(fiber.Map{
 		"success":       true,
 		"santri":        santriList,
 		"users":         userList,
 		"classes":       classList,
+		"classList":     classList,
+		"kelasList":     kelasListStrings,
 		"guruList":      guruList,
 		"absensiList":   absList,
 		"penilaianList": penList,

@@ -20,8 +20,9 @@ import {
   FeedbackRecord,
   FeedbackStatus,
   FeedbackType,
-    MizanNotification,
-  } from "./mock-data";
+  MizanNotification,
+  INITIAL_CLASSES
+} from "./mock-data";
 import { formatWIBDate, formatWIBDateTime, getWIBDate, getWIBTime } from "./date-utils";
 
 export type { UserProfile, MizanNotification } from "./mock-data";
@@ -138,7 +139,7 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
   const [isAuthLoading, setIsAuthLoading] = useState<boolean>(true);
   const [userList, setUserList] = useState<UserProfile[]>([]);
   const [santriList, setSantriList] = useState<Santri[]>([]);
-  const [kelasList, setKelasList] = useState<string[]>([]);
+  const [kelasList, setKelasList] = useState<string[]>(INITIAL_CLASSES);
   const [classList, setClassList] = useState<ClassInfo[]>([]);
   const [categories, setCategories] = useState<Kategori[]>([]);
   const [guruList, setGuruList] = useState<GuruMonitoring[]>([]);
@@ -175,7 +176,13 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
         const offlineData = JSON.parse(offlineRaw);
         if (offlineData.santri) setSantriList(offlineData.santri);
         if (offlineData.users) setUserList(offlineData.users);
-        if (offlineData.kelasList) setKelasList(offlineData.kelasList);
+        if (offlineData.kelasList && offlineData.kelasList.length > 0) {
+          setKelasList(offlineData.kelasList);
+        } else if (offlineData.classList && offlineData.classList.length > 0) {
+          setKelasList(offlineData.classList.map((c: any) => (typeof c === "string" ? c : c.name)));
+        } else if (offlineData.santri && offlineData.santri.length > 0) {
+          setKelasList(Array.from(new Set(offlineData.santri.map((s: any) => s.class))).sort() as string[]);
+        }
         if (offlineData.classList) setClassList(offlineData.classList);
         if (offlineData.guruList) setGuruList(offlineData.guruList);
         if (offlineData.categories) setCategories(offlineData.categories);
@@ -289,8 +296,17 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
             void 0;
           }
         }
-        if (data.kelasList && data.kelasList.length > 0) setKelasList(data.kelasList);
-        if (data.classList) setClassList(data.classList);
+        const rawClasses = data.classList || data.classes || [];
+        if (Array.isArray(rawClasses) && rawClasses.length > 0) {
+          setClassList(rawClasses);
+          const derivedNames = rawClasses.map((c: any) => (typeof c === "string" ? c : c.name));
+          setKelasList(derivedNames);
+        } else if (data.kelasList && data.kelasList.length > 0) {
+          setKelasList(data.kelasList);
+        } else if (data.santri && Array.isArray(data.santri) && data.santri.length > 0) {
+          const derivedClasses = Array.from(new Set(data.santri.map((s: any) => s.class))).sort();
+          setKelasList(derivedClasses as string[]);
+        }
         if (data.guruList) setGuruList(data.guruList);
         if (data.categories) setCategories(data.categories);
         if (data.penilaianList) setPenilaianList(data.penilaianList);
@@ -329,7 +345,13 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
           const offlineData = JSON.parse(offlineRaw);
           if (offlineData.santri) setSantriList(offlineData.santri);
           if (offlineData.users) setUserList(offlineData.users);
-          if (offlineData.kelasList) setKelasList(offlineData.kelasList);
+          if (offlineData.kelasList && offlineData.kelasList.length > 0) {
+          setKelasList(offlineData.kelasList);
+        } else if (offlineData.classList && offlineData.classList.length > 0) {
+          setKelasList(offlineData.classList.map((c: any) => (typeof c === "string" ? c : c.name)));
+        } else if (offlineData.santri && offlineData.santri.length > 0) {
+          setKelasList(Array.from(new Set(offlineData.santri.map((s: any) => s.class))).sort() as string[]);
+        }
           if (offlineData.classList) setClassList(offlineData.classList);
           if (offlineData.guruList) setGuruList(offlineData.guruList);
           if (offlineData.categories) setCategories(offlineData.categories);

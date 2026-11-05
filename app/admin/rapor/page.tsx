@@ -1,872 +1,346 @@
 "use client";
 
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo } from "react";
+import Link from "next/link";
 import {
   Search,
-  FileText,
-  Printer,
   Download,
   Users,
   Award,
   Clock,
-  X,
-  AlertTriangle,
+  Sparkles,
+  Building2,
+  ChevronRight,
   TrendingUp,
-  RefreshCw,
-  List,
-  LayoutGrid
+  GraduationCap,
+  User,
+  ShieldCheck,
+  FileText
 } from "lucide-react";
 import { useMizan } from "@/lib/mizan-context";
 import { RoleShell } from "@/components/RoleShell";
 import { CardSub } from "@/components/ui/Card";
-import { Avatar } from "@/components/ui/Avatar";
-import { Pagination } from "@/components/ui/Pagination";
-import { Santri, formatScore, formatScoreWithSign } from "@/lib/mock-data";
-import { generateSantriPdf } from "@/lib/pdf-generator";
+import { generateClassBulkPdf } from "@/lib/pdf-generator";
 
-function getPredikatAdab(score: number): { label: string; badgeCls: string } {
-  if (score >= 90) {
-    return {
-      label: "Mumtaz",
-      badgeCls: "bg-[#ECFDF5] text-[#065F46] border border-[#A7F3D0]"
-    };
-  }
-  if (score >= 80) {
-    return {
-      label: "Jayyid Jiddan",
-      badgeCls: "bg-[#E8F0EC] text-[#1B4D3E] border border-[#1B4D3E]/30"
-    };
-  }
-  if (score >= 70) {
-    return {
-      label: "Jayyid",
-      badgeCls: "bg-[#FEFCE8] text-[#854D0E] border border-[#FEF08A]"
-    };
-  }
-  if (score >= 60) {
-    return {
-      label: "Maqbul",
-      badgeCls: "bg-[#FFF7ED] text-[#C2410C] border border-[#FED7AA]"
-    };
-  }
-  return {
-    label: "Pembinaan",
-    badgeCls: "bg-[#FEF2F2] text-[#B91C1C] border border-[#FECACA]"
-  };
+interface ClassRaporCardItem {
+  id: string;
+  name: string;
+  gender: "Putra" | "Putri";
+  waliKelas: string;
+  waliAvatar: string;
+  studentCount: number;
+  avgScore: number;
+  avgSholat: number;
+  asrama: string;
 }
 
 export default function AdminRaporPage() {
   const {
+    kelasList,
+    classList,
     santriList,
+    userList,
     penilaianList,
     absensiList,
-    kelasList,
-    showToast,
-    refreshData
+    showToast
   } = useMizan();
 
-  const [viewMode, setViewMode] = useState<"list" | "grid">("list");
-  const [searchQuery, setSearchQuery] = useState("");
   const [selectedGender, setSelectedGender] = useState<"ALL" | "Putra" | "Putri">("ALL");
-  const [selectedClass, setSelectedClass] = useState<string>("ALL");
-  const [selectedPredikat, setSelectedPredikat] = useState<string>("ALL");
-  const [sortBy, setSortBy] = useState<"score_desc" | "score_asc" | "name_asc" | "nis_asc">("score_desc");
-  const [selectedDetailSantri, setSelectedDetailSantri] = useState<Santri | null>(null);
-  const [isPrintingAll, setIsPrintingAll] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [downloadingClassId, setDownloadingClassId] = useState<string | null>(null);
 
-  const santriAnalytics = useMemo(() => {
-    return santriList.map((s) => {
-      const studentPenilaian = penilaianList.filter((p) => p.santriId === s.id);
-      const studentAbsensi = absensiList.filter((a) => a.santriId === s.id);
+  const enrichedClasses: ClassRaporCardItem[] = useMemo(() => {
+    return kelasList.map((clsName) => {
+      const matchDb = classList.find((c) => c.name.toUpperCase() === clsName.toUpperCase());
+      const students = santriList.filter((s) => s.class.toUpperCase() === clsName.toUpperCase());
 
-      const hasanahRecords = studentPenilaian.filter((p) => p.type === "HASANAH");
-      const hasanahScore = hasanahRecords.reduce((acc, p) => acc + (p.score || 0), 0);
+      const avgScore =
+        students.length > 0
+          ? students.reduce((acc, s) => acc + s.currentScore, 0) / students.length
+          : 70.0;
 
-      const sayyiahRecords = studentPenilaian.filter((p) => p.type === "SAYYIAH");
-      const sayyiahScore = sayyiahRecords.reduce((acc, p) => acc + (p.score || 0), 0);
+      let totalSholatPercentSum = 0;
+      if (students.length > 0) {
+        students.forEach((s) => {
+          const sAbs = absensiList.filter((a) => a.santriId === s.id);
+          const totalHadir = sAbs.filter((a) => a.status === "Hadir").length;
+          const safeHadir = s.totalHadir ?? 28;
+          const rate = sAbs.length > 0 ? (totalHadir / sAbs.length) * 100 : (safeHadir / 28) * 100;
+          totalSholatPercentSum += Math.min(100, Math.max(0, rate));
+        });
+      }
+      const avgSholat = students.length > 0 ? totalSholatPercentSum / students.length : 100.0;
 
-      const hadirCount = studentAbsensi.filter((a) => a.status === "Hadir").length;
-      const totalRecordedAbsensi = studentAbsensi.length;
-      const effectiveHadir = totalRecordedAbsensi > 0 ? hadirCount : (s.totalHadir || 28);
-      const effectiveTotal = totalRecordedAbsensi > 0 ? totalRecordedAbsensi : 28;
-      const attendancePercent = ((effectiveHadir / effectiveTotal) * 100).toFixed(1);
+      let defaultGender: "Putra" | "Putri" = "Putra";
+      if (matchDb?.gender) {
+        defaultGender = matchDb.gender;
+      } else if (clsName.endsWith("B") || clsName.endsWith("C") || clsName.endsWith("D")) {
+        defaultGender = "Putri";
+      }
 
-      const predikat = getPredikatAdab(s.currentScore);
+      const assignedTeacher = userList.find(
+        (u) =>
+          u.assignedClass?.toUpperCase() === clsName.toUpperCase() &&
+          (u.role === "GURU" || u.role === "PENGASUHAN")
+      );
+
+      const defaultAvatar =
+        defaultGender === "Putri"
+          ? "/default-avatar-ustadzah.jpg"
+          : "/default-avatar-ustadz.jpg";
 
       return {
-        santri: s,
-        hasanahScore,
-        hasanahCount: hasanahRecords.length,
-        sayyiahScore,
-        sayyiahCount: sayyiahRecords.length,
-        effectiveHadir,
-        effectiveTotal,
-        attendancePercent,
-        predikat,
-        studentPenilaian,
-        studentAbsensi
+        id: matchDb?.id || `cls-${clsName.toLowerCase()}`,
+        name: clsName,
+        gender: defaultGender,
+        waliKelas: assignedTeacher?.name || matchDb?.waliKelas || "Ust. Pembina Kelas",
+        waliAvatar: assignedTeacher?.avatarUrl || defaultAvatar,
+        studentCount: students.length,
+        avgScore,
+        avgSholat,
+        asrama: defaultGender === "Putra" ? "Asrama Salman Al-Farisi" : "Asrama Khadijah"
       };
     });
-  }, [santriList, penilaianList, absensiList]);
+  }, [kelasList, classList, santriList, userList, absensiList]);
 
-  const summary = useMemo(() => {
-    const total = santriAnalytics.length || 1;
-    const putraCount = santriAnalytics.filter((item) => item.santri.gender === "Putra").length;
-    const putriCount = santriAnalytics.filter((item) => item.santri.gender === "Putri").length;
-    const avgScore = santriAnalytics.reduce((acc, item) => acc + item.santri.currentScore, 0) / total;
-    const mumtazCount = santriAnalytics.filter((item) => item.santri.currentScore >= 85).length;
-    const lulusCount = santriAnalytics.filter((item) => item.santri.currentScore >= 65).length;
-    const attentionCount = santriAnalytics.filter((item) => item.santri.currentScore < 65).length;
-
-    return {
-      total: santriAnalytics.length,
-      putraCount,
-      putriCount,
-      avgScore,
-      mumtazCount,
-      passRate: ((lulusCount / total) * 100).toFixed(1),
-      attentionCount
-    };
-  }, [santriAnalytics]);
-
-  const filteredItems = useMemo(() => {
-    return santriAnalytics.filter((item) => {
-      const matchGender = selectedGender === "ALL" || item.santri.gender === selectedGender;
-      const matchClass = selectedClass === "ALL" || item.santri.class === selectedClass;
+  const filteredClasses = useMemo(() => {
+    return enrichedClasses.filter((c) => {
+      const matchGender = selectedGender === "ALL" || c.gender === selectedGender;
       const matchSearch =
-        item.santri.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        item.santri.nis.includes(searchQuery);
-
-      let matchPredikat = true;
-      if (selectedPredikat === "MUMTAZ") matchPredikat = item.santri.currentScore >= 85;
-      else if (selectedPredikat === "JAYYID_JIDDAN") matchPredikat = item.santri.currentScore >= 75 && item.santri.currentScore < 85;
-      else if (selectedPredikat === "JAYYID") matchPredikat = item.santri.currentScore >= 65 && item.santri.currentScore < 75;
-      else if (selectedPredikat === "PERHATIAN") matchPredikat = item.santri.currentScore < 65;
-
-      return matchGender && matchClass && matchSearch && matchPredikat;
-    }).sort((a, b) => {
-      if (sortBy === "score_desc") return b.santri.currentScore - a.santri.currentScore;
-      if (sortBy === "score_asc") return a.santri.currentScore - b.santri.currentScore;
-      if (sortBy === "name_asc") return a.santri.name.localeCompare(b.santri.name);
-      if (sortBy === "nis_asc") return a.santri.nis.localeCompare(b.santri.nis);
-      return 0;
+        c.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        c.waliKelas.toLowerCase().includes(searchQuery.toLowerCase());
+      return matchGender && matchSearch;
     });
-  }, [santriAnalytics, selectedGender, selectedClass, searchQuery, selectedPredikat, sortBy]);
+  }, [enrichedClasses, selectedGender, searchQuery]);
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const PAGE_SIZE = 20;
+  const totalSantriCount = santriList.length;
+  const putraCount = santriList.filter((s) => s.gender === "Putra").length;
+  const putriCount = santriList.filter((s) => s.gender === "Putri").length;
 
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [searchQuery, selectedGender, selectedClass, selectedPredikat, sortBy]);
-
-  const totalPages = Math.max(1, Math.ceil(filteredItems.length / PAGE_SIZE));
-  const safePage = Math.min(Math.max(1, currentPage), totalPages);
-
-  const paginatedItems = useMemo(() => {
-    const start = (safePage - 1) * PAGE_SIZE;
-    return filteredItems.slice(start, start + PAGE_SIZE);
-  }, [filteredItems, safePage]);
-
-  const handlePrintSingle = (item: (typeof santriAnalytics)[0]) => {
-    try {
-      showToast(`Mengunduh rapor ${item.santri.name}...`, "info");
-      generateSantriPdf(item.santri, item.studentPenilaian, item.studentAbsensi);
-      showToast(`Rapor ${item.santri.name} berhasil diunduh`, "success");
-    } catch {
-      showToast("Gagal mengunduh rapor", "error");
-    }
-  };
-
-  const handlePrintAllVisible = () => {
-    if (filteredItems.length === 0) {
-      showToast("Tidak ada data rapor untuk dicetak", "error");
+  const handleDownloadClassBulk = async (cls: ClassRaporCardItem) => {
+    const studentsInClass = santriList.filter(
+      (s) => s.class.toUpperCase() === cls.name.toUpperCase()
+    );
+    if (studentsInClass.length === 0) {
+      showToast(`Tidak ada santri di Kelas ${cls.name}`, "error");
       return;
     }
-    setIsPrintingAll(true);
-    showToast(`Menyiapkan ${filteredItems.length} berkas rapor santri...`, "info");
-    filteredItems.forEach((item, index) => {
-      setTimeout(() => {
-        try {
-          generateSantriPdf(item.santri, item.studentPenilaian, item.studentAbsensi);
-        } catch {
-          void 0;
-        }
-        if (index === filteredItems.length - 1) {
-          setIsPrintingAll(false);
-          showToast(`Semua rapor (${filteredItems.length} santri) selesai diunduh`, "success");
-        }
-      }, index * 250);
-    });
-  };
 
-  const handleRefresh = async () => {
-    showToast("Memperbarui data rapor...", "info");
-    await refreshData();
-    showToast("Data rapor berhasil diperbarui", "success");
+    try {
+      setDownloadingClassId(cls.name);
+      await generateClassBulkPdf(cls.name, studentsInClass, penilaianList, absensiList);
+      showToast(`Rapor lengkap Kelas ${cls.name} (${studentsInClass.length} santri) berhasil diunduh.`, "success");
+    } catch {
+      showToast(`Gagal mengunduh rapor Kelas ${cls.name}`, "error");
+    } finally {
+      setDownloadingClassId(null);
+    }
   };
-
-  const activeDetailData = useMemo(() => {
-    if (!selectedDetailSantri) return null;
-    return santriAnalytics.find((item) => item.santri.id === selectedDetailSantri.id) || null;
-  }, [selectedDetailSantri, santriAnalytics]);
 
   return (
     <RoleShell>
-      <div className="w-full space-y-4 overflow-x-hidden pb-36">
-        <div className="mizan-card p-4 sm:p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="w-full space-y-4 sm:space-y-5 pb-32">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <h1 className="text-lg sm:text-2xl font-serif font-black text-[#172033] tracking-tight">
-              Rapor Akhlak & Adab Santri
+            <h1 className="text-xl sm:text-2xl font-serif font-black text-[#172033] tracking-tight">
+              Pusat Rapor Akhlak & Prestasi Santri
             </h1>
-            <p className="text-[11px] text-[#64748B] mt-0.5">
-              Rekapitulasi komprehensif penilaian adab, hasanah, sayyi&apos;ah, dan presensi sholat 7 waktu santri dan santriwati
+            <p className="text-xs text-[#64748B] mt-0.5">
+              Pilih kelas untuk melihat peringkat santri, statistik adab & sholat, serta unduh rapor buku kendali per kelas.
             </p>
-          </div>
-
-          <div className="flex items-center gap-2 shrink-0">
-            <button
-              type="button"
-              onClick={handleRefresh}
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-white border border-[#D4C9B5] text-[#172033] hover:bg-[#FAF7EE] text-xs font-bold shadow-2xs transition-colors"
-            >
-              <RefreshCw className="w-3.5 h-3.5 text-[#A8833E]" />
-              <span>Refresh</span>
-            </button>
-
-            <button
-              type="button"
-              disabled={isPrintingAll || filteredItems.length === 0}
-              onClick={handlePrintAllVisible}
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#1B4D3E] text-white hover:bg-[#153e32] text-xs font-bold shadow-sm transition-all disabled:opacity-50"
-            >
-              <Download className="w-3.5 h-3.5" />
-              <span>{isPrintingAll ? "Proses" : "Unduh"}</span>
-            </button>
           </div>
         </div>
 
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-          <CardSub className="p-4 bg-white">
-            <div className="flex items-center justify-between text-[#64748B] mb-2">
-              <span className="text-[11px] font-bold uppercase tracking-wider">Total Santri</span>
-              <div className="w-8 h-8 rounded-xl mizan-inset text-[#1B4D3E] flex items-center justify-center">
-                <Users className="w-4 h-4" />
-              </div>
-            </div>
-            <div className="text-2xl sm:text-3xl font-black font-mono text-[#172033]">
-              {summary.total}
-            </div>
-            <p className="text-[10px] text-[#64748B] mt-1 font-semibold">
-              {summary.putraCount} Santri Putra • {summary.putriCount} Santriwati
-            </p>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3.5">
+          <CardSub className="p-3.5 bg-white text-center">
+            <span className="text-[10px] text-[#64748B] font-bold uppercase tracking-wider block">
+              Total Kelas
+            </span>
+            <span className="text-xl sm:text-2xl font-black font-mono text-[#172033] mt-0.5 block">
+              {enrichedClasses.length}
+            </span>
+            <span className="text-[10px] text-[#64748B] block mt-0.5 font-medium">
+              Kelas 1 s/d Kelas 6
+            </span>
           </CardSub>
 
-          <CardSub className="p-4 bg-white">
-            <div className="flex items-center justify-between text-[#64748B] mb-2">
-              <span className="text-[11px] font-bold uppercase tracking-wider">Rata-Rata Adab</span>
-              <div className="w-8 h-8 rounded-xl mizan-inset text-[#A8833E] flex items-center justify-center">
-                <Award className="w-4 h-4" />
-              </div>
-            </div>
-            <div className="text-2xl sm:text-3xl font-black font-mono text-[#172033]">
-              {formatScore(summary.avgScore)}
-            </div>
-            <p className="text-[10px] text-[#64748B] mt-1 font-semibold">
-              Standar minimum kelulusan: 65,000
-            </p>
+          <CardSub className="p-3.5 bg-white text-center">
+            <span className="text-[10px] text-[#64748B] font-bold uppercase tracking-wider block">
+              Total Santri
+            </span>
+            <span className="text-xl sm:text-2xl font-black font-mono text-[#1B4D3E] mt-0.5 block">
+              {totalSantriCount}
+            </span>
+            <span className="text-[10px] text-[#64748B] block mt-0.5 font-medium">
+              Santri Aktif Terdata
+            </span>
           </CardSub>
 
-          <CardSub className="p-4 bg-white">
-            <div className="flex items-center justify-between text-[#64748B] mb-2">
-              <span className="text-[11px] font-bold uppercase tracking-wider">Kelulusan Adab</span>
-              <div className="w-8 h-8 rounded-xl mizan-inset text-[#065F46] flex items-center justify-center">
-                <TrendingUp className="w-4 h-4" />
-              </div>
-            </div>
-            <div className="text-2xl sm:text-3xl font-black font-mono text-[#065F46]">
-              {summary.passRate}%
-            </div>
-            <p className="text-[10px] text-[#065F46] mt-1 font-semibold">
-              {summary.mumtazCount} Santri Predikat Mumtaz
-            </p>
+          <CardSub className="p-3.5 bg-white text-center">
+            <span className="text-[10px] text-[#64748B] font-bold uppercase tracking-wider block">
+              Santri Putra (L)
+            </span>
+            <span className="text-xl sm:text-2xl font-black font-mono text-[#065F46] mt-0.5 block">
+              {putraCount}
+            </span>
+            <span className="text-[10px] text-[#64748B] block mt-0.5 font-medium">
+              Kelas 1A, 2A, 3A, 4A, 5A, 6A
+            </span>
           </CardSub>
 
-          <CardSub className="p-4 bg-white">
-            <div className="flex items-center justify-between text-[#64748B] mb-2">
-              <span className="text-[11px] font-bold uppercase tracking-wider">Perlu Binaan</span>
-              <div className="w-8 h-8 rounded-xl mizan-inset text-[#B91C1C] flex items-center justify-center">
-                <AlertTriangle className="w-4 h-4" />
-              </div>
-            </div>
-            <div className="text-2xl sm:text-3xl font-black font-mono text-[#B91C1C]">
-              {summary.attentionCount}
-            </div>
-            <p className="text-[10px] text-[#B91C1C] mt-1 font-semibold">
-              Skor adab di bawah 65,000
-            </p>
+          <CardSub className="p-3.5 bg-white text-center">
+            <span className="text-[10px] text-[#64748B] font-bold uppercase tracking-wider block">
+              Santri Putri (P)
+            </span>
+            <span className="text-xl sm:text-2xl font-black font-mono text-[#A8833E] mt-0.5 block">
+              {putriCount}
+            </span>
+            <span className="text-[10px] text-[#64748B] block mt-0.5 font-medium">
+              Kelas 1B, 2B, 3B, 4B, 5B, 6B
+            </span>
           </CardSub>
         </div>
 
-        <div className="mizan-card p-3 sm:p-4 bg-white space-y-3">
-          <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
-            <div className="relative flex-1">
-              <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[#64748B]" />
-              <input
-                type="text"
-                placeholder="Cari santri berdasarkan nama lengkap atau NIS..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-9 pr-3.5 py-2 text-xs bg-[#FAF7EE] border border-[#E2EBF4] rounded-2xl text-[#172033] font-medium focus:outline-none focus:border-[#1B4D3E]"
-              />
-            </div>
-
-            <div className="flex flex-wrap items-center gap-2">
-              <div className="flex items-center gap-1 bg-[#EEF2F6] p-1 rounded-2xl">
-                <button
-                  type="button"
-                  onClick={() => setViewMode("list")}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
-                    viewMode === "list"
-                      ? "bg-white text-[#1B4D3E] shadow-2xs"
-                      : "text-[#64748B] hover:text-[#172033]"
-                  }`}
-                >
-                  <List className="w-3.5 h-3.5" />
-                  <span>Daftar</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setViewMode("grid")}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
-                    viewMode === "grid"
-                      ? "bg-white text-[#1B4D3E] shadow-2xs"
-                      : "text-[#64748B] hover:text-[#172033]"
-                  }`}
-                >
-                  <LayoutGrid className="w-3.5 h-3.5" />
-                  <span>Kotak</span>
-                </button>
-              </div>
-
-              <div className="inline-flex rounded-2xl p-0.5 bg-[#FAF7EE] border border-[#E2EBF4] shrink-0">
-                {(["ALL", "Putra", "Putri"] as const).map((g) => (
-                  <button
-                    key={g}
-                    type="button"
-                    onClick={() => {
-                      setSelectedGender(g);
-                      showToast(`Filter gender: ${g === "ALL" ? "Semua" : g}`, "info");
-                    }}
-                    className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
-                      selectedGender === g
-                        ? "bg-[#1B4D3E] text-white shadow-2xs"
-                        : "text-[#64748B] hover:text-[#172033]"
-                    }`}
-                  >
-                    {g === "ALL" ? "Semua" : g === "Putra" ? "L" : "P"}
-                  </button>
-                ))}
-              </div>
-
-              <select
-                aria-label="Pilih Kelas"
-                value={selectedClass}
-                onChange={(e) => {
-                  setSelectedClass(e.target.value);
-                  showToast(`Filter kelas: ${e.target.value === "ALL" ? "Semua Kelas" : `Kelas ${e.target.value}`}`, "info");
-                }}
-                className="px-3 py-2 text-xs bg-[#FAF7EE] border border-[#E2EBF4] rounded-2xl text-[#172033] font-bold focus:outline-none shrink-0"
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-1.5 rounded-2xl bg-white border border-[#E2EBF4] shadow-2xs">
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0">
+            {(["ALL", "Putra", "Putri"] as const).map((gender) => (
+              <button
+                key={gender}
+                type="button"
+                onClick={() => setSelectedGender(gender)}
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
+                  selectedGender === gender
+                    ? "bg-[#1B4D3E] text-white shadow-2xs"
+                    : "text-[#64748B] hover:text-[#172033] hover:bg-[#FAF7EE]"
+                }`}
               >
-                <option value="ALL">Semua Kelas</option>
-                {kelasList.map((cls) => (
-                  <option key={cls} value={cls}>
-                    Kelas {cls}
-                  </option>
-                ))}
-              </select>
+                {gender === "ALL" ? "Semua Gender" : gender === "Putra" ? "Putra (L)" : "Putri (P)"}
+              </button>
+            ))}
+          </div>
 
-              <select
-                aria-label="Pilih Predikat"
-                value={selectedPredikat}
-                onChange={(e) => setSelectedPredikat(e.target.value)}
-                className="px-3 py-2 text-xs bg-[#FAF7EE] border border-[#E2EBF4] rounded-2xl text-[#172033] font-bold focus:outline-none shrink-0"
-              >
-                <option value="ALL">Semua Predikat</option>
-                <option value="MUMTAZ">Mumtaz (≥ 85)</option>
-                <option value="JAYYID_JIDDAN">Jayyid Jiddan (75 - 84.9)</option>
-                <option value="JAYYID">Jayyid (65 - 74.9)</option>
-                <option value="PERHATIAN">Perlu Pembinaan (&lt; 65)</option>
-              </select>
-
-              <select
-                aria-label="Urutkan"
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value as "score_desc" | "score_asc" | "name_asc" | "nis_asc")}
-                className="px-3 py-2 text-xs bg-[#FAF7EE] border border-[#E2EBF4] rounded-2xl text-[#172033] font-bold focus:outline-none shrink-0"
-              >
-                <option value="score_desc">Skor Tertinggi</option>
-                <option value="score_asc">Skor Terendah</option>
-                <option value="name_asc">Nama A-Z</option>
-                <option value="nis_asc">Nomor NIS</option>
-              </select>
-            </div>
+          <div className="relative w-full sm:w-64">
+            <Search className="w-4 h-4 absolute left-3 top-2.5 text-[#94A3B8]" />
+            <input
+              type="text"
+              placeholder="Cari kelas atau wali..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-9 pr-3.5 py-1.5 text-xs font-semibold bg-[#EEF2F6] border border-transparent rounded-xl text-[#172033] focus:bg-white focus:border-[#1B4D3E] focus:outline-none transition-colors"
+            />
           </div>
         </div>
 
-        {viewMode === "list" ? (
-          <div className="mizan-card overflow-hidden bg-white border border-[#E2EBF4]">
-            <div className="px-4 py-3 bg-[#FAF7EE] border-b border-[#E2EBF4] flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <FileText className="w-4 h-4 text-[#1B4D3E]" />
-                <span className="text-xs font-bold text-[#172033]">
-                  Lembar Data Rapor Terpadu ({filteredItems.length} Santri)
-                </span>
-              </div>
-              <span className="text-[10px] text-[#64748B] font-semibold">
-                Tahun Ajaran 2026/2027 • Semester Ganjil
-              </span>
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-4 md:gap-5">
+          {filteredClasses.length === 0 ? (
+            <div className="col-span-full py-12 text-center bg-white rounded-3xl border border-[#E2EBF4] p-6 space-y-2">
+              <GraduationCap className="w-10 h-10 text-[#C5A059] mx-auto opacity-70" />
+              <h3 className="text-sm font-bold text-[#172033]">Kelas Tidak Ditemukan</h3>
+              <p className="text-xs text-[#64748B]">
+                Tidak ada kelas yang sesuai dengan kata kunci pencarian atau filter gender.
+              </p>
             </div>
+          ) : (
+            filteredClasses.map((cls) => {
+              const defaultAvatar =
+                cls.gender === "Putri"
+                  ? "/default-avatar-ustadzah.jpg"
+                  : "/default-avatar-ustadz.jpg";
+              const classPhoto = cls.waliAvatar || defaultAvatar;
+              const isDownloadingThis = downloadingClassId === cls.name;
 
-            <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse text-xs">
-                <thead>
-                  <tr className="border-b border-[#E2EBF4] bg-[#F8FAFC] text-[#64748B] font-bold text-[10px] uppercase tracking-wider">
-                    <th className="py-3 px-3.5 w-12 text-center">No</th>
-                    <th className="py-3 px-3.5">Santri / Santriwati</th>
-                    <th className="py-3 px-3 text-center">Skor Awal</th>
-                    <th className="py-3 px-3 text-center">Prestasi (Hasanah)</th>
-                    <th className="py-3 px-3 text-center">Pelanggaran (Sayyi&apos;ah)</th>
-                    <th className="py-3 px-3 text-center">Sholat 7 Waktu</th>
-                    <th className="py-3 px-3 text-center">Skor Akhir Adab</th>
-                    <th className="py-3 px-3 text-center">Predikat Kelulusan</th>
-                    <th className="py-3 px-3.5 text-center w-28">Aksi</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-[#E2EBF4]">
-                  {paginatedItems.map((item, index) => {
-                    const s = item.santri;
-                    return (
-                      <tr
-                        key={s.id}
-                        className="hover:bg-[#FAF7EE]/60 transition-colors group"
-                      >
-                        <td className="py-3 px-3.5 text-center font-mono font-bold text-[#64748B]">
-                          {(safePage - 1) * PAGE_SIZE + index + 1}
-                        </td>
-
-                        <td className="py-3 px-3.5">
-                          <div className="flex items-center gap-3">
-                            <Avatar
-                              src={s.avatar}
-                              initials={s.name.slice(0, 2).toUpperCase()}
-                              size="md"
-                              variant={s.gender === "Putri" ? "gold" : "primary"}
-                              className="w-12 h-12 shadow-2xs"
-                            />
-                            <div className="min-w-0">
-                              <p className="font-bold text-[#172033] truncate max-w-[200px]">
-                                {s.name}
-                              </p>
-                              <div className="flex items-center gap-1.5 mt-0.5">
-                                <span className="font-mono text-[10px] text-[#64748B]">
-                                  NIS: {s.nis}
-                                </span>
-                                <span className="text-[10px] text-[#64748B]">•</span>
-                                <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-[#EEF2F6] text-[#172033] whitespace-nowrap">
-                                  {s.class}
-                                </span>
-                                <span
-                                  className={`text-[9px] font-bold px-1.5 py-0.2 rounded ${
-                                    s.gender === "Putra"
-                                      ? "bg-[#EFF6FF] text-[#1D4ED8]"
-                                      : "bg-[#FDF2F8] text-[#BE185D]"
-                                  }`}
-                                >
-                                  {s.gender}
-                                </span>
-                              </div>
-                            </div>
-                          </div>
-                        </td>
-
-                        <td className="py-3 px-3 text-center font-mono font-semibold text-[#64748B]">
-                          {formatScore(s.baseScore)}
-                        </td>
-
-                        <td className="py-3 px-3 text-center">
-                          <span className="font-mono font-bold text-[#065F46] block">
-                            +{formatScore(item.hasanahScore)}
-                          </span>
-                          <span className="text-[10px] text-[#64748B] font-medium block mt-0.5">
-                            {item.hasanahCount} Catatan
-                          </span>
-                        </td>
-
-                        <td className="py-3 px-3 text-center">
-                          <span className="font-mono font-bold text-[#B91C1C] block">
-                            {item.sayyiahScore !== 0 ? formatScoreWithSign(item.sayyiahScore) : "0,000"}
-                          </span>
-                          <span className="text-[10px] text-[#64748B] font-medium block mt-0.5">
-                            {item.sayyiahCount} Catatan
-                          </span>
-                        </td>
-
-                        <td className="py-3 px-3 text-center">
-                          <span className="font-mono font-bold text-[#172033] block">
-                            {item.attendancePercent}%
-                          </span>
-                          <span className="text-[10px] text-[#065F46] font-semibold block mt-0.5">
-                            {item.effectiveHadir}/{item.effectiveTotal} Hadir
-                          </span>
-                        </td>
-
-                        <td className="py-3 px-3 text-center">
-                          <span
-                            className={`font-mono text-sm font-black px-2.5 py-1 rounded-xl inline-block ${
-                              s.currentScore >= 80
-                                ? "bg-[#ECFDF5] text-[#065F46] border border-[#A7F3D0]"
-                                : s.currentScore >= 61
-                                ? "bg-white text-[#172033] border border-[#E2EBF4]"
-                                : "bg-[#FEF2F2] text-[#B91C1C] border border-[#FECACA]"
-                            }`}
-                          >
-                            {formatScore(s.currentScore)}
-                          </span>
-                        </td>
-
-                        <td className="py-3 px-3 text-center">
-                          <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full inline-block ${item.predikat.badgeCls}`}>
-                            {item.predikat.label}
-                          </span>
-                          {s.status && s.status !== "Aman" && (
-                            <span className="block text-[9px] font-black text-red-600 mt-0.5 uppercase">
-                              {s.status}
-                            </span>
-                          )}
-                        </td>
-
-                        <td className="py-3 px-3.5 text-center">
-                          <div className="flex items-center justify-center gap-1.5">
-                            <button
-                              type="button"
-                              onClick={() => setSelectedDetailSantri(s)}
-                              className="px-2.5 py-1 rounded-lg bg-[#FAF7EE] text-[#A8833E] hover:bg-[#C5A059] hover:text-white text-[11px] font-bold border border-[#C5A059]/30 transition-colors"
-                            >
-                              Detail
-                            </button>
-
-                            <button
-                              type="button"
-                              onClick={() => handlePrintSingle(item)}
-                              className="px-2.5 py-1 rounded-lg bg-[#1B4D3E] text-white hover:bg-[#153e32] text-[11px] font-bold transition-colors inline-flex items-center gap-1"
-                            >
-                              <Printer className="w-3 h-3" />
-                              <span>Cetak</span>
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    );
-                  })}
-
-                  {filteredItems.length === 0 && (
-                    <tr>
-                      <td colSpan={9} className="py-12 text-center text-xs text-[#94A3B8]">
-                        Tidak ada santri atau santriwati yang sesuai dengan filter pencarian rapor
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
-
-            <div className="p-3 bg-[#FAF7EE]/60 border-t border-[#E2EBF4] flex flex-col sm:flex-row items-center justify-between gap-2 text-[11px] text-[#64748B]">
-              <span>
-                Menampilkan <strong className="text-[#172033]">{filteredItems.length}</strong> dari <strong className="text-[#172033]">{santriAnalytics.length}</strong> seluruh data santri
-              </span>
-              <div className="flex items-center gap-2">
-                <span className="font-semibold">Skor Kelulusan: Mumtaz (≥85) • Jayyid (≥65) • Perhatian (&lt;65)</span>
-              </div>
-            </div>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-3.5">
-            {paginatedItems.map((item) => {
-              const s = item.santri;
               return (
                 <div
-                  key={s.id}
-                  className="p-4 rounded-2xl bg-white border border-[#E2EBF4] hover:border-[#1B4D3E]/40 hover:shadow-md transition-all flex flex-col justify-between space-y-3"
+                  key={cls.id}
+                  className="group relative rounded-2xl sm:rounded-3xl overflow-hidden bg-white border border-[#E2EBF4] shadow-2xs hover:shadow-2xl hover:border-[#1B4D3E]/40 hover:-translate-y-1.5 transition-all duration-500 flex flex-col justify-between text-left"
                 >
-                  <div>
-                    <div className="flex items-start gap-3">
-                      <Avatar
-                        src={s.avatar}
-                        initials={s.name.slice(0, 2).toUpperCase()}
-                        size="md"
-                        variant={s.gender === "Putri" ? "gold" : "primary"}
-                        className="w-12 h-12 shadow-2xs shrink-0"
-                      />
-                      <div className="min-w-0 flex-1">
-                        <div className="flex items-center justify-between gap-1">
-                          <p className="font-bold text-[#172033] text-sm truncate">
-                            {s.name}
-                          </p>
-                          <span
-                            className={`text-[9px] font-bold px-1.5 py-0.5 rounded-full shrink-0 ${
-                              s.gender === "Putra"
-                                ? "bg-[#EFF6FF] text-[#1D4ED8]"
-                                : "bg-[#FDF2F8] text-[#BE185D]"
-                            }`}
-                          >
-                            {s.gender}
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-1.5 mt-0.5">
-                          <span className="font-mono text-[10px] text-[#64748B]">
-                            NIS: {s.nis}
-                          </span>
-                          <span className="text-[10px] text-[#64748B]">•</span>
-                          <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-[#EEF2F6] text-[#172033] whitespace-nowrap">
-                            {s.class}
-                          </span>
-                        </div>
+                  <Link
+                    href={`/admin/rapor/${cls.name}`}
+                    className="sheen-wrapper relative w-full aspect-square overflow-hidden bg-[#0E271F] shrink-0 cursor-pointer block"
+                    title={`Lihat Rapor Kelas ${cls.name}`}
+                  >
+                    <img
+                      src={classPhoto}
+                      onError={(e) => {
+                        const target = e.currentTarget;
+                        if (target.src !== defaultAvatar && !target.src.endsWith(defaultAvatar)) {
+                          target.src = defaultAvatar;
+                        }
+                      }}
+                      alt={`Wali Kelas ${cls.name}`}
+                      className="w-full h-full object-cover object-top group-hover:scale-108 transition-transform duration-700 ease-out"
+                    />
+                    <div className="absolute inset-x-0 bottom-0 h-10 sm:h-14 bg-gradient-to-t from-white via-white/50 to-transparent pointer-events-none" />
+                  </Link>
+
+                  <div className="p-2.5 sm:p-4 flex flex-col justify-between flex-1 bg-white space-y-2.5">
+                    <div className="space-y-1 sm:space-y-1.5">
+                      <div className="flex items-center justify-between gap-1">
+                        <span className="px-2 py-0.5 rounded-lg text-[10px] sm:text-xs font-mono font-black bg-[#1B4D3E]/10 text-[#1B4D3E] border border-[#1B4D3E]/20 whitespace-nowrap">
+                          Kelas {cls.name}
+                        </span>
+                        <span
+                          className={`px-1.5 sm:px-2 py-0.5 rounded-md sm:rounded-full text-[9px] sm:text-[10px] font-bold border shrink-0 ${
+                            cls.gender === "Putra"
+                              ? "bg-[#ECFDF5] text-[#065F46] border-[#A7F3D0]"
+                              : "bg-[#FAF7EE] text-[#A8833E] border-[#C5A059]/40"
+                          }`}
+                        >
+                          {cls.gender === "Putra" ? "L" : "P"}
+                        </span>
+                      </div>
+
+                      <div>
+                        <span className="text-[8px] sm:text-[9px] font-extrabold uppercase tracking-widest text-[#C5A059] block">
+                          Wali Kelas
+                        </span>
+                        <h4 className="text-xs sm:text-sm font-black text-[#172033] group-hover:text-[#1B4D3E] transition-colors truncate mt-0.5">
+                          {cls.waliKelas}
+                        </h4>
+                        <p className="text-[10px] sm:text-xs text-[#64748B] flex items-center gap-1 pt-0.5 truncate">
+                          <Building2 className="w-3 h-3 text-[#C5A059] shrink-0" />
+                          <span>{cls.studentCount} Santri Terdaftar</span>
+                        </p>
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-3 gap-2 mt-3 p-2.5 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] text-center">
-                      <div>
-                        <span className="text-[9px] font-bold text-[#64748B] uppercase block">
-                          Skor
-                        </span>
-                        <span className="text-sm font-black font-mono text-[#1B4D3E] block mt-0.5">
-                          {formatScore(s.currentScore)}
-                        </span>
-                      </div>
-                      <div>
-                        <span className="text-[9px] font-bold text-[#64748B] uppercase block">
-                          Predikat
-                        </span>
-                        <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-full inline-block mt-0.5 ${item.predikat.badgeCls}`}>
-                          {item.predikat.label}
-                        </span>
-                      </div>
-                      <div>
-                        <span className="text-[9px] font-bold text-[#64748B] uppercase block">
-                          Sholat
-                        </span>
-                        <span className="text-xs font-black font-mono text-[#065F46] block mt-0.5">
-                          {item.attendancePercent}%
-                        </span>
-                      </div>
+                    <div className="pt-2 border-t border-[#E2EBF4] flex items-center justify-between text-[10px] sm:text-xs">
+                      <span className="text-[#64748B] font-medium">Rerata Skor</span>
+                      <span className="font-mono font-bold text-[#1B4D3E] bg-[#ECFDF5] border border-[#A7F3D0] px-1.5 sm:px-2 py-0.5 rounded-lg shadow-2xs">
+                        {cls.avgScore.toFixed(2).replace(".", ",")}
+                      </span>
                     </div>
-                  </div>
 
-                  <div className="pt-2 border-t border-[#F1F5F9] flex items-center justify-between gap-2">
-                    <button
-                      type="button"
-                      onClick={() => setSelectedDetailSantri(s)}
-                      className="flex-1 py-1.5 px-3 rounded-xl bg-[#FAF7EE] text-[#A8833E] hover:bg-[#C5A059] hover:text-white text-xs font-bold border border-[#C5A059]/30 transition-colors text-center"
-                    >
-                      Detail
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => handlePrintSingle(item)}
-                      className="flex-1 py-1.5 px-3 rounded-xl bg-[#1B4D3E] text-white hover:bg-[#153e32] text-xs font-bold transition-colors inline-flex items-center justify-center gap-1.5 shadow-2xs"
-                    >
-                      <Printer className="w-3.5 h-3.5" />
-                      <span>Cetak</span>
-                    </button>
+                    <div className="grid grid-cols-2 gap-1.5 pt-0.5 sm:pt-1">
+                      <Link
+                        href={`/admin/rapor/${cls.name}`}
+                        className="py-1.5 sm:py-2 rounded-lg sm:rounded-xl bg-[#FAF7EE] text-[#A8833E] hover:bg-[#F3EBD8] border border-[#C5A059]/40 text-[10px] sm:text-xs font-bold text-center transition-all shadow-2xs active:scale-95 cursor-pointer truncate flex items-center justify-center gap-1"
+                      >
+                        <span>Detail</span>
+                        <ChevronRight className="w-3 h-3" />
+                      </Link>
+
+                      <button
+                        type="button"
+                        onClick={() => handleDownloadClassBulk(cls)}
+                        disabled={isDownloadingThis || cls.studentCount === 0}
+                        className="py-1.5 sm:py-2 rounded-lg sm:rounded-xl bg-[#1B4D3E] text-white hover:bg-[#153e32] disabled:opacity-50 text-[10px] sm:text-xs font-bold text-center transition-all shadow-2xs active:scale-95 cursor-pointer truncate flex items-center justify-center gap-1"
+                        title="Unduh seluruh rapor santri di kelas ini"
+                      >
+                        {isDownloadingThis ? (
+                          <div className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                        ) : (
+                          <Download className="w-3 h-3" />
+                        )}
+                        <span>Unduh PDF</span>
+                      </button>
+                    </div>
                   </div>
                 </div>
               );
-            })}
-            {filteredItems.length === 0 && (
-              <div className="col-span-full py-12 text-center text-xs text-[#94A3B8] bg-white rounded-2xl border border-[#E2EBF4]">
-                Tidak ada santri atau santriwati yang sesuai dengan filter pencarian rapor
-              </div>
-            )}
-          </div>
-        )}
-
-        <Pagination
-          currentPage={safePage}
-          totalPages={totalPages}
-          onPageChange={setCurrentPage}
-          totalItems={filteredItems.length}
-          itemsPerPage={PAGE_SIZE}
-          itemName="santri"
-        />
-
-        {selectedDetailSantri && activeDetailData && (
-          <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4">
-            <div className="bg-white w-full max-w-2xl rounded-3xl shadow-2xl border border-[#E2EBF4] flex flex-col max-h-[90vh] overflow-hidden">
-              <div className="p-4 sm:p-5 border-b border-[#E2EBF4] flex items-center justify-between bg-[#FAF7EE]">
-                <div className="flex items-center gap-3">
-                  <Avatar
-                    src={selectedDetailSantri.avatar}
-                    initials={selectedDetailSantri.name.slice(0, 2).toUpperCase()}
-                    size="xl"
-                    variant={selectedDetailSantri.gender === "Putri" ? "gold" : "primary"}
-                  />
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <h3 className="text-base font-bold text-[#172033]">
-                        {selectedDetailSantri.name}
-                      </h3>
-                      <span className={`text-[9px] font-bold px-1.5 py-0.2 rounded ${activeDetailData.predikat.badgeCls}`}>
-                        {activeDetailData.predikat.label}
-                      </span>
-                    </div>
-                    <p className="text-xs text-[#64748B] mt-0.5">
-                      NIS: {selectedDetailSantri.nis} • Kelas {selectedDetailSantri.class} ({selectedDetailSantri.gender}) • {selectedDetailSantri.asrama || "Asrama Pondok"}
-                    </p>
-                  </div>
-                </div>
-
-                <button
-                  type="button"
-                  onClick={() => setSelectedDetailSantri(null)}
-                  className="p-1.5 rounded-xl hover:bg-black/5 text-[#64748B] hover:text-[#172033]"
-                  aria-label="Tutup"
-                >
-                  <X className="w-5 h-5" />
-                </button>
-              </div>
-
-              <div className="p-4 sm:p-5 overflow-y-auto space-y-4 flex-1">
-                <div className="grid grid-cols-3 gap-2.5 text-center">
-                  <div className="p-3 rounded-2xl bg-[#FAF7EE] border border-[#C5A059]/30">
-                    <span className="text-[10px] font-bold text-[#64748B] uppercase block">
-                      Skor Akhir Adab
-                    </span>
-                    <span className="text-xl font-black font-mono text-[#1B4D3E] mt-1 block">
-                      {formatScore(selectedDetailSantri.currentScore)}
-                    </span>
-                  </div>
-
-                  <div className="p-3 rounded-2xl bg-[#ECFDF5] border border-[#A7F3D0]">
-                    <span className="text-[10px] font-bold text-[#065F46] uppercase block">
-                      Prestasi Hasanah
-                    </span>
-                    <span className="text-xl font-black font-mono text-[#065F46] mt-1 block">
-                      +{formatScore(activeDetailData.hasanahScore)}
-                    </span>
-                  </div>
-
-                  <div className="p-3 rounded-2xl bg-[#FEF2F2] border border-[#FECACA]">
-                    <span className="text-[10px] font-bold text-[#B91C1C] uppercase block">
-                      Penalti Sayyi&apos;ah
-                    </span>
-                    <span className="text-xl font-black font-mono text-[#B91C1C] mt-1 block">
-                      {activeDetailData.sayyiahScore !== 0 ? formatScoreWithSign(activeDetailData.sayyiahScore) : "0,000"}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <h4 className="text-xs font-bold text-[#172033] uppercase tracking-wider flex items-center gap-1.5">
-                    <Clock className="w-3.5 h-3.5 text-[#A8833E]" />
-                    <span>Presensi Sholat 7 Waktu Santri</span>
-                  </h4>
-                  <div className="p-3 rounded-2xl bg-[#F8FAFC] border border-[#E2EBF4] flex items-center justify-between text-xs">
-                    <div>
-                      <p className="font-bold text-[#172033]">
-                        Tingkat Kehadiran: {activeDetailData.attendancePercent}%
-                      </p>
-                      <p className="text-[11px] text-[#64748B] mt-0.5">
-                        Tercatat hadir {activeDetailData.effectiveHadir} dari {activeDetailData.effectiveTotal} sesi sholat fardhu &amp; sunnah
-                      </p>
-                    </div>
-                    <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-[#ECFDF5] text-[#065F46] border border-[#A7F3D0]">
-                      Istiqamah
-                    </span>
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <h4 className="text-xs font-bold text-[#172033] uppercase tracking-wider flex items-center gap-1.5">
-                    <Award className="w-3.5 h-3.5 text-[#065F46]" />
-                    <span>Catatan Hasanah Terakhir ({activeDetailData.hasanahCount})</span>
-                  </h4>
-                  <div className="space-y-1.5 max-h-36 overflow-y-auto">
-                    {activeDetailData.studentPenilaian
-                      .filter((p) => p.type === "HASANAH")
-                      .map((p) => (
-                        <div
-                          key={p.id}
-                          className="p-2.5 rounded-xl border border-[#A7F3D0] bg-[#ECFDF5]/50 flex items-center justify-between text-xs"
-                        >
-                          <div>
-                            <p className="font-bold text-[#172033]">{p.unsurName || p.indicatorText}</p>
-                            <p className="text-[10px] text-[#64748B]">
-                              Oleh {p.guruName} • {p.date || p.createdAt || p.dateKey}
-                            </p>
-                          </div>
-                          <span className="font-mono font-bold text-[#065F46]">
-                            +{formatScore(p.score)}
-                          </span>
-                        </div>
-                      ))}
-                    {activeDetailData.hasanahCount === 0 && (
-                      <p className="text-xs text-[#94A3B8] italic">Belum ada catatan hasanah khusus</p>
-                    )}
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <h4 className="text-xs font-bold text-[#172033] uppercase tracking-wider flex items-center gap-1.5">
-                    <AlertTriangle className="w-3.5 h-3.5 text-[#B91C1C]" />
-                    <span>Catatan Sayyi&apos;ah Terakhir ({activeDetailData.sayyiahCount})</span>
-                  </h4>
-                  <div className="space-y-1.5 max-h-36 overflow-y-auto">
-                    {activeDetailData.studentPenilaian
-                      .filter((p) => p.type === "SAYYIAH")
-                      .map((p) => (
-                        <div
-                          key={p.id}
-                          className="p-2.5 rounded-xl border border-[#FECACA] bg-[#FEF2F2]/50 flex items-center justify-between text-xs"
-                        >
-                          <div>
-                            <p className="font-bold text-[#172033]">{p.unsurName || p.indicatorText}</p>
-                            <p className="text-[10px] text-[#64748B]">
-                              Oleh {p.guruName} • {p.date || p.createdAt || p.dateKey}
-                            </p>
-                          </div>
-                          <span className="font-mono font-bold text-[#B91C1C]">
-                            {formatScoreWithSign(p.score)}
-                          </span>
-                        </div>
-                      ))}
-                    {activeDetailData.sayyiahCount === 0 && (
-                      <p className="text-xs text-[#94A3B8] italic">Alhamdulillah, nihil pelanggaran</p>
-                    )}
-                  </div>
-                </div>
-              </div>
-
-              <div className="p-4 border-t border-[#E2EBF4] bg-[#FAF7EE] flex items-center justify-end gap-2">
-                <button
-                  type="button"
-                  onClick={() => setSelectedDetailSantri(null)}
-                  className="px-4 py-2 rounded-full border border-[#D4C9B5] text-[#172033] text-xs font-bold hover:bg-white"
-                >
-                  Tutup
-                </button>
-                <button
-                  type="button"
-                  onClick={() => handlePrintSingle(activeDetailData)}
-                  className="px-4 py-2 rounded-full bg-[#1B4D3E] text-white text-xs font-bold hover:bg-[#153e32] inline-flex items-center gap-1.5"
-                >
-                  <Printer className="w-3.5 h-3.5" />
-                  <span>Cetak</span>
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
+            })
+          )}
+        </div>
       </div>
     </RoleShell>
   );
