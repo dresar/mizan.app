@@ -501,8 +501,8 @@ export default function InputPenilaianPage() {
                             <p className="truncate text-[11px] font-bold leading-tight">
                               {santri.name}
                             </p>
-                            <p className="text-[9px] text-[#64748B] truncate">
-                              Kelas {santri.class}
+                            <p className="text-[9px] text-[#64748B] font-mono truncate">
+                              {santri.class}
                             </p>
                           </div>
                         </div>

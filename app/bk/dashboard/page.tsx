@@ -247,8 +247,8 @@ export default function PengasuhanDashboardPage() {
                     <p className="text-xs font-bold text-[#172033] truncate">
                       {item.santriName}
                     </p>
-                    <p className="text-[10px] text-[#64748B]">
-                      Kelas {item.santriClass} • {item.waktuSholat || "Subuh"}
+                    <p className="text-[10px] text-[#64748B] font-mono">
+                      {item.santriClass} • {item.waktuSholat || "Subuh"}
                     </p>
                   </div>
 

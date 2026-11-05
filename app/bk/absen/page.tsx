@@ -263,7 +263,7 @@ export default function PengasuhanAbsenPage() {
                 className="w-full px-3 py-1.5 rounded-xl text-xs font-bold bg-[#EEF2F6] border border-transparent text-[#172033] focus:bg-white focus:border-[#1B4D3E] focus:outline-none"
               >
                 {availableClasses.map((cls) => (
-                  <option key={cls} value={cls}>Kelas {cls}</option>
+                  <option key={cls} value={cls}>{cls}</option>
                 ))}
               </select>
             </div>
@@ -359,8 +359,8 @@ export default function PengasuhanAbsenPage() {
                         <p className="text-xs font-bold text-[#172033] truncate">
                           {santri.name}
                         </p>
-                        <p className="text-[10px] text-[#64748B]">
-                          NIS {santri.nis} • Kelas {santri.class}
+                        <p className="text-[10px] text-[#64748B] font-mono">
+                          NIS {santri.nis} • {santri.class}
                         </p>
                       </div>
                     </div>

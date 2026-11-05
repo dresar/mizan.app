@@ -170,7 +170,7 @@ export default function AdminWaliKelasPage() {
       name: t.name,
       subtitle: t.username ? `@${t.username}` : undefined,
       tag: t.assignedClass
-        ? `Kelas ${t.assignedClass} • ${t.role === "GURU" ? "Guru Kelas" : "Pengasuhan BK"}`
+        ? `${t.assignedClass} • ${t.role === "GURU" ? "Guru Kelas" : "Pengasuhan BK"}`
         : t.role === "GURU"
         ? "Guru Kelas"
         : "Pengasuhan BK",
@@ -522,12 +522,12 @@ export default function AdminWaliKelasPage() {
                     <div className="space-y-1 sm:space-y-1.5">
                       <div className="flex items-center justify-between gap-1">
                         {teacher.assignedClass ? (
-                          <span className="px-2 py-0.5 rounded-lg text-[10px] sm:text-xs font-black bg-[#1B4D3E]/10 text-[#1B4D3E] border border-[#1B4D3E]/20 truncate">
-                            Kelas {teacher.assignedClass}
+                          <span className="px-2 py-0.5 rounded-lg text-[10px] sm:text-xs font-mono font-black bg-[#1B4D3E]/10 text-[#1B4D3E] border border-[#1B4D3E]/20 whitespace-nowrap">
+                            {teacher.assignedClass}
                           </span>
                         ) : (
-                          <span className="px-2 py-0.5 rounded-lg text-[10px] sm:text-xs font-bold bg-slate-100 text-slate-500 border border-slate-200 truncate">
-                            Belum Ditugaskan
+                          <span className="px-2 py-0.5 rounded-lg text-[10px] sm:text-xs font-mono font-bold bg-slate-100 text-slate-400 border border-slate-200 whitespace-nowrap">
+                            -
                           </span>
                         )}
                         <span
@@ -701,14 +701,14 @@ export default function AdminWaliKelasPage() {
                         )}
 
                         {visibleColumns.class && (
-                          <td className="py-3 px-3.5">
+                          <td className="py-3 px-3.5 whitespace-nowrap">
                             {teacher.assignedClass ? (
-                              <span className="font-bold text-[#1B4D3E] bg-[#ECFDF5] px-2 py-0.5 rounded-lg border border-[#A7F3D0] text-xs">
-                                Kelas {teacher.assignedClass}
+                              <span className="inline-flex items-center px-2.5 py-1 rounded-lg font-mono font-bold text-xs bg-[#ECFDF5] text-[#065F46] border border-[#A7F3D0] shadow-2xs">
+                                {teacher.assignedClass}
                               </span>
                             ) : (
-                              <span className="text-[10px] text-[#94A3B8] italic">
-                                Belum Ditugaskan
+                              <span className="text-xs text-[#94A3B8] font-mono font-bold">
+                                -
                               </span>
                             )}
                           </td>
@@ -885,7 +885,7 @@ export default function AdminWaliKelasPage() {
                       <option value="">Bebas Tugas (Lepas Kelas)</option>
                       {kelasList.map((cls) => (
                         <option key={cls} value={cls}>
-                          Kelas {cls}
+                          {cls}
                         </option>
                       ))}
                     </select>

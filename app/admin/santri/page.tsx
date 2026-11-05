@@ -143,7 +143,7 @@ export default function AdminSantriPage() {
       id: s.id,
       name: s.name,
       subtitle: `NIS: ${s.nis}`,
-      tag: `Kelas ${s.class} • Santri ${s.gender}`,
+      tag: `${s.class} • Santri ${s.gender}`,
       photoUrl: s.avatarUrl,
       initials: s.avatar,
       gender: s.gender as "Putra" | "Putri"
@@ -610,7 +610,7 @@ export default function AdminSantriPage() {
                 <option value="ALL">Semua Kelas</option>
                 {kelasList.map((cls) => (
                   <option key={cls} value={cls}>
-                    Kelas {cls}
+                    {cls}
                   </option>
                 ))}
               </select>
@@ -817,8 +817,8 @@ export default function AdminSantriPage() {
                               </p>
                             )}
                             {visibleSantriColumns.class && (
-                              <p className="text-[10px] text-[#1B4D3E] font-semibold">
-                                Kelas {santri.class}
+                              <p className="text-[10px] text-[#1B4D3E] font-mono font-bold">
+                                {santri.class}
                               </p>
                             )}
                           </div>
@@ -999,8 +999,8 @@ export default function AdminSantriPage() {
                               </span>
                             )}
                             {visibleSantriColumns.class && (
-                              <span className="text-[10px] font-bold px-1.5 py-0.2 rounded bg-[#EEF2F6] text-[#172033]">
-                                Kelas {santri.class}
+                              <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-md bg-[#EEF2F6] text-[#172033] whitespace-nowrap">
+                                {santri.class}
                               </span>
                             )}
                           </div>
@@ -1207,7 +1207,7 @@ export default function AdminSantriPage() {
                       className="w-full p-2 text-xs bg-[#EEF2F6] border border-transparent rounded-xl text-[#172033] focus:bg-white focus:border-[#1B4D3E]"
                     >
                       {kelasList.map((cls) => (
-                        <option key={cls} value={cls}>Kelas {cls}</option>
+                        <option key={cls} value={cls}>{cls}</option>
                       ))}
                     </select>
                   </div>
@@ -1345,7 +1345,7 @@ export default function AdminSantriPage() {
                       className="w-full p-2 text-xs bg-[#EEF2F6] border border-transparent rounded-xl text-[#172033]"
                     >
                       {kelasList.map((cls) => (
-                        <option key={cls} value={cls}>Kelas {cls}</option>
+                        <option key={cls} value={cls}>{cls}</option>
                       ))}
                     </select>
                   </div>
@@ -1458,7 +1458,7 @@ export default function AdminSantriPage() {
                           {item.name} ({item.nis})
                         </span>
                         <span className="text-[#64748B]">
-                          Kelas {item.class} • {item.gender}
+                          {item.class} • {item.gender}
                         </span>
                       </div>
                     ))}

@@ -473,8 +473,8 @@ export default function AdminRaporPage() {
                                   NIS: {s.nis}
                                 </span>
                                 <span className="text-[10px] text-[#64748B]">•</span>
-                                <span className="text-[10px] font-bold px-1.5 py-0.2 rounded bg-[#EEF2F6] text-[#172033]">
-                                  Kelas {s.class}
+                                <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-[#EEF2F6] text-[#172033] whitespace-nowrap">
+                                  {s.class}
                                 </span>
                                 <span
                                   className={`text-[9px] font-bold px-1.5 py-0.2 rounded ${
@@ -628,8 +628,8 @@ export default function AdminRaporPage() {
                             NIS: {s.nis}
                           </span>
                           <span className="text-[10px] text-[#64748B]">•</span>
-                          <span className="text-[10px] font-bold px-1.5 py-0.2 rounded bg-[#EEF2F6] text-[#172033]">
-                            Kelas {s.class}
+                          <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-[#EEF2F6] text-[#172033] whitespace-nowrap">
+                            {s.class}
                           </span>
                         </div>
                       </div>

@@ -317,8 +317,8 @@ export function GuruMonitoringCard({
                 <td className="py-3 px-3 font-semibold text-[#172033]">
                   {guru.name}
                 </td>
-                <td className="py-3 px-3 text-[#64748B]">
-                  Kelas {guru.assignedClass} • {guru.asrama}
+                <td className="py-3 px-3 text-[#64748B] font-mono">
+                  {guru.assignedClass} • {guru.asrama}
                 </td>
                 <td className="py-3 px-3 text-center font-bold text-[#172033]">
                   {guru.sholatCount} kali

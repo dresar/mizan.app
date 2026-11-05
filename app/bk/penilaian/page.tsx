@@ -650,8 +650,8 @@ export default function PengasuhanPenilaianPage() {
                             <p className="truncate text-[11px] font-bold leading-tight">
                               {santri.name}
                             </p>
-                            <p className="text-[9px] text-[#64748B] truncate">
-                              Kelas {santri.class} • {santri.gender}
+                            <p className="text-[9px] text-[#64748B] font-mono truncate">
+                              {santri.class} • {santri.gender}
                             </p>
                           </div>
                         </div>

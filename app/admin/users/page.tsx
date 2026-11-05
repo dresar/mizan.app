@@ -613,8 +613,8 @@ export default function AdminUsersPage() {
                         </td>
                         <td className="py-3 px-3.5 font-bold text-[#172033]">
                           {!isSuper && user.assignedClass ? (
-                            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#EEF2F6] text-[#475569]">
-                              Kelas {user.assignedClass}
+                            <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-md bg-[#EEF2F6] text-[#475569] whitespace-nowrap">
+                              {user.assignedClass}
                             </span>
                           ) : (
                             <span className="text-[#94A3B8]">-</span>
@@ -736,8 +736,8 @@ export default function AdminUsersPage() {
                               {isSuper ? "Super Admin" : isPutri ? "Ustadzah (Putri)" : "Ustadz (Putra)"}
                             </span>
                             {!isSuper && user.assignedClass && (
-                              <span className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-[#EEF2F6] text-[#475569]">
-                                Kelas {user.assignedClass}
+                              <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded-md bg-[#EEF2F6] text-[#475569] whitespace-nowrap">
+                                {user.assignedClass}
                               </span>
                             )}
                           </div>

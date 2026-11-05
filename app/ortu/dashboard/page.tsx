@@ -429,8 +429,8 @@ export default function OrtuDashboardPage() {
                         <p className="text-xs font-bold text-[#172033] group-hover:text-[#1B4D3E] truncate">
                           {santri.name}
                         </p>
-                        <p className="text-[10px] text-[#94A3B8]">
-                          NIS: {santri.nis} • Kelas {santri.class} ({santri.gender})
+                        <p className="text-[10px] text-[#94A3B8] font-mono">
+                          NIS: {santri.nis} • {santri.class} ({santri.gender})
                         </p>
                       </div>
                     </div>

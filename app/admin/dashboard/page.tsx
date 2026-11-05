@@ -238,8 +238,8 @@ export default function AdminDashboardPage() {
                       <p className="text-xs font-bold text-[#172033] truncate group-hover:text-[#1B4D3E] transition-colors">
                         {santri.name}
                       </p>
-                      <p className="text-[10px] text-[#64748B]">
-                        Kelas {santri.class} • {santri.gender}
+                      <p className="text-[10px] text-[#64748B] font-mono">
+                        {santri.class} • {santri.gender}
                       </p>
                     </div>
                   </div>

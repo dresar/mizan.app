@@ -954,8 +954,8 @@ export default function AdminAbsensiPage() {
                             <span className="text-xs font-bold text-[#172033]">
                               {item.santriName}
                             </span>
-                            <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-[#EEF2F6] text-[#64748B] font-bold">
-                              Kelas {item.santriClass}
+                            <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-[#EEF2F6] text-[#64748B] font-bold whitespace-nowrap">
+                              {item.santriClass}
                             </span>
                             <span className={`text-[10px] px-1.5 py-0.5 rounded font-bold ${
                               item.gender === "Putra" ? "bg-blue-50 text-blue-700" : "bg-pink-50 text-pink-700"
@@ -1213,8 +1213,8 @@ export default function AdminAbsensiPage() {
                             <span className="text-xs font-bold text-[#172033]">
                               {item.santriName}
                             </span>
-                            <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-[#EEF2F6] text-[#64748B] font-bold">
-                              Kelas {item.santriClass}
+                            <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-[#EEF2F6] text-[#64748B] font-bold whitespace-nowrap">
+                              {item.santriClass}
                             </span>
                             <span className="text-[10px] font-bold text-[#1B4D3E]">
                               Sholat {item.waktuSholat || "Subuh"}

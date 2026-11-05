@@ -670,8 +670,8 @@ export default function PengasuhanHistoryPage() {
                               >
                                 {item.santriName}
                               </Link>
-                              <span className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-[#EEF2F6] text-[#475569]">
-                                Kelas {item.santriClass}
+                              <span className="text-[9px] font-mono font-bold px-2 py-0.5 rounded-md bg-[#EEF2F6] text-[#475569] whitespace-nowrap">
+                                {item.santriClass}
                               </span>
                               <span
                                 className={`text-[9px] font-bold px-2 py-0.5 rounded-full ${
@@ -914,8 +914,8 @@ export default function PengasuhanHistoryPage() {
                               <p className="text-xs font-bold text-[#172033] truncate">
                                 {item.santriName}
                               </p>
-                              <span className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-[#EEF2F6] text-[#475569]">
-                                Kelas {item.santriClass}
+                              <span className="text-[9px] font-mono font-bold px-2 py-0.5 rounded-md bg-[#EEF2F6] text-[#475569] whitespace-nowrap">
+                                {item.santriClass}
                               </span>
                               <span className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-[#FAF7EE] text-[#A8833E]">
                                 Sholat {item.waktuSholat || "Subuh"}

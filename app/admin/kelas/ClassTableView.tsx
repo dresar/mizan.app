@@ -78,8 +78,8 @@ export function ClassTableView({
                   {(safePage - 1) * pageSize + idx + 1}
                 </td>
                 <td className="py-3.5 px-3.5">
-                  <span className="font-serif font-black text-base text-[#172033] group-hover:text-[#1B4D3E] transition-colors">
-                    Kelas {cls.name}
+                  <span className="font-mono font-black text-base text-[#172033] group-hover:text-[#1B4D3E] transition-colors">
+                    {cls.name}
                   </span>
                 </td>
                 <td className="py-3.5 px-3.5 text-center">

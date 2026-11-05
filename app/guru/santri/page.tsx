@@ -215,8 +215,8 @@ export default function GuruSantriListPage() {
                           >
                             {santri.gender}
                           </span>
-                          <span className="text-[10px] font-bold px-1.5 py-0.2 rounded bg-[#EEF2F6] text-[#172033]">
-                            Kelas {santri.class}
+                          <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-[#EEF2F6] text-[#172033] whitespace-nowrap">
+                            {santri.class}
                           </span>
                           <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full border ${pred.color}`}>
                             {pred.label}

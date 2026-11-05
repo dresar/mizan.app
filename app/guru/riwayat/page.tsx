@@ -122,8 +122,8 @@ export default function GuruRiwayatPage() {
                       <p className="font-bold text-xs text-[#172033] truncate">
                         {item.santriName}
                       </p>
-                      <p className="text-[10px] text-[#94A3B8] truncate">
-                        Kelas {item.santriClass}
+                      <p className="text-[10px] text-[#94A3B8] font-mono truncate">
+                        {item.santriClass}
                       </p>
                     </div>
                   </div>

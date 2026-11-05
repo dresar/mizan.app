@@ -153,8 +153,8 @@ export function NeedAttentionCard({ santriList }: NeedAttentionCardProps) {
                   <p className={`text-xs font-bold text-[#172033] truncate transition-colors ${style.nameHover}`}>
                     {santri.name}
                   </p>
-                  <p className="text-[10px] text-[#64748B]">
-                    Kelas {santri.class} • {santri.gender}
+                  <p className="text-[10px] text-[#64748B] font-mono">
+                    {santri.class} • {santri.gender}
                   </p>
                 </div>
               </div>
