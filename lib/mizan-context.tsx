@@ -296,27 +296,29 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
         if (data.penilaianList) setPenilaianList(data.penilaianList);
         if (data.absensiList) setAbsensiList(data.absensiList);
         if (data.settings) setSettings(data.settings);
-        try {
-          const fbRes = await fetch("/api/feedback", { headers, credentials: "include" });
-          if (fbRes.ok) {
-            const fbData = await fbRes.json();
-            if (fbData.success && Array.isArray(fbData.data)) {
-              setFeedbackList(fbData.data);
+        if (authUser) {
+          try {
+            const fbRes = await fetch("/api/feedback", { headers, credentials: "include" });
+            if (fbRes.ok) {
+              const fbData = await fbRes.json();
+              if (fbData.success && Array.isArray(fbData.data)) {
+                setFeedbackList(fbData.data);
+              }
             }
+          } catch {
+            void 0;
           }
-        } catch {
-          void 0;
-        }
-        try {
-          const notifRes = await fetch("/api/notifications?all=1", { headers, credentials: "include" });
-          if (notifRes.ok) {
-            const notifData = await notifRes.json();
-            if (notifData.success && Array.isArray(notifData.data)) {
-              setNotificationList(notifData.data);
+          try {
+            const notifRes = await fetch("/api/notifications?all=1", { headers, credentials: "include" });
+            if (notifRes.ok) {
+              const notifData = await notifRes.json();
+              if (notifData.success && Array.isArray(notifData.data)) {
+                setNotificationList(notifData.data);
+              }
             }
+          } catch {
+            void 0;
           }
-        } catch {
-          void 0;
         }
       }
     } catch {
@@ -347,11 +349,23 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
     refreshData();
     const timer = setInterval(() => {
       if (typeof document !== "undefined" && !document.hidden) {
+        if (typeof window !== "undefined") {
+          const path = window.location.pathname;
+          if (path.startsWith("/login") || path.startsWith("/share")) {
+            return;
+          }
+        }
         refreshData();
       }
     }, 6000);
     const handleVisibility = () => {
       if (!document.hidden) {
+        if (typeof window !== "undefined") {
+          const path = window.location.pathname;
+          if (path.startsWith("/login") || path.startsWith("/share")) {
+            return;
+          }
+        }
         refreshData();
       }
     };

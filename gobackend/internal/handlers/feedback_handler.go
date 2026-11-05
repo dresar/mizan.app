@@ -21,6 +21,11 @@ import (
 )
 
 func GetFeedback(c *fiber.Ctx) error {
+	roleVal := c.Locals("role")
+	if roleVal == nil || roleVal == "" {
+		return c.JSON(fiber.Map{"success": true, "data": []models.FeedbackRecord{}})
+	}
+
 	pool := database.GetPool()
 	if pool == nil {
 		return utils.SendError(c, fiber.StatusServiceUnavailable, "Database belum terhubung")

@@ -22,6 +22,11 @@ var (
 )
 
 func GetNotifications(c *fiber.Ctx) error {
+	roleVal := c.Locals("role")
+	if roleVal == nil || roleVal == "" {
+		return c.JSON(fiber.Map{"success": true, "data": []models.MizanNotification{}})
+	}
+
 	showAll := c.Query("all") == "1"
 	pool := database.GetPool()
 

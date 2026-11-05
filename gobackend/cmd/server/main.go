@@ -156,6 +156,8 @@ func main() {
 	api.Get("/auth/me", handlers.GetMe(cfg))
 	api.Get("/share", handlers.GetShareCard)
 	api.Get("/data", middleware.OptionalAuth(cfg.SessionSecret), handlers.GetData)
+	api.Get("/feedback", middleware.OptionalAuth(cfg.SessionSecret), handlers.GetFeedback)
+	api.Get("/notifications", middleware.OptionalAuth(cfg.SessionSecret), handlers.GetNotifications)
 
 	api.Use(middleware.AuthRequired(cfg.SessionSecret))
 
@@ -194,13 +196,11 @@ func main() {
 
 	api.Post("/share", handlers.CreateShareCard)
 
-	api.Get("/feedback", handlers.GetFeedback)
 	api.Post("/feedback", handlers.CreateFeedback(realtimeHub))
 	api.Patch("/feedback", middleware.RequireRoles(models.RoleSuperAdmin, models.RolePengasuhan, models.RoleGuru), handlers.UpdateFeedbackStatus)
 	api.Delete("/feedback", middleware.RequireRoles(models.RoleSuperAdmin), handlers.DeleteFeedback)
 	api.Post("/feedback/analyze", middleware.RequireRoles(models.RoleSuperAdmin, models.RolePengasuhan, models.RoleGuru), handlers.AnalyzeFeedback(cfg))
 
-	api.Get("/notifications", handlers.GetNotifications)
 	api.Post("/notifications", middleware.RequireRoles(models.RoleSuperAdmin), handlers.CreateNotification(realtimeHub))
 	api.Patch("/notifications", middleware.RequireRoles(models.RoleSuperAdmin), handlers.UpdateNotification)
 	api.Delete("/notifications", middleware.RequireRoles(models.RoleSuperAdmin), handlers.DeleteNotification)
