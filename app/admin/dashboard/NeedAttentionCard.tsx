@@ -104,7 +104,7 @@ export function NeedAttentionCard({ santriList }: NeedAttentionCardProps) {
               ? "Santri dengan perolehan skor akhlak di bawah standar 50,000 yang memerlukan pembinaan intensif"
               : isWarningAlert
               ? "Santri dengan skor mendekati batas aman yang membutuhkan bimbingan pembina"
-              : "5 Putra & 5 Putri posisi skor terendah. Seluruh santri memenuhi batas standar aman (70,000)"}
+              : "5 L & 5 P posisi skor terendah. Seluruh santri memenuhi batas standar aman (70,000)"}
           </p>
         </div>
 
@@ -120,7 +120,7 @@ export function NeedAttentionCard({ santriList }: NeedAttentionCardProps) {
                   : "text-[#64748B] hover:text-[#172033]"
               }`}
             >
-              {g === "ALL" ? "Semua" : g}
+              {g === "ALL" ? "Semua" : g === "Putra" ? "L" : "P"}
             </button>
           ))}
         </div>

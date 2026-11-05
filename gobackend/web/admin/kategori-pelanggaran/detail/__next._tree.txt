@@ -1,6 +1,6 @@
-:HL["/_next/static/chunks/317b4xkkn8zyb.css","style"]
+:HL["/_next/static/chunks/03dw_awg4jmqq.css","style"]
 4:[["children",{"s":"__PAGE__","h":160}]]
 3:[["children",{"s":{"n":"id","t":"d","k":"detail","s":["indikator","kategori","unsur"]},"h":96,"c":"$Q4"}]]
 2:[["children",{"s":"kategori-pelanggaran","h":96,"c":"$Q3"}]]
 1:[["children",{"s":"admin","h":96,"c":"$Q2"}]]
-0:{"b":"O7IMpT91ECobJQwvOD8Ou","t":{"t":{"s":"","h":80,"c":"$Q1"}}}
+0:{"b":"50enkpjQIiEor3UC4qOr7","t":{"t":{"s":"","h":80,"c":"$Q1"}}}

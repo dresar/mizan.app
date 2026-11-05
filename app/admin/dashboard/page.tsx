@@ -108,7 +108,7 @@ export default function AdminDashboardPage() {
               {totalSantri}
             </div>
             <p className="text-[10px] text-[#64748B] mt-1">
-              Putra & Putri terdaftar
+              Santri L & P terdaftar
             </p>
           </CardSub>
 
@@ -170,7 +170,7 @@ export default function AdminDashboardPage() {
                 </h2>
               </div>
               <p className="text-[11px] text-[#64748B] mt-0.5">
-                5 Putra & 5 Putri peraih capaian akhlak tertinggi pondok
+                5 L & 5 P peraih capaian akhlak tertinggi pondok
               </p>
             </div>
 
@@ -186,7 +186,7 @@ export default function AdminDashboardPage() {
                       : "text-[#64748B] hover:text-[#172033]"
                   }`}
                 >
-                  {g === "ALL" ? "Semua" : g}
+                  {g === "ALL" ? "Semua" : g === "Putra" ? "L" : "P"}
                 </button>
               ))}
             </div>

@@ -107,7 +107,7 @@ export function GuruMonitoringCard({
       no: idx + 1,
       id: g.id,
       name: g.name,
-      gender: g.gender === "Putra" ? "Ustadz (Putra)" : "Ustadzah (Putri)",
+      gender: g.gender === "Putra" ? "L" : "P",
       assignedClass: g.assignedClass,
       asrama: g.asrama || '-',
       sholatReportCount: g.sholatCount,
@@ -277,8 +277,8 @@ export function GuruMonitoringCard({
             className="px-2.5 py-1.5 text-xs bg-[#F8FAFC] border border-[#E2EBF4] rounded-xl font-bold text-[#172033] focus:outline-none"
           >
             <option value="ALL">Semua Gender</option>
-            <option value="Putra">Ustadz (Putra)</option>
-            <option value="Putri">Ustadzah (Putri)</option>
+            <option value="Putra">L</option>
+            <option value="Putri">P</option>
           </select>
 
           <select

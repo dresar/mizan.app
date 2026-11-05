@@ -133,7 +133,7 @@ export function PhotoViewerModal({
             {currentItem.tag && (
               <div className="pt-1">
                 <span className="inline-block text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-[#C5A059]/20 text-[#E5C98E] border border-[#C5A059]/40">
-                  {currentItem.tag}
+                  {currentItem.tag.replace(/\bPutra\b/g, "L").replace(/\bPutri\b/g, "P")}
                 </span>
               </div>
             )}

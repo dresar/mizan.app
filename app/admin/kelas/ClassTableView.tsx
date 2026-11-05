@@ -90,7 +90,7 @@ export function ClassTableView({
                         : "bg-[#FAF7EE] text-[#A8833E]"
                     }`}
                   >
-                    {cls.gender}
+                    {cls.gender === "Putra" ? "L" : "P"}
                   </span>
                 </td>
                 <td className="py-3.5 px-3.5">

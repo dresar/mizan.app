@@ -97,7 +97,7 @@ export function ClassGridView({
                 <div className="flex items-center justify-between gap-1">
                   <div className="flex items-center gap-1 truncate">
                     <span className="px-2 py-0.5 rounded-lg text-[10px] sm:text-xs font-black bg-[#1B4D3E]/10 text-[#1B4D3E] border border-[#1B4D3E]/20 truncate">
-                      Kelas {cls.name}
+                      {cls.name}
                     </span>
                     <span
                       className={`px-1.5 sm:px-2 py-0.5 rounded-md sm:rounded-full text-[8px] sm:text-[10px] font-bold border shrink-0 ${
@@ -106,7 +106,7 @@ export function ClassGridView({
                           : "bg-[#FAF7EE] text-[#A8833E] border-[#C5A059]/40"
                       }`}
                     >
-                      {cls.gender}
+                      {cls.gender === "Putra" ? "L" : "P"}
                     </span>
                   </div>
 

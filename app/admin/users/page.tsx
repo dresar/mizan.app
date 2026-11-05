@@ -209,14 +209,15 @@ export default function AdminUsersPage() {
             </p>
           </div>
 
-          <button
-            type="button"
-            onClick={() => setIsAddingUser(!isAddingUser)}
-            className="px-4 py-2.5 rounded-2xl bg-[#1B4D3E] text-white text-xs font-bold flex items-center gap-2 shadow-sm hover:bg-[#153e32] transition-all self-start sm:self-auto"
-          >
-            {isAddingUser ? <X className="w-4 h-4" /> : <UserPlus className="w-4 h-4" />}
-            <span>{isAddingUser ? "Batal" : "Tambah"}</span>
-          </button>
+          <div className="flex items-center gap-2">
+            <Link
+              href="/admin/users/tambah?returnUrl=/admin/users"
+              className="px-4 py-2.5 rounded-2xl bg-[#1B4D3E] text-white text-xs font-bold flex items-center gap-2 shadow-sm hover:bg-[#153e32] transition-all self-start sm:self-auto cursor-pointer"
+            >
+              <UserPlus className="w-4 h-4" />
+              <span>Tambah Pengguna</span>
+            </Link>
+          </div>
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3.5">
@@ -234,7 +235,7 @@ export default function AdminUsersPage() {
               {totalTeachersPutra}
             </span>
             <span className="text-[10px] text-[#64748B] font-bold block mt-0.5">
-              Ustadz (Putra)
+              Pembina L
             </span>
           </CardSub>
 
@@ -243,7 +244,7 @@ export default function AdminUsersPage() {
               {totalTeachersPutri}
             </span>
             <span className="text-[10px] text-[#64748B] font-bold block mt-0.5">
-              Ustadzah (Putri)
+              Pembina P
             </span>
           </CardSub>
 
@@ -345,8 +346,8 @@ export default function AdminUsersPage() {
                         onChange={(e) => setFormData({ ...formData, gender: e.target.value as "Putra" | "Putri" })}
                         className="w-full px-3 py-2 text-xs bg-[#EEF2F6] border border-transparent rounded-xl focus:bg-white focus:border-[#1B4D3E] focus:outline-none"
                       >
-                        <option value="Putra">Ustadz (Khusus Santri Putra)</option>
-                        <option value="Putri">Ustadzah (Khusus Santriwati Putri)</option>
+                        <option value="Putra">L (Laki-laki)</option>
+                        <option value="Putri">P (Perempuan)</option>
                       </select>
                     </div>
 
@@ -359,8 +360,9 @@ export default function AdminUsersPage() {
                         onChange={(e) => setFormData({ ...formData, assignedClass: e.target.value })}
                         className="w-full px-3 py-2 text-xs bg-[#EEF2F6] border border-transparent rounded-xl focus:bg-white focus:border-[#1B4D3E] focus:outline-none"
                       >
-                        {kelasList.map((cls) => (
-                          <option key={cls} value={cls}>Kelas {cls}</option>
+                        <option value="">Bebas Tugas (Lepas Kelas)</option>
+                        {(kelasList && kelasList.length > 0 ? kelasList : ["1A", "1B", "1C", "1D", "2A", "2B", "2C", "2D", "3A", "3B", "3C", "3D", "4A", "4B", "5A", "6A"]).map((cls) => (
+                          <option key={cls} value={cls}>{cls}</option>
                         ))}
                       </select>
                     </div>
@@ -604,11 +606,11 @@ export default function AdminUsersPage() {
                               isSuper
                                 ? "bg-[#FEF3C7] text-[#92400E]"
                                 : isPutri
-                                ? "bg-[#FDF2F8] text-[#BE185D]"
-                                : "bg-[#ECFDF5] text-[#065F46]"
+                                ? "bg-[#FAF7EE] text-[#A8833E] border border-[#C5A059]/40"
+                                : "bg-[#ECFDF5] text-[#065F46] border border-[#A7F3D0]"
                             }`}
                           >
-                            {isSuper ? "Super Admin" : isPutri ? "Ustadzah (Putri)" : "Ustadz (Putra)"}
+                            {isSuper ? "Super Admin" : isPutri ? "P" : "L"}
                           </span>
                         </td>
                         <td className="py-3 px-3.5 font-bold text-[#172033]">
@@ -729,11 +731,11 @@ export default function AdminUsersPage() {
                                 isSuper
                                   ? "bg-[#FEF3C7] text-[#92400E]"
                                   : isPutri
-                                  ? "bg-[#FDF2F8] text-[#BE185D]"
-                                  : "bg-[#ECFDF5] text-[#065F46]"
+                                  ? "bg-[#FAF7EE] text-[#A8833E] border border-[#C5A059]/40"
+                                  : "bg-[#ECFDF5] text-[#065F46] border border-[#A7F3D0]"
                               }`}
                             >
-                              {isSuper ? "Super Admin" : isPutri ? "Ustadzah (Putri)" : "Ustadz (Putra)"}
+                              {isSuper ? "Super Admin" : isPutri ? "P" : "L"}
                             </span>
                             {!isSuper && user.assignedClass && (
                               <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded-md bg-[#EEF2F6] text-[#475569] whitespace-nowrap">

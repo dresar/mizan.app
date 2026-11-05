@@ -264,7 +264,7 @@ export default function AdminKelasPage() {
 
           <CardSub className="p-4 bg-white text-center">
             <span className="text-[10px] text-[#065F46] font-bold uppercase block">
-              Kelas Putra
+              Kelas L
             </span>
             <span className="text-2xl sm:text-3xl font-black font-mono text-[#065F46] block mt-1">
               {enrichedClasses.filter((c) => c.gender === "Putra").length}
@@ -273,7 +273,7 @@ export default function AdminKelasPage() {
 
           <CardSub className="p-4 bg-white text-center">
             <span className="text-[10px] text-[#A8833E] font-bold uppercase block">
-              Kelas Putri
+              Kelas P
             </span>
             <span className="text-2xl sm:text-3xl font-black font-mono text-[#A8833E] block mt-1">
               {enrichedClasses.filter((c) => c.gender === "Putri").length}
@@ -332,7 +332,7 @@ export default function AdminKelasPage() {
                         : "text-[#64748B] hover:text-[#172033]"
                     }`}
                   >
-                    {g === "ALL" ? "Semua" : g}
+                    {g === "ALL" ? "Semua" : g === "Putra" ? "L" : "P"}
                   </button>
                 ))}
               </div>

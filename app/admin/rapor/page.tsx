@@ -364,7 +364,7 @@ export default function AdminRaporPage() {
                         : "text-[#64748B] hover:text-[#172033]"
                     }`}
                   >
-                    {g === "ALL" ? "Semua" : g === "Putra" ? "Santri (Putra)" : "Santriwati (Putri)"}
+                    {g === "ALL" ? "Semua" : g === "Putra" ? "L" : "P"}
                   </button>
                 ))}
               </div>

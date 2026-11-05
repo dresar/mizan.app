@@ -143,7 +143,7 @@ export default function AdminSantriPage() {
       id: s.id,
       name: s.name,
       subtitle: `NIS: ${s.nis}`,
-      tag: `${s.class} • Santri ${s.gender}`,
+      tag: `${s.class} • ${s.gender === "Putra" ? "L" : "P"}`,
       photoUrl: s.avatarUrl,
       initials: s.avatar,
       gender: s.gender as "Putra" | "Putri"
@@ -572,7 +572,7 @@ export default function AdminSantriPage() {
                 : "text-[#64748B] hover:text-[#172033]"
             }`}
           >
-            Putra ({putraCount})
+            L ({putraCount})
           </button>
           <button
             type="button"
@@ -583,7 +583,7 @@ export default function AdminSantriPage() {
                 : "text-[#64748B] hover:text-[#172033]"
             }`}
           >
-            Putri ({putriCount})
+            P ({putriCount})
           </button>
         </div>
 
@@ -832,7 +832,7 @@ export default function AdminSantriPage() {
                                 : "bg-[#FAF7EE] text-[#A8833E]"
                             }`}
                           >
-                            {santri.gender}
+                            {santri.gender === "Putra" ? "L" : "P"}
                           </span>
                         )}
                       </div>
@@ -995,7 +995,7 @@ export default function AdminSantriPage() {
                                     : "bg-[#FAF7EE] text-[#A8833E]"
                                 }`}
                               >
-                                {santri.gender}
+                                {santri.gender === "Putra" ? "L" : "P"}
                               </span>
                             )}
                             {visibleSantriColumns.class && (

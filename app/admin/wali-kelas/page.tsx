@@ -4,6 +4,7 @@ import React, { useState, useMemo } from "react";
 import Link from "next/link";
 import {
   UserCheck,
+  UserPlus,
   Users,
   Plus,
   Edit2,
@@ -139,7 +140,7 @@ export default function AdminWaliKelasPage() {
         avgScore,
         reportsToday,
         studentsSample: students.slice(0, 5),
-        status: monitoringItem?.status || (reportsToday > 0 ? "Sudah Lapor" : "Belum Lapor")
+        status: reportsToday > 0 ? "Aktif" : "-"
       };
     });
   }, [teachers, santriList, penilaianList, guruList]);
@@ -195,25 +196,49 @@ export default function AdminWaliKelasPage() {
   const handleOpenAssign = (teacher?: typeof enrichedTeachers[0]) => {
     if (teacher) {
       setAssignTeacherId(teacher.id);
-      setAssignClassName(teacher.assignedClass || kelasList[0] || "1A");
+      setAssignClassName(teacher.assignedClass || "");
     } else {
-      setAssignTeacherId(teachers[0]?.id || "");
-      setAssignClassName(kelasList[0] || "1A");
+      setAssignTeacherId(allPembina[0]?.id || "");
+      setAssignClassName(allPembina[0]?.assignedClass || "");
     }
     setIsAssigning(true);
   };
 
+  const selectedAssignTeacher = useMemo(() => {
+    return allPembina.find((t) => t.id === assignTeacherId) || allPembina[0] || null;
+  }, [allPembina, assignTeacherId]);
+
+  const selectedAssignClassObj = useMemo(() => {
+    if (!assignClassName) return null;
+    return classList.find((c) => c.name.toUpperCase() === assignClassName.toUpperCase()) || null;
+  }, [classList, assignClassName]);
+
+  const selectedClassSantriCount = useMemo(() => {
+    if (!assignClassName) return 0;
+    return santriList.filter((s) => s.class.toUpperCase() === assignClassName.toUpperCase()).length;
+  }, [santriList, assignClassName]);
+
   const handleSaveAssign = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!assignTeacherId) {
-      showToast("Pilih guru pembina", "error");
+      showToast("Pilih guru pembina terlebih dahulu", "error");
       return;
     }
 
     const teacher = allPembina.find((t) => t.id === assignTeacherId);
     if (!teacher) return;
 
+    const previousClass = teacher.assignedClass;
+
     await updateUser(assignTeacherId, { assignedClass: assignClassName });
+
+    if (previousClass && previousClass !== assignClassName) {
+      await updateClass(previousClass, {
+        waliKelas: "",
+        guruId: ""
+      });
+    }
+
     if (assignClassName) {
       await updateClass(assignClassName, {
         waliKelas: teacher.name,
@@ -262,7 +287,7 @@ export default function AdminWaliKelasPage() {
 
   return (
     <RoleShell>
-      <div className="w-full space-y-4 overflow-x-hidden pb-36">
+      <div className="w-full space-y-4 overflow-x-hidden pt-1 pb-36">
         <div className="mizan-card p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white border border-[#E2E8F0]">
           <div>
             <h1 className="text-lg sm:text-2xl font-serif font-black text-[#172033] tracking-tight">
@@ -273,14 +298,22 @@ export default function AdminWaliKelasPage() {
             </p>
           </div>
 
-          <div className="flex items-center gap-2 shrink-0">
+          <div className="flex items-center gap-2 shrink-0 flex-wrap">
+            <Link
+              href="/admin/users/tambah?role=GURU&returnUrl=/admin/wali-kelas"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white border border-[#D4C9B5] text-[#1B4D3E] hover:bg-[#FAF7EE] text-xs font-bold shadow-xs transition-colors"
+            >
+              <UserPlus className="w-3.5 h-3.5 text-[#C5A059]" />
+              <span>Tambah Pembina</span>
+            </Link>
+
             <button
               type="button"
               onClick={() => {
                 setSelectedTeacherToShare(null);
                 setIsShareModalOpen(true);
               }}
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-white border border-[#D4C9B5] text-[#1C2826] hover:bg-[#FAF7F2] text-xs font-bold shadow-xs transition-colors"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white border border-[#D4C9B5] text-[#1C2826] hover:bg-[#FAF7F2] text-xs font-bold shadow-xs transition-colors"
             >
               <Share2 className="w-3.5 h-3.5 text-[#C5A059]" />
               <span>Bagikan</span>
@@ -289,7 +322,7 @@ export default function AdminWaliKelasPage() {
             <button
               type="button"
               onClick={() => handleOpenAssign()}
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl mizan-btn-primary text-xs font-bold shadow-xs"
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl mizan-btn-primary text-xs font-bold shadow-xs cursor-pointer"
             >
               <Plus className="w-3.5 h-3.5" />
               <span>Tugaskan</span>
@@ -297,30 +330,50 @@ export default function AdminWaliKelasPage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-          <CardSub className="p-3.5 text-center bg-white">
-            <span className="text-[10px] text-[#64748B] font-bold uppercase block">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5">
+          <CardSub className="p-3 text-center bg-white">
+            <span className="text-[10px] text-[#64748B] font-bold uppercase block tracking-wider">
               Total Pembina
             </span>
             <span className="text-xl sm:text-2xl font-black font-mono text-[#172033] mt-0.5 block">
               {allPembina.length}
             </span>
-            <span className="text-[10px] text-[#94A3B8] block mt-0.5">Ustadz & Ustadzah</span>
+            <span className="text-[10px] text-[#94A3B8] block mt-0.5">Asatidz & Ustadzah</span>
           </CardSub>
 
-          <CardSub className="p-3.5 text-center bg-white">
-            <span className="text-[10px] text-[#64748B] font-bold uppercase block">
-              Pembina Putra
+          <CardSub className="p-3 text-center bg-white">
+            <span className="text-[10px] text-[#64748B] font-bold uppercase block tracking-wider">
+              Aktif Hari Ini
+            </span>
+            <span className="text-xl sm:text-2xl font-black font-mono text-[#065F46] mt-0.5 block">
+              {enrichedTeachers.filter((t) => t.reportsToday > 0).length}
+            </span>
+            <span className="text-[10px] text-[#065F46] block mt-0.5 font-bold">Input Laporan</span>
+          </CardSub>
+
+          <CardSub className="p-3 text-center bg-white">
+            <span className="text-[10px] text-[#64748B] font-bold uppercase block tracking-wider">
+              Belum Aktif
+            </span>
+            <span className="text-xl sm:text-2xl font-black font-mono text-[#64748B] mt-0.5 block">
+              {enrichedTeachers.filter((t) => t.reportsToday === 0).length}
+            </span>
+            <span className="text-[10px] text-[#94A3B8] block mt-0.5">Menunggu Laporan</span>
+          </CardSub>
+
+          <CardSub className="p-3 text-center bg-white">
+            <span className="text-[10px] text-[#64748B] font-bold uppercase block tracking-wider">
+              Pembina L
             </span>
             <span className="text-xl sm:text-2xl font-black font-mono text-[#065F46] mt-0.5 block">
               {allPembina.filter((t) => t.gender === "Putra").length}
             </span>
-            <span className="text-[10px] text-[#94A3B8] block mt-0.5">Asatidz</span>
+            <span className="text-[10px] text-[#94A3B8] block mt-0.5">Ustadz</span>
           </CardSub>
 
-          <CardSub className="p-3.5 text-center bg-white">
-            <span className="text-[10px] text-[#64748B] font-bold uppercase block">
-              Pembina Putri
+          <CardSub className="p-3 text-center bg-white">
+            <span className="text-[10px] text-[#64748B] font-bold uppercase block tracking-wider">
+              Pembina P
             </span>
             <span className="text-xl sm:text-2xl font-black font-mono text-[#A8833E] mt-0.5 block">
               {allPembina.filter((t) => t.gender === "Putri").length}
@@ -328,14 +381,14 @@ export default function AdminWaliKelasPage() {
             <span className="text-[10px] text-[#94A3B8] block mt-0.5">Ustadzah</span>
           </CardSub>
 
-          <CardSub className="p-3.5 text-center bg-white">
-            <span className="text-[10px] text-[#64748B] font-bold uppercase block">
-              Kelas Terbina
+          <CardSub className="p-3 text-center bg-white">
+            <span className="text-[10px] text-[#64748B] font-bold uppercase block tracking-wider">
+              Kelas Terisi
             </span>
             <span className="text-xl sm:text-2xl font-black font-mono text-[#1B4D3E] mt-0.5 block">
               {assignedClassesCount} / {kelasList.length}
             </span>
-            <span className="text-[10px] text-[#94A3B8] block mt-0.5">Ruang Kelas Aktif</span>
+            <span className="text-[10px] text-[#94A3B8] block mt-0.5">Ruang Terbina</span>
           </CardSub>
         </div>
 
@@ -351,13 +404,13 @@ export default function AdminWaliKelasPage() {
                       setSelectedGender(g);
                       setCurrentPage(1);
                     }}
-                    className={`py-1.5 px-3 rounded-xl transition-all text-center ${
+                    className={`py-1.5 px-3 rounded-xl transition-all text-center cursor-pointer ${
                       selectedGender === g
                         ? "bg-white text-[#1B4D3E] shadow-xs"
                         : "text-[#64748B] hover:text-[#172033]"
                     }`}
                   >
-                    {g === "ALL" ? "Semua Gender" : g}
+                    {g === "ALL" ? "Semua Gender" : g === "Putra" ? "L" : "P"}
                   </button>
                 ))}
               </div>
@@ -531,13 +584,13 @@ export default function AdminWaliKelasPage() {
                           </span>
                         )}
                         <span
-                          className={`px-1.5 sm:px-2 py-0.5 rounded-md sm:rounded-full text-[8px] sm:text-[10px] font-bold border shrink-0 ${
+                          className={`px-1.5 sm:px-2 py-0.5 rounded-md sm:rounded-full text-[9px] sm:text-[10px] font-bold border shrink-0 ${
                             teacher.gender === "Putra"
                               ? "bg-[#ECFDF5] text-[#065F46] border-[#A7F3D0]"
                               : "bg-[#FAF7EE] text-[#A8833E] border-[#C5A059]/40"
                           }`}
                         >
-                          {teacher.gender}
+                          {teacher.gender === "Putra" ? "L" : "P"}
                         </span>
                       </div>
 
@@ -689,7 +742,7 @@ export default function AdminWaliKelasPage() {
                                   : "bg-[#FAF7EE] text-[#A8833E] border-[#C5A059]/40"
                               }`}
                             >
-                              {teacher.gender}
+                              {teacher.gender === "Putra" ? "L" : "P"}
                             </span>
                           </td>
                         )}
@@ -728,15 +781,14 @@ export default function AdminWaliKelasPage() {
 
                         {visibleColumns.status && (
                           <td className="py-3 px-3.5 text-center whitespace-nowrap">
-                            {teacher.status === "Sudah Lapor" ? (
+                            {teacher.reportsToday > 0 ? (
                               <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-[#ECFDF5] text-[#065F46] border border-[#A7F3D0] shadow-2xs">
-                                <span className="w-1.5 h-1.5 rounded-full bg-[#10B981]" />
-                                <span>Sudah Lapor</span>
+                                <span className="w-1.5 h-1.5 rounded-full bg-[#10B981] animate-pulse" />
+                                <span>Aktif</span>
                               </span>
                             ) : (
-                              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-[#FFF1F2] text-[#BE123C] border border-[#FECDD3] shadow-2xs">
-                                <span className="w-1.5 h-1.5 rounded-full bg-[#F43F5E]" />
-                                <span>Belum Lapor</span>
+                              <span className="text-xs font-mono font-bold text-[#94A3B8]">
+                                -
                               </span>
                             )}
                           </td>
@@ -829,19 +881,26 @@ export default function AdminWaliKelasPage() {
         />
 
         {isAssigning && (
-          <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4">
-            <div className="w-full max-w-lg bg-white rounded-[28px] border border-[#E2E8F0] shadow-2xl p-4 sm:p-6 space-y-4">
+          <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4">
+            <div className="w-full max-w-lg bg-white rounded-[28px] border border-[#E2E8F0] shadow-2xl p-4 sm:p-6 space-y-4 animate-in fade-in zoom-in-95 duration-150">
               <div className="flex items-center justify-between pb-3 border-b border-[#F1F5F9]">
-                <div className="flex items-center gap-2">
-                  <UserCheck className="w-4 h-4 text-[#1B4D3E]" />
-                  <h2 className="text-sm font-serif font-black text-[#172033]">
-                    Penugasan Wali Kelas & Ustadz
-                  </h2>
+                <div className="flex items-center gap-2.5">
+                  <div className="w-9 h-9 rounded-2xl bg-[#ECFDF5] border border-[#A7F3D0] flex items-center justify-center text-[#065F46] shrink-0">
+                    <UserCheck className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <h2 className="text-sm font-serif font-black text-[#172033]">
+                      Penugasan Wali Kelas & Pembina
+                    </h2>
+                    <p className="text-[10px] text-[#64748B]">
+                      Atur dan sinkronisasikan kelas binaan untuk ustadz atau ustadzah
+                    </p>
+                  </div>
                 </div>
                 <button
                   type="button"
                   onClick={() => setIsAssigning(false)}
-                  className="p-1 rounded-lg text-[#64748B] hover:text-[#172033]"
+                  className="p-1.5 rounded-xl text-[#64748B] hover:text-[#172033] hover:bg-slate-100 transition-colors"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -863,26 +922,70 @@ export default function AdminWaliKelasPage() {
                           setAssignClassName(found.assignedClass || "");
                         }
                       }}
-                      className="w-full p-2.5 text-xs bg-[#FAF7EE] border border-[#E2EBF4] rounded-xl text-[#172033] font-semibold focus:outline-none focus:border-[#1B4D3E]"
+                      className="w-full p-2.5 text-xs bg-[#FAF7EE] border border-[#E2EBF4] rounded-xl text-[#172033] font-semibold focus:outline-none focus:border-[#1B4D3E] transition-colors"
                     >
                       {allPembina.map((t) => (
                         <option key={t.id} value={t.id}>
-                          {t.name} ({t.gender}) - Kelas saat ini: {t.assignedClass || "Belum Ada"}
+                          {t.name} ({t.gender === "Putra" ? "L" : "P"}) {t.assignedClass ? `• ${t.assignedClass}` : "• Bebas Tugas"}
                         </option>
                       ))}
                     </select>
                   </div>
 
+                  {selectedAssignTeacher && (
+                    <div className="p-3 rounded-2xl bg-[#F8FAFC] border border-[#E2E8F0] flex items-center justify-between gap-3">
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        <div
+                          className={`w-9 h-9 rounded-xl border flex items-center justify-center font-bold text-xs shrink-0 ${
+                            selectedAssignTeacher.gender === "Putra"
+                              ? "bg-[#ECFDF5] border-[#A7F3D0] text-[#065F46]"
+                              : "bg-[#FAF7EE] border-[#C5A059]/40 text-[#A8833E]"
+                          }`}
+                        >
+                          {selectedAssignTeacher.avatarInitials || "MZ"}
+                        </div>
+                        <div className="min-w-0">
+                          <h4 className="text-xs font-bold text-[#172033] truncate">
+                            {selectedAssignTeacher.name}
+                          </h4>
+                          <p className="text-[10px] text-[#64748B] font-mono truncate">
+                            @{selectedAssignTeacher.username || selectedAssignTeacher.id} • {selectedAssignTeacher.role === "GURU" ? "Guru Kelas" : "Pengasuhan BK"}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-1.5 shrink-0">
+                        <span
+                          className={`px-2 py-0.5 rounded-full text-[10px] font-bold border ${
+                            selectedAssignTeacher.gender === "Putra"
+                              ? "bg-[#ECFDF5] text-[#065F46] border-[#A7F3D0]"
+                              : "bg-[#FAF7EE] text-[#A8833E] border-[#C5A059]/40"
+                          }`}
+                        >
+                          {selectedAssignTeacher.gender === "Putra" ? "L" : "P"}
+                        </span>
+                        {selectedAssignTeacher.assignedClass ? (
+                          <span className="px-2 py-0.5 rounded-md font-mono text-[10px] font-bold bg-[#1B4D3E]/10 text-[#1B4D3E] border border-[#1B4D3E]/20">
+                            {selectedAssignTeacher.assignedClass}
+                          </span>
+                        ) : (
+                          <span className="px-2 py-0.5 rounded-md text-[10px] font-bold bg-slate-100 text-slate-500">
+                            Bebas
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
                   <div>
                     <label className="block text-[11px] font-bold text-[#475569] uppercase mb-1">
-                      Kelas Binaan yang Ditugaskan
+                      Ruang Kelas Binaan yang Ditugaskan
                     </label>
                     <select
                       value={assignClassName}
                       onChange={(e) => setAssignClassName(e.target.value)}
-                      className="w-full p-2.5 text-xs bg-[#FAF7EE] border border-[#E2EBF4] rounded-xl text-[#172033] font-semibold focus:outline-none focus:border-[#1B4D3E]"
+                      className="w-full p-2.5 text-xs bg-[#FAF7EE] border border-[#E2EBF4] rounded-xl text-[#172033] font-semibold focus:outline-none focus:border-[#1B4D3E] transition-colors"
                     >
-                      <option value="">Bebas Tugas (Lepas Kelas)</option>
+                      <option value="">Bebas Tugas (Lepas Penugasan Kelas)</option>
                       {kelasList.map((cls) => (
                         <option key={cls} value={cls}>
                           {cls}
@@ -890,6 +993,48 @@ export default function AdminWaliKelasPage() {
                       ))}
                     </select>
                   </div>
+
+                  {assignClassName ? (
+                    <div className="p-3.5 rounded-2xl bg-[#FAF7EE]/70 border border-[#E2E8F0] space-y-2">
+                      <div className="flex items-center justify-between text-xs">
+                        <div className="flex items-center gap-2">
+                          <span className="px-2.5 py-1 rounded-lg font-mono font-black bg-[#1B4D3E] text-white text-xs">
+                            {assignClassName}
+                          </span>
+                          <span className="font-bold text-[#172033]">
+                            {selectedClassSantriCount} Santri Terdaftar
+                          </span>
+                        </div>
+                        {selectedAssignClassObj && (
+                          <span
+                            className={`px-2 py-0.5 rounded-full text-[10px] font-bold border ${
+                              selectedAssignClassObj.gender === "Putra"
+                                ? "bg-[#ECFDF5] text-[#065F46] border-[#A7F3D0]"
+                                : "bg-[#FAF7EE] text-[#A8833E] border-[#C5A059]/40"
+                            }`}
+                          >
+                            Kelas {selectedAssignClassObj.gender === "Putra" ? "L" : "P"}
+                          </span>
+                        )}
+                      </div>
+
+                      {selectedAssignClassObj?.waliKelas &&
+                      selectedAssignClassObj.waliKelas !== selectedAssignTeacher?.name ? (
+                        <p className="text-[11px] text-[#A8833E] bg-amber-50 border border-amber-200 p-2 rounded-xl">
+                          Wali sebelumnya: <span className="font-bold">{selectedAssignClassObj.waliKelas}</span> (akan dialihkan ke {selectedAssignTeacher?.name})
+                        </p>
+                      ) : (
+                        <p className="text-[10px] text-[#64748B]">
+                          Wali kelas saat ini: {selectedAssignClassObj?.waliKelas || "Tersedia (Kosong)"}
+                        </p>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 text-[11px] text-[#64748B] flex items-center gap-2">
+                      <Building2 className="w-4 h-4 text-[#94A3B8] shrink-0" />
+                      <span>Guru berstatus bebas tugas (tidak memiliki tanggung jawab kelas binaan khusus).</span>
+                    </div>
+                  )}
                 </div>
 
                 <div className="flex items-center justify-end gap-2 pt-3 border-t border-[#F1F5F9]">
@@ -902,9 +1047,10 @@ export default function AdminWaliKelasPage() {
                   </button>
                   <button
                     type="submit"
-                    className="px-5 py-2 rounded-xl text-xs font-bold text-white bg-[#1B4D3E] hover:bg-[#143B2F] shadow-xs transition-colors"
+                    className="inline-flex items-center gap-1.5 px-5 py-2 rounded-xl text-xs font-bold text-white bg-[#1B4D3E] hover:bg-[#143B2F] shadow-xs transition-colors cursor-pointer"
                   >
-                    Simpan
+                    <CheckCircle2 className="w-3.5 h-3.5" />
+                    <span>Simpan Penugasan</span>
                   </button>
                 </div>
               </form>
@@ -925,29 +1071,19 @@ export default function AdminWaliKelasPage() {
                       {activeTeacherDetail.name}
                     </h3>
                     <div className="flex items-center gap-2 text-[11px] text-[#64748B] flex-wrap mt-0.5">
-                      <span>Pembina Santri {activeTeacherDetail.gender}</span>
+                      <span>Gender {activeTeacherDetail.gender === "Putra" ? "L" : "P"}</span>
                       <span className="inline-block w-1 h-1 rounded-full bg-slate-300" />
                       <span className="font-bold text-[#1B4D3E]">
                         Kelas: {activeTeacherDetail.assignedClass || "Belum Ditugaskan"}
                       </span>
                       <span className="inline-block w-1 h-1 rounded-full bg-slate-300" />
                       <span className="font-mono text-[#94A3B8]">@{activeTeacherDetail.username}</span>
-                      {activeTeacherDetailEnriched && (
+                      {activeTeacherDetailEnriched && activeTeacherDetailEnriched.reportsToday > 0 && (
                         <>
                           <span className="inline-block w-1 h-1 rounded-full bg-slate-300" />
-                          <span
-                            className={`px-2 py-0.5 rounded-full text-[10px] font-bold border flex items-center gap-1 ${
-                              activeTeacherDetailEnriched.status === "Sudah Lapor"
-                                ? "bg-[#ECFDF5] text-[#065F46] border-[#A7F3D0]"
-                                : "bg-[#FEF2F2] text-[#991B1B] border-[#FECACA]"
-                            }`}
-                          >
-                            <span
-                              className={`w-1.5 h-1.5 rounded-full ${
-                                activeTeacherDetailEnriched.status === "Sudah Lapor" ? "bg-[#10B981]" : "bg-red-500"
-                              } animate-pulse`}
-                            />
-                            {activeTeacherDetailEnriched.status}
+                          <span className="px-2 py-0.5 rounded-full text-[10px] font-bold border flex items-center gap-1 bg-[#ECFDF5] text-[#065F46] border-[#A7F3D0]">
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#10B981] animate-pulse" />
+                            <span>Aktif</span>
                           </span>
                         </>
                       )}

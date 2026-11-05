@@ -429,7 +429,7 @@ export default function AdminAbsensiPage() {
                     : "text-[#64748B] hover:text-[#172033]"
                 }`}
               >
-                {g === "ALL" ? "Semua" : g}
+                {g === "ALL" ? "Semua" : g === "Putra" ? "L" : "P"}
               </button>
             ))}
           </div>
@@ -960,7 +960,7 @@ export default function AdminAbsensiPage() {
                             <span className={`text-[10px] px-1.5 py-0.5 rounded font-bold ${
                               item.gender === "Putra" ? "bg-blue-50 text-blue-700" : "bg-pink-50 text-pink-700"
                             }`}>
-                              {item.gender}
+                              {item.gender === "Putra" ? "L" : "P"}
                             </span>
                           </div>
                           <div className="flex items-center gap-2 mt-0.5 text-[10px] text-[#64748B]">

@@ -84,7 +84,7 @@ export function AddClassModal({
                         : "bg-white text-[#64748B] border-[#D4C9B5] hover:bg-[#FAF7EE]"
                     }`}
                   >
-                    {g}
+                    {g === "Putra" ? "L" : "P"}
                   </button>
                 ))}
               </div>
@@ -212,7 +212,7 @@ export function EditClassModal({
                         : "bg-white text-[#64748B] border-[#D4C9B5] hover:bg-[#FAF7EE]"
                     }`}
                   >
-                    {g}
+                    {g === "Putra" ? "L" : "P"}
                   </button>
                 ))}
               </div>
