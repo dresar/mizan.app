@@ -11,7 +11,8 @@ import {
   User,
   Users,
   Settings,
-  Award
+  Award,
+  ShieldCheck
 } from "lucide-react";
 import { useMizan } from "@/lib/mizan-context";
 
@@ -36,6 +37,10 @@ export function BottomNav() {
       { label: "Absen", href: "/bk/absen", icon: <CalendarCheck className="w-4 h-4" /> },
       { label: "History", href: "/bk/history", icon: <Clock className="w-4 h-4" /> },
       { label: "Profil", href: "/bk/profil", icon: <User className="w-4 h-4" /> }
+    ];
+  } else if (activeRole === "SATPAM") {
+    navItems = [
+      { label: "Pos Gerbang", href: "/satpam", icon: <ShieldCheck className="w-4 h-4" /> }
     ];
   } else {
     navItems = [

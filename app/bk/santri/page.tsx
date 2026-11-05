@@ -2,13 +2,24 @@
 
 import React, { useState, useMemo } from "react";
 import Link from "next/link";
-import { Search, User, GraduationCap, FileText, Share2, Eye, LayoutGrid, List } from "lucide-react";
+import {
+  Search,
+  User,
+  GraduationCap,
+  FileText,
+  Share2,
+  Eye,
+  LayoutGrid,
+  List,
+  MoreVertical
+} from "lucide-react";
 import { useMizan } from "@/lib/mizan-context";
 import { RoleShell } from "@/components/RoleShell";
 import { Avatar } from "@/components/ui/Avatar";
 import { Pagination } from "@/components/ui/Pagination";
 import { generateSantriPdf } from "@/lib/pdf-generator";
 import { ShareModal } from "@/components/ShareModal";
+import { PhotoViewerModal, PhotoItem } from "@/components/PhotoViewerModal";
 import { Santri } from "@/lib/mock-data";
 
 export default function BkSantriListPage() {
@@ -23,7 +34,10 @@ export default function BkSantriListPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [shareTargetSantri, setShareTargetSantri] = useState<Santri | null>(null);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
-  const PAGE_SIZE = 20;
+  const [isPhotoViewerOpen, setIsPhotoViewerOpen] = useState(false);
+  const [photoViewerIndex, setPhotoViewerIndex] = useState(0);
+  const [activeActionMenuId, setActiveActionMenuId] = useState<string | null>(null);
+  const PAGE_SIZE = 12;
 
   const classes = useMemo(() => {
     let list = accessibleSantriList;
@@ -51,6 +65,33 @@ export default function BkSantriListPage() {
     const start = (currentPage - 1) * PAGE_SIZE;
     return filteredSantri.slice(start, start + PAGE_SIZE);
   }, [filteredSantri, currentPage]);
+
+  const photoItems: PhotoItem[] = useMemo(() => {
+    return paginatedSantri.map((s) => {
+      const defaultAvatar =
+        s.gender === "Putri"
+          ? "/default-avatar-santriwati.jpg"
+          : "/default-avatar-santri.jpg";
+      return {
+        id: s.id,
+        name: s.name,
+        role: `Santri Kelas ${s.class} (${s.gender === "Putra" ? "L" : "P"})`,
+        photoUrl: s.avatarUrl || defaultAvatar,
+        avatarInitials: s.avatar,
+        gender: s.gender,
+        classInfo: s.class,
+        nis: s.nis
+      };
+    });
+  }, [paginatedSantri]);
+
+  const handleOpenPhotoViewer = (santriId: string) => {
+    const idx = photoItems.findIndex((item) => item.id === santriId);
+    if (idx !== -1) {
+      setPhotoViewerIndex(idx);
+      setIsPhotoViewerOpen(true);
+    }
+  };
 
   const handleSearchChange = (val: string) => {
     setSearchQuery(val);
@@ -206,76 +247,105 @@ export default function BkSantriListPage() {
           </div>
 
           {viewMode === "grid" ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-3">
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-4 md:gap-5">
               {paginatedSantri.map((santri) => {
                 const pred = getPredikatBadge(santri.currentScore);
+                const defaultAvatar =
+                  santri.gender === "Putri"
+                    ? "/default-avatar-santriwati.jpg"
+                    : "/default-avatar-santri.jpg";
+                const photoUrl = santri.avatarUrl || defaultAvatar;
 
                 return (
                   <div
                     key={santri.id}
-                    className="mizan-card-sub p-3.5 flex flex-col justify-between gap-3 hover:border-[#1B4D3E]/40 group"
+                    className="group relative rounded-2xl sm:rounded-3xl overflow-hidden bg-white border border-[#E2EBF4] shadow-2xs hover:shadow-2xl hover:border-[#1B4D3E]/40 hover:-translate-y-1.5 transition-all duration-500 flex flex-col justify-between text-left"
                   >
-                    <div className="flex items-start gap-3 min-w-0">
-                      <Avatar
-                        initials={santri.avatar}
-                        size="md"
-                        variant={santri.gender === "Putra" ? "primary" : "gold"}
+                    <div
+                      onClick={() => handleOpenPhotoViewer(santri.id)}
+                      className="sheen-wrapper relative w-full aspect-square overflow-hidden bg-[#0E271F] shrink-0 cursor-pointer"
+                      title="Klik untuk melihat foto santri"
+                    >
+                      <img
+                        src={photoUrl}
+                        alt={santri.name}
+                        onError={(e) => {
+                          e.currentTarget.src = defaultAvatar;
+                        }}
+                        className="w-full h-full object-cover object-top group-hover:scale-108 transition-transform duration-700 ease-out"
                       />
-                      <div className="min-w-0 flex-1">
+                      <div className="absolute inset-x-0 bottom-0 h-10 sm:h-14 bg-gradient-to-t from-white via-white/50 to-transparent pointer-events-none" />
+                    </div>
+
+                    <div className="p-2.5 sm:p-4 flex flex-col justify-between flex-1 bg-white space-y-2.5">
+                      <div className="space-y-1 sm:space-y-1.5">
+                        <div className="flex items-center justify-between gap-1">
+                          <span className="px-2 py-0.5 rounded-lg text-[10px] sm:text-xs font-mono font-black bg-[#1B4D3E]/10 text-[#1B4D3E] border border-[#1B4D3E]/20">
+                            {santri.class}
+                          </span>
+                          <span
+                            className={`px-1.5 sm:px-2 py-0.5 rounded-md text-[8px] sm:text-[10px] font-bold border shrink-0 ${
+                              santri.gender === "Putra"
+                                ? "bg-[#ECFDF5] text-[#065F46] border-[#A7F3D0]"
+                                : "bg-[#FAF7EE] text-[#A8833E] border-[#C5A059]/40"
+                            }`}
+                          >
+                            {santri.gender === "Putra" ? "L" : "P"}
+                          </span>
+                        </div>
+
                         <Link
                           href={`/bk/santri/${santri.id}`}
-                          className="text-xs font-bold text-[#172033] group-hover:text-[#1B4D3E] transition-colors truncate block"
+                          className="font-serif font-black text-xs sm:text-sm text-[#172033] line-clamp-1 group-hover:text-[#1B4D3E] transition-colors block"
                         >
                           {santri.name}
                         </Link>
-                        <p className="text-[10px] text-[#64748B] truncate mt-0.5">
-                          NIS {santri.nis} • Kelas {santri.class} ({santri.gender})
-                        </p>
-                        <p className="text-[10px] text-[#A8833E] truncate mt-0.5 font-medium">
-                          {santri.kamar || santri.asrama}
+                        <p className="text-[10px] text-[#64748B] font-mono truncate">
+                          NIS {santri.nis} • {santri.kamar || santri.asrama || "Asrama"}
                         </p>
                       </div>
-                    </div>
 
-                    <div className="flex items-center justify-between pt-2 border-t border-[#EEF2F6]">
-                      <div>
-                        <span className="text-[10px] text-[#94A3B8] block">Skor Adab</span>
-                        <span className="font-mono text-sm font-black text-[#1B4D3E]">
-                          {formatScore(santri.currentScore)}
-                        </span>
+                      <div className="grid grid-cols-2 gap-1.5 p-2 rounded-xl bg-[#FAF7EE]/60 border border-[#E2E8F0] text-center">
+                        <div>
+                          <span className="text-[8px] sm:text-[9px] text-[#94A3B8] font-bold uppercase block">
+                            Skor Adab
+                          </span>
+                          <span className="font-mono text-xs sm:text-sm font-black text-[#1B4D3E] block">
+                            {formatScore(santri.currentScore)}
+                          </span>
+                        </div>
+                        <div className="flex flex-col items-center justify-center">
+                          <span className="text-[8px] sm:text-[9px] text-[#94A3B8] font-bold uppercase block">
+                            Predikat
+                          </span>
+                          <span className={`text-[8px] sm:text-[9px] font-bold px-1.5 py-0.5 rounded-full border truncate max-w-full ${pred.color}`}>
+                            {pred.label}
+                          </span>
+                        </div>
                       </div>
 
-                      <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full border ${pred.color}`}>
-                        {pred.label}
-                      </span>
-                    </div>
-
-                    <div className="grid grid-cols-3 gap-1.5 pt-2 border-t border-[#EEF2F6]">
-                      <Link
-                        href={`/bk/santri/${santri.id}`}
-                        className="inline-flex items-center justify-center gap-1 py-1.5 rounded-xl bg-[#F8FAFC] text-[#172033] hover:bg-[#EEF2F6] text-[10px] font-bold border border-[#E2EBF4] transition-colors"
-                      >
-                        <Eye className="w-3 h-3 text-[#1B4D3E]" />
-                        <span>Detail</span>
-                      </Link>
-
-                      <button
-                        type="button"
-                        onClick={() => handleDownloadRapor(santri)}
-                        className="inline-flex items-center justify-center gap-1 py-1.5 rounded-xl bg-[#ECFDF5] text-[#065F46] hover:bg-[#D1FAE5] text-[10px] font-bold border border-[#A7F3D0] transition-colors"
-                      >
-                        <FileText className="w-3 h-3" />
-                        <span>Rapor</span>
-                      </button>
-
-                      <button
-                        type="button"
-                        onClick={() => handleOpenShare(santri)}
-                        className="inline-flex items-center justify-center gap-1 py-1.5 rounded-xl bg-[#FAF7EE] text-[#854D0E] hover:bg-[#FEFCE8] text-[10px] font-bold border border-[#FEF08A] transition-colors"
-                      >
-                        <Share2 className="w-3 h-3 text-[#C5A059]" />
-                        <span>Bagikan</span>
-                      </button>
+                      <div className="pt-2 border-t border-[#F1F5F9] grid grid-cols-3 gap-1">
+                        <Link
+                          href={`/bk/santri/${santri.id}`}
+                          className="py-1.5 rounded-xl bg-[#F8FAFC] text-[#172033] hover:bg-[#EEF2F6] text-[10px] font-bold border border-[#E2EBF4] text-center transition-colors"
+                        >
+                          Detail
+                        </Link>
+                        <button
+                          type="button"
+                          onClick={() => handleDownloadRapor(santri)}
+                          className="py-1.5 rounded-xl bg-[#ECFDF5] text-[#065F46] hover:bg-[#D1FAE5] text-[10px] font-bold border border-[#A7F3D0] text-center transition-colors cursor-pointer"
+                        >
+                          Rapor
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleOpenShare(santri)}
+                          className="py-1.5 rounded-xl bg-[#FAF7EE] text-[#854D0E] hover:bg-[#FEFCE8] text-[10px] font-bold border border-[#FEF08A] text-center transition-colors cursor-pointer"
+                        >
+                          Bagikan
+                        </button>
+                      </div>
                     </div>
                   </div>
                 );
@@ -404,6 +474,14 @@ export default function BkSantriListPage() {
           }}
           initialType="SANTRI"
           targetSantri={shareTargetSantri || undefined}
+        />
+
+        <PhotoViewerModal
+          isOpen={isPhotoViewerOpen}
+          onClose={() => setIsPhotoViewerOpen(false)}
+          items={photoItems}
+          currentIndex={photoViewerIndex}
+          onIndexChange={setPhotoViewerIndex}
         />
       </div>
     </RoleShell>

@@ -38,13 +38,21 @@ import {
   KeyRound,
   Lock,
   Bell,
-  Info
+  Info,
+  HeartPulse,
+  Wallet,
+  Ticket,
+  QrCode,
+  Plus,
+  PhoneCall,
+  X
 } from "lucide-react";
 import { useMizan } from "@/lib/mizan-context";
-import { Santri, formatScore, getSantriDisciplineStatus } from "@/lib/mock-data";
+import { Santri, formatScore, getSantriDisciplineStatus, PerizinanRecord } from "@/lib/mock-data";
 import { Avatar } from "@/components/ui/Avatar";
 import { generateSantriPdf } from "@/lib/pdf-generator";
 import { formatWIBDate, formatWIBDateTime, getWIBTime, getWIBDate } from "@/lib/date-utils";
+import { QrPassCard } from "@/components/QrPassCard";
 
 export default function OrtuDashboardPage() {
   const router = useRouter();
@@ -57,18 +65,48 @@ export default function OrtuDashboardPage() {
     loginUser,
     logoutUser,
     refreshData,
-    showToast
+    showToast,
+    tahfidzList,
+    kesehatanList,
+    perizinanList,
+    sambanganList,
+    transaksiList,
+    tagihanSppList,
+    catatanMusyrifList,
+    addPerizinan,
+    addSambangan
   } = useMizan();
 
   const [selectedSantriId, setSelectedSantriId] = useState<string>("");
   const [searchQuery, setSearchQuery] = useState("");
-  const [activeTab, setActiveTab] = useState<"RINGKASAN" | "KEBAIKAN" | "PELANGGARAN" | "PRESENSI" | "RAPOR">("RINGKASAN");
+  const [activeTab, setActiveTab] = useState<
+    | "RINGKASAN"
+    | "TAHFIDZ"
+    | "KESEHATAN"
+    | "KEUANGAN"
+    | "PERIZINAN"
+    | "KEBAIKAN"
+    | "PELANGGARAN"
+    | "PRESENSI"
+    | "RAPOR"
+  >("RINGKASAN");
   const [isDownloadingPdf, setIsDownloadingPdf] = useState(false);
   const [isClient, setIsClient] = useState(false);
   const [loginNis, setLoginNis] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const [activeIzinPanel, setActiveIzinPanel] = useState<"NONE" | "FORM_IZIN" | "FORM_SAMBANG">("NONE");
+  const [selectedQrRecord, setSelectedQrRecord] = useState<PerizinanRecord | null>(null);
+  const [izinJenis, setIzinJenis] = useState("Pulang");
+  const [izinAlasan, setIzinAlasan] = useState("");
+  const [izinKeluar, setIzinKeluar] = useState("");
+  const [izinKembali, setIzinKembali] = useState("");
+  const [sambangTanggal, setSambangTanggal] = useState("");
+  const [sambangSesi, setSambangSesi] = useState("Sesi Pagi (09:00 - 11:30)");
+  const [sambangPengunjung, setSambangPengunjung] = useState(2);
+  const [isSubmittingForm, setIsSubmittingForm] = useState(false);
 
   const [currentTime, setCurrentTime] = useState<Date | null>(null);
   useEffect(() => {
@@ -233,6 +271,81 @@ export default function OrtuDashboardPage() {
   const latestSayyiah = useMemo(() => {
     return sayyiahRecords.length > 0 ? sayyiahRecords[0] : null;
   }, [sayyiahRecords]);
+
+  const childTahfidz = useMemo(() => {
+    if (!selectedSantri) return [];
+    return tahfidzList.filter((t) => t.santriId === selectedSantri.id);
+  }, [selectedSantri, tahfidzList]);
+
+  const childKesehatan = useMemo(() => {
+    if (!selectedSantri) return [];
+    return kesehatanList.filter((k) => k.santriId === selectedSantri.id);
+  }, [selectedSantri, kesehatanList]);
+
+  const childPerizinan = useMemo(() => {
+    if (!selectedSantri) return [];
+    return perizinanList.filter((p) => p.santriId === selectedSantri.id);
+  }, [selectedSantri, perizinanList]);
+
+  const childSambangan = useMemo(() => {
+    if (!selectedSantri) return [];
+    return sambanganList.filter((s) => s.santriId === selectedSantri.id);
+  }, [selectedSantri, sambanganList]);
+
+  const childTransaksi = useMemo(() => {
+    if (!selectedSantri) return [];
+    return transaksiList.filter((t) => t.santriId === selectedSantri.id);
+  }, [selectedSantri, transaksiList]);
+
+  const childSpp = useMemo(() => {
+    if (!selectedSantri) return [];
+    return tagihanSppList.filter((s) => s.santriId === selectedSantri.id);
+  }, [selectedSantri, tagihanSppList]);
+
+  const childCatatanMusyrif = useMemo(() => {
+    if (!selectedSantri) return [];
+    return catatanMusyrifList.filter((m) => m.santriId === selectedSantri.id);
+  }, [selectedSantri, catatanMusyrifList]);
+
+  const handlePengajuanIzin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedSantri || !izinKeluar || !izinKembali || !izinAlasan) return;
+    setIsSubmittingForm(true);
+    await addPerizinan({
+      santriId: selectedSantri.id,
+      santriName: selectedSantri.name,
+      santriClass: selectedSantri.class,
+      gender: selectedSantri.gender,
+      jenisIzin: izinJenis,
+      alasan: izinAlasan,
+      tglKeluar: izinKeluar,
+      tglKembali: izinKembali,
+      diajukanOleh: currentUser?.name || selectedSantri.waliName || "Wali Santri"
+    });
+    setIsSubmittingForm(false);
+    setActiveIzinPanel("NONE");
+    setIzinAlasan("");
+    setIzinKeluar("");
+    setIzinKembali("");
+  };
+
+  const handlePengajuanSambang = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedSantri || !sambangTanggal) return;
+    setIsSubmittingForm(true);
+    await addSambangan({
+      santriId: selectedSantri.id,
+      santriName: selectedSantri.name,
+      gender: selectedSantri.gender,
+      waliName: currentUser?.name || selectedSantri.waliName || "Wali Santri",
+      tanggalSambang: sambangTanggal,
+      sesiWaktu: sambangSesi,
+      jumlahPengunjung: Number(sambangPengunjung) || 2
+    });
+    setIsSubmittingForm(false);
+    setActiveIzinPanel("NONE");
+    setSambangTanggal("");
+  };
 
   const studentAbsensi = useMemo(() => {
     if (!selectedSantri) return [];
@@ -859,6 +972,50 @@ export default function OrtuDashboardPage() {
             </button>
             <button
               type="button"
+              onClick={() => setActiveTab("TAHFIDZ")}
+              className={`px-3.5 py-2 rounded-2xl text-xs font-bold transition-all shrink-0 cursor-pointer ${
+                activeTab === "TAHFIDZ"
+                  ? "bg-[#1B4D3E] text-white shadow-2xs"
+                  : "text-[#64748B] hover:text-[#172033] hover:bg-[#FAF7EE]"
+              }`}
+            >
+              Tahfidz ({childTahfidz.length})
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveTab("KESEHATAN")}
+              className={`px-3.5 py-2 rounded-2xl text-xs font-bold transition-all shrink-0 cursor-pointer ${
+                activeTab === "KESEHATAN"
+                  ? "bg-[#1B4D3E] text-white shadow-2xs"
+                  : "text-[#64748B] hover:text-[#172033] hover:bg-[#FAF7EE]"
+              }`}
+            >
+              Kesehatan ({childKesehatan.length})
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveTab("KEUANGAN")}
+              className={`px-3.5 py-2 rounded-2xl text-xs font-bold transition-all shrink-0 cursor-pointer ${
+                activeTab === "KEUANGAN"
+                  ? "bg-[#1B4D3E] text-white shadow-2xs"
+                  : "text-[#64748B] hover:text-[#172033] hover:bg-[#FAF7EE]"
+              }`}
+            >
+              Keuangan ({childTransaksi.length})
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveTab("PERIZINAN")}
+              className={`px-3.5 py-2 rounded-2xl text-xs font-bold transition-all shrink-0 cursor-pointer ${
+                activeTab === "PERIZINAN"
+                  ? "bg-[#1B4D3E] text-white shadow-2xs"
+                  : "text-[#64748B] hover:text-[#172033] hover:bg-[#FAF7EE]"
+              }`}
+            >
+              Perizinan ({childPerizinan.length})
+            </button>
+            <button
+              type="button"
               onClick={() => setActiveTab("KEBAIKAN")}
               className={`px-3.5 py-2 rounded-2xl text-xs font-bold transition-all shrink-0 cursor-pointer ${
                 activeTab === "KEBAIKAN"
@@ -918,6 +1075,56 @@ export default function OrtuDashboardPage() {
                   </p>
                 </div>
 
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                  <div className="p-3 rounded-2xl bg-white border border-[#E2EBF4] shadow-2xs space-y-1">
+                    <span className="text-[10px] text-[#64748B] font-bold block">Status Kesehatan</span>
+                    <span className={`inline-block px-2 py-0.5 rounded-lg text-[10px] font-bold ${
+                      selectedSantri.currentHealthStatus === "Rawat Inap Klinik" || selectedSantri.currentHealthStatus === "Rujuk RS"
+                        ? "bg-rose-100 text-rose-800"
+                        : selectedSantri.currentHealthStatus === "Istirahat di Kamar"
+                        ? "bg-amber-100 text-amber-800"
+                        : "bg-emerald-100 text-emerald-800"
+                    }`}>
+                      {selectedSantri.currentHealthStatus || "Sehat"}
+                    </span>
+                  </div>
+
+                  <div className="p-3 rounded-2xl bg-white border border-[#E2EBF4] shadow-2xs space-y-1">
+                    <span className="text-[10px] text-[#64748B] font-bold block">Sisa Uang Saku</span>
+                    <span className="text-xs font-bold text-[#172033] block">
+                      Rp {(selectedSantri.pocketBalance || 0).toLocaleString("id-ID")}
+                    </span>
+                    <span className="text-[9px] text-[#94A3B8] block">
+                      Limit: Rp {(selectedSantri.dailyPocketLimit || 25000).toLocaleString("id-ID")}/hari
+                    </span>
+                  </div>
+
+                  <div className="p-3 rounded-2xl bg-white border border-[#E2EBF4] shadow-2xs space-y-1">
+                    <span className="text-[10px] text-[#64748B] font-bold block">Hafalan Terakhir</span>
+                    <span className="text-xs font-bold text-emerald-700 block truncate">
+                      {childTahfidz[0] ? `${childTahfidz[0].surahName} (Juz ${childTahfidz[0].juz})` : "Belum ada setoran"}
+                    </span>
+                    <span className="text-[9px] text-[#94A3B8] block truncate">
+                      {childTahfidz[0]?.predikat || "Tahfidz Harian"}
+                    </span>
+                  </div>
+
+                  <div className="p-3 rounded-2xl bg-white border border-[#E2EBF4] shadow-2xs space-y-1">
+                    <span className="text-[10px] text-[#64748B] font-bold block">Musyrif Kamar</span>
+                    <span className="text-xs font-bold text-[#172033] block truncate">
+                      {selectedSantri.musyrifName || "Pembina Asrama"}
+                    </span>
+                    <a
+                      href={`https://wa.me/${(selectedSantri.musyrifPhone || "6281234567890").replace(/[^0-9]/g, "")}?text=Assalamu%27alaikum%20Ustadz%2C%20saya%20wali%20dari%20${encodeURIComponent(selectedSantri.name)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 hover:underline"
+                    >
+                      <PhoneCall className="w-2.5 h-2.5" /> WhatsApp
+                    </a>
+                  </div>
+                </div>
+
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div className="p-3.5 rounded-2xl border border-[#E2EBF4] bg-[#F8FAFC] space-y-1">
                     <span className="text-[10px] font-bold text-[#64748B] uppercase">
@@ -968,6 +1175,486 @@ export default function OrtuDashboardPage() {
                     <Download className="w-3.5 h-3.5" />
                     <span>{isDownloadingPdf ? "Menyiapkan" : "Unduh"}</span>
                   </button>
+                </div>
+              </div>
+            )}
+
+            {activeTab === "TAHFIDZ" && (
+              <div className="space-y-4">
+                <div className="p-4 rounded-2xl bg-[#FAF7EE] border border-[#C5A059]/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div>
+                    <span className="text-[10px] font-bold text-[#A8833E] uppercase tracking-wider block">
+                      Target Tahfidz Tahunan
+                    </span>
+                    <h3 className="text-sm font-bold text-[#172033] mt-0.5">
+                      Target 3 Juz Al-Qur'an (Target Mutqin)
+                    </h3>
+                    <p className="text-xs text-[#64748B]">
+                      Total setoran tercatat: {childTahfidz.length} kali halaqah
+                    </p>
+                  </div>
+                  <div className="p-3 rounded-xl bg-white border border-[#D4C9B5] text-center min-w-[120px]">
+                    <span className="text-[10px] text-[#94A3B8] font-bold block">Juz Terakhir</span>
+                    <span className="text-base font-black text-[#1B4D3E]">
+                      {childTahfidz[0] ? `Juz ${childTahfidz[0].juz}` : "-"}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="space-y-2.5">
+                  <h4 className="text-xs font-bold text-[#172033] uppercase tracking-wider">
+                    Riwayat Setoran Hafalan Santri
+                  </h4>
+                  {childTahfidz.length === 0 ? (
+                    <div className="p-6 text-center text-[#64748B] bg-[#F8FAFC] rounded-2xl border border-[#E2EBF4]">
+                      Belum ada riwayat setoran hafalan yang tercatat
+                    </div>
+                  ) : (
+                    childTahfidz.map((t) => (
+                      <div key={t.id} className="p-3.5 rounded-2xl border border-[#E2EBF4] bg-white space-y-1.5 shadow-2xs">
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs font-bold text-[#172033]">
+                            Surat {t.surahName} (Ayat {t.ayatStart}-{t.ayatEnd})
+                          </span>
+                          <span className="px-2.5 py-0.5 rounded-lg text-[10px] font-bold bg-emerald-100 text-emerald-800">
+                            Juz {t.juz} • {t.predikat}
+                          </span>
+                        </div>
+                        <div className="flex items-center justify-between text-[11px] text-[#64748B]">
+                          <span>Kuantitas: {t.halaman} Halaman • {t.date}</span>
+                          <span>Penyimak: {t.ustadzName}</span>
+                        </div>
+                        {t.catatanUstadz && (
+                          <p className="text-[11px] text-[#172033] italic pt-1 border-t border-[#E2EBF4]">
+                            "{t.catatanUstadz}"
+                          </p>
+                        )}
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+            )}
+
+            {activeTab === "KESEHATAN" && (
+              <div className="space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="p-3.5 rounded-2xl bg-[#FAF7EE] border border-[#C5A059]/30 space-y-1">
+                    <span className="text-[10px] font-bold text-[#A8833E] uppercase block">
+                      Status Klinis Hari Ini
+                    </span>
+                    <span className={`inline-block px-3 py-1 rounded-xl text-xs font-bold ${
+                      selectedSantri.currentHealthStatus === "Rawat Inap Klinik" || selectedSantri.currentHealthStatus === "Rujuk RS"
+                        ? "bg-rose-100 text-rose-800"
+                        : selectedSantri.currentHealthStatus === "Istirahat di Kamar"
+                        ? "bg-amber-100 text-amber-800"
+                        : "bg-emerald-100 text-emerald-800"
+                    }`}>
+                      {selectedSantri.currentHealthStatus || "Kondisi Sehat"}
+                    </span>
+                  </div>
+
+                  <div className="p-3.5 rounded-2xl bg-white border border-[#E2EBF4] space-y-1">
+                    <span className="text-[10px] font-bold text-[#64748B] uppercase block">
+                      Riwayat Alergi / Catatan Khusus
+                    </span>
+                    <p className="text-xs text-[#172033] font-medium">
+                      {selectedSantri.riwayatAlergi || "Tidak ada riwayat alergi yang didaftarkan"}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="space-y-2.5">
+                  <h4 className="text-xs font-bold text-[#172033] uppercase tracking-wider">
+                    Riwayat Kunjungan Poskestren / Klinik Pondok
+                  </h4>
+                  {childKesehatan.length === 0 ? (
+                    <div className="p-6 text-center text-[#64748B] bg-[#F8FAFC] rounded-2xl border border-[#E2EBF4]">
+                      Alhamdulillah ananda dalam kondisi sehat dan tidak memiliki catatan sakit
+                    </div>
+                  ) : (
+                    childKesehatan.map((k) => (
+                      <div key={k.id} className="p-3.5 rounded-2xl border border-[#E2EBF4] bg-white space-y-1.5 shadow-2xs">
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs font-bold text-[#172033]">
+                            Tanggal Pemeriksaan: {k.tanggal}
+                          </span>
+                          <span className="px-2.5 py-0.5 rounded-lg text-[10px] font-bold bg-amber-100 text-amber-800">
+                            {k.statusRawat}
+                          </span>
+                        </div>
+                        <div className="p-2.5 rounded-xl bg-[#F8FAFC] text-xs space-y-0.5">
+                          <p><span className="text-[#94A3B8]">Keluhan:</span> <span className="font-semibold text-[#172033]">{k.keluhan}</span></p>
+                          <p><span className="text-[#94A3B8]">Diagnosa:</span> <span className="text-[#172033]">{k.diagnosa}</span></p>
+                          <p><span className="text-[#94A3B8]">Obat/Tindakan:</span> <span className="text-[#172033]">{k.tindakanObat}</span></p>
+                        </div>
+                        <span className="text-[10px] text-[#94A3B8] block text-right">Pemeriksa: {k.petugasNama}</span>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+            )}
+
+            {activeTab === "KEUANGAN" && (
+              <div className="space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-900 space-y-1">
+                    <span className="text-[10px] font-bold text-emerald-700 uppercase block">
+                      Sisa Saldo Uang Saku
+                    </span>
+                    <h3 className="text-lg font-black text-emerald-800">
+                      Rp {(selectedSantri.pocketBalance || 0).toLocaleString("id-ID")}
+                    </h3>
+                    <p className="text-[11px] text-emerald-700">
+                      Batas Belanja Santri: Rp {(selectedSantri.dailyPocketLimit || 25000).toLocaleString("id-ID")}/hari
+                    </p>
+                  </div>
+
+                  <div className="p-4 rounded-2xl bg-[#FAF7EE] border border-[#C5A059]/30 space-y-1">
+                    <span className="text-[10px] font-bold text-[#A8833E] uppercase block">
+                      Informasi Penambahan Saldo
+                    </span>
+                    <p className="text-xs text-[#172033]">
+                      Wali murid dapat menitipkan uang jajan secara manual melalui musyrif asrama, dan saldo ananda akan diperbarui di sistem secara transparan.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="space-y-2.5">
+                  <h4 className="text-xs font-bold text-[#172033] uppercase tracking-wider">
+                    Mutasi Belanja & Titipan Uang Saku
+                  </h4>
+                  {childTransaksi.length === 0 ? (
+                    <div className="p-6 text-center text-[#64748B] bg-[#F8FAFC] rounded-2xl border border-[#E2EBF4]">
+                      Belum ada transaksi uang saku
+                    </div>
+                  ) : (
+                    childTransaksi.map((t) => (
+                      <div key={t.id} className="p-3.5 rounded-2xl border border-[#E2EBF4] bg-white flex items-center justify-between gap-3 shadow-2xs">
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs font-bold text-[#172033]">{t.deskripsi}</span>
+                            <span className="text-[10px] text-[#94A3B8]">{t.tanggal}</span>
+                          </div>
+                          <span className="text-[10px] text-[#94A3B8] block">Metode: {t.metodePembayaran}</span>
+                        </div>
+                        <div className="text-right">
+                          <span className={`text-xs font-bold block ${t.jenis === "IN" ? "text-emerald-700" : "text-rose-600"}`}>
+                            {t.jenis === "IN" ? "+" : "-"}Rp {t.nominal.toLocaleString("id-ID")}
+                          </span>
+                          <span className="text-[10px] text-[#94A3B8]">Sisa: Rp {t.saldoTerakhir.toLocaleString("id-ID")}</span>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+
+                <div className="space-y-2.5 pt-2 border-t border-[#E2EBF4]">
+                  <h4 className="text-xs font-bold text-[#172033] uppercase tracking-wider">
+                    Tagihan SPP Asrama
+                  </h4>
+                  {childSpp.length === 0 ? (
+                    <div className="p-6 text-center text-[#64748B] bg-[#F8FAFC] rounded-2xl border border-[#E2EBF4]">
+                      Belum ada tagihan SPP untuk ananda
+                    </div>
+                  ) : (
+                    childSpp.map((s) => (
+                      <div key={s.id} className="p-3.5 rounded-2xl border border-[#E2EBF4] bg-white flex items-center justify-between gap-3 shadow-2xs">
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs font-bold text-[#172033]">Bulan {s.bulan} {s.tahun}</span>
+                            <span className={`px-2 py-0.5 rounded-lg text-[10px] font-bold ${
+                              s.status === "LUNAS" ? "bg-emerald-100 text-emerald-800" : "bg-rose-100 text-rose-800"
+                            }`}>
+                              {s.status}
+                            </span>
+                          </div>
+                          <span className="text-xs font-bold text-[#172033] block mt-0.5">
+                            Rp {s.nominal.toLocaleString("id-ID")}
+                          </span>
+                          {s.kuitansiNomor && (
+                            <span className="text-[10px] text-emerald-700 font-mono block">
+                              No. Kuitansi: {s.kuitansiNomor}
+                            </span>
+                          )}
+                        </div>
+                        <span className="text-[10px] text-[#94A3B8]">
+                          {s.tglBayar ? `Lunas pada: ${s.tglBayar}` : `Jatuh tempo: ${s.jatuhTempo}`}
+                        </span>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+            )}
+
+            {activeTab === "PERIZINAN" && (
+              <div className="space-y-4">
+                <div className="flex items-center justify-between gap-2 flex-wrap">
+                  <h4 className="text-xs font-bold text-[#172033] uppercase tracking-wider">
+                    Status Izin Keluar & Sambang
+                  </h4>
+                  <div className="flex gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setActiveIzinPanel(activeIzinPanel === "FORM_IZIN" ? "NONE" : "FORM_IZIN")}
+                      className={`px-3.5 py-2 rounded-2xl text-xs font-bold transition-all shadow-xs flex items-center gap-1.5 cursor-pointer ${
+                        activeIzinPanel === "FORM_IZIN"
+                          ? "bg-[#172033] text-white"
+                          : "bg-[#1B4D3E] hover:bg-[#1B4D3E]/90 text-white"
+                      }`}
+                    >
+                      <Plus className="w-3.5 h-3.5" />
+                      <span>{activeIzinPanel === "FORM_IZIN" ? "Tutup Form" : "Ajukan Izin Pulang"}</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setActiveIzinPanel(activeIzinPanel === "FORM_SAMBANG" ? "NONE" : "FORM_SAMBANG")}
+                      className={`px-3.5 py-2 rounded-2xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+                        activeIzinPanel === "FORM_SAMBANG"
+                          ? "bg-[#172033] text-white"
+                          : "bg-[#FAF7EE] hover:bg-[#FAF7EE]/80 border border-[#D4C9B5] text-[#172033]"
+                      }`}
+                    >
+                      <Calendar className="w-3.5 h-3.5 text-[#A8833E]" />
+                      <span>{activeIzinPanel === "FORM_SAMBANG" ? "Tutup Form" : "Jadwalkan Sambang"}</span>
+                    </button>
+                  </div>
+                </div>
+
+                {activeIzinPanel === "FORM_IZIN" && (
+                  <div className="p-4 sm:p-5 rounded-3xl bg-white border border-[#1B4D3E]/30 shadow-md space-y-3">
+                    <div className="flex items-center justify-between pb-2 border-b border-[#E2EBF4]">
+                      <h3 className="text-xs sm:text-sm font-bold text-[#172033]">Form Pengajuan Izin Keluar/Pulang Santri</h3>
+                      <button
+                        type="button"
+                        onClick={() => setActiveIzinPanel("NONE")}
+                        className="w-7 h-7 rounded-lg text-[#64748B] hover:bg-[#F8FAFC] flex items-center justify-center cursor-pointer"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
+
+                    <form onSubmit={handlePengajuanIzin} className="space-y-3 text-xs">
+                      <div>
+                        <label className="block text-xs font-bold text-[#172033] mb-1">Jenis Izin:</label>
+                        <select
+                          value={izinJenis}
+                          onChange={(e) => setIzinJenis(e.target.value)}
+                          className="w-full p-2.5 rounded-xl bg-[#FAF7EE] border border-[#D4C9B5] font-semibold text-[#172033]"
+                        >
+                          <option value="Pulang">Pulang ke Rumah (Kepentingan Keluarga)</option>
+                          <option value="Sakit">Izin Sakit / Berobat Luar</option>
+                          <option value="Acara Pondok / Lomba">Acara Pondok / Dispensasi Lomba</option>
+                          <option value="Keluar Sebentar">Keluar Sebentar</option>
+                        </select>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-2">
+                        <div>
+                          <label className="block text-xs font-bold text-[#172033] mb-1">Tgl Keluar:</label>
+                          <input
+                            type="date"
+                            value={izinKeluar}
+                            onChange={(e) => setIzinKeluar(e.target.value)}
+                            className="w-full p-2.5 rounded-xl bg-[#FAF7EE] border border-[#D4C9B5] font-medium text-[#172033]"
+                            required
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-xs font-bold text-[#172033] mb-1">Tgl Kembali:</label>
+                          <input
+                            type="date"
+                            value={izinKembali}
+                            onChange={(e) => setIzinKembali(e.target.value)}
+                            className="w-full p-2.5 rounded-xl bg-[#FAF7EE] border border-[#D4C9B5] font-medium text-[#172033]"
+                            required
+                          />
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="block text-xs font-bold text-[#172033] mb-1">Alasan / Kepentingan:</label>
+                        <textarea
+                          value={izinAlasan}
+                          onChange={(e) => setIzinAlasan(e.target.value)}
+                          rows={2}
+                          placeholder="Sebutkan keperluan izin secara jelas..."
+                          className="w-full p-2.5 rounded-xl bg-[#FAF7EE] border border-[#D4C9B5] font-medium text-[#172033]"
+                          required
+                        />
+                      </div>
+
+                      <div className="pt-2 flex justify-end gap-2">
+                        <button
+                          type="button"
+                          onClick={() => setActiveIzinPanel("NONE")}
+                          className="px-4 py-2 rounded-xl bg-gray-100 hover:bg-gray-200 text-[#64748B] font-bold cursor-pointer"
+                        >
+                          Batal
+                        </button>
+                        <button
+                          type="submit"
+                          disabled={isSubmittingForm}
+                          className="px-4 py-2 rounded-xl bg-[#1B4D3E] hover:bg-[#1B4D3E]/90 text-white font-bold disabled:opacity-50 cursor-pointer"
+                        >
+                          {isSubmittingForm ? "Mengirim..." : "Kirim Pengajuan Izin"}
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                )}
+
+                {activeIzinPanel === "FORM_SAMBANG" && (
+                  <div className="p-4 sm:p-5 rounded-3xl bg-white border border-[#C5A059]/40 shadow-md space-y-3">
+                    <div className="flex items-center justify-between pb-2 border-b border-[#E2EBF4]">
+                      <h3 className="text-xs sm:text-sm font-bold text-[#172033]">Form Reservasi Jadwal Sambangan</h3>
+                      <button
+                        type="button"
+                        onClick={() => setActiveIzinPanel("NONE")}
+                        className="w-7 h-7 rounded-lg text-[#64748B] hover:bg-[#F8FAFC] flex items-center justify-center cursor-pointer"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
+
+                    <form onSubmit={handlePengajuanSambang} className="space-y-3 text-xs">
+                      <div className="grid grid-cols-2 gap-2">
+                        <div>
+                          <label className="block text-xs font-bold text-[#172033] mb-1">Tanggal Sambang:</label>
+                          <input
+                            type="date"
+                            value={sambangTanggal}
+                            onChange={(e) => setSambangTanggal(e.target.value)}
+                            className="w-full p-2.5 rounded-xl bg-[#FAF7EE] border border-[#D4C9B5] font-medium text-[#172033]"
+                            required
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-xs font-bold text-[#172033] mb-1">Jumlah Pengunjung:</label>
+                          <input
+                            type="number"
+                            min={1}
+                            max={10}
+                            value={sambangPengunjung}
+                            onChange={(e) => setSambangPengunjung(Number(e.target.value))}
+                            className="w-full p-2.5 rounded-xl bg-[#FAF7EE] border border-[#D4C9B5] font-medium text-[#172033]"
+                          />
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="block text-xs font-bold text-[#172033] mb-1">Pilihan Sesi Sambang:</label>
+                        <select
+                          value={sambangSesi}
+                          onChange={(e) => setSambangSesi(e.target.value)}
+                          className="w-full p-2.5 rounded-xl bg-[#FAF7EE] border border-[#D4C9B5] font-semibold text-[#172033]"
+                        >
+                          <option value="Sesi Pagi (09:00 - 11:30)">Sesi Pagi (09:00 - 11:30)</option>
+                          <option value="Sesi Siang (13:30 - 16:30)">Sesi Siang (13:30 - 16:30)</option>
+                        </select>
+                      </div>
+
+                      <div className="pt-2 flex justify-end gap-2">
+                        <button
+                          type="button"
+                          onClick={() => setActiveIzinPanel("NONE")}
+                          className="px-4 py-2 rounded-xl bg-gray-100 hover:bg-gray-200 text-[#64748B] font-bold cursor-pointer"
+                        >
+                          Batal
+                        </button>
+                        <button
+                          type="submit"
+                          disabled={isSubmittingForm}
+                          className="px-4 py-2 rounded-xl bg-[#1B4D3E] hover:bg-[#1B4D3E]/90 text-white font-bold disabled:opacity-50 cursor-pointer"
+                        >
+                          {isSubmittingForm ? "Menyimpan..." : "Reservasi Sekarang"}
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                )}
+
+                <div className="space-y-3">
+                  {childPerizinan.length === 0 ? (
+                    <div className="p-6 text-center text-[#64748B] bg-[#F8FAFC] rounded-2xl border border-[#E2EBF4]">
+                      Belum ada riwayat perizinan santri
+                    </div>
+                  ) : (
+                    childPerizinan.map((p) => (
+                      <div key={p.id} className="p-4 rounded-2xl bg-white border border-[#E2EBF4] shadow-xs space-y-3">
+                        <div className="flex items-start justify-between gap-2">
+                          <div>
+                            <span className="text-xs font-bold text-[#172033] block">{p.jenisIzin}</span>
+                            <span className="text-[11px] text-[#64748B] block">
+                              Jadwal: {p.tglKeluar} s/d {p.tglKembali}
+                            </span>
+                          </div>
+                          <span className={`px-2.5 py-1 rounded-xl text-[10px] font-bold ${
+                            p.status === "DISETUJUI"
+                              ? "bg-emerald-100 text-emerald-800"
+                              : p.status === "BERJALAN"
+                              ? "bg-amber-100 text-amber-800"
+                              : p.status === "SELESAI"
+                              ? "bg-blue-100 text-blue-800"
+                              : p.status === "MENUNGGU"
+                              ? "bg-yellow-100 text-yellow-800"
+                              : "bg-rose-100 text-rose-800"
+                          }`}>
+                            {p.status}
+                          </span>
+                        </div>
+
+                        {p.alasan && (
+                          <p className="text-xs text-[#172033] p-2.5 rounded-xl bg-[#FAF7EE]">
+                            <span className="text-[#94A3B8]">Alasan: </span> {p.alasan}
+                          </p>
+                        )}
+
+                        <div className="flex items-center justify-between pt-2 border-t border-[#E2EBF4] text-[11px] flex-wrap gap-2">
+                          <button
+                            type="button"
+                            onClick={() => setSelectedQrRecord(selectedQrRecord?.id === p.id ? null : p)}
+                            className="inline-flex items-center gap-1.5 font-mono text-[11px] text-[#854D0E] bg-[#FAF7EE] hover:bg-[#FEFCE8] px-3 py-1.5 rounded-xl border border-[#C5A059]/40 font-bold transition-colors cursor-pointer"
+                          >
+                            <QrCode className="w-3.5 h-3.5 text-[#C5A059]" />
+                            <span>{selectedQrRecord?.id === p.id ? "Tutup Kartu QR" : "Unduh Kartu Izin QR (.png)"}</span>
+                          </button>
+                          <span className="text-[10px] text-[#64748B]">Token: {p.qrCodeToken}</span>
+                        </div>
+
+                        {selectedQrRecord?.id === p.id && (
+                          <div className="pt-2">
+                            <QrPassCard record={p} onClose={() => setSelectedQrRecord(null)} />
+                          </div>
+                        )}
+                      </div>
+                    ))
+                  )}
+                </div>
+
+                <div className="space-y-2.5 pt-2 border-t border-[#E2EBF4]">
+                  <h4 className="text-xs font-bold text-[#172033] uppercase tracking-wider">
+                    Jadwal Sambangan Terdaftar
+                  </h4>
+                  {childSambangan.length === 0 ? (
+                    <div className="p-6 text-center text-[#64748B] bg-[#F8FAFC] rounded-2xl border border-[#E2EBF4]">
+                      Belum ada jadwal sambangan
+                    </div>
+                  ) : (
+                    childSambangan.map((s) => (
+                      <div key={s.id} className="p-3 rounded-2xl border border-[#E2EBF4] bg-white flex items-center justify-between text-xs">
+                        <div>
+                          <span className="font-bold text-[#172033] block">{s.tanggalSambang} • {s.sesiWaktu}</span>
+                          <span className="text-[10px] text-[#64748B]">Pengunjung: {s.jumlahPengunjung} Orang (Wali: {s.waliName})</span>
+                        </div>
+                        <span className="px-2 py-0.5 rounded-lg text-[10px] font-bold bg-emerald-100 text-emerald-800">
+                          {s.status}
+                        </span>
+                      </div>
+                    ))
+                  )}
                 </div>
               </div>
             )}

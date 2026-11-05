@@ -75,6 +75,7 @@ export default function AdminSantriPage() {
 
   const [showAddModal, setShowAddModal] = useState(false);
   const [showImportModal, setShowImportModal] = useState(false);
+  const [showToolsDropdown, setShowToolsDropdown] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [editingSantri, setEditingSantri] = useState<Santri | null>(null);
 
@@ -451,52 +452,91 @@ export default function AdminSantriPage() {
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2">
-            <button
-              type="button"
-              onClick={handleDownloadTemplate}
-              title="Unduh format berkas CSV"
-              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-[#F8FAFC] border border-[#CBD5E1] text-[#172033] text-xs font-bold hover:bg-white transition-colors"
-            >
-              <FileSpreadsheet className="w-3.5 h-3.5 text-[#A8833E]" />
-              <span>Template</span>
-            </button>
+          <div className="flex items-center gap-2">
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setShowToolsDropdown(!showToolsDropdown)}
+                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-[#F8FAFC] border border-[#CBD5E1] text-[#172033] text-xs font-bold hover:bg-white transition-colors shadow-2xs"
+              >
+                <SlidersHorizontal className="w-3.5 h-3.5 text-[#1B4D3E]" />
+                <span>Tools</span>
+                <ChevronDown
+                  className={`w-3.5 h-3.5 text-[#64748B] transition-transform duration-200 ${
+                    showToolsDropdown ? "rotate-180" : ""
+                  }`}
+                />
+              </button>
 
-            <button
-              type="button"
-              onClick={() => setShowImportModal(true)}
-              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-[#EFF6FF] border border-[#BFDBFE] text-[#1D4ED8] text-xs font-bold hover:bg-[#DBEAFE] transition-colors"
-            >
-              <Upload className="w-3.5 h-3.5" />
-              <span>Import</span>
-            </button>
+              {showToolsDropdown && (
+                <>
+                  <div
+                    className="fixed inset-0 z-40"
+                    onClick={() => setShowToolsDropdown(false)}
+                  />
+                  <div className="absolute right-0 mt-1.5 w-52 rounded-2xl bg-white border border-[#E2EBF4] shadow-lg py-1.5 z-50 animate-in fade-in zoom-in-95 duration-100">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowToolsDropdown(false);
+                        handleDownloadTemplate();
+                      }}
+                      className="w-full px-3.5 py-2 text-left text-xs font-semibold text-[#172033] hover:bg-[#F8FAFC] flex items-center gap-2.5 transition-colors"
+                    >
+                      <FileSpreadsheet className="w-3.5 h-3.5 text-[#A8833E]" />
+                      <span>Format Template CSV</span>
+                    </button>
 
-            <button
-              type="button"
-              onClick={handleExportCsv}
-              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-[#ECFDF5] border border-[#A7F3D0] text-[#065F46] text-xs font-bold hover:bg-[#D1FAE5] transition-colors"
-            >
-              <Download className="w-3.5 h-3.5" />
-              <span>Ekspor</span>
-            </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowToolsDropdown(false);
+                        setShowImportModal(true);
+                      }}
+                      className="w-full px-3.5 py-2 text-left text-xs font-semibold text-[#1D4ED8] hover:bg-[#EFF6FF] flex items-center gap-2.5 transition-colors"
+                    >
+                      <Upload className="w-3.5 h-3.5 text-[#1D4ED8]" />
+                      <span>Import Berkas CSV/Excel</span>
+                    </button>
 
-            <button
-              type="button"
-              onClick={handleExportJson}
-              title="Cadangkan data santri dalam format JSON"
-              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-[#FAF7EE] border border-[#C5A059]/40 text-[#854D0E] text-xs font-bold hover:bg-[#FEFCE8] transition-colors"
-            >
-              <FileCode className="w-3.5 h-3.5 text-[#C5A059]" />
-              <span>Backup</span>
-            </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowToolsDropdown(false);
+                        handleExportCsv();
+                      }}
+                      className="w-full px-3.5 py-2 text-left text-xs font-semibold text-[#065F46] hover:bg-[#ECFDF5] flex items-center gap-2.5 transition-colors"
+                    >
+                      <Download className="w-3.5 h-3.5 text-[#065F46]" />
+                      <span>Ekspor Data Santri</span>
+                    </button>
 
-            <Link
-              href="/admin/kelas"
-              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-[#FAF7EE] border border-[#C5A059]/30 text-[#A8833E] text-xs font-bold hover:bg-[#F5EED9] transition-colors"
-            >
-              <GraduationCap className="w-3.5 h-3.5" />
-              <span>Kelas</span>
-            </Link>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowToolsDropdown(false);
+                        handleExportJson();
+                      }}
+                      className="w-full px-3.5 py-2 text-left text-xs font-semibold text-[#854D0E] hover:bg-[#FAF7EE] flex items-center gap-2.5 transition-colors"
+                    >
+                      <FileCode className="w-3.5 h-3.5 text-[#C5A059]" />
+                      <span>Cadangkan Data (Backup)</span>
+                    </button>
+
+                    <div className="my-1 border-t border-[#F1F5F9]" />
+
+                    <Link
+                      href="/admin/kelas"
+                      onClick={() => setShowToolsDropdown(false)}
+                      className="w-full px-3.5 py-2 text-left text-xs font-semibold text-[#A8833E] hover:bg-[#FAF7EE] flex items-center gap-2.5 transition-colors"
+                    >
+                      <GraduationCap className="w-3.5 h-3.5 text-[#A8833E]" />
+                      <span>Manajemen Kelas</span>
+                    </Link>
+                  </div>
+                </>
+              )}
+            </div>
 
             <button
               type="button"

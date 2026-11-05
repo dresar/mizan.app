@@ -206,20 +206,25 @@ func main() {
 
 	api.Get("/monitoring/perizinan", handlers.GetPerizinan)
 	api.Post("/monitoring/perizinan", middleware.RequireRoles(models.RoleSuperAdmin, models.RolePengasuhan, models.RoleOrtu), handlers.CreatePerizinan(realtimeHub))
+	api.Put("/monitoring/perizinan", middleware.RequireRoles(models.RoleSuperAdmin, models.RolePengasuhan), handlers.UpdatePerizinan(realtimeHub))
+	api.Delete("/monitoring/perizinan", middleware.RequireRoles(models.RoleSuperAdmin, models.RolePengasuhan), handlers.DeletePerizinan)
 	api.Patch("/monitoring/perizinan/approve", middleware.RequireRoles(models.RoleSuperAdmin, models.RolePengasuhan), handlers.ApprovePerizinan(realtimeHub))
 	api.Post("/monitoring/perizinan/verify", middleware.RequireRoles(models.RoleSuperAdmin, models.RolePengasuhan, models.RoleSatpam), handlers.VerifyPerizinanQR(realtimeHub))
 
 	api.Get("/monitoring/sambangan", handlers.GetSambangan)
 	api.Post("/monitoring/sambangan", middleware.RequireRoles(models.RoleSuperAdmin, models.RolePengasuhan, models.RoleOrtu), handlers.CreateSambangan(realtimeHub))
+	api.Delete("/monitoring/sambangan", middleware.RequireRoles(models.RoleSuperAdmin, models.RolePengasuhan), handlers.DeleteSambangan)
 
 	api.Get("/monitoring/catatan-musyrif", handlers.GetCatatanMusyrif)
 	api.Post("/monitoring/catatan-musyrif", middleware.RequireRoles(models.RoleSuperAdmin, models.RolePengasuhan), handlers.CreateCatatanMusyrif(realtimeHub))
 
 	api.Get("/monitoring/keuangan", middleware.RequireRoles(models.RoleSuperAdmin, models.RolePengasuhan, models.RoleOrtu), handlers.GetKeuangan)
 	api.Post("/monitoring/keuangan", middleware.RequireRoles(models.RoleSuperAdmin, models.RolePengasuhan), handlers.CreateTransaksiKeuangan(realtimeHub))
+	api.Delete("/monitoring/keuangan", middleware.RequireRoles(models.RoleSuperAdmin, models.RolePengasuhan), handlers.DeleteTransaksiKeuangan(realtimeHub))
 
 	api.Get("/monitoring/spp", middleware.RequireRoles(models.RoleSuperAdmin, models.RolePengasuhan, models.RoleOrtu), handlers.GetTagihanSPP)
 	api.Post("/monitoring/spp", middleware.RequireRoles(models.RoleSuperAdmin, models.RolePengasuhan), handlers.CreateTagihanSPP(realtimeHub))
+	api.Delete("/monitoring/spp", middleware.RequireRoles(models.RoleSuperAdmin, models.RolePengasuhan), handlers.DeleteTagihanSPP)
 	api.Patch("/monitoring/spp/pay", middleware.RequireRoles(models.RoleSuperAdmin, models.RolePengasuhan), handlers.PayTagihanSPP(realtimeHub))
 
 	api.Post("/feedback", handlers.CreateFeedback(realtimeHub))
@@ -248,6 +253,18 @@ func main() {
 	})
 
 	if _, err := os.Stat(cfg.StaticWebDir); err == nil {
+		app.Use(func(c *fiber.Ctx) error {
+			p := c.Path()
+			if p == "/sw.js" || p == "/manifest.json" {
+				c.Set("Cache-Control", "no-cache, no-store, must-revalidate")
+			} else if strings.HasPrefix(p, "/_next/static/") {
+				c.Set("Cache-Control", "public, max-age=31536000, immutable")
+			} else if p == "/" || strings.HasSuffix(p, ".html") {
+				c.Set("Cache-Control", "no-cache, no-store, must-revalidate")
+			}
+			return c.Next()
+		})
+
 		app.Static("/", cfg.StaticWebDir, fiber.Static{
 			Compress:  true,
 			ByteRange: true,
@@ -318,6 +335,14 @@ func main() {
 			}
 
 			if strings.Contains(reqPath, ".") {
+				if strings.HasSuffix(reqPath, ".css") {
+					c.Set("Content-Type", "text/css; charset=utf-8")
+					return c.Status(fiber.StatusNotFound).SendString("")
+				}
+				if strings.HasSuffix(reqPath, ".js") {
+					c.Set("Content-Type", "application/javascript; charset=utf-8")
+					return c.Status(fiber.StatusNotFound).SendString("")
+				}
 				return c.Status(fiber.StatusNotFound).SendString("File not found")
 			}
 

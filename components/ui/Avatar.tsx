@@ -6,6 +6,7 @@ interface AvatarProps {
   initials: string;
   src?: string | null;
   name?: string;
+  gender?: "Putra" | "Putri" | string;
   size?: "xs" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl";
   variant?: "primary" | "gold" | "neutral";
   className?: string;
@@ -15,6 +16,7 @@ export function Avatar({
   initials,
   src,
   name,
+  gender,
   size = "md",
   variant = "primary",
   className = ""
@@ -33,14 +35,25 @@ export function Avatar({
   if (variant === "gold") colorClass = "bg-[#C5A059] text-white border border-[#AD8742]";
   if (variant === "neutral") colorClass = "bg-[#FAF7F2] text-[#1B4D3E] border border-[#E5DECE]";
 
-  if (src && !imgError) {
+  const effectiveSrc =
+    src !== undefined
+      ? src
+      : gender === "Putri"
+      ? "/default-avatar-ustadzah.jpg"
+      : gender === "Putra"
+      ? "/default-avatar-ustadz.jpg"
+      : variant === "gold"
+      ? "/default-avatar-ustadzah.jpg"
+      : "/default-avatar-ustadz.jpg";
+
+  if (effectiveSrc && !imgError) {
     return (
       <div
         title={name || initials}
         className={`inline-flex items-center justify-center shrink-0 rounded-2xl overflow-hidden shadow-xs border border-[#E2EBF4] ${sizeClass} ${className}`}
       >
         <img
-          src={src}
+          src={effectiveSrc}
           alt={name || initials}
           onError={() => setImgError(true)}
           className="w-full h-full object-cover"

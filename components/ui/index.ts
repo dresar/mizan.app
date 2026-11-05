@@ -13,3 +13,4 @@ export * from "./Drawer";
 export * from "./EmptyState";
 export * from "./ScoreBar";
 export * from "./Toast";
+export * from "./SantriSelect";

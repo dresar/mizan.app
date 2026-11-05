@@ -144,6 +144,9 @@ export function NeedAttentionCard({ santriList }: NeedAttentionCardProps) {
                 </div>
 
                 <Avatar
+                  src={santri.avatarUrl || (santri.gender === "Putri" ? "/default-avatar-ustadzah.jpg" : "/default-avatar-ustadz.jpg")}
+                  name={santri.name}
+                  gender={santri.gender}
                   initials={santri.avatar}
                   size="md"
                   variant={santri.gender === "Putra" ? "primary" : "gold"}

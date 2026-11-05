@@ -6,7 +6,9 @@ import {
   CheckCircle2,
   HelpCircle,
   XCircle,
-  Clock
+  Clock,
+  Calendar,
+  Filter
 } from "lucide-react";
 import { AbsensiRecord, WaktuSholat } from "@/lib/mock-data";
 import { Card } from "@/components/ui/Card";
@@ -42,14 +44,39 @@ export function PrayerAttendanceChart({
 }: PrayerAttendanceChartProps) {
   const [prayerMode, setPrayerMode] = useState<"5_WAKTU" | "7_WAKTU">("5_WAKTU");
 
+  const todayStr = useMemo(() => {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+  }, []);
+
+  const availableDates = useMemo(() => {
+    const set = new Set<string>();
+    absensiList.forEach((a) => {
+      if (a.date) set.add(a.date.split("T")[0]);
+    });
+    return Array.from(set).sort().reverse();
+  }, [absensiList]);
+
+  const defaultDate = useMemo(() => {
+    if (availableDates.includes(todayStr)) return todayStr;
+    if (availableDates.length > 0) return availableDates[0];
+    return todayStr;
+  }, [availableDates, todayStr]);
+
+  const [selectedDate, setSelectedDate] = useState<string>("ALL");
+
   const activePrayers = useMemo(() => {
     return prayerMode === "5_WAKTU" ? FIVE_PRAYERS : SEVEN_PRAYERS;
   }, [prayerMode]);
 
   const stats = useMemo(() => {
-    const relevantRecords = absensiList.filter((a) =>
-      activePrayers.includes((a.waktuSholat || "Subuh") as WaktuSholat)
-    );
+    const relevantRecords = absensiList.filter((a) => {
+      const p = (a.waktuSholat || "Subuh") as WaktuSholat;
+      if (!activePrayers.includes(p)) return false;
+      if (selectedDate === "ALL") return true;
+      const recDate = (a.date || "").split("T")[0];
+      return recDate === selectedDate;
+    });
 
     const total = relevantRecords.length;
     const hadir = relevantRecords.filter((a) => a.status === "Hadir").length;
@@ -81,11 +108,27 @@ export function PrayerAttendanceChart({
       rateHadir,
       breakdown
     };
-  }, [absensiList, activePrayers]);
+  }, [absensiList, activePrayers, selectedDate]);
+
+  const formatDisplayDate = (dStr: string) => {
+    if (dStr === "ALL") return "Semua Tanggal (Akumulasi)";
+    try {
+      const [y, m, d] = dStr.split("-").map(Number);
+      const dateObj = new Date(y, m - 1, d);
+      return dateObj.toLocaleDateString("id-ID", {
+        weekday: "long",
+        day: "numeric",
+        month: "short",
+        year: "numeric"
+      });
+    } catch {
+      return dStr;
+    }
+  };
 
   return (
     <Card className="p-4 sm:p-5 space-y-4 bg-white">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[#E2E8F0]">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 pb-3 border-b border-[#E2E8F0]">
         <div>
           <div className="flex items-center gap-2">
             <CalendarCheck className="w-4 h-4 text-[#1B4D3E]" />
@@ -94,33 +137,90 @@ export function PrayerAttendanceChart({
             </h2>
           </div>
           <p className="text-[11px] text-[#64748B] mt-0.5">
-            {subtitle}
+            {subtitle} • <span className="font-semibold text-[#1B4D3E]">{formatDisplayDate(selectedDate)}</span>
           </p>
         </div>
 
-        <div className="inline-flex rounded-xl p-1 bg-[#EEF2F6] self-start sm:self-auto">
-          <button
-            type="button"
-            onClick={() => setPrayerMode("5_WAKTU")}
-            className={`px-3 py-1 rounded-lg text-[10px] font-bold transition-all ${
-              prayerMode === "5_WAKTU"
-                ? "bg-white text-[#1B4D3E] shadow-xs"
-                : "text-[#64748B] hover:text-[#172033]"
-            }`}
-          >
-            Sholat 5 Waktu
-          </button>
-          <button
-            type="button"
-            onClick={() => setPrayerMode("7_WAKTU")}
-            className={`px-3 py-1 rounded-lg text-[10px] font-bold transition-all ${
-              prayerMode === "7_WAKTU"
-                ? "bg-white text-[#1B4D3E] shadow-xs"
-                : "text-[#64748B] hover:text-[#172033]"
-            }`}
-          >
-            7 Waktu (+Sunnah)
-          </button>
+        <div className="flex flex-wrap items-center gap-2">
+          <div className="flex items-center gap-1.5 bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl px-2.5 py-1">
+            <Calendar className="w-3.5 h-3.5 text-[#1B4D3E]" />
+            <input
+              type="date"
+              aria-label="Pilih Tanggal Presensi Sholat"
+              value={selectedDate === "ALL" ? "" : selectedDate}
+              onChange={(e) => {
+                if (e.target.value) {
+                  setSelectedDate(e.target.value);
+                } else {
+                  setSelectedDate("ALL");
+                }
+              }}
+              className="text-xs bg-transparent text-[#172033] font-semibold focus:outline-none cursor-pointer"
+            />
+          </div>
+
+          <div className="inline-flex rounded-xl p-0.5 bg-[#EEF2F6]">
+            <button
+              type="button"
+              onClick={() => setSelectedDate(todayStr)}
+              className={`px-2.5 py-1 rounded-lg text-[10px] font-bold transition-all ${
+                selectedDate === todayStr
+                  ? "bg-white text-[#1B4D3E] shadow-2xs"
+                  : "text-[#64748B] hover:text-[#172033]"
+              }`}
+            >
+              Hari Ini
+            </button>
+            {defaultDate !== todayStr && (
+              <button
+                type="button"
+                onClick={() => setSelectedDate(defaultDate)}
+                className={`px-2.5 py-1 rounded-lg text-[10px] font-bold transition-all ${
+                  selectedDate === defaultDate
+                    ? "bg-white text-[#1B4D3E] shadow-2xs"
+                    : "text-[#64748B] hover:text-[#172033]"
+                }`}
+              >
+                Log Terakhir
+              </button>
+            )}
+            <button
+              type="button"
+              onClick={() => setSelectedDate("ALL")}
+              className={`px-2.5 py-1 rounded-lg text-[10px] font-bold transition-all ${
+                selectedDate === "ALL"
+                  ? "bg-white text-[#1B4D3E] shadow-2xs"
+                  : "text-[#64748B] hover:text-[#172033]"
+              }`}
+            >
+              Semua
+            </button>
+          </div>
+
+          <div className="inline-flex rounded-xl p-0.5 bg-[#EEF2F6]">
+            <button
+              type="button"
+              onClick={() => setPrayerMode("5_WAKTU")}
+              className={`px-2.5 py-1 rounded-lg text-[10px] font-bold transition-all ${
+                prayerMode === "5_WAKTU"
+                  ? "bg-white text-[#1B4D3E] shadow-2xs"
+                  : "text-[#64748B] hover:text-[#172033]"
+              }`}
+            >
+              5 Waktu
+            </button>
+            <button
+              type="button"
+              onClick={() => setPrayerMode("7_WAKTU")}
+              className={`px-2.5 py-1 rounded-lg text-[10px] font-bold transition-all ${
+                prayerMode === "7_WAKTU"
+                  ? "bg-white text-[#1B4D3E] shadow-2xs"
+                  : "text-[#64748B] hover:text-[#172033]"
+              }`}
+            >
+              7 Waktu
+            </button>
+          </div>
         </div>
       </div>
 

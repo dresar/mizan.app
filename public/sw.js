@@ -1,4 +1,4 @@
-const CACHE_NAME = "mizan-pwa-v2.2.0";
+const CACHE_NAME = "mizan-pwa-v2.3.0";
 const PRECACHE_ASSETS = [
   "/",
   "/login",
@@ -135,36 +135,33 @@ self.addEventListener("fetch", (event) => {
 
   if (isNavigation) {
     event.respondWith(
-      caches.match(event.request).then((cachedResponse) => {
-        const fetchPromise = fetch(event.request)
-          .then((networkResponse) => {
-            if (networkResponse && networkResponse.status === 200) {
-              const clone = networkResponse.clone();
-              caches.open(CACHE_NAME).then((cache) => {
-                cache.put(event.request, clone).catch(() => void 0);
-                cache.put("/index.html", clone.clone()).catch(() => void 0);
-              }).catch(() => void 0);
-            }
-            return networkResponse;
-          })
-          .catch(async () => {
-            if (cachedResponse) {
-              return cachedResponse;
-            }
-            const fallbackIndex = await caches.match("/index.html");
-            if (fallbackIndex) return fallbackIndex;
-            const fallbackLogin = await caches.match("/login");
-            if (fallbackLogin) return fallbackLogin;
-            const fallbackOffline = await caches.match("/offline.html");
-            if (fallbackOffline) return fallbackOffline;
-            return new Response("Offline", {
-              status: 503,
-              headers: { "Content-Type": "text/plain" }
-            });
+      fetch(event.request)
+        .then((networkResponse) => {
+          if (networkResponse && networkResponse.status === 200) {
+            const clone = networkResponse.clone();
+            caches.open(CACHE_NAME).then((cache) => {
+              cache.put(event.request, clone).catch(() => void 0);
+              cache.put("/index.html", clone.clone()).catch(() => void 0);
+            }).catch(() => void 0);
+          }
+          return networkResponse;
+        })
+        .catch(async () => {
+          const cachedResponse = await caches.match(event.request);
+          if (cachedResponse) {
+            return cachedResponse;
+          }
+          const fallbackIndex = await caches.match("/index.html");
+          if (fallbackIndex) return fallbackIndex;
+          const fallbackLogin = await caches.match("/login");
+          if (fallbackLogin) return fallbackLogin;
+          const fallbackOffline = await caches.match("/offline.html");
+          if (fallbackOffline) return fallbackOffline;
+          return new Response("Offline", {
+            status: 503,
+            headers: { "Content-Type": "text/plain" }
           });
-
-        return cachedResponse || fetchPromise;
-      })
+        })
     );
     return;
   }

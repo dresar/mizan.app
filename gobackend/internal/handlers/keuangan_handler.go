@@ -377,3 +377,71 @@ func CreateTagihanSPP(h *hub.Hub) fiber.Handler {
 		return utils.SendSuccess(c, s, "Tagihan SPP berhasil dibuat")
 	}
 }
+
+func DeleteTransaksiKeuangan(h *hub.Hub) fiber.Handler {
+	return func(c *fiber.Ctx) error {
+		id := c.Query("id")
+		if id == "" {
+			return utils.SendError(c, fiber.StatusBadRequest, "ID transaksi dibutuhkan")
+		}
+
+		pool := database.GetPool()
+		if pool == nil {
+			return utils.SendError(c, fiber.StatusServiceUnavailable, "Database belum terhubung")
+		}
+
+		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+		defer cancel()
+
+		var santriID, jenis string
+		var nominal float64
+		err := pool.QueryRow(ctx, "SELECT santri_id, jenis, nominal FROM transaksi_keuangan WHERE id = $1", id).Scan(&santriID, &jenis, &nominal)
+		if err != nil {
+			return utils.SendError(c, fiber.StatusNotFound, "Transaksi tidak ditemukan")
+		}
+
+		_, err = pool.Exec(ctx, "DELETE FROM transaksi_keuangan WHERE id = $1", id)
+		if err != nil {
+			return utils.SendError(c, fiber.StatusInternalServerError, err.Error())
+		}
+
+		if jenis == "TOPUP" {
+			_, _ = pool.Exec(ctx, "UPDATE santri SET pocket_balance = GREATEST(0, pocket_balance - $1) WHERE id = $2", nominal, santriID)
+		} else if jenis == "BELANJA" || jenis == "TARIK" {
+			_, _ = pool.Exec(ctx, "UPDATE santri SET pocket_balance = pocket_balance + $1 WHERE id = $2", nominal, santriID)
+		}
+
+		if h != nil {
+			payload, _ := json.Marshal(fiber.Map{
+				"channel": "keuangan",
+				"action":  "deleted",
+				"data":    fiber.Map{"id": id, "santriId": santriID},
+			})
+			h.BroadcastMessage(payload)
+		}
+
+		return utils.SendSuccess(c, nil, "Transaksi keuangan berhasil dihapus dan saldo diperbarui")
+	}
+}
+
+func DeleteTagihanSPP(c *fiber.Ctx) error {
+	id := c.Query("id")
+	if id == "" {
+		return utils.SendError(c, fiber.StatusBadRequest, "ID tagihan SPP dibutuhkan")
+	}
+
+	pool := database.GetPool()
+	if pool == nil {
+		return utils.SendError(c, fiber.StatusServiceUnavailable, "Database belum terhubung")
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	_, err := pool.Exec(ctx, "DELETE FROM tagihan_spp WHERE id = $1", id)
+	if err != nil {
+		return utils.SendError(c, fiber.StatusInternalServerError, err.Error())
+	}
+
+	return utils.SendSuccess(c, nil, "Tagihan SPP berhasil dihapus")
+}

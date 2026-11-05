@@ -333,6 +333,7 @@ export default function AdminUsersPage() {
                   >
                     <option value="GURU">Guru / Pembina Asrama</option>
                     <option value="PENGASUHAN">Bagian Pengasuhan & BK (Presensi Sholat)</option>
+                    <option value="SATPAM">Petugas Keamanan Gerbang (Satpam)</option>
                     <option value="SUPER_ADMIN">Super Admin Pengasuhan</option>
                   </select>
                 </div>

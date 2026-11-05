@@ -27,6 +27,20 @@ export function RoleShell({ children }: RoleShellProps) {
       return;
     }
 
+    if (activeRole === "SATPAM") {
+      if (!pathname.startsWith("/satpam")) {
+        router.replace("/satpam");
+      }
+      return;
+    }
+
+    if (pathname.startsWith("/satpam")) {
+      if (activeRole !== "SUPER_ADMIN" && activeRole !== "PENGASUHAN") {
+        router.replace("/login");
+      }
+      return;
+    }
+
     if (pathname.startsWith("/admin")) {
       if (activeRole !== "SUPER_ADMIN") {
         if (activeRole === "PENGASUHAN") {
@@ -75,6 +89,12 @@ export function RoleShell({ children }: RoleShellProps) {
   }
 
   const isAuthorized = (() => {
+    if (activeRole === "SATPAM") {
+      return pathname.startsWith("/satpam");
+    }
+    if (pathname.startsWith("/satpam")) {
+      return activeRole === "SUPER_ADMIN" || activeRole === "PENGASUHAN";
+    }
     if (pathname.startsWith("/admin")) {
       return activeRole === "SUPER_ADMIN";
     }

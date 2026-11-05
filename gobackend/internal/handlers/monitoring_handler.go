@@ -149,7 +149,27 @@ func CreateTahfidz(h *hub.Hub) fiber.Handler {
 
 func DeleteTahfidz(c *fiber.Ctx) error {
 	id := c.Query("id")
-	if id == "" {
+	idsStr := c.Query("ids")
+	var req struct {
+		IDs []string `json:"ids"`
+	}
+	_ = c.BodyParser(&req)
+
+	var targetIDs []string
+	if len(req.IDs) > 0 {
+		targetIDs = req.IDs
+	} else if idsStr != "" {
+		for _, part := range strings.Split(idsStr, ",") {
+			trimmed := strings.TrimSpace(part)
+			if trimmed != "" {
+				targetIDs = append(targetIDs, trimmed)
+			}
+		}
+	} else if id != "" {
+		targetIDs = []string{id}
+	}
+
+	if len(targetIDs) == 0 {
 		return utils.SendError(c, fiber.StatusBadRequest, "ID Tahfidz dibutuhkan")
 	}
 
@@ -161,9 +181,16 @@ func DeleteTahfidz(c *fiber.Ctx) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	_, err := pool.Exec(ctx, "DELETE FROM tahfidz_records WHERE id = $1", id)
-	if err != nil {
-		return utils.SendError(c, fiber.StatusInternalServerError, err.Error())
+	if len(targetIDs) == 1 {
+		_, err := pool.Exec(ctx, "DELETE FROM tahfidz_records WHERE id = $1", targetIDs[0])
+		if err != nil {
+			return utils.SendError(c, fiber.StatusInternalServerError, err.Error())
+		}
+	} else {
+		_, err := pool.Exec(ctx, "DELETE FROM tahfidz_records WHERE id = ANY($1)", targetIDs)
+		if err != nil {
+			return utils.SendError(c, fiber.StatusInternalServerError, err.Error())
+		}
 	}
 
 	return utils.SendSuccess(c, nil, "Catatan tahfidz berhasil dihapus")
@@ -555,7 +582,7 @@ func VerifyPerizinanQR(h *hub.Hub) fiber.Handler {
 		officerName, _ := usernameVal.(string)
 
 		if req.Action == "KELUAR" {
-			if p.Status != "DISETUJUI" {
+			if strings.ToUpper(p.Status) != "DISETUJUI" {
 				return utils.SendError(c, fiber.StatusBadRequest, fmt.Sprintf("Izin belum disetujui (Status: %s)", p.Status))
 			}
 			nowStr := time.Now().Format("2006-01-02 15:04")
@@ -823,4 +850,98 @@ func CreateCatatanMusyrif(h *hub.Hub) fiber.Handler {
 
 		return utils.SendSuccess(c, m, "Catatan ulasan musyrif berhasil disimpan")
 	}
+}
+
+func DeletePerizinan(c *fiber.Ctx) error {
+	id := c.Query("id")
+	if id == "" {
+		return utils.SendError(c, fiber.StatusBadRequest, "ID perizinan dibutuhkan")
+	}
+
+	pool := database.GetPool()
+	if pool == nil {
+		return utils.SendError(c, fiber.StatusServiceUnavailable, "Database belum terhubung")
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	_, err := pool.Exec(ctx, "DELETE FROM perizinan_records WHERE id = $1", id)
+	if err != nil {
+		return utils.SendError(c, fiber.StatusInternalServerError, err.Error())
+	}
+
+	return utils.SendSuccess(c, nil, "Data perizinan berhasil dihapus")
+}
+
+func UpdatePerizinan(h *hub.Hub) fiber.Handler {
+	return func(c *fiber.Ctx) error {
+		var req struct {
+			ID            string `json:"id"`
+			JenisIzin     string `json:"jenisIzin"`
+			Alasan        string `json:"alasan"`
+			TglKeluar     string `json:"tglKeluar"`
+			TglKembali    string `json:"tglKembali"`
+			Status        string `json:"status"`
+			BuktiSuratURL string `json:"buktiSuratUrl"`
+		}
+		if err := c.BodyParser(&req); err != nil || req.ID == "" {
+			return utils.SendError(c, fiber.StatusBadRequest, "Data perizinan tidak valid")
+		}
+
+		pool := database.GetPool()
+		if pool == nil {
+			return utils.SendError(c, fiber.StatusServiceUnavailable, "Database belum terhubung")
+		}
+
+		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+		defer cancel()
+
+		_, err := pool.Exec(ctx, `
+			UPDATE perizinan_records SET
+				jenis_izin = COALESCE(NULLIF($1, ''), jenis_izin),
+				alasan = COALESCE(NULLIF($2, ''), alasan),
+				tgl_keluar = COALESCE(NULLIF($3, ''), tgl_keluar),
+				tgl_kembali = COALESCE(NULLIF($4, ''), tgl_kembali),
+				status = COALESCE(NULLIF($5, ''), status),
+				bukti_surat_url = COALESCE(NULLIF($6, ''), bukti_surat_url)
+			WHERE id = $7
+		`, req.JenisIzin, req.Alasan, req.TglKeluar, req.TglKembali, req.Status, req.BuktiSuratURL, req.ID)
+		if err != nil {
+			return utils.SendError(c, fiber.StatusInternalServerError, err.Error())
+		}
+
+		if h != nil {
+			payload, _ := json.Marshal(fiber.Map{
+				"channel": "monitoring",
+				"action":  "perizinan_updated",
+				"data":    req,
+			})
+			h.BroadcastMessage(payload)
+		}
+
+		return utils.SendSuccess(c, req, "Perizinan santri berhasil diperbarui")
+	}
+}
+
+func DeleteSambangan(c *fiber.Ctx) error {
+	id := c.Query("id")
+	if id == "" {
+		return utils.SendError(c, fiber.StatusBadRequest, "ID sambangan dibutuhkan")
+	}
+
+	pool := database.GetPool()
+	if pool == nil {
+		return utils.SendError(c, fiber.StatusServiceUnavailable, "Database belum terhubung")
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	_, err := pool.Exec(ctx, "DELETE FROM sambangan_records WHERE id = $1", id)
+	if err != nil {
+		return utils.SendError(c, fiber.StatusInternalServerError, err.Error())
+	}
+
+	return utils.SendSuccess(c, nil, "Jadwal sambangan berhasil dihapus")
 }

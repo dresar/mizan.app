@@ -87,6 +87,8 @@ export default function LoginPage() {
           router.push("/admin/dashboard");
         } else if (data.user.role === "PENGASUHAN") {
           router.push("/bk/dashboard");
+        } else if (data.user.role === "SATPAM") {
+          router.push("/satpam");
         } else if (data.user.role === "ORTU") {
           if (data.user.santriId) {
             try {
@@ -135,6 +137,8 @@ export default function LoginPage() {
           router.push("/admin/dashboard");
         } else if (data.user.role === "PENGASUHAN") {
           router.push("/bk/dashboard");
+        } else if (data.user.role === "SATPAM") {
+          router.push("/satpam");
         } else if (data.user.role === "ORTU") {
           if (data.user.santriId) {
             try {

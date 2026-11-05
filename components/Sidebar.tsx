@@ -20,6 +20,11 @@ import {
   FileText,
   MessageSquarePlus,
   Bell,
+  HeartPulse,
+  Ticket,
+  Wallet,
+  BookOpen,
+  ShieldCheck,
   X
 } from "lucide-react";
 import { useMizan } from "@/lib/mizan-context";
@@ -65,6 +70,10 @@ export function Sidebar() {
       { label: "Wali & Pembina", href: "/admin/wali-kelas", icon: <UserCheck className="w-4 h-4" />, description: "Kelola wali & pembina" },
       { label: "Data Absensi", href: "/admin/absensi", icon: <CalendarCheck className="w-4 h-4" />, description: "Rekap log sholat santri" },
       { label: "Rapor Santri", href: "/admin/rapor", icon: <FileText className="w-4 h-4" />, description: "Rapor adab & sholat" },
+      { label: "Rekap Kesehatan", href: "/admin/kesehatan", icon: <HeartPulse className="w-4 h-4" />, description: "Poskestren & rawat" },
+      { label: "Rekap Perizinan", href: "/admin/perizinan", icon: <Ticket className="w-4 h-4" />, description: "Izin keluar & sambang" },
+      { label: "Rekap Finansial", href: "/admin/keuangan", icon: <Wallet className="w-4 h-4" />, description: "Uang saku & tagihan SPP" },
+      { label: "Rekap Tahfidz", href: "/admin/tahfidz", icon: <BookOpen className="w-4 h-4" />, description: "Setoran hafalan santri" },
       { label: "Kelola Pengguna", href: "/admin/users", icon: <User className="w-4 h-4" />, description: "Akun pembina & admin" },
       { label: "Master Kategori", href: "/admin/kategori-pelanggaran", icon: <Sliders className="w-4 h-4" />, description: "Hasanah & Sayyi'ah" },
       { label: "Pengaturan Nilai", href: "/admin/pengaturan-nilai", icon: <Settings className="w-4 h-4" />, description: "Konfigurasi bobot" },
@@ -74,11 +83,19 @@ export function Sidebar() {
   } else if (activeRole === "PENGASUHAN") {
     navItems = [
       { label: "Beranda Pengasuhan", href: "/bk/dashboard", icon: <LayoutDashboard className="w-4 h-4" />, description: "Pusat monitoring BK" },
+      { label: "Poskestren / Kesehatan", href: "/bk/kesehatan", icon: <HeartPulse className="w-4 h-4" />, description: "Rekam medis santri" },
+      { label: "Perizinan & Sambang", href: "/bk/perizinan", icon: <Ticket className="w-4 h-4" />, description: "Approval & QR gate" },
+      { label: "Finansial & SPP", href: "/bk/keuangan", icon: <Wallet className="w-4 h-4" />, description: "Uang saku & tagihan SPP" },
+      { label: "Hafalan & Tahfidz", href: "/bk/tahfidz", icon: <BookOpen className="w-4 h-4" />, description: "Setoran & capaian juz" },
       { label: "Penilaian Santri", href: "/bk/penilaian", icon: <Award className="w-4 h-4" />, description: "Catat hasanah & sayyi'ah" },
       { label: "Data Santri", href: "/bk/santri", icon: <GraduationCap className="w-4 h-4" />, description: "Profil & rapor santri" },
       { label: "Absen Sholat", href: "/bk/absen", icon: <CalendarCheck className="w-4 h-4" />, description: "Presensi 7 waktu sholat" },
       { label: "Riwayat & Log", href: "/bk/history", icon: <Clock className="w-4 h-4" />, description: "Catatan sikap & presensi" },
       { label: "Profil Pengasuhan", href: "/bk/profil", icon: <User className="w-4 h-4" />, description: "Data akun BK" }
+    ];
+  } else if (activeRole === "SATPAM") {
+    navItems = [
+      { label: "Pos Jaga Gerbang", href: "/satpam", icon: <ShieldCheck className="w-4 h-4" />, description: "Scan QR Izin Santri" }
     ];
   } else {
     navItems = [
@@ -95,6 +112,8 @@ export function Sidebar() {
       ? "Administrator Pondok"
       : activeRole === "PENGASUHAN"
       ? "Pengasuhan Pondok (BK)"
+      : activeRole === "SATPAM"
+      ? "Petugas Keamanan Gerbang"
       : "Asatidzah / Pembina";
 
   return (

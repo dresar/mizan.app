@@ -237,7 +237,7 @@ func GetData(c *fiber.Ctx) error {
 
 	guruRows, _ := pool.Query(ctx, `
 		SELECT 
-			COALESCE(gm.id, 'guru-' || u.id), u.name, u.gender,
+			COALESCE(u.id, gm.id), u.name, u.gender,
 			COALESCE(gm.assigned_class, u.assigned_class, '1A'),
 			COALESCE(gm.asrama, CASE WHEN u.gender = 'Putri' THEN 'Asrama Khadijah' ELSE 'Asrama Salman Al-Farisi' END),
 			COALESCE(gm.last_login, 'Aktif'),

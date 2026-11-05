@@ -22,7 +22,14 @@ import {
   FeedbackType,
   MizanNotification,
   INITIAL_CLASSES,
-  INITIAL_CATEGORIES
+  INITIAL_CATEGORIES,
+  TahfidzRecord,
+  KesehatanRecord,
+  PerizinanRecord,
+  SambanganRecord,
+  TransaksiKeuangan,
+  TagihanSPP,
+  CatatanMusyrif
 } from "./mock-data";
 import { formatWIBDate, formatWIBDateTime, getWIBDate, getWIBTime } from "./date-utils";
 
@@ -116,6 +123,31 @@ interface MizanContextType {
   toggleNotificationActive: (id: string, currentActive: boolean) => Promise<{ success: boolean; message: string }>;
   markNotificationAsRead: (id: string) => void;
   markAllNotificationsAsRead: () => void;
+  tahfidzList: TahfidzRecord[];
+  addTahfidz: (data: Omit<TahfidzRecord, "id" | "createdAt">) => Promise<{ success: boolean; message: string }>;
+  deleteTahfidz: (id: string) => Promise<{ success: boolean; message: string }>;
+  deleteTahfidzBulk: (ids: string[]) => Promise<{ success: boolean; message: string }>;
+  kesehatanList: KesehatanRecord[];
+  addKesehatan: (data: Omit<KesehatanRecord, "id" | "createdAt">) => Promise<{ success: boolean; message: string }>;
+  deleteKesehatan: (id: string) => Promise<{ success: boolean; message: string }>;
+  perizinanList: PerizinanRecord[];
+  addPerizinan: (data: Omit<PerizinanRecord, "id" | "createdAt" | "qrCodeToken" | "status">) => Promise<{ success: boolean; message: string }>;
+  updatePerizinan: (data: Partial<PerizinanRecord> & { id: string }) => Promise<{ success: boolean; message: string }>;
+  deletePerizinan: (id: string) => Promise<{ success: boolean; message: string }>;
+  approvePerizinan: (id: string, status: "DISETUJUI" | "DITOLAK") => Promise<{ success: boolean; message: string }>;
+  verifyGatePass: (token: string, action: "KELUAR" | "KEMBALI") => Promise<{ success: boolean; data?: PerizinanRecord; message: string }>;
+  sambanganList: SambanganRecord[];
+  addSambangan: (data: Omit<SambanganRecord, "id" | "createdAt" | "status">) => Promise<{ success: boolean; message: string }>;
+  deleteSambangan: (id: string) => Promise<{ success: boolean; message: string }>;
+  transaksiList: TransaksiKeuangan[];
+  addTransaksi: (data: Omit<TransaksiKeuangan, "id" | "createdAt" | "saldoTerakhir">) => Promise<{ success: boolean; message: string }>;
+  deleteTransaksi: (id: string) => Promise<{ success: boolean; message: string }>;
+  tagihanSppList: TagihanSPP[];
+  addTagihanSpp: (data: Omit<TagihanSPP, "id" | "createdAt" | "status">) => Promise<{ success: boolean; message: string }>;
+  deleteTagihanSpp: (id: string) => Promise<{ success: boolean; message: string }>;
+  payTagihanSpp: (id: string) => Promise<{ success: boolean; message: string }>;
+  catatanMusyrifList: CatatanMusyrif[];
+  addCatatanMusyrif: (data: Omit<CatatanMusyrif, "id" | "createdAt">) => Promise<{ success: boolean; message: string }>;
 }
 
 const MizanContext = createContext<MizanContextType | undefined>(undefined);
@@ -156,6 +188,13 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
   const [feedbackInitialType, setFeedbackInitialType] = useState<FeedbackType>("SARAN");
   const [notificationList, setNotificationList] = useState<MizanNotification[]>([]);
   const [readNotifIds, setReadNotifIds] = useState<string[]>([]);
+  const [tahfidzList, setTahfidzList] = useState<TahfidzRecord[]>([]);
+  const [kesehatanList, setKesehatanList] = useState<KesehatanRecord[]>([]);
+  const [perizinanList, setPerizinanList] = useState<PerizinanRecord[]>([]);
+  const [sambanganList, setSambanganList] = useState<SambanganRecord[]>([]);
+  const [transaksiList, setTransaksiList] = useState<TransaksiKeuangan[]>([]);
+  const [tagihanSppList, setTagihanSppList] = useState<TagihanSPP[]>([]);
+  const [catatanMusyrifList, setCatatanMusyrifList] = useState<CatatanMusyrif[]>([]);
 
   useEffect(() => {
     try {
@@ -348,6 +387,47 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
               if (catData.success && Array.isArray(catData.categories) && catData.categories.length > 0) {
                 setCategories(catData.categories);
               }
+            }
+          } catch {
+            void 0;
+          }
+          try {
+            const [tRes, kRes, pRes, sRes, qRes, spRes, cRes] = await Promise.allSettled([
+              fetch("/api/monitoring/tahfidz", { headers, credentials: "include" }),
+              fetch("/api/monitoring/kesehatan", { headers, credentials: "include" }),
+              fetch("/api/monitoring/perizinan", { headers, credentials: "include" }),
+              fetch("/api/monitoring/sambangan", { headers, credentials: "include" }),
+              fetch("/api/monitoring/keuangan", { headers, credentials: "include" }),
+              fetch("/api/monitoring/spp", { headers, credentials: "include" }),
+              fetch("/api/monitoring/catatan-musyrif", { headers, credentials: "include" })
+            ]);
+            if (tRes.status === "fulfilled" && tRes.value.ok) {
+              const td = await tRes.value.json();
+              if (td.success && Array.isArray(td.tahfidz)) setTahfidzList(td.tahfidz);
+            }
+            if (kRes.status === "fulfilled" && kRes.value.ok) {
+              const kd = await kRes.value.json();
+              if (kd.success && Array.isArray(kd.kesehatan)) setKesehatanList(kd.kesehatan);
+            }
+            if (pRes.status === "fulfilled" && pRes.value.ok) {
+              const pd = await pRes.value.json();
+              if (pd.success && Array.isArray(pd.perizinan)) setPerizinanList(pd.perizinan);
+            }
+            if (sRes.status === "fulfilled" && sRes.value.ok) {
+              const sd = await sRes.value.json();
+              if (sd.success && Array.isArray(sd.sambangan)) setSambanganList(sd.sambangan);
+            }
+            if (qRes.status === "fulfilled" && qRes.value.ok) {
+              const qd = await qRes.value.json();
+              if (qd.success && Array.isArray(qd.transaksi)) setTransaksiList(qd.transaksi);
+            }
+            if (spRes.status === "fulfilled" && spRes.value.ok) {
+              const spd = await spRes.value.json();
+              if (spd.success && Array.isArray(spd.tagihan)) setTagihanSppList(spd.tagihan);
+            }
+            if (cRes.status === "fulfilled" && cRes.value.ok) {
+              const cd = await cRes.value.json();
+              if (cd.success && Array.isArray(cd.catatanMusyrif)) setCatatanMusyrifList(cd.catatanMusyrif);
             }
           } catch {
             void 0;
@@ -1289,6 +1369,356 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
     return updateNotification(id, { isActive: nextActive });
   };
 
+  const addTahfidz = async (payload: Omit<TahfidzRecord, "id" | "createdAt">): Promise<{ success: boolean; message: string }> => {
+    try {
+      const res = await fetch("/api/monitoring/tahfidz", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast(data.message || "Setoran tahfidz berhasil disimpan", "success");
+        await refreshData();
+        return { success: true, message: data.message };
+      }
+      showToast(data.message || "Gagal mencatat tahfidz", "error");
+      return { success: false, message: data.message };
+    } catch (e: any) {
+      showToast(e?.message || "Kesalahan jaringan", "error");
+      return { success: false, message: e?.message };
+    }
+  };
+
+  const deleteTahfidz = async (id: string): Promise<{ success: boolean; message: string }> => {
+    try {
+      const res = await fetch(`/api/monitoring/tahfidz?id=${encodeURIComponent(id)}`, { method: "DELETE" });
+      const data = await res.json();
+      if (data.success) {
+        setTahfidzList((prev) => prev.filter((t) => t.id !== id));
+        showToast("Catatan tahfidz dihapus", "success");
+        return { success: true, message: data.message };
+      }
+      return { success: false, message: data.message };
+    } catch (e: any) {
+      return { success: false, message: e?.message };
+    }
+  };
+
+  const deleteTahfidzBulk = async (ids: string[]): Promise<{ success: boolean; message: string }> => {
+    setTahfidzList((prev) => prev.filter((t) => !ids.includes(t.id)));
+    try {
+      const res = await fetch(`/api/monitoring/tahfidz?ids=${encodeURIComponent(ids.join(","))}`, { method: "DELETE" });
+      const data = await res.json();
+      showToast(data.message || `${ids.length} catatan tahfidz dihapus`, "info");
+      return { success: true, message: data.message || "Dihapus" };
+    } catch (e: any) {
+      showToast(e?.message || "Gagal menghapus", "error");
+      return { success: false, message: e?.message };
+    }
+  };
+
+  const addKesehatan = async (payload: Omit<KesehatanRecord, "id" | "createdAt">): Promise<{ success: boolean; message: string }> => {
+    try {
+      const res = await fetch("/api/monitoring/kesehatan", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast(data.message || "Rekam poskestren berhasil disimpan", "success");
+        await refreshData();
+        return { success: true, message: data.message };
+      }
+      showToast(data.message || "Gagal mencatat poskestren", "error");
+      return { success: false, message: data.message };
+    } catch (e: any) {
+      showToast(e?.message || "Kesalahan jaringan", "error");
+      return { success: false, message: e?.message };
+    }
+  };
+
+  const deleteKesehatan = async (id: string): Promise<{ success: boolean; message: string }> => {
+    try {
+      const res = await fetch(`/api/monitoring/kesehatan?id=${encodeURIComponent(id)}`, { method: "DELETE" });
+      const data = await res.json();
+      if (data.success) {
+        setKesehatanList((prev) => prev.filter((k) => k.id !== id));
+        showToast("Catatan poskestren dihapus", "success");
+        return { success: true, message: data.message };
+      }
+      return { success: false, message: data.message };
+    } catch (e: any) {
+      return { success: false, message: e?.message };
+    }
+  };
+
+  const addPerizinan = async (payload: Omit<PerizinanRecord, "id" | "createdAt" | "qrCodeToken" | "status">): Promise<{ success: boolean; message: string }> => {
+    try {
+      const res = await fetch("/api/monitoring/perizinan", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast(data.message || "Izin berhasil diajukan", "success");
+        await refreshData();
+        return { success: true, message: data.message };
+      }
+      showToast(data.message || "Gagal mengajukan izin", "error");
+      return { success: false, message: data.message };
+    } catch (e: any) {
+      showToast(e?.message || "Kesalahan jaringan", "error");
+      return { success: false, message: e?.message };
+    }
+  };
+
+  const updatePerizinan = async (payload: Partial<PerizinanRecord> & { id: string }): Promise<{ success: boolean; message: string }> => {
+    try {
+      const res = await fetch("/api/monitoring/perizinan", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast(data.message || "Perizinan berhasil diperbarui", "success");
+        await refreshData();
+        return { success: true, message: data.message };
+      }
+      showToast(data.message || "Gagal memperbarui perizinan", "error");
+      return { success: false, message: data.message };
+    } catch (e: any) {
+      showToast(e?.message || "Kesalahan jaringan", "error");
+      return { success: false, message: e?.message };
+    }
+  };
+
+  const deletePerizinan = async (id: string): Promise<{ success: boolean; message: string }> => {
+    try {
+      const res = await fetch(`/api/monitoring/perizinan?id=${encodeURIComponent(id)}`, {
+        method: "DELETE"
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast(data.message || "Perizinan berhasil dihapus", "success");
+        await refreshData();
+        return { success: true, message: data.message };
+      }
+      showToast(data.message || "Gagal menghapus perizinan", "error");
+      return { success: false, message: data.message };
+    } catch (e: any) {
+      showToast(e?.message || "Kesalahan jaringan", "error");
+      return { success: false, message: e?.message };
+    }
+  };
+
+  const approvePerizinan = async (id: string, status: "DISETUJUI" | "DITOLAK"): Promise<{ success: boolean; message: string }> => {
+    try {
+      const res = await fetch("/api/monitoring/perizinan/approve", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, status })
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast(data.message || "Status izin diperbarui", "success");
+        await refreshData();
+        return { success: true, message: data.message };
+      }
+      showToast(data.message || "Gagal memproses izin", "error");
+      return { success: false, message: data.message };
+    } catch (e: any) {
+      showToast(e?.message || "Kesalahan jaringan", "error");
+      return { success: false, message: e?.message };
+    }
+  };
+
+  const verifyGatePass = async (token: string, action: "KELUAR" | "KEMBALI"): Promise<{ success: boolean; data?: PerizinanRecord; message: string }> => {
+    try {
+      const res = await fetch("/api/monitoring/perizinan/verify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token, action })
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast(data.message || "Verifikasi gerbang berhasil", "success");
+        await refreshData();
+        return { success: true, data: data.data, message: data.message };
+      }
+      showToast(data.message || "Verifikasi gerbang gagal", "error");
+      return { success: false, message: data.message };
+    } catch (e: any) {
+      showToast(e?.message || "Kesalahan jaringan", "error");
+      return { success: false, message: e?.message };
+    }
+  };
+
+  const addSambangan = async (payload: Omit<SambanganRecord, "id" | "createdAt" | "status">): Promise<{ success: boolean; message: string }> => {
+    try {
+      const res = await fetch("/api/monitoring/sambangan", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast(data.message || "Reservasi sambang berhasil", "success");
+        await refreshData();
+        return { success: true, message: data.message };
+      }
+      showToast(data.message || "Gagal menjadwalkan sambang", "error");
+      return { success: false, message: data.message };
+    } catch (e: any) {
+      showToast(e?.message || "Kesalahan jaringan", "error");
+      return { success: false, message: e?.message };
+    }
+  };
+
+  const deleteSambangan = async (id: string): Promise<{ success: boolean; message: string }> => {
+    try {
+      const res = await fetch(`/api/monitoring/sambangan?id=${encodeURIComponent(id)}`, {
+        method: "DELETE"
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast(data.message || "Jadwal sambang berhasil dihapus", "success");
+        await refreshData();
+        return { success: true, message: data.message };
+      }
+      showToast(data.message || "Gagal menghapus sambangan", "error");
+      return { success: false, message: data.message };
+    } catch (e: any) {
+      showToast(e?.message || "Kesalahan jaringan", "error");
+      return { success: false, message: e?.message };
+    }
+  };
+
+  const addTransaksi = async (payload: Omit<TransaksiKeuangan, "id" | "createdAt" | "saldoTerakhir">): Promise<{ success: boolean; message: string }> => {
+    try {
+      const res = await fetch("/api/monitoring/keuangan", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast(data.message || "Transaksi uang saku dicatat", "success");
+        await refreshData();
+        return { success: true, message: data.message };
+      }
+      showToast(data.message || "Gagal mencatat transaksi", "error");
+      return { success: false, message: data.message };
+    } catch (e: any) {
+      showToast(e?.message || "Kesalahan jaringan", "error");
+      return { success: false, message: e?.message };
+    }
+  };
+
+  const deleteTransaksi = async (id: string): Promise<{ success: boolean; message: string }> => {
+    try {
+      const res = await fetch(`/api/monitoring/keuangan?id=${encodeURIComponent(id)}`, {
+        method: "DELETE"
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast(data.message || "Transaksi berhasil dihapus", "success");
+        await refreshData();
+        return { success: true, message: data.message };
+      }
+      showToast(data.message || "Gagal menghapus transaksi", "error");
+      return { success: false, message: data.message };
+    } catch (e: any) {
+      showToast(e?.message || "Kesalahan jaringan", "error");
+      return { success: false, message: e?.message };
+    }
+  };
+
+  const addTagihanSpp = async (payload: Omit<TagihanSPP, "id" | "createdAt" | "status">): Promise<{ success: boolean; message: string }> => {
+    try {
+      const res = await fetch("/api/monitoring/spp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast(data.message || "Tagihan SPP berhasil dibuat", "success");
+        await refreshData();
+        return { success: true, message: data.message };
+      }
+      showToast(data.message || "Gagal membuat tagihan SPP", "error");
+      return { success: false, message: data.message };
+    } catch (e: any) {
+      showToast(e?.message || "Kesalahan jaringan", "error");
+      return { success: false, message: e?.message };
+    }
+  };
+
+  const deleteTagihanSpp = async (id: string): Promise<{ success: boolean; message: string }> => {
+    try {
+      const res = await fetch(`/api/monitoring/spp?id=${encodeURIComponent(id)}`, {
+        method: "DELETE"
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast(data.message || "Tagihan SPP berhasil dihapus", "success");
+        await refreshData();
+        return { success: true, message: data.message };
+      }
+      showToast(data.message || "Gagal menghapus tagihan SPP", "error");
+      return { success: false, message: data.message };
+    } catch (e: any) {
+      showToast(e?.message || "Kesalahan jaringan", "error");
+      return { success: false, message: e?.message };
+    }
+  };
+
+  const payTagihanSpp = async (id: string): Promise<{ success: boolean; message: string }> => {
+    try {
+      const res = await fetch("/api/monitoring/spp/pay", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id })
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast(data.message || "SPP disahkan lunas", "success");
+        await refreshData();
+        return { success: true, message: data.message };
+      }
+      showToast(data.message || "Gagal memproses pembayaran SPP", "error");
+      return { success: false, message: data.message };
+    } catch (e: any) {
+      showToast(e?.message || "Kesalahan jaringan", "error");
+      return { success: false, message: e?.message };
+    }
+  };
+
+  const addCatatanMusyrif = async (payload: Omit<CatatanMusyrif, "id" | "createdAt">): Promise<{ success: boolean; message: string }> => {
+    try {
+      const res = await fetch("/api/monitoring/catatan-musyrif", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast(data.message || "Catatan musyrif disimpan", "success");
+        await refreshData();
+        return { success: true, message: data.message };
+      }
+      showToast(data.message || "Gagal menyimpan ulasan musyrif", "error");
+      return { success: false, message: data.message };
+    } catch (e: any) {
+      showToast(e?.message || "Kesalahan jaringan", "error");
+      return { success: false, message: e?.message };
+    }
+  };
+
   return (
     <MizanContext.Provider
       value={{
@@ -1362,7 +1792,32 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
         deleteNotification,
         toggleNotificationActive,
         markNotificationAsRead,
-        markAllNotificationsAsRead
+        markAllNotificationsAsRead,
+        tahfidzList,
+        addTahfidz,
+        deleteTahfidz,
+        deleteTahfidzBulk,
+        kesehatanList,
+        addKesehatan,
+        deleteKesehatan,
+        perizinanList,
+        addPerizinan,
+        updatePerizinan,
+        deletePerizinan,
+        approvePerizinan,
+        verifyGatePass,
+        sambanganList,
+        addSambangan,
+        deleteSambangan,
+        transaksiList,
+        addTransaksi,
+        deleteTransaksi,
+        tagihanSppList,
+        addTagihanSpp,
+        deleteTagihanSpp,
+        payTagihanSpp,
+        catatanMusyrifList,
+        addCatatanMusyrif
       }}
     >
       {children}

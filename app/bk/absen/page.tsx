@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import {
   CalendarCheck,
@@ -15,7 +15,11 @@ import {
   Users,
   Eye,
   X,
-  ChevronDown
+  ChevronDown,
+  Camera,
+  Upload,
+  Image as ImageIcon,
+  Sparkles
 } from "lucide-react";
 import { useMizan } from "@/lib/mizan-context";
 import { RoleShell } from "@/components/RoleShell";
@@ -23,6 +27,20 @@ import { Card, CardSub, CardInset } from "@/components/ui/Card";
 import { Avatar } from "@/components/ui/Avatar";
 import { StatusAbsensi, WaktuSholat } from "@/lib/mock-data";
 import { getWIBDate, getWIBTime } from "@/lib/date-utils";
+
+function getAutoPrayerTime(date = new Date()): WaktuSholat {
+  const hours = date.getHours();
+  const minutes = date.getMinutes();
+  const timeVal = hours * 60 + minutes;
+
+  if (timeVal >= 180 && timeVal < 375) return "Subuh";
+  if (timeVal >= 375 && timeVal < 675) return "Dhuha";
+  if (timeVal >= 675 && timeVal < 885) return "Dzuhur";
+  if (timeVal >= 885 && timeVal < 1065) return "Ashar";
+  if (timeVal >= 1065 && timeVal < 1145) return "Maghrib";
+  if (timeVal >= 1145 && timeVal <= 1439) return "Isya";
+  return "Tahajjud";
+}
 
 const PRAYER_TIMES: WaktuSholat[] = [
   "Subuh",
@@ -38,7 +56,7 @@ export default function PengasuhanAbsenPage() {
   const router = useRouter();
   const { accessibleSantriList, kelasList, currentUser, batchAddAbsensi, showToast, settings } = useMizan();
 
-  const [selectedPrayer, setSelectedPrayer] = useState<WaktuSholat>("Subuh");
+  const [selectedPrayer, setSelectedPrayer] = useState<WaktuSholat>(() => getAutoPrayerTime());
   const isSuperAdmin = currentUser.role === "SUPER_ADMIN";
   const canToggleGender = isSuperAdmin;
   const userGender = (currentUser.gender === "Putri" ? "Putri" : "Putra") as "Putra" | "Putri";
@@ -67,16 +85,34 @@ export default function PengasuhanAbsenPage() {
   const [currentTimeStr, setCurrentTimeStr] = useState<string>("04:30 WIB");
   const [attendanceMap, setAttendanceMap] = useState<Record<string, StatusAbsensi>>({});
   const [showReviewModal, setShowReviewModal] = useState(false);
+  const [attendancePhoto, setAttendancePhoto] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     try {
       const now = new Date();
       setSelectedDate(getWIBDate(now));
       setCurrentTimeStr(getWIBTime(now) + " WIB");
+      setSelectedPrayer(getAutoPrayerTime(now));
     } catch {
       void 0;
     }
   }, []);
+
+  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) {
+      showToast("Ukuran foto maksimal 5 MB", "error");
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      setAttendancePhoto(reader.result as string);
+      showToast("Foto bukti absensi berhasil dimuat", "success");
+    };
+    reader.readAsDataURL(file);
+  };
 
   useEffect(() => {
     if (!availableClasses.includes(selectedClass) && availableClasses.length > 0) {
@@ -200,9 +236,15 @@ export default function PengasuhanAbsenPage() {
           </div>
 
           <div className="space-y-1.5 pt-1 border-t border-[#E2E8F0]">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-[#94A3B8] block">
-              Pilih Waktu Sholat
-            </span>
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-[#94A3B8] block">
+                Pilih Waktu Sholat
+              </span>
+              <span className="inline-flex items-center gap-1 text-[10px] font-bold text-[#065F46] bg-[#ECFDF5] border border-[#A7F3D0] px-2 py-0.5 rounded-full">
+                <Sparkles className="w-3 h-3 text-[#065F46]" />
+                <span>Otomatis {selectedPrayer}</span>
+              </span>
+            </div>
             <div className="grid grid-cols-4 sm:grid-cols-7 gap-1.5">
               {PRAYER_TIMES.map((time) => {
                 const isSelected = selectedPrayer === time;
@@ -211,7 +253,7 @@ export default function PengasuhanAbsenPage() {
                     key={time}
                     type="button"
                     onClick={() => setSelectedPrayer(time)}
-                    className={`py-2 px-1 rounded-xl text-xs font-bold transition-all text-center ${
+                    className={`py-2 px-1 rounded-xl text-xs font-bold transition-all text-center cursor-pointer ${
                       isSelected
                         ? "bg-[#1B4D3E] text-white shadow-xs"
                         : "bg-[#EEF2F6] text-[#64748B] hover:text-[#172033]"
@@ -222,6 +264,77 @@ export default function PengasuhanAbsenPage() {
                 );
               })}
             </div>
+          </div>
+
+          <div className="pt-2 border-t border-[#E2E8F0] space-y-2">
+            <div className="flex items-center justify-between">
+              <label className="text-[10px] font-bold uppercase tracking-wider text-[#94A3B8] flex items-center gap-1.5">
+                <Camera className="w-3.5 h-3.5 text-[#1B4D3E]" />
+                <span>Foto Bukti Waktu Absen Sholat</span>
+              </label>
+              {attendancePhoto && (
+                <span className="text-[10px] font-bold text-[#065F46] bg-[#ECFDF5] px-2 py-0.5 rounded-full border border-[#A7F3D0]">
+                  Foto Siap
+                </span>
+              )}
+            </div>
+
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              capture="environment"
+              onChange={handlePhotoChange}
+              className="hidden"
+            />
+
+            {!attendancePhoto ? (
+              <div
+                onClick={() => fileInputRef.current?.click()}
+                className="p-3.5 rounded-2xl border-2 border-dashed border-[#CBD5E1] bg-[#FAF7EE]/50 hover:bg-[#FAF7EE] hover:border-[#1B4D3E]/40 transition-all cursor-pointer flex items-center justify-center gap-2.5 text-[#64748B]"
+              >
+                <div className="w-8 h-8 rounded-xl bg-white border border-[#E2E8F0] flex items-center justify-center text-[#1B4D3E] shadow-2xs">
+                  <Camera className="w-4 h-4" />
+                </div>
+                <div className="text-left">
+                  <p className="text-xs font-bold text-[#172033]">Ambil Foto / Unggah Bukti Sholat</p>
+                  <p className="text-[10px] text-[#94A3B8]">Dokumentasi jama&apos;ah sholat santri di masjid/musholla</p>
+                </div>
+              </div>
+            ) : (
+              <div className="p-2.5 rounded-2xl bg-white border border-[#E2EBF4] flex items-center justify-between gap-3 shadow-2xs">
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <div className="relative w-12 h-12 rounded-xl overflow-hidden bg-slate-100 border border-slate-200 shrink-0">
+                    <img
+                      src={attendancePhoto}
+                      alt="Bukti Absen"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-xs font-bold text-[#172033] truncate">Foto Bukti Terlampir</p>
+                    <p className="text-[10px] text-[#64748B]">Sholat {selectedPrayer} • {selectedDate}</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-1.5 shrink-0">
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="px-2.5 py-1.5 rounded-xl text-xs font-bold bg-[#FAF7EE] text-[#172033] hover:bg-[#F0ECE1] border border-[#E2E8F0] transition-colors cursor-pointer"
+                  >
+                    Ganti
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setAttendancePhoto(null)}
+                    className="p-1.5 rounded-xl text-red-500 hover:bg-red-50 transition-colors cursor-pointer"
+                    title="Hapus Foto"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
 
           <div className="grid grid-cols-2 gap-2 pt-1">
@@ -312,18 +425,28 @@ export default function PengasuhanAbsenPage() {
         </div>
 
         <Card className="p-4 sm:p-5 space-y-3 bg-white">
-          <div className="flex items-center justify-between pb-2 border-b border-[#E2E8F0]">
+          <div className="flex items-center justify-between pb-2 border-b border-[#E2E8F0] gap-2 flex-wrap">
             <span className="text-xs font-bold text-[#172033] uppercase tracking-wider flex items-center gap-1.5">
               <Users className="w-3.5 h-3.5 text-[#1B4D3E]" />
               Daftar Santri ({studentsInClass.length})
             </span>
-            <button
-              type="button"
-              onClick={handleMarkAllHadir}
-              className="text-[11px] font-bold text-[#065F46] bg-[#ECFDF5] px-3 py-1 rounded-full mizan-pill hover:bg-[#D1FAE5] transition-colors"
-            >
-              Semua
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={handleMarkAllHadir}
+                className="text-[11px] font-bold text-[#065F46] bg-[#ECFDF5] px-3 py-1.5 rounded-xl border border-[#A7F3D0] hover:bg-[#D1FAE5] transition-colors cursor-pointer"
+              >
+                Semua Hadir
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowReviewModal(true)}
+                className="px-4 py-1.5 rounded-xl bg-[#1B4D3E] text-white text-xs font-bold hover:bg-[#153e32] flex items-center gap-1.5 shadow-2xs transition-colors cursor-pointer active:scale-95"
+              >
+                <Check className="w-3.5 h-3.5" />
+                <span>Simpan Absensi</span>
+              </button>
+            </div>
           </div>
 
           {studentsInClass.length === 0 ? (
@@ -416,6 +539,28 @@ export default function PengasuhanAbsenPage() {
               })}
             </div>
           )}
+
+          <div className="pt-3 border-t border-[#E2E8F0] flex items-center justify-between gap-3 flex-wrap">
+            <div className="text-xs text-[#64748B]">
+              <span className="font-bold text-[#172033]">{stats.hadir}</span> Hadir •{" "}
+              <span className="font-bold text-amber-700">{stats.izin}</span> Izin •{" "}
+              <span className="font-bold text-blue-700">{stats.sakit}</span> Sakit •{" "}
+              <span className="font-bold text-red-600">{stats.alpa}</span> Alpa
+              {attendancePhoto && (
+                <span className="ml-2 inline-flex items-center gap-1 text-[10px] font-bold text-[#065F46] bg-[#ECFDF5] px-2 py-0.5 rounded-full">
+                  • Foto terlampir
+                </span>
+              )}
+            </div>
+            <button
+              type="button"
+              onClick={() => setShowReviewModal(true)}
+              className="px-5 py-2.5 rounded-xl bg-[#1B4D3E] text-white text-xs font-bold hover:bg-[#153e32] flex items-center gap-2 shadow-sm transition-all cursor-pointer active:scale-95"
+            >
+              <Check className="w-4 h-4" />
+              <span>Simpan Absensi ({stats.hadir} Hadir)</span>
+            </button>
+          </div>
         </Card>
 
         <div className="fixed bottom-16 md:bottom-6 inset-x-3 sm:inset-x-auto sm:right-6 z-20">
@@ -444,6 +589,19 @@ export default function PengasuhanAbsenPage() {
                   <X className="w-4 h-4" />
                 </button>
               </div>
+
+              {attendancePhoto && (
+                <div className="relative rounded-xl overflow-hidden border border-[#E2E8F0] bg-slate-100 max-h-40">
+                  <img
+                    src={attendancePhoto}
+                    alt="Bukti Absensi"
+                    className="w-full h-36 object-cover"
+                  />
+                  <div className="absolute bottom-2 left-2 px-2 py-0.5 rounded bg-black/60 text-white text-[10px] font-medium backdrop-blur-xs">
+                    Bukti Sholat {selectedPrayer}
+                  </div>
+                </div>
+              )}
 
               <div className="grid grid-cols-4 gap-2 text-center">
                 <div className="p-2 rounded-xl bg-[#ECFDF5] text-[#065F46]">

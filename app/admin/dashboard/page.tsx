@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import {
   Users,
@@ -9,7 +9,9 @@ import {
   AlertTriangle,
   Award,
   Trophy,
-  Download
+  Download,
+  Clock,
+  Calendar
 } from "lucide-react";
 import { useMizan } from "@/lib/mizan-context";
 import { RoleShell } from "@/components/RoleShell";
@@ -17,12 +19,35 @@ import { Card, CardSub } from "@/components/ui/Card";
 import { Avatar } from "@/components/ui/Avatar";
 import { PrayerAttendanceChart } from "@/components/PrayerAttendanceChart";
 import { NeedAttentionCard } from "./NeedAttentionCard";
-import { GuruMonitoringCard } from "./GuruMonitoringCard";
+import { GuruMonitoringPreviewCard } from "./GuruMonitoringPreviewCard";
 
 export default function AdminDashboardPage() {
-  const { santriList, guruList, absensiList, penilaianList, setGuruStatus, settings } = useMizan();
+  const { santriList, guruList, absensiList, penilaianList, settings } = useMizan();
 
   const [leaderboardGender, setLeaderboardGender] = useState<"ALL" | "Putra" | "Putri">("ALL");
+  const [currentDateTime, setCurrentDateTime] = useState<string>("");
+
+  useEffect(() => {
+    const updateTime = () => {
+      const now = new Date();
+      const dateStr = now.toLocaleDateString("id-ID", {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+        year: "numeric"
+      });
+      const timeStr = now.toLocaleTimeString("id-ID", {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit"
+      }).replace(/\./g, ":");
+      setCurrentDateTime(`${dateStr} • ${timeStr} WIB`);
+    };
+
+    updateTime();
+    const timer = setInterval(updateTime, 1000);
+    return () => clearInterval(timer);
+  }, []);
 
   const totalSantri = santriList.length;
   const totalGuru = guruList.length;
@@ -67,17 +92,25 @@ export default function AdminDashboardPage() {
   return (
     <RoleShell>
       <div className="w-full space-y-4 overflow-x-hidden pb-36">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
           <div>
-            <h1 className="text-xl sm:text-2xl font-serif font-black text-[#172033] tracking-tight">
-              Kendali Pengasuhan & Monitoring
-            </h1>
+            <div className="flex items-center gap-2 flex-wrap">
+              <h1 className="text-xl sm:text-2xl font-serif font-black text-[#172033] tracking-tight">
+                Kendali Pengasuhan & Monitoring
+              </h1>
+              {currentDateTime && (
+                <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#FAF7EE] border border-[#C5A059]/40 text-[#854D0E] text-[11px] font-bold font-mono shadow-2xs">
+                  <Clock className="w-3 h-3 text-[#C5A059]" />
+                  <span>{currentDateTime}</span>
+                </div>
+              )}
+            </div>
             <p className="text-xs text-[#64748B] mt-0.5">
-              Monitoring akhlak, absensi, serta pelaporan asatidzah
+              Monitoring akhlak, absensi, serta pelaporan asatidz & pembina
             </p>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 self-start md:self-auto">
             <a
               href="/api/admin/backup?download=1"
               className="px-3.5 py-2 rounded-2xl bg-[#FAF7EE] border border-[#C5A059]/40 text-[#854D0E] text-xs font-bold flex items-center gap-1.5 shadow-2xs hover:bg-[#FEFCE8] transition-colors"
@@ -114,7 +147,7 @@ export default function AdminDashboardPage() {
 
           <CardSub className="p-4">
             <div className="flex items-center justify-between text-[#64748B] mb-2">
-              <span className="text-[11px] font-bold uppercase tracking-wider">Ustadz & Ustadzah</span>
+              <span className="text-[11px] font-bold uppercase tracking-wider">Pembina & Guru</span>
               <div className="w-8 h-8 rounded-xl mizan-inset text-[#A8833E] flex items-center justify-center">
                 <GraduationCap className="w-4 h-4" />
               </div>
@@ -229,6 +262,9 @@ export default function AdminDashboardPage() {
                     </div>
 
                     <Avatar
+                      src={santri.avatarUrl || (santri.gender === "Putri" ? "/default-avatar-ustadzah.jpg" : "/default-avatar-ustadz.jpg")}
+                      name={santri.name}
+                      gender={santri.gender}
                       initials={santri.avatar}
                       size="md"
                       variant={isFirst ? "gold" : santri.gender === "Putra" ? "primary" : "gold"}
@@ -261,11 +297,10 @@ export default function AdminDashboardPage() {
 
         <NeedAttentionCard santriList={santriList} />
 
-        <GuruMonitoringCard
+        <GuruMonitoringPreviewCard
           guruList={guruList}
           absensiList={absensiList}
           penilaianList={penilaianList}
-          setGuruStatus={setGuruStatus}
         />
       </div>
     </RoleShell>
