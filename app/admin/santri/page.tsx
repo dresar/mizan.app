@@ -25,7 +25,8 @@ import {
   SlidersHorizontal,
   Eye,
   Edit2,
-  ChevronDown
+  ChevronDown,
+  User
 } from "lucide-react";
 import { useMizan } from "@/lib/mizan-context";
 import { RoleShell } from "@/components/RoleShell";
@@ -751,7 +752,7 @@ export default function AdminSantriPage() {
             </div>
 
             {viewMode === "grid" ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-3">
+              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-4 md:gap-5">
               {paginatedSantri.map((santri) => {
                 const isSelected = selectedSantriIds.includes(santri.id);
                 const defaultAvatar =
@@ -763,165 +764,151 @@ export default function AdminSantriPage() {
                 return (
                   <div
                     key={santri.id}
-                    className={`mizan-card p-4 flex flex-col justify-between hover:border-[#1B4D3E]/40 group transition-all relative ${
+                    className={`group relative rounded-2xl sm:rounded-3xl overflow-hidden bg-white border border-[#E2EBF4] shadow-2xs hover:shadow-2xl hover:border-[#1B4D3E]/40 hover:-translate-y-1.5 transition-all duration-500 flex flex-col justify-between text-left ${
                       isSelected ? "ring-2 ring-red-400 bg-red-50/20" : ""
                     }`}
                   >
-                    <div>
-                      <div className="flex items-start justify-between gap-2 mb-2">
-                        <div className="flex items-center gap-2.5 min-w-0">
-                          {visibleSantriColumns.checkbox && (
-                            <input
-                              type="checkbox"
-                              checked={isSelected}
-                              onChange={() => toggleSelectSantri(santri.id)}
-                              className="w-4 h-4 rounded text-[#1B4D3E] accent-[#1B4D3E] cursor-pointer shrink-0"
-                              aria-label={`Pilih ${santri.name}`}
-                            />
-                          )}
+                    <div
+                      onClick={() => handleOpenPhotoViewer(santri.id)}
+                      className="sheen-wrapper relative w-full aspect-square overflow-hidden bg-[#0E271F] shrink-0 cursor-pointer"
+                      title="Klik untuk melihat foto"
+                    >
+                      {visibleSantriColumns.checkbox && (
+                        <div
+                          onClick={(e) => e.stopPropagation()}
+                          className="absolute top-2 left-2 z-10 p-1.5 rounded-xl bg-white/90 backdrop-blur-xs border border-white/60 shadow-xs"
+                        >
+                          <input
+                            type="checkbox"
+                            checked={isSelected}
+                            onChange={() => toggleSelectSantri(santri.id)}
+                            className="w-4 h-4 rounded text-[#1B4D3E] accent-[#1B4D3E] cursor-pointer block"
+                            aria-label={`Pilih ${santri.name}`}
+                          />
+                        </div>
+                      )}
 
-                          {visibleSantriColumns.avatar && (
-                            <button
-                              type="button"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleOpenPhotoViewer(santri.id);
-                              }}
-                              className="group/avatar relative w-11 h-11 rounded-2xl overflow-hidden border border-[#E2E8F0] bg-[#FAF7EE] shadow-2xs shrink-0 cursor-pointer hover:scale-105 hover:ring-2 hover:ring-[#1B4D3E] transition-all"
-                              title="Klik untuk melihat foto"
+                      <img
+                        src={santriPhoto}
+                        onError={(e) => {
+                          const target = e.currentTarget;
+                          if (target.src !== defaultAvatar && !target.src.endsWith(defaultAvatar)) {
+                            target.src = defaultAvatar;
+                          }
+                        }}
+                        alt={santri.name}
+                        className="w-full h-full object-cover object-top group-hover:scale-108 transition-transform duration-700 ease-out"
+                      />
+                      <div className="absolute inset-x-0 bottom-0 h-10 sm:h-14 bg-gradient-to-t from-white via-white/50 to-transparent pointer-events-none" />
+                    </div>
+
+                    <div className="p-2.5 sm:p-4 flex flex-col justify-between flex-1 bg-white space-y-2.5">
+                      <div className="space-y-1 sm:space-y-1.5">
+                        <div className="flex items-center justify-between gap-1">
+                          {visibleSantriColumns.class && (
+                            <span className="px-2 py-0.5 rounded-lg text-[10px] sm:text-xs font-mono font-black bg-[#1B4D3E]/10 text-[#1B4D3E] border border-[#1B4D3E]/20 whitespace-nowrap">
+                              {santri.class}
+                            </span>
+                          )}
+                          {visibleSantriColumns.gender && (
+                            <span
+                              className={`px-1.5 sm:px-2 py-0.5 rounded-md sm:rounded-full text-[9px] sm:text-[10px] font-bold border shrink-0 ${
+                                santri.gender === "Putra"
+                                  ? "bg-[#ECFDF5] text-[#065F46] border-[#A7F3D0]"
+                                  : "bg-[#FAF7EE] text-[#A8833E] border-[#C5A059]/40"
+                              }`}
                             >
-                              <img
-                                src={santriPhoto}
-                                alt={santri.name}
-                                onError={(e) => {
-                                  const target = e.currentTarget;
-                                  if (target.src !== defaultAvatar && !target.src.endsWith(defaultAvatar)) {
-                                    target.src = defaultAvatar;
-                                  }
-                                }}
-                                className="w-full h-full object-cover object-top"
-                              />
-                              <div className="absolute inset-0 bg-black/0 group-hover/avatar:bg-black/25 flex items-center justify-center transition-colors">
-                                <Eye className="w-3.5 h-3.5 text-white opacity-0 group-hover/avatar:opacity-100 transition-opacity drop-shadow-sm" />
-                              </div>
-                            </button>
+                              {santri.gender === "Putra" ? "L" : "P"}
+                            </span>
                           )}
-
-                          <div className="min-w-0">
-                            <h3 className="font-bold text-xs sm:text-sm text-[#172033] leading-tight truncate group-hover:text-[#1B4D3E] transition-colors">
-                              {santri.name}
-                            </h3>
-                            {visibleSantriColumns.nis && (
-                              <p className="text-[10px] text-[#94A3B8] mt-0.5 font-mono">
-                                NIS: {santri.nis}
-                              </p>
-                            )}
-                            {visibleSantriColumns.class && (
-                              <p className="text-[10px] text-[#1B4D3E] font-mono font-bold">
-                                {santri.class}
-                              </p>
-                            )}
-                          </div>
                         </div>
 
-                        {visibleSantriColumns.gender && (
-                          <span
-                            className={`text-[9px] font-bold px-2 py-0.5 rounded-full mizan-pill shrink-0 ${
-                              santri.gender === "Putra"
-                                ? "bg-[#ECFDF5] text-[#065F46]"
-                                : "bg-[#FAF7EE] text-[#A8833E]"
-                            }`}
-                          >
-                            {santri.gender === "Putra" ? "L" : "P"}
+                        <div>
+                          {visibleSantriColumns.nis && (
+                            <span className="text-[8px] sm:text-[9px] font-extrabold uppercase tracking-widest text-[#C5A059] block font-mono">
+                              NIS: {santri.nis}
+                            </span>
+                          )}
+                          <h4 className="text-xs sm:text-sm font-black text-[#172033] group-hover:text-[#1B4D3E] transition-colors truncate mt-0.5">
+                            {santri.name}
+                          </h4>
+                          {visibleSantriColumns.wali && (
+                            <p className="text-[10px] sm:text-xs text-[#64748B] flex items-center gap-1 pt-0.5 truncate">
+                              <User className="w-3 h-3 text-[#C5A059] shrink-0" />
+                              <span>{santri.waliName || "Wali Santri"}</span>
+                            </p>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="pt-2 border-t border-[#E2EBF4] flex items-center justify-between text-[10px] sm:text-xs">
+                        {visibleSantriColumns.score && (
+                          <span className="text-[#64748B] font-medium">Skor Akhlak</span>
+                        )}
+                        {visibleSantriColumns.score && (
+                          <span className="font-mono font-bold text-[#1B4D3E] bg-[#ECFDF5] border border-[#A7F3D0] px-1.5 sm:px-2 py-0.5 rounded-lg shadow-2xs">
+                            {santri.currentScore.toFixed(2).replace(".", ",")}
                           </span>
                         )}
                       </div>
 
-                      <CardInset className="p-2.5 grid grid-cols-2 gap-2 text-center my-2">
-                        {visibleSantriColumns.score && (
-                          <div>
-                            <span className="text-[9px] text-[#94A3B8] block font-bold uppercase">
-                              Skor Akhlak
-                            </span>
-                            <span className="text-xs font-black font-mono text-[#1B4D3E]">
-                              {santri.currentScore.toFixed(3).replace(".", ",")}
-                            </span>
-                          </div>
-                        )}
-
-                        {visibleSantriColumns.kehadiran && (
-                          <div>
-                            <span className="text-[9px] text-[#94A3B8] block font-bold uppercase">
-                              Kehadiran
-                            </span>
-                            <span className="text-xs font-black font-mono text-[#065F46]">
-                              {santri.totalHadir || 0} Hari
-                            </span>
-                          </div>
-                        )}
-                      </CardInset>
-                    </div>
-
-                    <div className="pt-2 border-t border-[#E2EBF4] flex items-center justify-between gap-2 text-[11px]">
-                      {visibleSantriColumns.wali && (
-                        <span className="text-[#64748B] truncate max-w-[120px]">
-                          {santri.waliName || "Wali Santri"}
-                        </span>
-                      )}
-
-                      {visibleSantriColumns.action && (
-                        <div
-                          className="relative inline-block text-left ml-auto"
-                          ref={activeActionMenuId === santri.id ? actionMenuRef : null}
+                      <div
+                        className="flex items-center gap-1.5 pt-0.5 sm:pt-1"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <Link
+                          href={`/guru/santri/${santri.id}`}
+                          className="flex-1 py-1.5 sm:py-2 rounded-lg sm:rounded-xl bg-[#1B4D3E] text-white hover:bg-[#153e32] text-[10px] sm:text-xs font-bold text-center transition-all shadow-2xs active:scale-95 cursor-pointer truncate"
                         >
-                          <button
-                            type="button"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setActiveActionMenuId(activeActionMenuId === santri.id ? null : santri.id);
-                            }}
-                            className="w-7 h-7 rounded-xl bg-white border border-[#E2E8F0] hover:bg-[#FAF7F2] hover:border-[#1B4D3E]/40 text-[#64748B] hover:text-[#172033] flex items-center justify-center transition-all shadow-2xs cursor-pointer active:scale-95"
-                            title="Opsi Aksi"
-                            aria-label="Opsi Aksi"
-                          >
-                            <MoreVertical className="w-4 h-4" />
-                          </button>
+                          Detail
+                        </Link>
 
-                          {activeActionMenuId === santri.id && (
-                            <div className="absolute right-0 bottom-full mb-1.5 w-40 rounded-2xl bg-white shadow-xl border border-[#E2EBF4] z-50 p-1.5 space-y-0.5 animate-in fade-in zoom-in-95 duration-100">
-                              <Link
-                                href={`/guru/santri/${santri.id}`}
-                                className="w-full flex items-center gap-2 px-2.5 py-1.5 rounded-xl text-xs font-semibold text-[#172033] hover:bg-[#FAF7EE] hover:text-[#1B4D3E] text-left transition-colors cursor-pointer"
-                              >
-                                <Eye className="w-3.5 h-3.5 text-[#1B4D3E]" />
-                                <span>Profil Lengkap</span>
-                              </Link>
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  setActiveActionMenuId(null);
-                                  handleOpenEdit(santri);
-                                }}
-                                className="w-full flex items-center gap-2 px-2.5 py-1.5 rounded-xl text-xs font-semibold text-[#172033] hover:bg-[#FAF7EE] hover:text-[#C5A059] text-left transition-colors cursor-pointer"
-                              >
-                                <Edit2 className="w-3.5 h-3.5 text-[#C5A059]" />
-                                <span>Ubah Data</span>
-                              </button>
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  setActiveActionMenuId(null);
-                                  handleOpenDeleteSingle(santri);
-                                }}
-                                className="w-full flex items-center gap-2 px-2.5 py-1.5 rounded-xl text-xs font-semibold text-red-600 hover:bg-red-50 text-left transition-colors cursor-pointer"
-                              >
-                                <Trash2 className="w-3.5 h-3.5 text-red-500" />
-                                <span>Hapus Santri</span>
-                              </button>
-                            </div>
-                          )}
-                        </div>
-                      )}
+                        {visibleSantriColumns.action && (
+                          <div
+                            className="relative inline-block text-left"
+                            ref={activeActionMenuId === santri.id ? actionMenuRef : null}
+                          >
+                            <button
+                              type="button"
+                              onClick={() =>
+                                setActiveActionMenuId(activeActionMenuId === santri.id ? null : santri.id)
+                              }
+                              className="p-1.5 sm:p-2 rounded-lg sm:rounded-xl bg-white border border-[#E2E8F0] hover:bg-[#FAF7F2] text-[#64748B] hover:text-[#172033] flex items-center justify-center transition-all shadow-2xs cursor-pointer active:scale-95"
+                              title="Opsi Aksi"
+                              aria-label="Opsi Aksi"
+                            >
+                              <MoreVertical className="w-4 h-4" />
+                            </button>
+
+                            {activeActionMenuId === santri.id && (
+                              <div className="absolute right-0 bottom-full mb-1.5 w-40 rounded-2xl bg-white shadow-xl border border-[#E2EBF4] z-50 p-1.5 space-y-0.5 animate-in fade-in zoom-in-95 duration-100">
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setActiveActionMenuId(null);
+                                    handleOpenEdit(santri);
+                                  }}
+                                  className="w-full flex items-center gap-2 px-2.5 py-1.5 rounded-xl text-xs font-semibold text-[#172033] hover:bg-[#FAF7EE] hover:text-[#C5A059] text-left transition-colors cursor-pointer"
+                                >
+                                  <Edit2 className="w-3.5 h-3.5 text-[#C5A059]" />
+                                  <span>Ubah Data</span>
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setActiveActionMenuId(null);
+                                    handleOpenDeleteSingle(santri);
+                                  }}
+                                  className="w-full flex items-center gap-2 px-2.5 py-1.5 rounded-xl text-xs font-semibold text-red-600 hover:bg-red-50 text-left transition-colors cursor-pointer"
+                                >
+                                  <Trash2 className="w-3.5 h-3.5 text-red-500" />
+                                  <span>Hapus Santri</span>
+                                </button>
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
                 );
