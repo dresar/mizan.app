@@ -65,8 +65,8 @@ export function PhotoViewerModal({
 
   const defaultAvatar =
     currentItem.gender === "Putri"
-      ? "/default-avatar-ustadzah.svg"
-      : "/default-avatar-ustadz.svg";
+      ? "/default-avatar-ustadzah.jpg"
+      : "/default-avatar-ustadz.jpg";
 
   const resolvedPhoto = currentItem.photoUrl || defaultAvatar;
 

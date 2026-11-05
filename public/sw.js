@@ -1,4 +1,4 @@
-const CACHE_NAME = "mizan-pwa-v2.1.0";
+const CACHE_NAME = "mizan-pwa-v2.2.0";
 const PRECACHE_ASSETS = [
   "/",
   "/login",
@@ -9,6 +9,9 @@ const PRECACHE_ASSETS = [
   "/icons/icon-192.png",
   "/icons/icon-512.png",
   "/icons/apple-touch-icon.png",
+  "/default-avatar.jpg",
+  "/default-avatar-ustadz.jpg",
+  "/default-avatar-ustadzah.jpg",
   "/default-avatar.svg",
   "/default-avatar-ustadz.svg",
   "/default-avatar-ustadzah.svg"

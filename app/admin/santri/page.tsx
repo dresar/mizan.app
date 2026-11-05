@@ -756,8 +756,8 @@ export default function AdminSantriPage() {
                 const isSelected = selectedSantriIds.includes(santri.id);
                 const defaultAvatar =
                   santri.gender === "Putri"
-                    ? "/default-avatar-ustadzah.svg"
-                    : "/default-avatar-ustadz.svg";
+                    ? "/default-avatar-ustadzah.jpg"
+                    : "/default-avatar-ustadz.jpg";
                 const santriPhoto = santri.avatarUrl || defaultAvatar;
 
                 return (
@@ -933,8 +933,8 @@ export default function AdminSantriPage() {
                   const isSelected = selectedSantriIds.includes(santri.id);
                   const defaultAvatar =
                     santri.gender === "Putri"
-                      ? "/default-avatar-ustadzah.svg"
-                      : "/default-avatar-ustadz.svg";
+                      ? "/default-avatar-ustadzah.jpg"
+                      : "/default-avatar-ustadz.jpg";
                   const santriPhoto = santri.avatarUrl || defaultAvatar;
 
                   return (

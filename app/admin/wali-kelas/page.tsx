@@ -539,8 +539,8 @@ export default function AdminWaliKelasPage() {
             {paginatedTeachers.map((teacher) => {
               const defaultAvatar =
                 teacher.gender === "Putri"
-                  ? "/default-avatar-ustadzah.svg"
-                  : "/default-avatar-ustadz.svg";
+                  ? "/default-avatar-ustadzah.jpg"
+                  : "/default-avatar-ustadz.jpg";
               const teacherPhoto = teacher.avatarUrl || defaultAvatar;
 
               return (
@@ -679,8 +679,8 @@ export default function AdminWaliKelasPage() {
                     const rowNumber = (currentPage - 1) * PAGE_SIZE + idx + 1;
                     const defaultAvatar =
                       teacher.gender === "Putri"
-                        ? "/default-avatar-ustadzah.svg"
-                        : "/default-avatar-ustadz.svg";
+                        ? "/default-avatar-ustadzah.jpg"
+                        : "/default-avatar-ustadz.jpg";
                     const teacherPhoto = teacher.avatarUrl || defaultAvatar;
 
                     return (
