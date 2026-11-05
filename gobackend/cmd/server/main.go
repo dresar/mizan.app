@@ -155,10 +155,10 @@ func main() {
 	api.Post("/auth/login", handlers.Login(cfg))
 	api.Get("/auth/me", handlers.GetMe(cfg))
 	api.Get("/share", handlers.GetShareCard)
+	api.Get("/data", middleware.OptionalAuth(cfg.SessionSecret), handlers.GetData)
 
 	api.Use(middleware.AuthRequired(cfg.SessionSecret))
 
-	api.Get("/data", handlers.GetData)
 	api.Post("/auth/update-password", handlers.UpdatePassword)
 
 	api.Get("/santri", handlers.GetSantri)

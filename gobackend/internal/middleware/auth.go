@@ -72,6 +72,28 @@ func VerifySessionToken(tokenString string, secret string) (*models.SessionPaylo
 	return &payload, nil
 }
 
+func OptionalAuth(secret string) fiber.Handler {
+	return func(c *fiber.Ctx) error {
+		token := c.Cookies("mizan_session")
+		if token == "" {
+			authHeader := c.Get("Authorization")
+			if strings.HasPrefix(authHeader, "Bearer ") {
+				token = strings.TrimPrefix(authHeader, "Bearer ")
+			}
+		}
+
+		if token != "" {
+			if payload, err := VerifySessionToken(token, secret); err == nil {
+				c.Locals("user_id", payload.UserID)
+				c.Locals("username", payload.Username)
+				c.Locals("role", payload.Role)
+			}
+		}
+
+		return c.Next()
+	}
+}
+
 func AuthRequired(secret string) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		token := c.Cookies("mizan_session")

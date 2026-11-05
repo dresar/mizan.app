@@ -75,13 +75,14 @@ export default function LoginPage() {
       const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({ username: acc.username, password: pwd })
       });
 
       const data = await res.json();
 
       if (data.success && data.user) {
-        loginUser(data.user);
+        loginUser(data.user, data.token);
         if (data.user.role === "SUPER_ADMIN") {
           router.push("/admin/dashboard");
         } else if (data.user.role === "PENGASUHAN") {
@@ -122,13 +123,14 @@ export default function LoginPage() {
       const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({ username: username.trim(), password: password.trim() })
       });
 
       const data = await res.json();
 
       if (data.success && data.user) {
-        loginUser(data.user);
+        loginUser(data.user, data.token);
         if (data.user.role === "SUPER_ADMIN") {
           router.push("/admin/dashboard");
         } else if (data.user.role === "PENGASUHAN") {

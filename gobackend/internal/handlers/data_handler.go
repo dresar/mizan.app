@@ -27,6 +27,27 @@ func GetData(c *fiber.Ctx) error {
 	userIDVal := c.Locals("user_id")
 	userID, _ := userIDVal.(string)
 
+	if role == "" {
+		var settingsMap map[string]interface{}
+		row := pool.QueryRow(ctx, `SELECT value FROM app_settings WHERE key = 'general' LIMIT 1`)
+		var rawSettings []byte
+		if err := row.Scan(&rawSettings); err == nil {
+			_ = json.Unmarshal(rawSettings, &settingsMap)
+		}
+
+		return c.JSON(fiber.Map{
+			"success":       true,
+			"authenticated": false,
+			"santri":        []models.Santri{},
+			"users":         []models.UserProfile{},
+			"classes":       []models.ClassInfo{},
+			"guruList":      []models.GuruMonitoring{},
+			"absensiList":   []models.AbsensiRecord{},
+			"penilaianList": []models.PenilaianRecord{},
+			"settings":      settingsMap,
+		})
+	}
+
 	if role == models.RoleOrtu {
 		santriID := strings.TrimPrefix(userID, "ortu-")
 		usernameVal := c.Locals("username")

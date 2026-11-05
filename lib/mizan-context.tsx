@@ -49,7 +49,7 @@ interface MizanContextType {
   isAuthLoading: boolean;
   userList: UserProfile[];
   switchRole: (role: Role, userId?: string) => void;
-  loginUser: (user: UserProfile) => void;
+  loginUser: (user: UserProfile, token?: string) => void;
   logoutUser: () => void;
   updateUserAvatar: (avatarUrl: string) => void;
   santriList: Santri[];
@@ -198,6 +198,7 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
     setCurrentUser(GUEST_USER);
     setActiveRole(null);
     try {
+      localStorage.removeItem("mizan_token");
       localStorage.removeItem("mizan_user_cache_v4");
       localStorage.removeItem(STORAGE_KEY_ROLE);
       localStorage.removeItem(STORAGE_KEY_USER);
@@ -214,7 +215,22 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
 
   const refreshData = async () => {
     try {
-      const res = await fetch("/api/data");
+      let token = "";
+      if (typeof window !== "undefined") {
+        try {
+          token = localStorage.getItem("mizan_token") || "";
+        } catch {
+          void 0;
+        }
+      }
+      const headers: Record<string, string> = {};
+      if (token) {
+        headers["Authorization"] = `Bearer ${token}`;
+      }
+      const res = await fetch("/api/data", {
+        headers,
+        credentials: "include"
+      });
       if (res.status === 401) {
         handleUnauthorized();
         return;
@@ -236,7 +252,10 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
         let authUser: UserProfile | null = null;
         let authRejected = false;
         try {
-          const authRes = await fetch("/api/auth/me");
+          const authRes = await fetch("/api/auth/me", {
+            headers,
+            credentials: "include"
+          });
           if (authRes.ok) {
             const authData = await authRes.json();
             if (authData.authenticated && authData.user) {
@@ -278,7 +297,7 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
         if (data.absensiList) setAbsensiList(data.absensiList);
         if (data.settings) setSettings(data.settings);
         try {
-          const fbRes = await fetch("/api/feedback");
+          const fbRes = await fetch("/api/feedback", { headers, credentials: "include" });
           if (fbRes.ok) {
             const fbData = await fbRes.json();
             if (fbData.success && Array.isArray(fbData.data)) {
@@ -289,7 +308,7 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
           void 0;
         }
         try {
-          const notifRes = await fetch("/api/notifications?all=1");
+          const notifRes = await fetch("/api/notifications?all=1", { headers, credentials: "include" });
           if (notifRes.ok) {
             const notifData = await notifRes.json();
             if (notifData.success && Array.isArray(notifData.data)) {
@@ -367,12 +386,15 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
     setToasts((prev) => prev.filter((t) => t.id !== id));
   };
 
-  const loginUser = (user: UserProfile) => {
+  const loginUser = (user: UserProfile, token?: string) => {
     setCurrentUser(user);
     setActiveRole(user.role);
     setIsAuthenticated(true);
     setIsAuthLoading(false);
     try {
+      if (token) {
+        localStorage.setItem("mizan_token", token);
+      }
       localStorage.setItem(STORAGE_KEY_ROLE, user.role);
       localStorage.setItem(STORAGE_KEY_USER, user.id);
       localStorage.setItem("mizan_user_cache_v4", JSON.stringify(user));
@@ -384,6 +406,11 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
   };
 
   const logoutUser = () => {
+    try {
+      localStorage.removeItem("mizan_token");
+    } catch {
+      void 0;
+    }
     setCurrentUser(GUEST_USER);
     setActiveRole(null);
     setIsAuthenticated(false);
