@@ -12,3 +12,4 @@ export * from "./PembinaReportChart";
 export * from "./AnnouncementPopup";
 export * from "./NotificationDrawer";
 export * from "./ServiceWorkerRegister";
+export * from "./PhotoViewerModal";

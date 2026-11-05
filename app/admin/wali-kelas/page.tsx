@@ -18,7 +18,11 @@ import {
   CheckCircle2,
   HelpCircle,
   ExternalLink,
-  Building2
+  Building2,
+  MoreVertical,
+  SlidersHorizontal,
+  Eye,
+  ChevronDown
 } from "lucide-react";
 import { useMizan } from "@/lib/mizan-context";
 import { UserProfile, Santri } from "@/lib/mock-data";
@@ -28,6 +32,7 @@ import { Avatar } from "@/components/ui/Avatar";
 import { Badge } from "@/components/ui/Badge";
 import { Pagination } from "@/components/ui/Pagination";
 import { ShareModal } from "@/components/ShareModal";
+import { PhotoViewerModal, PhotoItem } from "@/components/PhotoViewerModal";
 
 export default function AdminWaliKelasPage() {
   const {
@@ -59,6 +64,47 @@ export default function AdminWaliKelasPage() {
 
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [selectedTeacherToShare, setSelectedTeacherToShare] = useState<UserProfile | null>(null);
+
+  const [visibleColumns, setVisibleColumns] = useState({
+    no: true,
+    teacher: true,
+    gender: true,
+    role: true,
+    class: true,
+    studentsCount: true,
+    score: true,
+    status: true,
+    action: true
+  });
+  const [isColumnDropdownOpen, setIsColumnDropdownOpen] = useState(false);
+  const columnDropdownRef = React.useRef<HTMLDivElement>(null);
+
+  const [activeActionMenuId, setActiveActionMenuId] = useState<string | null>(null);
+  const actionMenuRef = React.useRef<HTMLDivElement>(null);
+
+  const [isPhotoViewerOpen, setIsPhotoViewerOpen] = useState(false);
+  const [photoViewerIndex, setPhotoViewerIndex] = useState(0);
+
+  React.useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        columnDropdownRef.current &&
+        !columnDropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsColumnDropdownOpen(false);
+      }
+      if (
+        actionMenuRef.current &&
+        !actionMenuRef.current.contains(event.target as Node)
+      ) {
+        setActiveActionMenuId(null);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const allPembina = useMemo(() => {
     return userList.filter((u) => u.role === "GURU" || u.role === "PENGASUHAN");
@@ -117,6 +163,30 @@ export default function AdminWaliKelasPage() {
     const start = (currentPage - 1) * PAGE_SIZE;
     return filteredTeachers.slice(start, start + PAGE_SIZE);
   }, [filteredTeachers, currentPage]);
+
+  const photoItems: PhotoItem[] = useMemo(() => {
+    return filteredTeachers.map((t) => ({
+      id: t.id,
+      name: t.name,
+      subtitle: t.username ? `@${t.username}` : undefined,
+      tag: t.assignedClass
+        ? `Kelas ${t.assignedClass} • ${t.role === "GURU" ? "Guru Kelas" : "Pengasuhan BK"}`
+        : t.role === "GURU"
+        ? "Guru Kelas"
+        : "Pengasuhan BK",
+      photoUrl: t.avatarUrl,
+      initials: t.avatarInitials,
+      gender: t.gender as "Putra" | "Putri"
+    }));
+  }, [filteredTeachers]);
+
+  const handleOpenPhotoViewer = (teacherId: string) => {
+    const idx = photoItems.findIndex((p) => p.id === teacherId);
+    if (idx !== -1) {
+      setPhotoViewerIndex(idx);
+      setIsPhotoViewerOpen(true);
+    }
+  };
 
   const assignedClassesCount = useMemo(() => {
     return new Set(allPembina.map((t) => t.assignedClass).filter(Boolean)).size;
@@ -354,6 +424,59 @@ export default function AdminWaliKelasPage() {
                   <List className="w-4 h-4" />
                 </button>
               </div>
+
+              <div className="relative shrink-0" ref={columnDropdownRef}>
+                <button
+                  type="button"
+                  onClick={() => setIsColumnDropdownOpen(!isColumnDropdownOpen)}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white border border-[#E2E8F0] text-[#172033] text-xs font-bold hover:bg-[#FAF7EE] transition-colors shadow-2xs cursor-pointer"
+                  title="Pilih kolom yang ditampilkan"
+                >
+                  <SlidersHorizontal className="w-3.5 h-3.5 text-[#A8833E]" />
+                  <span>Kolom</span>
+                  <ChevronDown className={`w-3 h-3 text-[#64748B] transition-transform ${isColumnDropdownOpen ? "rotate-180" : ""}`} />
+                </button>
+
+                {isColumnDropdownOpen && (
+                  <div className="absolute right-0 top-full mt-2 w-52 rounded-2xl bg-white shadow-xl border border-[#E2EBF4] z-50 p-2 space-y-1 animate-in fade-in zoom-in-95 duration-100">
+                    <div className="px-2 py-1 border-b border-[#F1F5F9] text-[11px] font-bold text-[#64748B]">
+                      Kolom Ditampilkan
+                    </div>
+                    {[
+                      { key: "no", label: "No" },
+                      { key: "teacher", label: "Wali & Foto" },
+                      { key: "gender", label: "Gender" },
+                      { key: "role", label: "Peran" },
+                      { key: "class", label: "Kelas Binaan" },
+                      { key: "studentsCount", label: "Jumlah Santri" },
+                      { key: "score", label: "Rata-rata Skor" },
+                      { key: "status", label: "Status Lapor" },
+                      { key: "action", label: "Menu Aksi" }
+                    ].map((col) => {
+                      const isChecked = visibleColumns[col.key as keyof typeof visibleColumns];
+                      return (
+                        <label
+                          key={col.key}
+                          className="flex items-center justify-between px-2 py-1.5 rounded-xl hover:bg-[#FAF7EE] text-xs font-semibold text-[#172033] cursor-pointer"
+                        >
+                          <span>{col.label}</span>
+                          <input
+                            type="checkbox"
+                            checked={isChecked}
+                            onChange={() =>
+                              setVisibleColumns((prev) => ({
+                                ...prev,
+                                [col.key]: !isChecked
+                              }))
+                            }
+                            className="w-4 h-4 rounded text-[#1B4D3E] accent-[#1B4D3E] cursor-pointer"
+                          />
+                        </label>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -373,7 +496,14 @@ export default function AdminWaliKelasPage() {
                   onClick={() => handleOpenDetail(teacher)}
                   className="group relative rounded-2xl sm:rounded-3xl overflow-hidden bg-white border border-[#E2EBF4] shadow-2xs hover:shadow-2xl hover:border-[#1B4D3E]/40 hover:-translate-y-1.5 transition-all duration-500 flex flex-col justify-between cursor-pointer text-left"
                 >
-                  <div className="sheen-wrapper relative w-full aspect-square overflow-hidden bg-[#0E271F] shrink-0">
+                  <div
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleOpenPhotoViewer(teacher.id);
+                    }}
+                    className="sheen-wrapper relative w-full aspect-square overflow-hidden bg-[#0E271F] shrink-0 cursor-pointer"
+                    title="Klik untuk melihat foto"
+                  >
                     <img
                       src={teacherPhoto}
                       onError={(e) => {
@@ -471,103 +601,209 @@ export default function AdminWaliKelasPage() {
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs border-collapse">
                 <thead>
-                  <tr className="border-b border-[#E2E8F0] bg-[#F8FAFC] text-[#64748B] font-semibold">
-                    <th className="py-3 px-3.5">No</th>
-                    <th className="py-3 px-3.5">Wali Kelas / Pembina</th>
-                    <th className="py-3 px-3.5">Gender</th>
-                    <th className="py-3 px-3.5">Peran</th>
-                    <th className="py-3 px-3.5">Kelas Binaan</th>
-                    <th className="py-3 px-3.5 text-center">Jumlah Santri</th>
-                    <th className="py-3 px-3.5 text-center">Rata-rata Skor</th>
-                    <th className="py-3 px-3.5 text-center">Status</th>
-                    <th className="py-3 px-3.5 text-right">Aksi</th>
+                  <tr className="border-b border-[#E2E8F0] bg-[#F8FAFC] text-[#64748B] font-semibold text-[11px]">
+                    {visibleColumns.no && <th className="py-3.5 px-3.5">No</th>}
+                    {visibleColumns.teacher && <th className="py-3.5 px-3.5">Wali Kelas / Pembina</th>}
+                    {visibleColumns.gender && <th className="py-3.5 px-3.5">Gender</th>}
+                    {visibleColumns.role && <th className="py-3.5 px-3.5">Peran</th>}
+                    {visibleColumns.class && <th className="py-3.5 px-3.5">Kelas Binaan</th>}
+                    {visibleColumns.studentsCount && (
+                      <th className="py-3.5 px-3.5 text-center">Jumlah Santri</th>
+                    )}
+                    {visibleColumns.score && (
+                      <th className="py-3.5 px-3.5 text-center">Rata-rata Skor</th>
+                    )}
+                    {visibleColumns.status && (
+                      <th className="py-3.5 px-3.5 text-center">Status</th>
+                    )}
+                    {visibleColumns.action && (
+                      <th className="py-3.5 px-3.5 text-right">Aksi</th>
+                    )}
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#E2E8F0]">
                   {paginatedTeachers.map((teacher, idx) => {
                     const rowNumber = (currentPage - 1) * PAGE_SIZE + idx + 1;
+                    const defaultAvatar =
+                      teacher.gender === "Putri"
+                        ? "/default-avatar-ustadzah.svg"
+                        : "/default-avatar-ustadz.svg";
+                    const teacherPhoto = teacher.avatarUrl || defaultAvatar;
+
                     return (
                       <tr key={teacher.id} className="hover:bg-[#F8FAFC] transition-colors">
-                        <td className="py-3 px-3.5 font-mono text-[#94A3B8]">{rowNumber}</td>
-                        <td className="py-3 px-3.5">
-                          <div className="flex items-center gap-2.5">
-                            <div className="w-8 h-8 rounded-xl bg-[#F0FDF4] border border-[#BBF7D0] flex items-center justify-center font-bold text-[11px] text-[#166534] shrink-0">
-                              {teacher.avatarInitials || "WB"}
+                        {visibleColumns.no && (
+                          <td className="py-3 px-3.5 font-mono text-[#94A3B8] text-xs">
+                            {rowNumber}
+                          </td>
+                        )}
+
+                        {visibleColumns.teacher && (
+                          <td className="py-3 px-3.5">
+                            <div className="flex items-center gap-3">
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleOpenPhotoViewer(teacher.id);
+                                }}
+                                className="group/avatar relative w-10 h-10 sm:w-11 sm:h-11 rounded-2xl overflow-hidden border border-[#E2E8F0] bg-[#FAF7EE] shadow-2xs shrink-0 cursor-pointer hover:scale-105 hover:ring-2 hover:ring-[#1B4D3E] transition-all"
+                                title="Klik untuk melihat foto"
+                              >
+                                <img
+                                  src={teacherPhoto}
+                                  alt={teacher.name}
+                                  onError={(e) => {
+                                    const target = e.currentTarget;
+                                    if (target.src !== defaultAvatar && !target.src.endsWith(defaultAvatar)) {
+                                      target.src = defaultAvatar;
+                                    }
+                                  }}
+                                  className="w-full h-full object-cover object-top"
+                                />
+                                <div className="absolute inset-0 bg-black/0 group-hover/avatar:bg-black/25 flex items-center justify-center transition-colors">
+                                  <Eye className="w-3.5 h-3.5 text-white opacity-0 group-hover/avatar:opacity-100 transition-opacity drop-shadow-sm" />
+                                </div>
+                              </button>
+                              <div className="min-w-0">
+                                <p
+                                  onClick={() => handleOpenDetail(teacher)}
+                                  className="font-bold text-[#172033] text-xs sm:text-sm truncate hover:text-[#1B4D3E] cursor-pointer"
+                                >
+                                  {teacher.name}
+                                </p>
+                                <p className="text-[10px] text-[#94A3B8] font-mono truncate">
+                                  @{teacher.username || teacher.id}
+                                </p>
+                              </div>
                             </div>
-                            <div>
-                              <p className="font-bold text-[#172033]">{teacher.name}</p>
-                              <p className="text-[10px] text-[#94A3B8] font-mono">@{teacher.username}</p>
-                            </div>
-                          </div>
-                        </td>
-                        <td className="py-3 px-3.5">
-                          <span
-                            className={`text-[9px] font-bold px-2 py-0.5 rounded-full ${
-                              teacher.gender === "Putra"
-                                ? "bg-[#ECFDF5] text-[#065F46]"
-                                : "bg-[#FAF7EE] text-[#A8833E]"
-                            }`}
-                          >
-                            {teacher.gender}
-                          </span>
-                        </td>
-                        <td className="py-3 px-3.5 text-[#475569]">
-                          {teacher.role === "GURU" ? "Guru Kelas" : "Pengasuhan BK"}
-                        </td>
-                        <td className="py-3 px-3.5">
-                          {teacher.assignedClass ? (
-                            <span className="font-bold text-[#1B4D3E] bg-[#ECFDF5] px-2 py-0.5 rounded-lg border border-[#A7F3D0]">
-                              Kelas {teacher.assignedClass}
+                          </td>
+                        )}
+
+                        {visibleColumns.gender && (
+                          <td className="py-3 px-3.5">
+                            <span
+                              className={`text-[9px] font-bold px-2 py-0.5 rounded-full border ${
+                                teacher.gender === "Putra"
+                                  ? "bg-[#ECFDF5] text-[#065F46] border-[#A7F3D0]"
+                                  : "bg-[#FAF7EE] text-[#A8833E] border-[#C5A059]/40"
+                              }`}
+                            >
+                              {teacher.gender}
                             </span>
-                          ) : (
-                            <span className="text-[10px] text-[#94A3B8] italic">Belum Ditugaskan</span>
-                          )}
-                        </td>
-                        <td className="py-3 px-3.5 text-center font-mono font-bold text-[#172033]">
-                          {teacher.studentsCount}
-                        </td>
-                        <td className="py-3 px-3.5 text-center font-mono font-bold text-[#1B4D3E]">
-                          {teacher.avgScore.toFixed(3).replace(".", ",")}
-                        </td>
-                        <td className="py-3 px-3.5 text-center">
-                          <span
-                            className={`text-[9px] font-bold px-2 py-0.5 rounded-full ${
-                              teacher.status === "Sudah Lapor"
-                                ? "bg-[#ECFDF5] text-[#065F46]"
-                                : "bg-[#FEF2F2] text-[#991B1B]"
-                            }`}
-                          >
-                            {teacher.status}
-                          </span>
-                        </td>
-                        <td className="py-3 px-3.5 text-right">
-                          <div className="flex items-center justify-end gap-1.5">
-                            <button
-                              type="button"
-                              onClick={() => {
-                                setSelectedTeacherToShare(teacher);
-                                setIsShareModalOpen(true);
-                              }}
-                              className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-[#FAF7EE] text-[#A8833E] border border-[#C5A059]/40 hover:bg-[#F5EED9]"
+                          </td>
+                        )}
+
+                        {visibleColumns.role && (
+                          <td className="py-3 px-3.5 text-[#475569] text-xs">
+                            {teacher.role === "GURU" ? "Guru Kelas" : "Pengasuhan BK"}
+                          </td>
+                        )}
+
+                        {visibleColumns.class && (
+                          <td className="py-3 px-3.5">
+                            {teacher.assignedClass ? (
+                              <span className="font-bold text-[#1B4D3E] bg-[#ECFDF5] px-2 py-0.5 rounded-lg border border-[#A7F3D0] text-xs">
+                                Kelas {teacher.assignedClass}
+                              </span>
+                            ) : (
+                              <span className="text-[10px] text-[#94A3B8] italic">
+                                Belum Ditugaskan
+                              </span>
+                            )}
+                          </td>
+                        )}
+
+                        {visibleColumns.studentsCount && (
+                          <td className="py-3 px-3.5 text-center font-mono font-bold text-[#172033] text-xs">
+                            {teacher.studentsCount}
+                          </td>
+                        )}
+
+                        {visibleColumns.score && (
+                          <td className="py-3 px-3.5 text-center font-mono font-bold text-[#1B4D3E] text-xs">
+                            {teacher.avgScore.toFixed(3).replace(".", ",")}
+                          </td>
+                        )}
+
+                        {visibleColumns.status && (
+                          <td className="py-3 px-3.5 text-center whitespace-nowrap">
+                            {teacher.status === "Sudah Lapor" ? (
+                              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-[#ECFDF5] text-[#065F46] border border-[#A7F3D0] shadow-2xs">
+                                <span className="w-1.5 h-1.5 rounded-full bg-[#10B981]" />
+                                <span>Sudah Lapor</span>
+                              </span>
+                            ) : (
+                              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-[#FFF1F2] text-[#BE123C] border border-[#FECDD3] shadow-2xs">
+                                <span className="w-1.5 h-1.5 rounded-full bg-[#F43F5E]" />
+                                <span>Belum Lapor</span>
+                              </span>
+                            )}
+                          </td>
+                        )}
+
+                        {visibleColumns.action && (
+                          <td className="py-3 px-3.5 text-right">
+                            <div
+                              className="relative inline-block text-left"
+                              ref={activeActionMenuId === teacher.id ? actionMenuRef : null}
                             >
-                              Bagikan
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => handleOpenAssign(teacher)}
-                              className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-[#F8FAFC] text-[#475569] border border-[#CBD5E1] hover:bg-white"
-                            >
-                              Ubah
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => handleOpenDetail(teacher)}
-                              className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-[#1B4D3E] text-white hover:bg-[#143B2F]"
-                            >
-                              Detail
-                            </button>
-                          </div>
-                        </td>
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setActiveActionMenuId(
+                                    activeActionMenuId === teacher.id ? null : teacher.id
+                                  );
+                                }}
+                                className="w-8 h-8 rounded-xl bg-white border border-[#E2E8F0] hover:bg-[#FAF7F2] hover:border-[#1B4D3E]/40 text-[#64748B] hover:text-[#172033] flex items-center justify-center transition-all shadow-2xs cursor-pointer active:scale-95"
+                                title="Opsi Aksi"
+                                aria-label="Opsi Aksi"
+                              >
+                                <MoreVertical className="w-4 h-4" />
+                              </button>
+
+                              {activeActionMenuId === teacher.id && (
+                                <div className="absolute right-0 top-full mt-1.5 w-44 rounded-2xl bg-white shadow-xl border border-[#E2EBF4] z-50 p-1.5 space-y-0.5 animate-in fade-in zoom-in-95 duration-100">
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      setActiveActionMenuId(null);
+                                      handleOpenDetail(teacher);
+                                    }}
+                                    className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-[#172033] hover:bg-[#FAF7EE] hover:text-[#1B4D3E] text-left transition-colors cursor-pointer"
+                                  >
+                                    <Eye className="w-3.5 h-3.5 text-[#1B4D3E]" />
+                                    <span>Detail Lengkap</span>
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      setActiveActionMenuId(null);
+                                      handleOpenAssign(teacher);
+                                    }}
+                                    className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-[#172033] hover:bg-[#FAF7EE] hover:text-[#C5A059] text-left transition-colors cursor-pointer"
+                                  >
+                                    <Edit2 className="w-3.5 h-3.5 text-[#C5A059]" />
+                                    <span>Tugaskan Kelas</span>
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      setActiveActionMenuId(null);
+                                      setSelectedTeacherToShare(teacher);
+                                      setIsShareModalOpen(true);
+                                    }}
+                                    className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-[#172033] hover:bg-[#FAF7EE] hover:text-[#2563EB] text-left transition-colors cursor-pointer"
+                                  >
+                                    <Share2 className="w-3.5 h-3.5 text-[#2563EB]" />
+                                    <span>Bagikan Statistik</span>
+                                  </button>
+                                </div>
+                              )}
+                            </div>
+                          </td>
+                        )}
                       </tr>
                     );
                   })}
@@ -866,6 +1102,14 @@ export default function AdminWaliKelasPage() {
           }}
           initialType={selectedTeacherToShare ? "USTADZ" : "SHOLAT"}
           targetUstadz={selectedTeacherToShare || undefined}
+        />
+
+        <PhotoViewerModal
+          isOpen={isPhotoViewerOpen}
+          onClose={() => setIsPhotoViewerOpen(false)}
+          items={photoItems}
+          currentIndex={photoViewerIndex}
+          onIndexChange={setPhotoViewerIndex}
         />
       </div>
     </RoleShell>

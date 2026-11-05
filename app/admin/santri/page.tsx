@@ -20,7 +20,12 @@ import {
   Check,
   GraduationCap,
   LayoutGrid,
-  List
+  List,
+  MoreVertical,
+  SlidersHorizontal,
+  Eye,
+  Edit2,
+  ChevronDown
 } from "lucide-react";
 import { useMizan } from "@/lib/mizan-context";
 import { RoleShell } from "@/components/RoleShell";
@@ -32,6 +37,7 @@ import { EmptyState } from "@/components/ui/EmptyState";
 import { DeleteModal } from "@/components/ui/DeleteModal";
 import { Pagination } from "@/components/ui/Pagination";
 import { Santri } from "@/lib/mock-data";
+import { PhotoViewerModal, PhotoItem } from "@/components/PhotoViewerModal";
 
 export default function AdminSantriPage() {
   const {
@@ -111,6 +117,67 @@ export default function AdminSantriPage() {
     const start = (safePage - 1) * PAGE_SIZE;
     return filteredSantri.slice(start, start + PAGE_SIZE);
   }, [filteredSantri, safePage]);
+
+  const [visibleSantriColumns, setVisibleSantriColumns] = useState({
+    checkbox: true,
+    avatar: true,
+    nis: true,
+    gender: true,
+    class: true,
+    wali: true,
+    score: true,
+    kehadiran: true,
+    action: true
+  });
+  const [isColumnDropdownOpen, setIsColumnDropdownOpen] = useState(false);
+  const columnDropdownRef = React.useRef<HTMLDivElement>(null);
+
+  const [activeActionMenuId, setActiveActionMenuId] = useState<string | null>(null);
+  const actionMenuRef = React.useRef<HTMLDivElement>(null);
+
+  const [isPhotoViewerOpen, setIsPhotoViewerOpen] = useState(false);
+  const [photoViewerIndex, setPhotoViewerIndex] = useState(0);
+
+  const photoItems: PhotoItem[] = useMemo(() => {
+    return filteredSantri.map((s) => ({
+      id: s.id,
+      name: s.name,
+      subtitle: `NIS: ${s.nis}`,
+      tag: `Kelas ${s.class} • Santri ${s.gender}`,
+      photoUrl: s.avatarUrl,
+      initials: s.avatar,
+      gender: s.gender as "Putra" | "Putri"
+    }));
+  }, [filteredSantri]);
+
+  const handleOpenPhotoViewer = (santriId: string) => {
+    const idx = photoItems.findIndex((p) => p.id === santriId);
+    if (idx !== -1) {
+      setPhotoViewerIndex(idx);
+      setIsPhotoViewerOpen(true);
+    }
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        columnDropdownRef.current &&
+        !columnDropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsColumnDropdownOpen(false);
+      }
+      if (
+        actionMenuRef.current &&
+        !actionMenuRef.current.contains(event.target as Node)
+      ) {
+        setActiveActionMenuId(null);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const putraCount = santriList.filter((s) => s.gender === "Putra").length;
   const putriCount = santriList.filter((s) => s.gender === "Putri").length;
@@ -627,6 +694,59 @@ export default function AdminSantriPage() {
                     <List className="w-4 h-4" />
                   </button>
                 </div>
+
+                <div className="relative shrink-0" ref={columnDropdownRef}>
+                  <button
+                    type="button"
+                    onClick={() => setIsColumnDropdownOpen(!isColumnDropdownOpen)}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white border border-[#E2E8F0] text-[#172033] text-xs font-bold hover:bg-[#FAF7EE] transition-colors shadow-2xs cursor-pointer"
+                    title="Pilih kolom atau atribut yang ditampilkan"
+                  >
+                    <SlidersHorizontal className="w-3.5 h-3.5 text-[#A8833E]" />
+                    <span>Kolom</span>
+                    <ChevronDown className={`w-3 h-3 text-[#64748B] transition-transform ${isColumnDropdownOpen ? "rotate-180" : ""}`} />
+                  </button>
+
+                  {isColumnDropdownOpen && (
+                    <div className="absolute right-0 top-full mt-2 w-52 rounded-2xl bg-white shadow-xl border border-[#E2EBF4] z-50 p-2 space-y-1 animate-in fade-in zoom-in-95 duration-100">
+                      <div className="px-2 py-1 border-b border-[#F1F5F9] text-[11px] font-bold text-[#64748B]">
+                        Informasi Ditampilkan
+                      </div>
+                      {[
+                        { key: "checkbox", label: "Kotak Pilihan" },
+                        { key: "avatar", label: "Foto Santri" },
+                        { key: "nis", label: "NIS Santri" },
+                        { key: "gender", label: "Gender" },
+                        { key: "class", label: "Kelas Santri" },
+                        { key: "wali", label: "Nama Wali" },
+                        { key: "score", label: "Skor Akhlak" },
+                        { key: "kehadiran", label: "Kehadiran" },
+                        { key: "action", label: "Menu Aksi" }
+                      ].map((col) => {
+                        const isChecked = visibleSantriColumns[col.key as keyof typeof visibleSantriColumns];
+                        return (
+                          <label
+                            key={col.key}
+                            className="flex items-center justify-between px-2 py-1.5 rounded-xl hover:bg-[#FAF7EE] text-xs font-semibold text-[#172033] cursor-pointer"
+                          >
+                            <span>{col.label}</span>
+                            <input
+                              type="checkbox"
+                              checked={isChecked}
+                              onChange={() =>
+                                setVisibleSantriColumns((prev) => ({
+                                  ...prev,
+                                  [col.key]: !isChecked
+                                }))
+                              }
+                              className="w-4 h-4 rounded text-[#1B4D3E] accent-[#1B4D3E] cursor-pointer"
+                            />
+                          </label>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
 
@@ -634,6 +754,12 @@ export default function AdminSantriPage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-3">
               {paginatedSantri.map((santri) => {
                 const isSelected = selectedSantriIds.includes(santri.id);
+                const defaultAvatar =
+                  santri.gender === "Putri"
+                    ? "/default-avatar-ustadzah.svg"
+                    : "/default-avatar-ustadz.svg";
+                const santriPhoto = santri.avatarUrl || defaultAvatar;
+
                 return (
                   <div
                     key={santri.id}
@@ -643,90 +769,159 @@ export default function AdminSantriPage() {
                   >
                     <div>
                       <div className="flex items-start justify-between gap-2 mb-2">
-                        <div className="flex items-center gap-2 min-w-0">
-                          <input
-                            type="checkbox"
-                            checked={isSelected}
-                            onChange={() => toggleSelectSantri(santri.id)}
-                            className="w-4 h-4 rounded text-[#1B4D3E] accent-[#1B4D3E] cursor-pointer shrink-0"
-                            aria-label={`Pilih ${santri.name}`}
-                          />
-                          <Avatar
-                            initials={santri.avatar}
-                            size="md"
-                            variant={santri.gender === "Putra" ? "primary" : "gold"}
-                          />
+                        <div className="flex items-center gap-2.5 min-w-0">
+                          {visibleSantriColumns.checkbox && (
+                            <input
+                              type="checkbox"
+                              checked={isSelected}
+                              onChange={() => toggleSelectSantri(santri.id)}
+                              className="w-4 h-4 rounded text-[#1B4D3E] accent-[#1B4D3E] cursor-pointer shrink-0"
+                              aria-label={`Pilih ${santri.name}`}
+                            />
+                          )}
+
+                          {visibleSantriColumns.avatar && (
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleOpenPhotoViewer(santri.id);
+                              }}
+                              className="group/avatar relative w-11 h-11 rounded-2xl overflow-hidden border border-[#E2E8F0] bg-[#FAF7EE] shadow-2xs shrink-0 cursor-pointer hover:scale-105 hover:ring-2 hover:ring-[#1B4D3E] transition-all"
+                              title="Klik untuk melihat foto"
+                            >
+                              <img
+                                src={santriPhoto}
+                                alt={santri.name}
+                                onError={(e) => {
+                                  const target = e.currentTarget;
+                                  if (target.src !== defaultAvatar && !target.src.endsWith(defaultAvatar)) {
+                                    target.src = defaultAvatar;
+                                  }
+                                }}
+                                className="w-full h-full object-cover object-top"
+                              />
+                              <div className="absolute inset-0 bg-black/0 group-hover/avatar:bg-black/25 flex items-center justify-center transition-colors">
+                                <Eye className="w-3.5 h-3.5 text-white opacity-0 group-hover/avatar:opacity-100 transition-opacity drop-shadow-sm" />
+                              </div>
+                            </button>
+                          )}
+
                           <div className="min-w-0">
                             <h3 className="font-bold text-xs sm:text-sm text-[#172033] leading-tight truncate group-hover:text-[#1B4D3E] transition-colors">
                               {santri.name}
                             </h3>
-                            <p className="text-[10px] text-[#94A3B8] mt-0.5">
-                              NIS: {santri.nis} • Kelas {santri.class}
-                            </p>
+                            {visibleSantriColumns.nis && (
+                              <p className="text-[10px] text-[#94A3B8] mt-0.5 font-mono">
+                                NIS: {santri.nis}
+                              </p>
+                            )}
+                            {visibleSantriColumns.class && (
+                              <p className="text-[10px] text-[#1B4D3E] font-semibold">
+                                Kelas {santri.class}
+                              </p>
+                            )}
                           </div>
                         </div>
 
-                        <span
-                          className={`text-[9px] font-bold px-2 py-0.5 rounded-full mizan-pill shrink-0 ${
-                            santri.gender === "Putra"
-                              ? "bg-[#ECFDF5] text-[#065F46]"
-                              : "bg-[#FAF7EE] text-[#A8833E]"
-                          }`}
-                        >
-                          {santri.gender}
-                        </span>
+                        {visibleSantriColumns.gender && (
+                          <span
+                            className={`text-[9px] font-bold px-2 py-0.5 rounded-full mizan-pill shrink-0 ${
+                              santri.gender === "Putra"
+                                ? "bg-[#ECFDF5] text-[#065F46]"
+                                : "bg-[#FAF7EE] text-[#A8833E]"
+                            }`}
+                          >
+                            {santri.gender}
+                          </span>
+                        )}
                       </div>
 
                       <CardInset className="p-2.5 grid grid-cols-2 gap-2 text-center my-2">
-                        <div>
-                          <span className="text-[9px] text-[#94A3B8] block font-bold uppercase">
-                            Skor Akhlak
-                          </span>
-                          <span className="text-xs font-black font-mono text-[#1B4D3E]">
-                            {santri.currentScore.toFixed(3).replace(".", ",")}
-                          </span>
-                        </div>
+                        {visibleSantriColumns.score && (
+                          <div>
+                            <span className="text-[9px] text-[#94A3B8] block font-bold uppercase">
+                              Skor Akhlak
+                            </span>
+                            <span className="text-xs font-black font-mono text-[#1B4D3E]">
+                              {santri.currentScore.toFixed(3).replace(".", ",")}
+                            </span>
+                          </div>
+                        )}
 
-                        <div>
-                          <span className="text-[9px] text-[#94A3B8] block font-bold uppercase">
-                            Kehadiran
-                          </span>
-                          <span className="text-xs font-black font-mono text-[#065F46]">
-                            {santri.totalHadir || 0} Hari
-                          </span>
-                        </div>
+                        {visibleSantriColumns.kehadiran && (
+                          <div>
+                            <span className="text-[9px] text-[#94A3B8] block font-bold uppercase">
+                              Kehadiran
+                            </span>
+                            <span className="text-xs font-black font-mono text-[#065F46]">
+                              {santri.totalHadir || 0} Hari
+                            </span>
+                          </div>
+                        )}
                       </CardInset>
                     </div>
 
                     <div className="pt-2 border-t border-[#E2EBF4] flex items-center justify-between gap-2 text-[11px]">
-                      <span className="text-[#64748B] truncate max-w-[120px]">
-                        {santri.waliName || "Bapak Santri"}
-                      </span>
+                      {visibleSantriColumns.wali && (
+                        <span className="text-[#64748B] truncate max-w-[120px]">
+                          {santri.waliName || "Wali Santri"}
+                        </span>
+                      )}
 
-                      <div className="flex items-center gap-1.5 shrink-0">
-                        <button
-                          type="button"
-                          onClick={() => handleOpenEdit(santri)}
-                          className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-[#F1F5F9] text-[#475569] hover:bg-[#E2E8F0]"
+                      {visibleSantriColumns.action && (
+                        <div
+                          className="relative inline-block text-left ml-auto"
+                          ref={activeActionMenuId === santri.id ? actionMenuRef : null}
                         >
-                          Edit
-                        </button>
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setActiveActionMenuId(activeActionMenuId === santri.id ? null : santri.id);
+                            }}
+                            className="w-7 h-7 rounded-xl bg-white border border-[#E2E8F0] hover:bg-[#FAF7F2] hover:border-[#1B4D3E]/40 text-[#64748B] hover:text-[#172033] flex items-center justify-center transition-all shadow-2xs cursor-pointer active:scale-95"
+                            title="Opsi Aksi"
+                            aria-label="Opsi Aksi"
+                          >
+                            <MoreVertical className="w-4 h-4" />
+                          </button>
 
-                        <button
-                          type="button"
-                          onClick={() => handleOpenDeleteSingle(santri)}
-                          className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-red-50 text-red-600 hover:bg-red-100"
-                        >
-                          Hapus
-                        </button>
-
-                        <Link
-                          href={`/guru/santri/${santri.id}`}
-                          className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-[#1B4D3E] text-white hover:bg-[#153e32]"
-                        >
-                          Profil
-                        </Link>
-                      </div>
+                          {activeActionMenuId === santri.id && (
+                            <div className="absolute right-0 bottom-full mb-1.5 w-40 rounded-2xl bg-white shadow-xl border border-[#E2EBF4] z-50 p-1.5 space-y-0.5 animate-in fade-in zoom-in-95 duration-100">
+                              <Link
+                                href={`/guru/santri/${santri.id}`}
+                                className="w-full flex items-center gap-2 px-2.5 py-1.5 rounded-xl text-xs font-semibold text-[#172033] hover:bg-[#FAF7EE] hover:text-[#1B4D3E] text-left transition-colors cursor-pointer"
+                              >
+                                <Eye className="w-3.5 h-3.5 text-[#1B4D3E]" />
+                                <span>Profil Lengkap</span>
+                              </Link>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setActiveActionMenuId(null);
+                                  handleOpenEdit(santri);
+                                }}
+                                className="w-full flex items-center gap-2 px-2.5 py-1.5 rounded-xl text-xs font-semibold text-[#172033] hover:bg-[#FAF7EE] hover:text-[#C5A059] text-left transition-colors cursor-pointer"
+                              >
+                                <Edit2 className="w-3.5 h-3.5 text-[#C5A059]" />
+                                <span>Ubah Data</span>
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setActiveActionMenuId(null);
+                                  handleOpenDeleteSingle(santri);
+                                }}
+                                className="w-full flex items-center gap-2 px-2.5 py-1.5 rounded-xl text-xs font-semibold text-red-600 hover:bg-red-50 text-left transition-colors cursor-pointer"
+                              >
+                                <Trash2 className="w-3.5 h-3.5 text-red-500" />
+                                <span>Hapus Santri</span>
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                      )}
                     </div>
                   </div>
                 );
@@ -736,6 +931,12 @@ export default function AdminSantriPage() {
               <div className="space-y-2">
                 {paginatedSantri.map((santri) => {
                   const isSelected = selectedSantriIds.includes(santri.id);
+                  const defaultAvatar =
+                    santri.gender === "Putri"
+                      ? "/default-avatar-ustadzah.svg"
+                      : "/default-avatar-ustadz.svg";
+                  const santriPhoto = santri.avatarUrl || defaultAvatar;
+
                   return (
                     <div
                       key={santri.id}
@@ -744,39 +945,72 @@ export default function AdminSantriPage() {
                       }`}
                     >
                       <div className="flex items-center gap-3 min-w-0">
-                        <input
-                          type="checkbox"
-                          checked={isSelected}
-                          onChange={() => toggleSelectSantri(santri.id)}
-                          className="w-4 h-4 rounded text-[#1B4D3E] accent-[#1B4D3E] cursor-pointer shrink-0"
-                          aria-label={`Pilih ${santri.name}`}
-                        />
-                        <Avatar
-                          initials={santri.avatar}
-                          size="md"
-                          variant={santri.gender === "Putra" ? "primary" : "gold"}
-                        />
+                        {visibleSantriColumns.checkbox && (
+                          <input
+                            type="checkbox"
+                            checked={isSelected}
+                            onChange={() => toggleSelectSantri(santri.id)}
+                            className="w-4 h-4 rounded text-[#1B4D3E] accent-[#1B4D3E] cursor-pointer shrink-0"
+                            aria-label={`Pilih ${santri.name}`}
+                          />
+                        )}
+
+                        {visibleSantriColumns.avatar && (
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleOpenPhotoViewer(santri.id);
+                            }}
+                            className="group/avatar relative w-11 h-11 rounded-2xl overflow-hidden border border-[#E2E8F0] bg-[#FAF7EE] shadow-2xs shrink-0 cursor-pointer hover:scale-105 hover:ring-2 hover:ring-[#1B4D3E] transition-all"
+                            title="Klik untuk melihat foto"
+                          >
+                            <img
+                              src={santriPhoto}
+                              alt={santri.name}
+                              onError={(e) => {
+                                const target = e.currentTarget;
+                                if (target.src !== defaultAvatar && !target.src.endsWith(defaultAvatar)) {
+                                  target.src = defaultAvatar;
+                                }
+                              }}
+                              className="w-full h-full object-cover object-top"
+                            />
+                            <div className="absolute inset-0 bg-black/0 group-hover/avatar:bg-black/25 flex items-center justify-center transition-colors">
+                              <Eye className="w-3.5 h-3.5 text-white opacity-0 group-hover/avatar:opacity-100 transition-opacity drop-shadow-sm" />
+                            </div>
+                          </button>
+                        )}
+
                         <div className="min-w-0">
                           <div className="flex items-center gap-2 flex-wrap">
                             <h3 className="font-bold text-xs sm:text-sm text-[#172033] truncate">
                               {santri.name}
                             </h3>
-                            <span
-                              className={`text-[9px] font-bold px-2 py-0.5 rounded-full ${
-                                santri.gender === "Putra"
-                                  ? "bg-[#ECFDF5] text-[#065F46]"
-                                  : "bg-[#FAF7EE] text-[#A8833E]"
-                              }`}
-                            >
-                              {santri.gender}
-                            </span>
-                            <span className="text-[10px] font-bold px-1.5 py-0.2 rounded bg-[#EEF2F6] text-[#172033]">
-                              Kelas {santri.class}
-                            </span>
+                            {visibleSantriColumns.gender && (
+                              <span
+                                className={`text-[9px] font-bold px-2 py-0.5 rounded-full ${
+                                  santri.gender === "Putra"
+                                    ? "bg-[#ECFDF5] text-[#065F46]"
+                                    : "bg-[#FAF7EE] text-[#A8833E]"
+                                }`}
+                              >
+                                {santri.gender}
+                              </span>
+                            )}
+                            {visibleSantriColumns.class && (
+                              <span className="text-[10px] font-bold px-1.5 py-0.2 rounded bg-[#EEF2F6] text-[#172033]">
+                                Kelas {santri.class}
+                              </span>
+                            )}
                           </div>
                           <div className="flex items-center gap-2 text-[10px] text-[#64748B] mt-0.5 flex-wrap">
-                            <span>NIS: <strong className="font-mono text-[#172033]">{santri.nis}</strong></span>
-                            {santri.waliName && (
+                            {visibleSantriColumns.nis && (
+                              <span>
+                                NIS: <strong className="font-mono text-[#172033]">{santri.nis}</strong>
+                              </span>
+                            )}
+                            {visibleSantriColumns.wali && santri.waliName && (
                               <>
                                 <span>•</span>
                                 <span className="truncate max-w-[140px]">Wali: {santri.waliName}</span>
@@ -794,48 +1028,81 @@ export default function AdminSantriPage() {
 
                       <div className="flex items-center justify-between sm:justify-end gap-3 pt-2 sm:pt-0 border-t sm:border-0 border-[#F1F5F9]">
                         <div className="flex items-center gap-3 text-right">
-                          <div>
-                            <span className="text-[9px] text-[#94A3B8] font-bold block uppercase">
-                              Skor Akhlak
-                            </span>
-                            <span className="text-xs sm:text-sm font-black font-mono text-[#1B4D3E]">
-                              {santri.currentScore.toFixed(3).replace(".", ",")}
-                            </span>
-                          </div>
-                          <div>
-                            <span className="text-[9px] text-[#94A3B8] font-bold block uppercase">
-                              Kehadiran
-                            </span>
-                            <span className="text-xs sm:text-sm font-black font-mono text-[#065F46]">
-                              {santri.totalHadir || 0} Hari
-                            </span>
-                          </div>
+                          {visibleSantriColumns.score && (
+                            <div>
+                              <span className="text-[9px] text-[#94A3B8] font-bold block uppercase">
+                                Skor Akhlak
+                              </span>
+                              <span className="text-xs sm:text-sm font-black font-mono text-[#1B4D3E]">
+                                {santri.currentScore.toFixed(3).replace(".", ",")}
+                              </span>
+                            </div>
+                          )}
+                          {visibleSantriColumns.kehadiran && (
+                            <div>
+                              <span className="text-[9px] text-[#94A3B8] block font-bold uppercase">
+                                Kehadiran
+                              </span>
+                              <span className="text-xs sm:text-sm font-black font-mono text-[#065F46]">
+                                {santri.totalHadir || 0} Hari
+                              </span>
+                            </div>
+                          )}
                         </div>
 
-                        <div className="flex items-center gap-1.5 shrink-0">
-                          <button
-                            type="button"
-                            onClick={() => handleOpenEdit(santri)}
-                            className="px-2.5 py-1.5 rounded-xl text-[10px] font-bold bg-[#F1F5F9] text-[#475569] hover:bg-[#E2E8F0] transition-colors"
+                        {visibleSantriColumns.action && (
+                          <div
+                            className="relative inline-block text-left ml-auto shrink-0"
+                            ref={activeActionMenuId === santri.id ? actionMenuRef : null}
                           >
-                            Ubah
-                          </button>
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setActiveActionMenuId(activeActionMenuId === santri.id ? null : santri.id);
+                              }}
+                              className="w-8 h-8 rounded-xl bg-white border border-[#E2E8F0] hover:bg-[#FAF7F2] hover:border-[#1B4D3E]/40 text-[#64748B] hover:text-[#172033] flex items-center justify-center transition-all shadow-2xs cursor-pointer active:scale-95"
+                              title="Opsi Aksi"
+                              aria-label="Opsi Aksi"
+                            >
+                              <MoreVertical className="w-4 h-4" />
+                            </button>
 
-                          <button
-                            type="button"
-                            onClick={() => handleOpenDeleteSingle(santri)}
-                            className="px-2.5 py-1.5 rounded-xl text-[10px] font-bold bg-red-50 text-red-600 hover:bg-red-100 transition-colors"
-                          >
-                            Hapus
-                          </button>
-
-                          <Link
-                            href={`/guru/santri/${santri.id}`}
-                            className="px-3 py-1.5 rounded-xl text-[10px] font-bold bg-[#1B4D3E] text-white hover:bg-[#153e32] transition-colors shadow-2xs"
-                          >
-                            Profil
-                          </Link>
-                        </div>
+                            {activeActionMenuId === santri.id && (
+                              <div className="absolute right-0 top-full mt-1.5 w-44 rounded-2xl bg-white shadow-xl border border-[#E2EBF4] z-50 p-1.5 space-y-0.5 animate-in fade-in zoom-in-95 duration-100">
+                                <Link
+                                  href={`/guru/santri/${santri.id}`}
+                                  className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-[#172033] hover:bg-[#FAF7EE] hover:text-[#1B4D3E] text-left transition-colors cursor-pointer"
+                                >
+                                  <Eye className="w-3.5 h-3.5 text-[#1B4D3E]" />
+                                  <span>Profil Lengkap</span>
+                                </Link>
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setActiveActionMenuId(null);
+                                    handleOpenEdit(santri);
+                                  }}
+                                  className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-[#172033] hover:bg-[#FAF7EE] hover:text-[#C5A059] text-left transition-colors cursor-pointer"
+                                >
+                                  <Edit2 className="w-3.5 h-3.5 text-[#C5A059]" />
+                                  <span>Ubah Data</span>
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setActiveActionMenuId(null);
+                                    handleOpenDeleteSingle(santri);
+                                  }}
+                                  className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-red-600 hover:bg-red-50 text-left transition-colors cursor-pointer"
+                                >
+                                  <Trash2 className="w-3.5 h-3.5 text-red-500" />
+                                  <span>Hapus Santri</span>
+                                </button>
+                              </div>
+                            )}
+                          </div>
+                        )}
                       </div>
                     </div>
                   );
@@ -1237,6 +1504,14 @@ export default function AdminSantriPage() {
             : undefined
         }
         isLoading={deleteModalState.isLoading}
+      />
+
+      <PhotoViewerModal
+        isOpen={isPhotoViewerOpen}
+        onClose={() => setIsPhotoViewerOpen(false)}
+        items={photoItems}
+        currentIndex={photoViewerIndex}
+        onIndexChange={setPhotoViewerIndex}
       />
     </RoleShell>
   );
