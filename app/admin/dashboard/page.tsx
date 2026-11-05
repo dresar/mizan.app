@@ -69,15 +69,10 @@ export default function AdminDashboardPage() {
       <div className="w-full space-y-4 overflow-x-hidden pb-36">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <div className="flex items-center gap-2">
-              <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-[#FAF7EE] text-[#A8833E] border border-[#C5A059]/30">
-                Dashboard Super Admin
-              </span>
-            </div>
-            <h1 className="text-xl sm:text-2xl font-serif font-black text-[#172033] tracking-tight mt-1">
-              Pusat Kendali Pengasuhan & Monitoring
+            <h1 className="text-xl sm:text-2xl font-serif font-black text-[#172033] tracking-tight">
+              Kendali Pengasuhan & Monitoring
             </h1>
-            <p className="text-xs text-[#64748B]">
+            <p className="text-xs text-[#64748B] mt-0.5">
               Monitoring akhlak, absensi, serta pelaporan asatidzah
             </p>
           </div>
@@ -143,7 +138,7 @@ export default function AdminDashboardPage() {
               {avgScore}
             </div>
             <p className="text-[10px] text-[#64748B] mt-1">
-              Batas Maksimal 99,000
+              Skor rata-rata pondok
             </p>
           </CardSub>
 
@@ -175,7 +170,7 @@ export default function AdminDashboardPage() {
                 </h2>
               </div>
               <p className="text-[11px] text-[#64748B] mt-0.5">
-                5 Putra & 5 Putri peraih capaian akhlak tertinggi pondok (Maksimal 99,000)
+                5 Putra & 5 Putri peraih capaian akhlak tertinggi pondok
               </p>
             </div>
 

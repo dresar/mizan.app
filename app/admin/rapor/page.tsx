@@ -216,18 +216,10 @@ export default function AdminRaporPage() {
       <div className="w-full space-y-4 overflow-x-hidden pb-36">
         <div className="mizan-card p-4 sm:p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <div className="flex items-center gap-2">
-              <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-[#FAF7EE] text-[#A8833E] border border-[#C5A059]/30">
-                Pusat Evaluasi & Rapor
-              </span>
-              <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-[#ECFDF5] text-[#065F46] border border-[#A7F3D0]">
-                {santriAnalytics.length} Santri Terdata
-              </span>
-            </div>
-            <h1 className="text-lg sm:text-2xl font-serif font-black text-[#172033] tracking-tight mt-1">
+            <h1 className="text-lg sm:text-2xl font-serif font-black text-[#172033] tracking-tight">
               Rapor Akhlak & Adab Santri
             </h1>
-            <p className="text-[11px] text-[#64748B]">
+            <p className="text-[11px] text-[#64748B] mt-0.5">
               Rekapitulasi komprehensif penilaian adab, hasanah, sayyi&apos;ah, dan presensi sholat 7 waktu santri dan santriwati
             </p>
           </div>

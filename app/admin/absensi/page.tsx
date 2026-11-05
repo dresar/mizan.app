@@ -359,19 +359,10 @@ export default function AdminAbsensiPage() {
       <div className="w-full space-y-4 overflow-x-hidden pb-36">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <div className="flex items-center gap-2">
-              <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-[#FAF7EE] text-[#A8833E] border border-[#C5A059]/30 flex items-center gap-1.5">
-                <ShieldCheck className="w-3.5 h-3.5" />
-                <span>Super Admin</span>
-              </span>
-              <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-[#EEF2F6] text-[#64748B]">
-                Audit Presensi
-              </span>
-            </div>
-            <h1 className="text-xl sm:text-2xl font-serif font-black text-[#172033] tracking-tight mt-1.5">
+            <h1 className="text-xl sm:text-2xl font-serif font-black text-[#172033] tracking-tight">
               Monitoring Absensi
             </h1>
-            <p className="text-xs text-[#64748B]">
+            <p className="text-xs text-[#64748B] mt-0.5">
               Rekapitulasi presensi sholat harian santri dan santriwati
             </p>
           </div>

@@ -321,9 +321,6 @@ export default function OrtuDashboardPage() {
               <Image src={appLogo} alt="Mizan" width={48} height={48} className="object-contain" unoptimized />
             </div>
             <div>
-              <span className="px-3 py-1 rounded-full text-[10px] font-bold bg-[#FAF7EE] text-[#A8833E] border border-[#C5A059]/40 uppercase tracking-widest inline-block mb-1">
-                Portal Wali Santri
-              </span>
               <h1 className="text-xl sm:text-2xl font-serif font-black text-[#172033]">
                 Pesantren Modern Raudhatussalam
               </h1>
@@ -531,7 +528,7 @@ export default function OrtuDashboardPage() {
         </div>
       </header>
 
-      <main className="max-w-5xl mx-auto w-full px-3 sm:px-6 py-4 space-y-4">
+      <main className="max-w-5xl mx-auto w-full px-3 sm:px-6 py-5 md:py-8 space-y-4">
         <div className="bg-white rounded-3xl p-4 sm:p-5 shadow-xl border border-[#E2EBF4] relative overflow-hidden">
           <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-[#C5A059]/10 to-transparent rounded-bl-full pointer-events-none" />
 

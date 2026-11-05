@@ -96,19 +96,10 @@ export default function AdminKategoriPelanggaranPage() {
       <div className="w-full space-y-4 pb-36">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <div className="flex items-center gap-2">
-              <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-[#FAF7EE] text-[#A8833E] border border-[#C5A059]/30 flex items-center gap-1.5">
-                <Sliders className="w-3.5 h-3.5" />
-                <span>Pusat Konfigurasi Indikator</span>
-              </span>
-              <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-[#EEF2F6] text-[#64748B]">
-                {categories.length} Kategori Utama
-              </span>
-            </div>
-            <h1 className="text-xl sm:text-2xl font-serif font-black text-[#172033] tracking-tight mt-1.5">
+            <h1 className="text-xl sm:text-2xl font-serif font-black text-[#172033] tracking-tight">
               Master Kategori & Indikator Penilaian
             </h1>
-            <p className="text-xs text-[#64748B]">
+            <p className="text-xs text-[#64748B] mt-0.5">
               Pilih salah satu kategori utama di bawah untuk mengelola unsur dan rincian indikator penilaian santri
             </p>
           </div>

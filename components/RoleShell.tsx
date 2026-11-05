@@ -105,7 +105,7 @@ export function RoleShell({ children }: RoleShellProps) {
       <Header />
       <div className="flex-1 flex w-full">
         <Sidebar />
-        <main className="flex-1 min-w-0 p-2.5 sm:p-3.5 md:p-4 pb-36 md:pb-8 w-full overflow-x-hidden">
+        <main className="flex-1 min-w-0 p-3 sm:p-4 md:px-7 md:py-6 lg:px-9 lg:py-7 pb-36 md:pb-12 w-full overflow-x-hidden">
           <PageTransition>
             {children}
           </PageTransition>

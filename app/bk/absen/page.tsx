@@ -181,17 +181,12 @@ export default function PengasuhanAbsenPage() {
         <div className="mizan-card p-4 sm:p-5 bg-white space-y-3">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
             <div>
-              <div className="flex items-center gap-2">
-                <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-[#ECFDF5] text-[#065F46] border border-[#A7F3D0]">
-                  Bagian Pengasuhan Santri (BK)
-                </span>
-                <span className="text-[11px] text-[#64748B] flex items-center gap-1">
-                  <Clock className="w-3 h-3 text-[#A8833E]" /> {currentTimeStr}
-                </span>
-              </div>
-              <h1 className="text-lg sm:text-xl font-serif font-black text-[#172033] mt-1">
+              <h1 className="text-lg sm:text-xl font-serif font-black text-[#172033]">
                 Absensi Sholat Santri
               </h1>
+              <p className="text-[11px] text-[#64748B] flex items-center gap-1 mt-0.5">
+                <Clock className="w-3 h-3 text-[#A8833E]" /> {currentTimeStr}
+              </p>
             </div>
 
             <div className="flex items-center gap-2">

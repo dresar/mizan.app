@@ -480,7 +480,7 @@ export default function PengasuhanPenilaianPage() {
               Input Penilaian Santri & Santriwati
             </h1>
             <p className="text-[11px] text-[#64748B] mt-0.5">
-              Pusat Pengasuhan Pondok (BK) • Catat prestasi hasanah dan pelanggaran sayyiah
+              Pengasuhan Pondok (BK) • Catat prestasi hasanah dan pelanggaran sayyiah
             </p>
           </div>
           <div className="flex items-center gap-2 flex-wrap">

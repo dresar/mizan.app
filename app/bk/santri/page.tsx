@@ -108,7 +108,7 @@ export default function BkSantriListPage() {
               Data Santri & Santriwati
             </h1>
             <p className="text-xs text-[#64748B] mt-0.5">
-              Pusat Pengasuhan Pondok (BK) • Total {filteredSantri.length} santri terdaftar
+              Pengasuhan Pondok (BK) • Total {filteredSantri.length} santri terdaftar
             </p>
           </div>
           <span className="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1 rounded-full mizan-pill bg-[#ECFDF5] text-[#065F46]">

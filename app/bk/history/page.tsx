@@ -374,16 +374,6 @@ export default function PengasuhanHistoryPage() {
       <div className="w-full space-y-4 overflow-x-hidden pb-36">
         <div className="mizan-card p-4 sm:p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white border border-[#E2E8F0] shadow-xs">
           <div className="space-y-1">
-            <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-[#ECFDF5] text-[#065F46] border border-[#A7F3D0]">
-                Pengasuhan Santri (BK)
-              </span>
-              <span className="inline-flex items-center gap-1.5 text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-[#FAF7EE] text-[#A8833E] border border-[#E8DFC8]">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#10B981] animate-pulse" />
-                <span>Sinkron Realtime</span>
-              </span>
-            </div>
-
             <h1 className="text-xl sm:text-2xl font-serif font-black text-[#172033] tracking-tight">
               Riwayat & Aktivitas Santri
             </h1>

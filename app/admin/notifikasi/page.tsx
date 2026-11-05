@@ -246,18 +246,10 @@ export default function AdminNotificationPage() {
       <div className="w-full space-y-5 pb-36">
         <div className="mizan-card p-4 sm:p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <div className="flex items-center gap-2">
-              <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-[#FAF7EE] text-[#A8833E] border border-[#C5A059]/30">
-                Pusat Notifikasi & Peringatan
-              </span>
-              <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-[#ECFDF5] text-[#065F46] border border-[#A7F3D0]">
-                {stats.active} Aktif
-              </span>
-            </div>
-            <h1 className="text-xl sm:text-2xl font-serif font-black text-[#172033] tracking-tight mt-1">
+            <h1 className="text-xl sm:text-2xl font-serif font-black text-[#172033] tracking-tight">
               Manajemen Notifikasi
             </h1>
-            <p className="text-xs text-[#64748B]">
+            <p className="text-xs text-[#64748B] mt-0.5">
               Kelola peringatan evaluasi rapor santri, presensi sholat, kedisiplinan adab, dan pengumuman terpadu
             </p>
           </div>

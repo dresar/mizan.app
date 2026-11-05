@@ -113,15 +113,10 @@ export default function AdminPengaturanNilaiPage() {
       <div className="w-full space-y-4 pb-36">
         <div className="mizan-card p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <div className="flex items-center gap-2">
-              <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-[#FAF7EE] text-[#A8833E] border border-[#C5A059]/30">
-                Konfigurasi Master
-              </span>
-            </div>
-            <h1 className="text-lg sm:text-2xl font-serif font-black text-[#172033] tracking-tight mt-1">
+            <h1 className="text-lg sm:text-2xl font-serif font-black text-[#172033] tracking-tight">
               Pengaturan Bobot & Nilai Santri
             </h1>
-            <p className="text-[11px] text-[#64748B]">
+            <p className="text-[11px] text-[#64748B] mt-0.5">
               Atur standar nilai awal, ambang batas status akhlak, serta bobot desimal penalti dan apresiasi
             </p>
           </div>

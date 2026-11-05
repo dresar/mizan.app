@@ -195,18 +195,10 @@ export default function AdminWaliKelasPage() {
       <div className="w-full space-y-4 overflow-x-hidden pb-36">
         <div className="mizan-card p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white border border-[#E2E8F0]">
           <div>
-            <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-[#FAF7EE] text-[#A8833E] border border-[#C5A059]/30">
-                Pusat Pembinaan Ustadz & Ustadzah
-              </span>
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#ECFDF5] text-[#065F46] border border-[#A7F3D0]">
-                Maksimal 20 per Halaman
-              </span>
-            </div>
-            <h1 className="text-lg sm:text-2xl font-serif font-black text-[#172033] tracking-tight mt-1">
+            <h1 className="text-lg sm:text-2xl font-serif font-black text-[#172033] tracking-tight">
               Data Wali Kelas & Guru Pembina
             </h1>
-            <p className="text-[11px] text-[#64748B]">
+            <p className="text-[11px] text-[#64748B] mt-0.5">
               Daftar penanggung jawab kelas santri serta sarana publikasi statistik ke khalayak publik
             </p>
           </div>
@@ -775,7 +767,6 @@ export default function AdminWaliKelasPage() {
                     <span className="text-xs font-bold text-[#172033] block">
                       Daftar Santri Binaan di Kelas {activeTeacherDetail.assignedClass || "-"} ({assignedStudents.length})
                     </span>
-                    <span className="text-[10px] text-[#94A3B8]">Maksimal 20 per Halaman</span>
                   </div>
 
                   {assignedStudents.length === 0 ? (

@@ -78,7 +78,7 @@ export default function PengasuhanDashboardPage() {
           <div className="flex items-center justify-between gap-2 flex-wrap">
             <div>
               <h1 className="text-base sm:text-xl font-bold text-[#172033] tracking-tight">
-                Pusat Pengasuhan Santri & Santriwati
+                Dashboard Pengasuhan Santri & Santriwati
               </h1>
               <p className="text-xs text-[#64748B] mt-0.5 font-medium">
                 {todayFormatted} • {currentUser.name}
