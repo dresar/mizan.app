@@ -21,6 +21,8 @@ export default defineConfig(({ mode }) => ({
   build: {
     outDir: path.resolve(__dirname, "../gobackend/web_public"),
     emptyOutDir: true,
+    reportCompressedSize: false,
+    chunkSizeWarningLimit: 2000,
     rollupOptions: {
       input: {
         main: path.resolve(__dirname, "index.html"),

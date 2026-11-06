@@ -1,5 +1,2483 @@
 [
   {
+    "id": "log_1793971308307_3001",
+    "timestamp": "2026-11-06T20:21:48+07:00",
+    "level": "INFO",
+    "category": "HTTP",
+    "action": "PUT /api/v1/admin/cms/faq/1",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[200] PUT /api/v1/admin/cms/faq/1 (188ms)",
+    "details": {
+      "duration_ms": 188,
+      "error": "",
+      "method": "PUT",
+      "path": "/api/v1/admin/cms/faq/1",
+      "status": 200,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971308307_3001",
+    "timestamp": "2026-11-06T20:21:48+07:00",
+    "level": "INFO",
+    "category": "HTTP",
+    "action": "PUT /api/v1/admin/cms/faq/1",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[200] PUT /api/v1/admin/cms/faq/1 (186ms)",
+    "details": {
+      "duration_ms": 186,
+      "error": "",
+      "method": "PUT",
+      "path": "/api/v1/admin/cms/faq/1",
+      "status": 200,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971308303_3001",
+    "timestamp": "2026-11-06T20:21:48+07:00",
+    "level": "INFO",
+    "category": "HTTP",
+    "action": "PUT /api/v1/admin/cms/faq/1",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[200] PUT /api/v1/admin/cms/faq/1 (121ms)",
+    "details": {
+      "duration_ms": 121,
+      "error": "",
+      "method": "PUT",
+      "path": "/api/v1/admin/cms/faq/1",
+      "status": 200,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971308293_3001",
+    "timestamp": "2026-11-06T20:21:48+07:00",
+    "level": "INFO",
+    "category": "HTTP",
+    "action": "PUT /api/v1/admin/cms/faq/1",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[200] PUT /api/v1/admin/cms/faq/1 (107ms)",
+    "details": {
+      "duration_ms": 107,
+      "error": "",
+      "method": "PUT",
+      "path": "/api/v1/admin/cms/faq/1",
+      "status": 200,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971308289_3001",
+    "timestamp": "2026-11-06T20:21:48+07:00",
+    "level": "INFO",
+    "category": "HTTP",
+    "action": "PUT /api/v1/admin/cms/faq/1",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[200] PUT /api/v1/admin/cms/faq/1 (6ms)",
+    "details": {
+      "duration_ms": 6,
+      "error": "",
+      "method": "PUT",
+      "path": "/api/v1/admin/cms/faq/1",
+      "status": 200,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971308287_3001",
+    "timestamp": "2026-11-06T20:21:48+07:00",
+    "level": "INFO",
+    "category": "HTTP",
+    "action": "PUT /api/v1/admin/cms/faq/1",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[200] PUT /api/v1/admin/cms/faq/1 (107ms)",
+    "details": {
+      "duration_ms": 107,
+      "error": "",
+      "method": "PUT",
+      "path": "/api/v1/admin/cms/faq/1",
+      "status": 200,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971308285_3001",
+    "timestamp": "2026-11-06T20:21:48+07:00",
+    "level": "INFO",
+    "category": "HTTP",
+    "action": "PUT /api/v1/admin/cms/faq/1",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[200] PUT /api/v1/admin/cms/faq/1 (162ms)",
+    "details": {
+      "duration_ms": 162,
+      "error": "",
+      "method": "PUT",
+      "path": "/api/v1/admin/cms/faq/1",
+      "status": 200,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971308285_3001",
+    "timestamp": "2026-11-06T20:21:48+07:00",
+    "level": "INFO",
+    "category": "HTTP",
+    "action": "PUT /api/v1/admin/cms/faq/1",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[200] PUT /api/v1/admin/cms/faq/1 (162ms)",
+    "details": {
+      "duration_ms": 162,
+      "error": "",
+      "method": "PUT",
+      "path": "/api/v1/admin/cms/faq/1",
+      "status": 200,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971308203_3001",
+    "timestamp": "2026-11-06T20:21:48+07:00",
+    "level": "INFO",
+    "category": "HTTP",
+    "action": "PUT /api/v1/admin/cms/faq/1",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[200] PUT /api/v1/admin/cms/faq/1 (94ms)",
+    "details": {
+      "duration_ms": 94,
+      "error": "",
+      "method": "PUT",
+      "path": "/api/v1/admin/cms/faq/1",
+      "status": 200,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971308180_3001",
+    "timestamp": "2026-11-06T20:21:48+07:00",
+    "level": "INFO",
+    "category": "HTTP",
+    "action": "PUT /api/v1/admin/cms/faq/1",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[200] PUT /api/v1/admin/cms/faq/1 (69ms)",
+    "details": {
+      "duration_ms": 69,
+      "error": "",
+      "method": "PUT",
+      "path": "/api/v1/admin/cms/faq/1",
+      "status": 200,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971307958_3001",
+    "timestamp": "2026-11-06T20:21:47+07:00",
+    "level": "WARN",
+    "category": "AUTH",
+    "action": "POST /api/v1/auth/login",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[401] POST /api/v1/auth/login (6ms)",
+    "details": {
+      "duration_ms": 6,
+      "error": "",
+      "method": "PUTT",
+      "path": "/api/v1/admin/cms/",
+      "status": 401,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971307829_3001",
+    "timestamp": "2026-11-06T20:21:47+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "GET /api/v1/admin/cms/faq%27;SELECT%20pg_sleep(5);--",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[404] GET /api/v1/admin/cms/faq%27;SELECT%20pg_sleep(5);-- (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "PUT",
+      "path": "/api/v1/admin/cms/faq/1sted/view20pg_sleep(5);--",
+      "status": 404,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971307757_3001",
+    "timestamp": "2026-11-06T20:21:47+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "GET /api/v1/public/posts/%27%20OR%201=1%20--",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[404] GET /api/v1/public/posts/%27%20OR%201=1%20-- (9ms)",
+    "details": {
+      "duration_ms": 9,
+      "error": "",
+      "method": "PUT",
+      "path": "/api/v1/public/posts/%27%20OR%201=1%20--",
+      "status": 404,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971307695_3001",
+    "timestamp": "2026-11-06T20:21:47+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "POST /api/core/contact",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[400] POST /api/core/contact (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "POST",
+      "path": "/api/core/contact",
+      "status": 400,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971307573_3001",
+    "timestamp": "2026-11-06T20:21:47+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "POST /api/core/contact",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[400] POST /api/core/contact (4ms)",
+    "details": {
+      "duration_ms": 4,
+      "error": "",
+      "method": "POST",
+      "path": "/api/core/contact",
+      "status": 400,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971307496_3001",
+    "timestamp": "2026-11-06T20:21:47+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "POST /api/core/contact",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[400] POST /api/core/contact (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "POST",
+      "path": "/api/core/contact",
+      "status": 400,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971307097_3001",
+    "timestamp": "2026-11-06T20:21:47+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "POST /api/v1/public/psb/daftar",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[400] POST /api/v1/public/psb/daftar (22ms)",
+    "details": {
+      "duration_ms": 22,
+      "error": "",
+      "method": "POST",
+      "path": "/api/core/contactb/daftar",
+      "status": 400,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971307018_3001",
+    "timestamp": "2026-11-06T20:21:47+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "POST /api/v1/public/psb/daftar",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[400] POST /api/v1/public/psb/daftar (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "POST",
+      "path": "/api/v1/public/psb/daftar",
+      "status": 400,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971307017_3001",
+    "timestamp": "2026-11-06T20:21:47+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "POST /api/v1/public/psb/daftar",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[400] POST /api/v1/public/psb/daftar (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "POST",
+      "path": "/api/v1/public/psb/daftar",
+      "status": 400,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971307017_3001",
+    "timestamp": "2026-11-06T20:21:47+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "POST /api/v1/public/psb/daftar",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[400] POST /api/v1/public/psb/daftar (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "POST",
+      "path": "/api/v1/public/psb/daftar",
+      "status": 400,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971307016_3001",
+    "timestamp": "2026-11-06T20:21:47+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "POST /api/v1/public/psb/daftar",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[400] POST /api/v1/public/psb/daftar (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "POST",
+      "path": "/api/v1/public/psb/daftar",
+      "status": 400,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971307016_3001",
+    "timestamp": "2026-11-06T20:21:47+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "POST /api/v1/public/psb/daftar",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[400] POST /api/v1/public/psb/daftar (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "POST",
+      "path": "/api/v1/public/psb/daftar",
+      "status": 400,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971307015_3001",
+    "timestamp": "2026-11-06T20:21:47+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "POST /api/v1/public/psb/daftar",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[400] POST /api/v1/public/psb/daftar (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "POST",
+      "path": "/api/v1/public/psb/daftar",
+      "status": 400,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971307014_3001",
+    "timestamp": "2026-11-06T20:21:47+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "POST /api/v1/public/psb/daftar",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[400] POST /api/v1/public/psb/daftar (1ms)",
+    "details": {
+      "duration_ms": 1,
+      "error": "",
+      "method": "POST",
+      "path": "/api/v1/public/psb/daftar",
+      "status": 400,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971307078_3001",
+    "timestamp": "2026-11-06T20:21:47+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "POST /api/v1/public/psb/daftar",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[400] POST /api/v1/public/psb/daftar (5ms)",
+    "details": {
+      "duration_ms": 5,
+      "error": "",
+      "method": "POST",
+      "path": "/api/v1/public/psb/daftar",
+      "status": 400,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971307002_3001",
+    "timestamp": "2026-11-06T20:21:47+07:00",
+    "level": "INFO",
+    "category": "HTTP",
+    "action": "POST /api/v1/public/psb/daftar",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[201] POST /api/v1/public/psb/daftar (12ms)",
+    "details": {
+      "duration_ms": 12,
+      "error": "",
+      "method": "POST",
+      "path": "/api/v1/public/psb/daftar",
+      "status": 201,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971306928_3001",
+    "timestamp": "2026-11-06T20:21:46+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "POST /api/v1/public/psb/daftar",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[400] POST /api/v1/public/psb/daftar (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "POST",
+      "path": "/api/v1/public/psb/daftar",
+      "status": 400,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971306813_3001",
+    "timestamp": "2026-11-06T20:21:46+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "POST /api/v1/public/psb/daftar",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[400] POST /api/v1/public/psb/daftar (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "POST",
+      "path": "/api/v1/public/psb/daftar",
+      "status": 400,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971306694_3001",
+    "timestamp": "2026-11-06T20:21:46+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "POST /api/v1/public/psb/daftar",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[400] POST /api/v1/public/psb/daftar (1ms)",
+    "details": {
+      "duration_ms": 1,
+      "error": "",
+      "method": "POST",
+      "path": "/api/v1/public/psb/daftar",
+      "status": 400,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971306588_3001",
+    "timestamp": "2026-11-06T20:21:46+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "POST /api/v1/public/psb/daftar",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[400] POST /api/v1/public/psb/daftar (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "POST",
+      "path": "/api/v1/public/psb/daftar",
+      "status": 400,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971306544_3001",
+    "timestamp": "2026-11-06T20:21:46+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "POST /api/v1/public/psb/daftar",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[400] POST /api/v1/public/psb/daftar (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "POST",
+      "path": "/api/v1/public/psb/daftar",
+      "status": 400,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971306423_3001",
+    "timestamp": "2026-11-06T20:21:46+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "GET /api/v1/admin/cms/faq",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[401] GET /api/v1/admin/cms/faq (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "POS",
+      "path": "/api/v1/admin/cms/faq",
+      "status": 401,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971306371_3001",
+    "timestamp": "2026-11-06T20:21:46+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "GET /api/v1/admin/cms/faq",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[401] GET /api/v1/admin/cms/faq (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "GET",
+      "path": "/api/v1/admin/cms/faq",
+      "status": 401,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971306323_3001",
+    "timestamp": "2026-11-06T20:21:46+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "GET /api/v1/admin/cms/faq",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[401] GET /api/v1/admin/cms/faq (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "GET",
+      "path": "/api/v1/admin/cms/faq",
+      "status": 401,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971306261_3001",
+    "timestamp": "2026-11-06T20:21:46+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "GET /api/v1/admin/cms/faq",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[401] GET /api/v1/admin/cms/faq (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "GET",
+      "path": "/api/v1/admin/cms/faq",
+      "status": 401,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971306195_3001",
+    "timestamp": "2026-11-06T20:21:46+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "GET /api/v1/admin/cms/faq",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[401] GET /api/v1/admin/cms/faq (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "GET",
+      "path": "/api/v1/admin/cms/faq",
+      "status": 401,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971306129_3001",
+    "timestamp": "2026-11-06T20:21:46+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "GET /api/v1/admin/cms/faq",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[401] GET /api/v1/admin/cms/faq (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "GET",
+      "path": "/api/v1/admin/cms/faq",
+      "status": 401,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971305856_3001",
+    "timestamp": "2026-11-06T20:21:45+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "PUT /api/v1/admin/blog/posts/1",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[400] PUT /api/v1/admin/blog/posts/1 (3ms)",
+    "details": {
+      "duration_ms": 3,
+      "error": "",
+      "method": "GET",
+      "path": "/api/v1/admin/blog/posts/1",
+      "status": 400,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971305788_3001",
+    "timestamp": "2026-11-06T20:21:45+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "PUT /api/v1/admin/blog/posts/1",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[400] PUT /api/v1/admin/blog/posts/1 (8ms)",
+    "details": {
+      "duration_ms": 8,
+      "error": "",
+      "method": "GET",
+      "path": "/api/v1/admin/blog/posts/1",
+      "status": 400,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971305718_3001",
+    "timestamp": "2026-11-06T20:21:45+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "PUT /api/v1/admin/psb/pendaftar/1",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[400] PUT /api/v1/admin/psb/pendaftar/1 (9ms)",
+    "details": {
+      "duration_ms": 9,
+      "error": "",
+      "method": "GET",
+      "path": "/api/v1/admin/blog/posts/1r/1",
+      "status": 400,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971305637_3001",
+    "timestamp": "2026-11-06T20:21:45+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "PUT /api/v1/admin/cms/faq/1",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[400] PUT /api/v1/admin/cms/faq/1 (3ms)",
+    "details": {
+      "duration_ms": 3,
+      "error": "",
+      "method": "PUT",
+      "path": "/api/v1/admin/blog/post",
+      "status": 400,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971305557_3001",
+    "timestamp": "2026-11-06T20:21:45+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "POST /api/v1/admin/cms/fasilitas",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[400] POST /api/v1/admin/cms/fasilitas (3ms)",
+    "details": {
+      "duration_ms": 3,
+      "error": "",
+      "method": "PUTT",
+      "path": "/api/v1/admin/blog/posts/1r",
+      "status": 400,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971305479_3001",
+    "timestamp": "2026-11-06T20:21:45+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "POST /api/v1/admin/cms/faq",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[400] POST /api/v1/admin/cms/faq (3ms)",
+    "details": {
+      "duration_ms": 3,
+      "error": "",
+      "method": "PUTT",
+      "path": "/api/v1/admin/blog/po",
+      "status": 400,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971305415_3001",
+    "timestamp": "2026-11-06T20:21:45+07:00",
+    "level": "INFO",
+    "category": "AUTH",
+    "action": "POST /api/v1/auth/login",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[200] POST /api/v1/auth/login (87ms)",
+    "details": {
+      "duration_ms": 87,
+      "error": "",
+      "method": "PUTT",
+      "path": "/api/v1/auth/login",
+      "status": 200,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971304991_3001",
+    "timestamp": "2026-11-06T20:21:44+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "PUT /api/v1/admin/cms/website-settings",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[401] PUT /api/v1/admin/cms/website-settings (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "PUT",
+      "path": "/api/v1/auth/loginwebsite-settings",
+      "status": 401,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971304831_3001",
+    "timestamp": "2026-11-06T20:21:44+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "GET /api/v1/admin/blog/posts",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[401] GET /api/v1/admin/blog/posts (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "PUT",
+      "path": "/admin-cmsblic/postsosts",
+      "status": 401,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971304763_3001",
+    "timestamp": "2026-11-06T20:21:44+07:00",
+    "level": "INFO",
+    "category": "HTTP",
+    "action": "POST /api/v1/public/psb/daftar",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[201] POST /api/v1/public/psb/daftar (5ms)",
+    "details": {
+      "duration_ms": 5,
+      "error": "",
+      "method": "POST",
+      "path": "/api/v1/public/psb/daftar",
+      "status": 201,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971304622_3001",
+    "timestamp": "2026-11-06T20:21:44+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "GET /api/v1/admin/cms/website-settings",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[401] GET /api/v1/admin/cms/website-settings (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "POS",
+      "path": "/api/v1/public/psb/daftar-settings",
+      "status": 401,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971304556_3001",
+    "timestamp": "2026-11-06T20:21:44+07:00",
+    "level": "WARN",
+    "category": "PRESENSI",
+    "action": "GET /api/absensi",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[401] GET /api/absensi (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "POS",
+      "path": "/api/absensi",
+      "status": 401,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971304367_3001",
+    "timestamp": "2026-11-06T20:21:44+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "GET /api/v1/admin/psb/pendaftar",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[401] GET /api/v1/admin/psb/pendaftar (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "POS",
+      "path": "/api/v1/public/visi-misiion",
+      "status": 401,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971304310_3001",
+    "timestamp": "2026-11-06T20:21:44+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "GET /api/v1/admin/blog/posts",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[401] GET /api/v1/admin/blog/posts (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "POS",
+      "path": "/api/v1/public/visi-misi",
+      "status": 401,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971304236_3001",
+    "timestamp": "2026-11-06T20:21:44+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "GET /api/v1/admin/cms/fasilitas",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[401] GET /api/v1/admin/cms/fasilitas (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "POS",
+      "path": "/api/v1/public/visi-misiion",
+      "status": 401,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971304098_3001",
+    "timestamp": "2026-11-06T20:21:44+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "GET /api/v1/admin/blog/posts",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[401] GET /api/v1/admin/blog/posts (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "GET",
+      "path": "/admin-cmsmin/blog/posts",
+      "status": 401,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971304016_3001",
+    "timestamp": "2026-11-06T20:21:44+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "GET /api/v1/admin/cms/website-settings",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[401] GET /api/v1/admin/cms/website-settings (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "GET",
+      "path": "/api/v1/public/postsbsite-settings",
+      "status": 401,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971303926_3001",
+    "timestamp": "2026-11-06T20:21:43+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "GET /api/v1/admin/psb/pendaftar",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[401] GET /api/v1/admin/psb/pendaftar (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "GET",
+      "path": "/api/v1/admin/psb/pendaftar",
+      "status": 401,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971303867_3001",
+    "timestamp": "2026-11-06T20:21:43+07:00",
+    "level": "INFO",
+    "category": "HTTP",
+    "action": "POST /api/v1/public/psb/daftar",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[201] POST /api/v1/public/psb/daftar (12ms)",
+    "details": {
+      "duration_ms": 12,
+      "error": "",
+      "method": "GETT",
+      "path": "/api/v1/admin/psb/pendaft",
+      "status": 201,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971303800_3001",
+    "timestamp": "2026-11-06T20:21:43+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "PUT /api/v1/admin/psb/pendaftar/-1",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[401] PUT /api/v1/admin/psb/pendaftar/-1 (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "GET",
+      "path": "/api/v1/admin/psb/pendaftar/-1",
+      "status": 401,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971303751_3001",
+    "timestamp": "2026-11-06T20:21:43+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "GET /api/v1/admin/psb/pendaftar",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[401] GET /api/v1/admin/psb/pendaftar (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "GET",
+      "path": "/api/v1/admin/psb/pendaftar",
+      "status": 401,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971303702_3001",
+    "timestamp": "2026-11-06T20:21:43+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "PUT /api/v1/admin/psb/pendaftar/1",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[401] PUT /api/v1/admin/psb/pendaftar/1 (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "GET",
+      "path": "/api/v1/admin/psb/pendaftar/-",
+      "status": 401,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971303642_3001",
+    "timestamp": "2026-11-06T20:21:43+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "GET /api/v1/admin/psb/pendaftar/999999",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[401] GET /api/v1/admin/psb/pendaftar/999999 (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "GET",
+      "path": "/api/v1/admin/psb/pendaftar/-19999",
+      "status": 401,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971303599_3001",
+    "timestamp": "2026-11-06T20:21:43+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "GET /api/v1/admin/psb/pendaftar",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[401] GET /api/v1/admin/psb/pendaftar (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "GET",
+      "path": "/api/v1/admin/psb/pendaftar",
+      "status": 401,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971303558_3001",
+    "timestamp": "2026-11-06T20:21:43+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "GET /api/v1/admin/blog/posts/-1",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[401] GET /api/v1/admin/blog/posts/-1 (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "GET",
+      "path": "/api/v1/admin/blog/posts/-1",
+      "status": 401,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971303513_3001",
+    "timestamp": "2026-11-06T20:21:43+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "POST /api/v1/admin/blog/posts",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[401] POST /api/v1/admin/blog/posts (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "GETT",
+      "path": "/api/v1/admin/psb/pendaf",
+      "status": 401,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971303461_3001",
+    "timestamp": "2026-11-06T20:21:43+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "DELETE /api/v1/admin/blog/posts/999999",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[401] DELETE /api/v1/admin/blog/posts/999999 (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "GETETE",
+      "path": "/api/v1/admin/blog/posts/-19999",
+      "status": 401,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971303411_3001",
+    "timestamp": "2026-11-06T20:21:43+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "PUT /api/v1/admin/blog/posts/999999",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[401] PUT /api/v1/admin/blog/posts/999999 (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "GET",
+      "path": "/api/v1/admin/psb/pendaftar9999",
+      "status": 401,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971303359_3001",
+    "timestamp": "2026-11-06T20:21:43+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "POST /api/v1/admin/blog/posts",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[401] POST /api/v1/admin/blog/posts (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "GETE",
+      "path": "/api/v1/admin/blog/posts",
+      "status": 401,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971303275_3001",
+    "timestamp": "2026-11-06T20:21:43+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "POST /api/v1/admin/cms/fasilitas",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[401] POST /api/v1/admin/cms/fasilitas (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "POST",
+      "path": "/api/v1/admin/blog/posts/-1",
+      "status": 401,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971303195_3001",
+    "timestamp": "2026-11-06T20:21:43+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "DELETE /api/v1/admin/cms/fasilitas/not_a_number",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[401] DELETE /api/v1/admin/cms/fasilitas/not_a_number (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "POSTTE",
+      "path": "/api/v1/admin/cms/fasilitas/not_a_number",
+      "status": 401,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971303128_3001",
+    "timestamp": "2026-11-06T20:21:43+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "PUT /api/v1/admin/cms/fasilitas/-1",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[401] PUT /api/v1/admin/cms/fasilitas/-1 (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "PUT",
+      "path": "/api/v1/admin/blog/posts/-1999",
+      "status": 401,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971303074_3001",
+    "timestamp": "2026-11-06T20:21:43+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "GET /api/v1/admin/cms/..%2F..%2Fetc%2Fpasswd",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[401] GET /api/v1/admin/cms/..%2F..%2Fetc%2Fpasswd (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "PUT",
+      "path": "/api/v1/admin/cms/..%2F..%2Fetc%2Fpasswd",
+      "status": 401,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971303014_3001",
+    "timestamp": "2026-11-06T20:21:43+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "GET /api/v1/admin/cms/%3Cscript%3E",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[401] GET /api/v1/admin/cms/%3Cscript%3E (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "PUT",
+      "path": "/api/v1/admin/cms/..%2F..%2Fet",
+      "status": 401,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971302876_3001",
+    "timestamp": "2026-11-06T20:21:42+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "GET /api/v1/admin/cms/website-settings",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[401] GET /api/v1/admin/cms/website-settings (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "PUT",
+      "path": "/api/v1/admin/cms/..%2F..%2Fetc%2F",
+      "status": 401,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971302825_3001",
+    "timestamp": "2026-11-06T20:21:42+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "GET /api/v1/admin/cms/website-settings",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[401] GET /api/v1/admin/cms/website-settings (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "PUT",
+      "path": "/api/v1/admin/cms/..%2F..%2Fetc%2F",
+      "status": 401,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971302742_3001",
+    "timestamp": "2026-11-06T20:21:42+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "GET /api/v1/admin/cms/website-settings",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[401] GET /api/v1/admin/cms/website-settings (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "PUT",
+      "path": "/api/v1/admin/cms/website-settings",
+      "status": 401,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971302687_3001",
+    "timestamp": "2026-11-06T20:21:42+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "GET /api/v1/admin/cms/website-settings",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[401] GET /api/v1/admin/cms/website-settings (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "PUT",
+      "path": "/api/v1/admin/cms/website-settings",
+      "status": 401,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971302588_3001",
+    "timestamp": "2026-11-06T20:21:42+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "GET /api/v1/public/psb/daftar",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[405] GET /api/v1/public/psb/daftar (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "PUT",
+      "path": "/api/v1/admin/cms/website",
+      "status": 405,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971302474_3001",
+    "timestamp": "2026-11-06T20:21:42+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "POST /api/v1/public/psb/daftar",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[400] POST /api/v1/public/psb/daftar (4ms)",
+    "details": {
+      "duration_ms": 4,
+      "error": "",
+      "method": "PUTT",
+      "path": "/api/v1/admin/cms/website",
+      "status": 400,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971302394_3001",
+    "timestamp": "2026-11-06T20:21:42+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "POST /api/v1/public/psb/daftar",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[400] POST /api/v1/public/psb/daftar (3ms)",
+    "details": {
+      "duration_ms": 3,
+      "error": "",
+      "method": "POST",
+      "path": "/api/v1/admin/cms/website",
+      "status": 400,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971302092_3001",
+    "timestamp": "2026-11-06T20:21:42+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "POST /api/v1/public/psb/daftar",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[400] POST /api/v1/public/psb/daftar (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "POST",
+      "path": "/api/v1/public/psb/daftar",
+      "status": 400,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971301980_3001",
+    "timestamp": "2026-11-06T20:21:41+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "GET /api/v1/public/posts/..%2F..%2Fmain.go",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[404] GET /api/v1/public/posts/..%2F..%2Fmain.go (1ms)",
+    "details": {
+      "duration_ms": 1,
+      "error": "",
+      "method": "POS",
+      "path": "/api/v1/public/psb/daftarF..%2Fmain.go",
+      "status": 404,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971301927_3001",
+    "timestamp": "2026-11-06T20:21:41+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "GET /api/v1/public/posts/test%20slug%20special",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[404] GET /api/v1/public/posts/test%20slug%20special (2ms)",
+    "details": {
+      "duration_ms": 2,
+      "error": "",
+      "method": "POS",
+      "path": "/api/v1/public/psb/daftarF..%2Fmain.gocial",
+      "status": 404,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971301859_3001",
+    "timestamp": "2026-11-06T20:21:41+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "GET /api/v1/public/posts/this-slug-definitely-does-not-exist-12345",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[404] GET /api/v1/public/posts/this-slug-definitely-does-not-exist-12345 (3ms)",
+    "details": {
+      "duration_ms": 3,
+      "error": "",
+      "method": "GET",
+      "path": "/api/v1/public/posts/this-slug-definitely-does-not-exist-12345",
+      "status": 404,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971301121_3001",
+    "timestamp": "2026-11-06T20:21:41+07:00",
+    "level": "INFO",
+    "category": "HTTP",
+    "action": "HEAD /api/v1/public/fasilitas",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[200] HEAD /api/v1/public/fasilitas (3ms)",
+    "details": {
+      "duration_ms": 3,
+      "error": "",
+      "method": "GETD",
+      "path": "/api/v1/public/tenaga-pe",
+      "status": 200,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971301049_3001",
+    "timestamp": "2026-11-06T20:21:41+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "DELETE /api/v1/public/fasilitas",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[404] DELETE /api/v1/public/fasilitas (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "DELETE",
+      "path": "/api/v1/public/tenaga-pe",
+      "status": 404,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971300925_3001",
+    "timestamp": "2026-11-06T20:21:40+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "GET /api/v1/public/fasilitas/-1",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[404] GET /api/v1/public/fasilitas/-1 (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "DEL",
+      "path": "/api/v1/public/tenaga-penga",
+      "status": 404,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971300852_3001",
+    "timestamp": "2026-11-06T20:21:40+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "GET /api/v1/public/fasilitas/999999",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[404] GET /api/v1/public/fasilitas/999999 (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "GET",
+      "path": "/api/v1/public/fasilitas/999999",
+      "status": 404,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971300787_3001",
+    "timestamp": "2026-11-06T20:21:40+07:00",
+    "level": "INFO",
+    "category": "HTTP",
+    "action": "HEAD /api/v1/public/visi-misi",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[200] HEAD /api/v1/public/visi-misi (2ms)",
+    "details": {
+      "duration_ms": 2,
+      "error": "",
+      "method": "DELE",
+      "path": "/api/v1/public/fasilitas",
+      "status": 200,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971300182_3001",
+    "timestamp": "2026-11-06T20:21:40+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "GET /api/v1/public/visi-misi/%27%20OR%201=1",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[404] GET /api/v1/public/visi-misi/%27%20OR%201=1 (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "DEL",
+      "path": "/api/v1/public/fasilitas/999999OR%201=1",
+      "status": 404,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971300104_3001",
+    "timestamp": "2026-11-06T20:21:40+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "POST /api/v1/public/visi-misi",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[404] POST /api/v1/public/visi-misi (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "DELE",
+      "path": "/api/v1/public/visi-misi",
+      "status": 404,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971300026_3001",
+    "timestamp": "2026-11-06T20:21:40+07:00",
+    "level": "INFO",
+    "category": "HTTP",
+    "action": "HEAD /api/v1/public/hero-section",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[200] HEAD /api/v1/public/hero-section (3ms)",
+    "details": {
+      "duration_ms": 3,
+      "error": "",
+      "method": "HEAD",
+      "path": "/api/v1/public/hero-section",
+      "status": 200,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971299304_3001",
+    "timestamp": "2026-11-06T20:21:39+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "PUT /api/v1/public/hero-section",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[404] PUT /api/v1/public/hero-section (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "HEA",
+      "path": "/api/v1/public/hero-section",
+      "status": 404,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971298934_3001",
+    "timestamp": "2026-11-06T20:21:38+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "DELETE /api/v1/public/website-settings",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[404] DELETE /api/v1/public/website-settings (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "HEADON",
+      "path": "/api/v1/public/website-settings",
+      "status": 404,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971298861_3001",
+    "timestamp": "2026-11-06T20:21:38+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "POST /api/v1/public/website-settings",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[404] POST /api/v1/public/website-settings (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "HEAD",
+      "path": "/api/v1/public/website-settings",
+      "status": 404,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971297528_3001",
+    "timestamp": "2026-11-06T20:21:37+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "GET /api/v1/admin/psb/pendaftar",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[401] GET /api/v1/admin/psb/pendaftar (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "GET",
+      "path": "/admin-cms//../etc/passwdar",
+      "status": 401,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971297434_3001",
+    "timestamp": "2026-11-06T20:21:37+07:00",
+    "level": "INFO",
+    "category": "HTTP",
+    "action": "PUT /api/v1/admin/psb/pendaftar/520",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[200] PUT /api/v1/admin/psb/pendaftar/520 (4ms)",
+    "details": {
+      "duration_ms": 4,
+      "error": "",
+      "method": "GET",
+      "path": "/admin-cms//../etc/passwdar/520",
+      "status": 200,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971297061_3001",
+    "timestamp": "2026-11-06T20:21:37+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "GET /api/v1/admin/blog/posts",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[401] GET /api/v1/admin/blog/posts (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "GET",
+      "path": "/admin-cms//../etc/passw",
+      "status": 401,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971296969_3001",
+    "timestamp": "2026-11-06T20:21:36+07:00",
+    "level": "INFO",
+    "category": "HTTP",
+    "action": "DELETE /api/v1/admin/blog/posts/65",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[200] DELETE /api/v1/admin/blog/posts/65 (15ms)",
+    "details": {
+      "duration_ms": 15,
+      "error": "",
+      "method": "DELETE",
+      "path": "/api/v1/admin/blog/posts/65",
+      "status": 200,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971296862_3001",
+    "timestamp": "2026-11-06T20:21:36+07:00",
+    "level": "INFO",
+    "category": "HTTP",
+    "action": "PUT /api/v1/admin/blog/posts/65",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[200] PUT /api/v1/admin/blog/posts/65 (13ms)",
+    "details": {
+      "duration_ms": 13,
+      "error": "",
+      "method": "DEL",
+      "path": "/admin-cms//../etc/passwdar",
+      "status": 200,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971296579_3001",
+    "timestamp": "2026-11-06T20:21:36+07:00",
+    "level": "INFO",
+    "category": "HTTP",
+    "action": "POST /api/v1/admin/blog/posts",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[201] POST /api/v1/admin/blog/posts (4ms)",
+    "details": {
+      "duration_ms": 4,
+      "error": "",
+      "method": "DELE",
+      "path": "/api/v1/admin/blog/posts",
+      "status": 201,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971296470_3001",
+    "timestamp": "2026-11-06T20:21:36+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "GET /api/v1/admin/cms/invalid_section_12345",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[404] GET /api/v1/admin/cms/invalid_section_12345 (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "DEL",
+      "path": "/api/v1/admin/cms/invalid_section_12345",
+      "status": 404,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971296393_3001",
+    "timestamp": "2026-11-06T20:21:36+07:00",
+    "level": "INFO",
+    "category": "HTTP",
+    "action": "DELETE /api/v1/admin/cms/faq/384",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[200] DELETE /api/v1/admin/cms/faq/384 (9ms)",
+    "details": {
+      "duration_ms": 9,
+      "error": "",
+      "method": "DELETE",
+      "path": "/api/v1/admin/cms/faq/384",
+      "status": 200,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971296308_3001",
+    "timestamp": "2026-11-06T20:21:36+07:00",
+    "level": "INFO",
+    "category": "HTTP",
+    "action": "PUT /api/v1/admin/cms/faq/384",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[200] PUT /api/v1/admin/cms/faq/384 (15ms)",
+    "details": {
+      "duration_ms": 15,
+      "error": "",
+      "method": "DEL",
+      "path": "/api/v1/admin/cms/faq/384",
+      "status": 200,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971295932_3001",
+    "timestamp": "2026-11-06T20:21:35+07:00",
+    "level": "INFO",
+    "category": "HTTP",
+    "action": "POST /api/v1/admin/cms/faq",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[201] POST /api/v1/admin/cms/faq (10ms)",
+    "details": {
+      "duration_ms": 10,
+      "error": "",
+      "method": "GETT",
+      "path": "/api/v1/admin/cms/faq",
+      "status": 201,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971295741_3001",
+    "timestamp": "2026-11-06T20:21:35+07:00",
+    "level": "INFO",
+    "category": "AUTH",
+    "action": "POST /api/v1/auth/login",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[200] POST /api/v1/auth/login (121ms)",
+    "details": {
+      "duration_ms": 121,
+      "error": "",
+      "method": "GETT",
+      "path": "/api/v1/auth/login",
+      "status": 200,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971295546_3001",
+    "timestamp": "2026-11-06T20:21:35+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "GET /api/v1/admin/cms/website-settings",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[401] GET /api/v1/admin/cms/website-settings (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "GET",
+      "path": "/api/v1/auth/loginwebsite-settings",
+      "status": 401,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971295440_3001",
+    "timestamp": "2026-11-06T20:21:35+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "GET /api/v1/admin/cms/website-settings",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[401] GET /api/v1/admin/cms/website-settings (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "GET",
+      "path": "/api/v1/auth/loginwebsite-settings",
+      "status": 401,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971295352_3001",
+    "timestamp": "2026-11-06T20:21:35+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "GET /api/v1/admin/cms/website-settings",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[401] GET /api/v1/admin/cms/website-settings (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "GET",
+      "path": "/api/v1/admin/cms/website-settings",
+      "status": 401,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971295269_3001",
+    "timestamp": "2026-11-06T20:21:35+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "GET /api/v1/admin/cms/website-settings",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[401] GET /api/v1/admin/cms/website-settings (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "GET",
+      "path": "/api/v1/admin/cms/website-settings",
+      "status": 401,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971295160_3001",
+    "timestamp": "2026-11-06T20:21:35+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "POST /api/v1/public/psb/daftar",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[400] POST /api/v1/public/psb/daftar (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "GETT",
+      "path": "/api/v1/public/psb/daftar",
+      "status": 400,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971295076_3001",
+    "timestamp": "2026-11-06T20:21:35+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "POST /api/v1/public/psb/daftar",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[400] POST /api/v1/public/psb/daftar (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "GETT",
+      "path": "/api/v1/public/psb/daftar",
+      "status": 400,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971294992_3001",
+    "timestamp": "2026-11-06T20:21:34+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "POST /api/v1/public/psb/daftar",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[400] POST /api/v1/public/psb/daftar (2ms)",
+    "details": {
+      "duration_ms": 2,
+      "error": "",
+      "method": "GETT",
+      "path": "/api/v1/public/psb/daftar",
+      "status": 400,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971294923_3001",
+    "timestamp": "2026-11-06T20:21:34+07:00",
+    "level": "INFO",
+    "category": "HTTP",
+    "action": "POST /api/v1/public/psb/daftar",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[201] POST /api/v1/public/psb/daftar (12ms)",
+    "details": {
+      "duration_ms": 12,
+      "error": "",
+      "method": "GETT",
+      "path": "/api/v1/public/psb/daftar",
+      "status": 201,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971294783_3001",
+    "timestamp": "2026-11-06T20:21:34+07:00",
+    "level": "INFO",
+    "category": "HTTP",
+    "action": "HEAD /api/v1/public/posts",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[200] HEAD /api/v1/public/posts (4ms)",
+    "details": {
+      "duration_ms": 4,
+      "error": "",
+      "method": "GETT",
+      "path": "/api/v1/public/psb/d",
+      "status": 200,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971294534_3001",
+    "timestamp": "2026-11-06T20:21:34+07:00",
+    "level": "INFO",
+    "category": "HTTP",
+    "action": "HEAD /api/v1/public/tenaga-pengajar",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[200] HEAD /api/v1/public/tenaga-pengajar (10ms)",
+    "details": {
+      "duration_ms": 10,
+      "error": "",
+      "method": "GETT",
+      "path": "/api/v1/public/psb/daftarle-po",
+      "status": 200,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971294115_3001",
+    "timestamp": "2026-11-06T20:21:34+07:00",
+    "level": "INFO",
+    "category": "HTTP",
+    "action": "HEAD /api/v1/public/fasilitas",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[200] HEAD /api/v1/public/fasilitas (1ms)",
+    "details": {
+      "duration_ms": 1,
+      "error": "",
+      "method": "HEAD",
+      "path": "/api/v1/public/fasilitas",
+      "status": 200,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971293980_3001",
+    "timestamp": "2026-11-06T20:21:33+07:00",
+    "level": "INFO",
+    "category": "HTTP",
+    "action": "HEAD /api/v1/public/visi-misi",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[200] HEAD /api/v1/public/visi-misi (2ms)",
+    "details": {
+      "duration_ms": 2,
+      "error": "",
+      "method": "HEAD",
+      "path": "/api/v1/public/fasilitas",
+      "status": 200,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971293626_3001",
+    "timestamp": "2026-11-06T20:21:33+07:00",
+    "level": "INFO",
+    "category": "HTTP",
+    "action": "HEAD /api/v1/public/hero-section",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[200] HEAD /api/v1/public/hero-section (5ms)",
+    "details": {
+      "duration_ms": 5,
+      "error": "",
+      "method": "HEAD",
+      "path": "/api/v1/public/fasilitasion",
+      "status": 200,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971293385_3001",
+    "timestamp": "2026-11-06T20:21:33+07:00",
+    "level": "INFO",
+    "category": "HTTP",
+    "action": "HEAD /api/v1/public/website-settings",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[200] HEAD /api/v1/public/website-settings (3ms)",
+    "details": {
+      "duration_ms": 3,
+      "error": "",
+      "method": "HEAD",
+      "path": "/api/v1/public/website-settings",
+      "status": 200,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
     "id": "log_1793971067250_3001",
     "timestamp": "2026-11-06T20:17:47+07:00",
     "level": "INFO",
@@ -15,7 +2493,7 @@
       "duration_ms": 2,
       "error": "",
       "method": "POST",
-      "path": "/api/auth/login",
+      "path": "/loginuth/login",
       "status": 200,
       "user_agent": "curl/8.14.1"
     }
@@ -36,7 +2514,7 @@
       "duration_ms": 73,
       "error": "",
       "method": "POST",
-      "path": "/api/auth/login",
+      "path": "/loginuth/login",
       "status": 200,
       "user_agent": "curl/8.14.1"
     }
@@ -57,7 +2535,7 @@
       "duration_ms": 67,
       "error": "",
       "method": "POST",
-      "path": "/api/auth/login",
+      "path": "/loginuth/login",
       "status": 200,
       "user_agent": "curl/8.14.1"
     }
@@ -60510,2484 +62988,6 @@
       "method": "POST",
       "path": "/api/v1/public/psb/daftar",
       "status": 400,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957199635_3001",
-    "timestamp": "2026-11-06T16:26:39+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "POST /api/v1/public/psb/daftar",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] POST /api/v1/public/psb/daftar (19ms)",
-    "details": {
-      "duration_ms": 19,
-      "error": "",
-      "method": "POST",
-      "path": "/api/v1/public/psb/daftar",
-      "status": 400,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957199635_3001",
-    "timestamp": "2026-11-06T16:26:39+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "POST /api/v1/public/psb/daftar",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] POST /api/v1/public/psb/daftar (17ms)",
-    "details": {
-      "duration_ms": 17,
-      "error": "",
-      "method": "POST",
-      "path": "/api/v1/public/psb/daftar",
-      "status": 400,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957199635_3001",
-    "timestamp": "2026-11-06T16:26:39+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "POST /api/v1/public/psb/daftar",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] POST /api/v1/public/psb/daftar (28ms)",
-    "details": {
-      "duration_ms": 28,
-      "error": "",
-      "method": "POST",
-      "path": "/api/v1/public/psb/daftar",
-      "status": 400,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957199635_3001",
-    "timestamp": "2026-11-06T16:26:39+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "POST /api/v1/public/psb/daftar",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] POST /api/v1/public/psb/daftar (0ms)",
-    "details": {
-      "duration_ms": 0,
-      "error": "",
-      "method": "POST",
-      "path": "/api/v1/public/psb/daftar",
-      "status": 400,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957199628_3001",
-    "timestamp": "2026-11-06T16:26:39+07:00",
-    "level": "INFO",
-    "category": "HTTP",
-    "action": "POST /api/v1/public/psb/daftar",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[201] POST /api/v1/public/psb/daftar (21ms)",
-    "details": {
-      "duration_ms": 21,
-      "error": "",
-      "method": "POST",
-      "path": "/api/v1/public/psb/daftar",
-      "status": 201,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957199545_3001",
-    "timestamp": "2026-11-06T16:26:39+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "POST /api/v1/public/psb/daftar",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] POST /api/v1/public/psb/daftar (0ms)",
-    "details": {
-      "duration_ms": 0,
-      "error": "",
-      "method": "POST",
-      "path": "/api/v1/public/psb/daftar",
-      "status": 400,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957199460_3001",
-    "timestamp": "2026-11-06T16:26:39+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "POST /api/v1/public/psb/daftar",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] POST /api/v1/public/psb/daftar (0ms)",
-    "details": {
-      "duration_ms": 0,
-      "error": "",
-      "method": "POST",
-      "path": "/api/v1/public/psb/daftar",
-      "status": 400,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957199379_3001",
-    "timestamp": "2026-11-06T16:26:39+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "POST /api/v1/public/psb/daftar",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] POST /api/v1/public/psb/daftar (0ms)",
-    "details": {
-      "duration_ms": 0,
-      "error": "",
-      "method": "POST",
-      "path": "/api/v1/public/psb/daftar",
-      "status": 400,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957199304_3001",
-    "timestamp": "2026-11-06T16:26:39+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "POST /api/v1/public/psb/daftar",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] POST /api/v1/public/psb/daftar (0ms)",
-    "details": {
-      "duration_ms": 0,
-      "error": "",
-      "method": "POST",
-      "path": "/api/v1/public/psb/daftar",
-      "status": 400,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957199256_3001",
-    "timestamp": "2026-11-06T16:26:39+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "POST /api/v1/public/psb/daftar",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] POST /api/v1/public/psb/daftar (0ms)",
-    "details": {
-      "duration_ms": 0,
-      "error": "",
-      "method": "POST",
-      "path": "/api/v1/public/psb/daftar",
-      "status": 400,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957199141_3001",
-    "timestamp": "2026-11-06T16:26:39+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "GET /api/v1/admin/cms/faq",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[401] GET /api/v1/admin/cms/faq (0ms)",
-    "details": {
-      "duration_ms": 0,
-      "error": "",
-      "method": "GET",
-      "path": "/api/v1/admin/cms/faq",
-      "status": 401,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957199072_3001",
-    "timestamp": "2026-11-06T16:26:39+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "GET /api/v1/admin/cms/faq",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[401] GET /api/v1/admin/cms/faq (0ms)",
-    "details": {
-      "duration_ms": 0,
-      "error": "",
-      "method": "GET",
-      "path": "/api/v1/admin/cms/faq",
-      "status": 401,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957199003_3001",
-    "timestamp": "2026-11-06T16:26:39+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "GET /api/v1/admin/cms/faq",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[401] GET /api/v1/admin/cms/faq (0ms)",
-    "details": {
-      "duration_ms": 0,
-      "error": "",
-      "method": "GET",
-      "path": "/api/v1/admin/cms/faq",
-      "status": 401,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957198942_3001",
-    "timestamp": "2026-11-06T16:26:38+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "GET /api/v1/admin/cms/faq",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[401] GET /api/v1/admin/cms/faq (0ms)",
-    "details": {
-      "duration_ms": 0,
-      "error": "",
-      "method": "GET",
-      "path": "/api/v1/admin/cms/faq",
-      "status": 401,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957198857_3001",
-    "timestamp": "2026-11-06T16:26:38+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "GET /api/v1/admin/cms/faq",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[401] GET /api/v1/admin/cms/faq (0ms)",
-    "details": {
-      "duration_ms": 0,
-      "error": "",
-      "method": "GET",
-      "path": "/api/v1/admin/cms/faq",
-      "status": 401,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957198767_3001",
-    "timestamp": "2026-11-06T16:26:38+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "GET /api/v1/admin/cms/faq",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[401] GET /api/v1/admin/cms/faq (0ms)",
-    "details": {
-      "duration_ms": 0,
-      "error": "",
-      "method": "GET",
-      "path": "/api/v1/admin/cms/faq",
-      "status": 401,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957198522_3001",
-    "timestamp": "2026-11-06T16:26:38+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "PUT /api/v1/admin/blog/posts/1",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] PUT /api/v1/admin/blog/posts/1 (0ms)",
-    "details": {
-      "duration_ms": 0,
-      "error": "",
-      "method": "PUT",
-      "path": "/api/v1/admin/blog/posts/1",
-      "status": 400,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957198468_3001",
-    "timestamp": "2026-11-06T16:26:38+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "PUT /api/v1/admin/blog/posts/1",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] PUT /api/v1/admin/blog/posts/1 (1ms)",
-    "details": {
-      "duration_ms": 1,
-      "error": "",
-      "method": "PUT",
-      "path": "/api/v1/admin/blog/posts/1",
-      "status": 400,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957198417_3001",
-    "timestamp": "2026-11-06T16:26:38+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "PUT /api/v1/admin/psb/pendaftar/1",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] PUT /api/v1/admin/psb/pendaftar/1 (3ms)",
-    "details": {
-      "duration_ms": 3,
-      "error": "",
-      "method": "PUT",
-      "path": "/api/v1/admin/psb/pendaftar/1",
-      "status": 400,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957198343_3001",
-    "timestamp": "2026-11-06T16:26:38+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "PUT /api/v1/admin/cms/faq/1",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] PUT /api/v1/admin/cms/faq/1 (3ms)",
-    "details": {
-      "duration_ms": 3,
-      "error": "",
-      "method": "PUT",
-      "path": "/api/v1/admin/psb/penda",
-      "status": 400,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957198270_3001",
-    "timestamp": "2026-11-06T16:26:38+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "POST /api/v1/admin/cms/fasilitas",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] POST /api/v1/admin/cms/fasilitas (0ms)",
-    "details": {
-      "duration_ms": 0,
-      "error": "",
-      "method": "PUTT",
-      "path": "/api/v1/admin/psb/pendaftar",
-      "status": 400,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957198221_3001",
-    "timestamp": "2026-11-06T16:26:38+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "POST /api/v1/admin/cms/faq",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] POST /api/v1/admin/cms/faq (4ms)",
-    "details": {
-      "duration_ms": 4,
-      "error": "",
-      "method": "PUTT",
-      "path": "/api/v1/admin/cms/faq",
-      "status": 400,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957198166_3001",
-    "timestamp": "2026-11-06T16:26:38+07:00",
-    "level": "INFO",
-    "category": "AUTH",
-    "action": "POST /api/v1/auth/login",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[200] POST /api/v1/auth/login (90ms)",
-    "details": {
-      "duration_ms": 90,
-      "error": "",
-      "method": "PUTT",
-      "path": "/api/v1/admin/cms/",
-      "status": 200,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957197935_3001",
-    "timestamp": "2026-11-06T16:26:37+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "POST /api/v1/admin/cms/faq",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] POST /api/v1/admin/cms/faq (2ms)",
-    "details": {
-      "duration_ms": 2,
-      "error": "",
-      "method": "PUTT",
-      "path": "/api/v1/admin/cms/faq",
-      "status": 400,
-      "user_agent": "curl/8.14.1ests/2.33.0"
-    }
-  },
-  {
-    "id": "log_1793957197879_3001",
-    "timestamp": "2026-11-06T16:26:37+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "PUT /api/v1/admin/blog/posts/1",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] PUT /api/v1/admin/blog/posts/1 (0ms)",
-    "details": {
-      "duration_ms": 0,
-      "error": "",
-      "method": "PUT",
-      "path": "/api/v1/admin/cms/faqsts/1",
-      "status": 400,
-      "user_agent": "python-requests/2.33.0"
-    }
-  },
-  {
-    "id": "log_1793957197829_3001",
-    "timestamp": "2026-11-06T16:26:37+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "POST /api/v1/admin/cms/faq",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] POST /api/v1/admin/cms/faq (0ms)",
-    "details": {
-      "duration_ms": 0,
-      "error": "",
-      "method": "POST",
-      "path": "/api/v1/admin/cms/faq",
-      "status": 400,
-      "user_agent": "python-requests/2.33.0"
-    }
-  },
-  {
-    "id": "log_1793957197771_3001",
-    "timestamp": "2026-11-06T16:26:37+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "POST /api/v1/admin/blog/posts",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] POST /api/v1/admin/blog/posts (0ms)",
-    "details": {
-      "duration_ms": 0,
-      "error": "",
-      "method": "POST",
-      "path": "/api/v1/admin/cms/faqsts",
-      "status": 400,
-      "user_agent": "python-requests/2.33.0"
-    }
-  },
-  {
-    "id": "log_1793957197724_3001",
-    "timestamp": "2026-11-06T16:26:37+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "POST /api/v1/admin/blog/posts",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] POST /api/v1/admin/blog/posts (0ms)",
-    "details": {
-      "duration_ms": 0,
-      "error": "",
-      "method": "POST",
-      "path": "/api/v1/admin/blog/posts",
-      "status": 400,
-      "user_agent": "python-requests/2.33.0"
-    }
-  },
-  {
-    "id": "log_1793957197700_3001",
-    "timestamp": "2026-11-06T16:26:37+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "POST /api/v1/admin/blog/posts",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] POST /api/v1/admin/blog/posts (1ms)",
-    "details": {
-      "duration_ms": 1,
-      "error": "",
-      "method": "POST",
-      "path": "/api/v1/admin/blog/posts",
-      "status": 400,
-      "user_agent": "python-requests/2.33.0"
-    }
-  },
-  {
-    "id": "log_1793957197659_3001",
-    "timestamp": "2026-11-06T16:26:37+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "POST /api/v1/admin/blog/posts",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] POST /api/v1/admin/blog/posts (0ms)",
-    "details": {
-      "duration_ms": 0,
-      "error": "",
-      "method": "POST",
-      "path": "/api/v1/admin/cms/faqsts",
-      "status": 400,
-      "user_agent": "python-requests/2.33.0"
-    }
-  },
-  {
-    "id": "log_1793957197634_3001",
-    "timestamp": "2026-11-06T16:26:37+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "POST /api/v1/admin/blog/posts",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] POST /api/v1/admin/blog/posts (0ms)",
-    "details": {
-      "duration_ms": 0,
-      "error": "",
-      "method": "POST",
-      "path": "/api/v1/admin/cms/faqsts",
-      "status": 400,
-      "user_agent": "python-requests/2.33.0"
-    }
-  },
-  {
-    "id": "log_1793957197603_3001",
-    "timestamp": "2026-11-06T16:26:37+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "PUT /api/v1/admin/psb/pendaftar/1",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] PUT /api/v1/admin/psb/pendaftar/1 (1ms)",
-    "details": {
-      "duration_ms": 1,
-      "error": "",
-      "method": "POS",
-      "path": "/api/v1/admin/psb/pendaftar/1",
-      "status": 400,
-      "user_agent": "python-requests/2.33.0"
-    }
-  },
-  {
-    "id": "log_1793957197574_3001",
-    "timestamp": "2026-11-06T16:26:37+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "PUT /api/v1/admin/psb/pendaftar/1",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] PUT /api/v1/admin/psb/pendaftar/1 (1ms)",
-    "details": {
-      "duration_ms": 1,
-      "error": "",
-      "method": "POS",
-      "path": "/api/v1/admin/psb/pendaftar/1",
-      "status": 400,
-      "user_agent": "python-requests/2.33.0"
-    }
-  },
-  {
-    "id": "log_1793957197534_3001",
-    "timestamp": "2026-11-06T16:26:37+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "PUT /api/v1/admin/psb/pendaftar/1",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] PUT /api/v1/admin/psb/pendaftar/1 (1ms)",
-    "details": {
-      "duration_ms": 1,
-      "error": "",
-      "method": "POS",
-      "path": "/api/v1/admin/psb/pendaftar/1",
-      "status": 400,
-      "user_agent": "python-requests/2.33.0"
-    }
-  },
-  {
-    "id": "log_1793957197511_3001",
-    "timestamp": "2026-11-06T16:26:37+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "PUT /api/v1/admin/psb/pendaftar/1",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] PUT /api/v1/admin/psb/pendaftar/1 (2ms)",
-    "details": {
-      "duration_ms": 2,
-      "error": "",
-      "method": "POS",
-      "path": "/api/v1/admin/psb/pendaftar/1",
-      "status": 400,
-      "user_agent": "python-requests/2.33.0"
-    }
-  },
-  {
-    "id": "log_1793957197478_3001",
-    "timestamp": "2026-11-06T16:26:37+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "PUT /api/v1/admin/psb/pendaftar/1",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] PUT /api/v1/admin/psb/pendaftar/1 (2ms)",
-    "details": {
-      "duration_ms": 2,
-      "error": "",
-      "method": "POS",
-      "path": "/api/v1/admin/psb/pendaftar/1",
-      "status": 400,
-      "user_agent": "python-requests/2.33.0"
-    }
-  },
-  {
-    "id": "log_1793957197427_3001",
-    "timestamp": "2026-11-06T16:26:37+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "PUT /api/v1/admin/psb/pendaftar/1",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] PUT /api/v1/admin/psb/pendaftar/1 (2ms)",
-    "details": {
-      "duration_ms": 2,
-      "error": "",
-      "method": "POS",
-      "path": "/api/v1/admin/psb/pendaftar/1",
-      "status": 400,
-      "user_agent": "python-requests/2.33.0"
-    }
-  },
-  {
-    "id": "log_1793957197399_3001",
-    "timestamp": "2026-11-06T16:26:37+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "PUT /api/v1/admin/blog/posts/1",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] PUT /api/v1/admin/blog/posts/1 (0ms)",
-    "details": {
-      "duration_ms": 0,
-      "error": "",
-      "method": "POS",
-      "path": "/api/v1/admin/psb/pendafta",
-      "status": 400,
-      "user_agent": "python-requests/2.33.0"
-    }
-  },
-  {
-    "id": "log_1793957197371_3001",
-    "timestamp": "2026-11-06T16:26:37+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "PUT /api/v1/admin/blog/posts/1",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] PUT /api/v1/admin/blog/posts/1 (1ms)",
-    "details": {
-      "duration_ms": 1,
-      "error": "",
-      "method": "POS",
-      "path": "/api/v1/admin/psb/pendafta",
-      "status": 400,
-      "user_agent": "python-requests/2.33.0"
-    }
-  },
-  {
-    "id": "log_1793957197329_3001",
-    "timestamp": "2026-11-06T16:26:37+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "PUT /api/v1/admin/blog/posts/1",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] PUT /api/v1/admin/blog/posts/1 (1ms)",
-    "details": {
-      "duration_ms": 1,
-      "error": "",
-      "method": "POS",
-      "path": "/api/v1/admin/psb/pendafta",
-      "status": 400,
-      "user_agent": "python-requests/2.33.0"
-    }
-  },
-  {
-    "id": "log_1793957197297_3001",
-    "timestamp": "2026-11-06T16:26:37+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "PUT /api/v1/admin/blog/posts/1",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] PUT /api/v1/admin/blog/posts/1 (0ms)",
-    "details": {
-      "duration_ms": 0,
-      "error": "",
-      "method": "POS",
-      "path": "/api/v1/admin/blog/posts/1",
-      "status": 400,
-      "user_agent": "python-requests/2.33.0"
-    }
-  },
-  {
-    "id": "log_1793957197264_3001",
-    "timestamp": "2026-11-06T16:26:37+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "PUT /api/v1/admin/blog/posts/1",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] PUT /api/v1/admin/blog/posts/1 (0ms)",
-    "details": {
-      "duration_ms": 0,
-      "error": "",
-      "method": "POS",
-      "path": "/api/v1/admin/blog/posts/1",
-      "status": 400,
-      "user_agent": "python-requests/2.33.0"
-    }
-  },
-  {
-    "id": "log_1793957197242_3001",
-    "timestamp": "2026-11-06T16:26:37+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "PUT /api/v1/admin/blog/posts/1",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] PUT /api/v1/admin/blog/posts/1 (0ms)",
-    "details": {
-      "duration_ms": 0,
-      "error": "",
-      "method": "PUT",
-      "path": "/api/v1/admin/blog/posts/1",
-      "status": 400,
-      "user_agent": "python-requests/2.33.0"
-    }
-  },
-  {
-    "id": "log_1793957197206_3001",
-    "timestamp": "2026-11-06T16:26:37+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "PUT /api/v1/admin/cms/nonexistent_section_xyz/1",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[404] PUT /api/v1/admin/cms/nonexistent_section_xyz/1 (0ms)",
-    "details": {
-      "duration_ms": 0,
-      "error": "",
-      "method": "PUT",
-      "path": "/api/v1/admin/blog/posts/1ent_section_xyz/1",
-      "status": 404,
-      "user_agent": "python-requests/2.33.0"
-    }
-  },
-  {
-    "id": "log_1793957197150_3001",
-    "timestamp": "2026-11-06T16:26:37+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "PUT /api/v1/admin/cms/faq/1",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] PUT /api/v1/admin/cms/faq/1 (0ms)",
-    "details": {
-      "duration_ms": 0,
-      "error": "",
-      "method": "PUT",
-      "path": "/api/v1/admin/cms/faq/1",
-      "status": 400,
-      "user_agent": "python-requests/2.33.0"
-    }
-  },
-  {
-    "id": "log_1793957197121_3001",
-    "timestamp": "2026-11-06T16:26:37+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "PUT /api/v1/admin/cms/faq/1",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] PUT /api/v1/admin/cms/faq/1 (0ms)",
-    "details": {
-      "duration_ms": 0,
-      "error": "",
-      "method": "PUT",
-      "path": "/api/v1/admin/cms/faq/1",
-      "status": 400,
-      "user_agent": "python-requests/2.33.0"
-    }
-  },
-  {
-    "id": "log_1793957197081_3001",
-    "timestamp": "2026-11-06T16:26:37+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "PUT /api/v1/admin/cms/fasilitas/1",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] PUT /api/v1/admin/cms/fasilitas/1 (5ms)",
-    "details": {
-      "duration_ms": 5,
-      "error": "",
-      "method": "PUT",
-      "path": "/api/v1/admin/cms/fasilitas/1",
-      "status": 400,
-      "user_agent": "python-requests/2.33.0"
-    }
-  },
-  {
-    "id": "log_1793957197027_3001",
-    "timestamp": "2026-11-06T16:26:37+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "PUT /api/v1/admin/cms/faq/1",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] PUT /api/v1/admin/cms/faq/1 (1ms)",
-    "details": {
-      "duration_ms": 1,
-      "error": "",
-      "method": "PUT",
-      "path": "/api/v1/admin/cms/faq/1",
-      "status": 400,
-      "user_agent": "python-requests/2.33.0"
-    }
-  },
-  {
-    "id": "log_1793957197002_3001",
-    "timestamp": "2026-11-06T16:26:37+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "POST /api/v1/admin/cms/ekstrakurikuler",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] POST /api/v1/admin/cms/ekstrakurikuler (1ms)",
-    "details": {
-      "duration_ms": 1,
-      "error": "",
-      "method": "PUTT",
-      "path": "/api/v1/admin/cms/ekstrakurikuler",
-      "status": 400,
-      "user_agent": "python-requests/2.33.0"
-    }
-  },
-  {
-    "id": "log_1793957196976_3001",
-    "timestamp": "2026-11-06T16:26:36+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "POST /api/v1/admin/cms/ekstrakurikuler",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] POST /api/v1/admin/cms/ekstrakurikuler (0ms)",
-    "details": {
-      "duration_ms": 0,
-      "error": "",
-      "method": "PUTT",
-      "path": "/api/v1/admin/cms/ekstrakurikuler",
-      "status": 400,
-      "user_agent": "python-requests/2.33.0"
-    }
-  },
-  {
-    "id": "log_1793957196949_3001",
-    "timestamp": "2026-11-06T16:26:36+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "POST /api/v1/admin/cms/testimonials",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] POST /api/v1/admin/cms/testimonials (1ms)",
-    "details": {
-      "duration_ms": 1,
-      "error": "",
-      "method": "PUTT",
-      "path": "/api/v1/admin/cms/ekstrakuriku",
-      "status": 400,
-      "user_agent": "python-requests/2.33.0"
-    }
-  },
-  {
-    "id": "log_1793957196928_3001",
-    "timestamp": "2026-11-06T16:26:36+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "POST /api/v1/admin/cms/testimonials",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] POST /api/v1/admin/cms/testimonials (0ms)",
-    "details": {
-      "duration_ms": 0,
-      "error": "",
-      "method": "POST",
-      "path": "/api/v1/admin/cms/ekstrakuriku",
-      "status": 400,
-      "user_agent": "python-requests/2.33.0"
-    }
-  },
-  {
-    "id": "log_1793957196901_3001",
-    "timestamp": "2026-11-06T16:26:36+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "POST /api/v1/admin/cms/tenaga-pengajar",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] POST /api/v1/admin/cms/tenaga-pengajar (1ms)",
-    "details": {
-      "duration_ms": 1,
-      "error": "",
-      "method": "POST",
-      "path": "/api/v1/admin/cms/ekstrakurikuler",
-      "status": 400,
-      "user_agent": "python-requests/2.33.0"
-    }
-  },
-  {
-    "id": "log_1793957196867_3001",
-    "timestamp": "2026-11-06T16:26:36+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "POST /api/v1/admin/cms/tenaga-pengajar",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] POST /api/v1/admin/cms/tenaga-pengajar (1ms)",
-    "details": {
-      "duration_ms": 1,
-      "error": "",
-      "method": "POST",
-      "path": "/api/v1/admin/cms/ekstrakurikuler",
-      "status": 400,
-      "user_agent": "python-requests/2.33.0"
-    }
-  },
-  {
-    "id": "log_1793957196827_3001",
-    "timestamp": "2026-11-06T16:26:36+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "POST /api/v1/admin/cms/hero-section",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] POST /api/v1/admin/cms/hero-section (0ms)",
-    "details": {
-      "duration_ms": 0,
-      "error": "",
-      "method": "POST",
-      "path": "/api/v1/admin/cms/hero-section",
-      "status": 400,
-      "user_agent": "python-requests/2.33.0"
-    }
-  },
-  {
-    "id": "log_1793957196798_3001",
-    "timestamp": "2026-11-06T16:26:36+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "POST /api/v1/admin/cms/hero-section",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] POST /api/v1/admin/cms/hero-section (4ms)",
-    "details": {
-      "duration_ms": 4,
-      "error": "",
-      "method": "POST",
-      "path": "/api/v1/admin/cms/hero-section",
-      "status": 400,
-      "user_agent": "python-requests/2.33.0"
-    }
-  },
-  {
-    "id": "log_1793957196765_3001",
-    "timestamp": "2026-11-06T16:26:36+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "POST /api/v1/admin/cms/fasilitas",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] POST /api/v1/admin/cms/fasilitas (0ms)",
-    "details": {
-      "duration_ms": 0,
-      "error": "",
-      "method": "POST",
-      "path": "/api/v1/admin/cms/hero-sect",
-      "status": 400,
-      "user_agent": "python-requests/2.33.0"
-    }
-  },
-  {
-    "id": "log_1793957196733_3001",
-    "timestamp": "2026-11-06T16:26:36+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "POST /api/v1/admin/cms/fasilitas",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] POST /api/v1/admin/cms/fasilitas (0ms)",
-    "details": {
-      "duration_ms": 0,
-      "error": "",
-      "method": "POST",
-      "path": "/api/v1/admin/cms/hero-sect",
-      "status": 400,
-      "user_agent": "python-requests/2.33.0"
-    }
-  },
-  {
-    "id": "log_1793957196712_3001",
-    "timestamp": "2026-11-06T16:26:36+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "POST /api/v1/admin/cms/programs",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] POST /api/v1/admin/cms/programs (0ms)",
-    "details": {
-      "duration_ms": 0,
-      "error": "",
-      "method": "POST",
-      "path": "/api/v1/admin/cms/programs",
-      "status": 400,
-      "user_agent": "python-requests/2.33.0"
-    }
-  },
-  {
-    "id": "log_1793957196682_3001",
-    "timestamp": "2026-11-06T16:26:36+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "POST /api/v1/admin/cms/programs",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] POST /api/v1/admin/cms/programs (0ms)",
-    "details": {
-      "duration_ms": 0,
-      "error": "",
-      "method": "POST",
-      "path": "/api/v1/admin/cms/programs",
-      "status": 400,
-      "user_agent": "python-requests/2.33.0"
-    }
-  },
-  {
-    "id": "log_1793957196640_3001",
-    "timestamp": "2026-11-06T16:26:36+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "POST /api/v1/admin/cms/faq",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] POST /api/v1/admin/cms/faq (0ms)",
-    "details": {
-      "duration_ms": 0,
-      "error": "",
-      "method": "POST",
-      "path": "/api/v1/admin/cms/faq",
-      "status": 400,
-      "user_agent": "python-requests/2.33.0"
-    }
-  },
-  {
-    "id": "log_1793957196614_3001",
-    "timestamp": "2026-11-06T16:26:36+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "POST /api/v1/admin/cms/faq",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] POST /api/v1/admin/cms/faq (0ms)",
-    "details": {
-      "duration_ms": 0,
-      "error": "",
-      "method": "POST",
-      "path": "/api/v1/admin/cms/faq",
-      "status": 400,
-      "user_agent": "python-requests/2.33.0"
-    }
-  },
-  {
-    "id": "log_1793957196577_3001",
-    "timestamp": "2026-11-06T16:26:36+07:00",
-    "level": "INFO",
-    "category": "AUTH",
-    "action": "POST /api/v1/auth/login",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[200] POST /api/v1/auth/login (69ms)",
-    "details": {
-      "duration_ms": 69,
-      "error": "",
-      "method": "POST",
-      "path": "/api/v1/admin/cms/",
-      "status": 200,
-      "user_agent": "python-requests/2.33.0"
-    }
-  },
-  {
-    "id": "log_1793957165557_3001",
-    "timestamp": "2026-11-06T16:26:05+07:00",
-    "level": "INFO",
-    "category": "HTTP",
-    "action": "PUT /api/v1/admin/cms/faq/1",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[200] PUT /api/v1/admin/cms/faq/1 (1554ms)",
-    "details": {
-      "duration_ms": 1554,
-      "error": "",
-      "method": "POS",
-      "path": "/api/v1/admin/cms/faq/1",
-      "status": 200,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957165285_3001",
-    "timestamp": "2026-11-06T16:26:05+07:00",
-    "level": "INFO",
-    "category": "HTTP",
-    "action": "PUT /api/v1/admin/cms/faq/1",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[200] PUT /api/v1/admin/cms/faq/1 (1284ms)",
-    "details": {
-      "duration_ms": 1284,
-      "error": "",
-      "method": "PUT",
-      "path": "/api/v1/admin/cms/faq/1",
-      "status": 200,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957165144_3001",
-    "timestamp": "2026-11-06T16:26:05+07:00",
-    "level": "INFO",
-    "category": "HTTP",
-    "action": "PUT /api/v1/admin/cms/faq/1",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[200] PUT /api/v1/admin/cms/faq/1 (1151ms)",
-    "details": {
-      "duration_ms": 1151,
-      "error": "",
-      "method": "PUT",
-      "path": "/api/v1/admin/cms/faq/1",
-      "status": 200,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957165051_3001",
-    "timestamp": "2026-11-06T16:26:05+07:00",
-    "level": "INFO",
-    "category": "HTTP",
-    "action": "PUT /api/v1/admin/cms/faq/1",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[200] PUT /api/v1/admin/cms/faq/1 (1059ms)",
-    "details": {
-      "duration_ms": 1059,
-      "error": "",
-      "method": "PUT",
-      "path": "/api/v1/admin/cms/faq/1",
-      "status": 200,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957164761_3001",
-    "timestamp": "2026-11-06T16:26:04+07:00",
-    "level": "INFO",
-    "category": "HTTP",
-    "action": "PUT /api/v1/admin/cms/faq/1",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[200] PUT /api/v1/admin/cms/faq/1 (763ms)",
-    "details": {
-      "duration_ms": 763,
-      "error": "",
-      "method": "PUT",
-      "path": "/api/v1/admin/cms/faq/1",
-      "status": 200,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957164661_3001",
-    "timestamp": "2026-11-06T16:26:04+07:00",
-    "level": "INFO",
-    "category": "HTTP",
-    "action": "PUT /api/v1/admin/cms/faq/1",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[200] PUT /api/v1/admin/cms/faq/1 (663ms)",
-    "details": {
-      "duration_ms": 663,
-      "error": "",
-      "method": "PUT",
-      "path": "/api/v1/admin/cms/faq/1",
-      "status": 200,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957164606_3001",
-    "timestamp": "2026-11-06T16:26:04+07:00",
-    "level": "INFO",
-    "category": "HTTP",
-    "action": "PUT /api/v1/admin/cms/faq/1",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[200] PUT /api/v1/admin/cms/faq/1 (616ms)",
-    "details": {
-      "duration_ms": 616,
-      "error": "",
-      "method": "PUT",
-      "path": "/api/v1/admin/cms/faq/1",
-      "status": 200,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957164410_3001",
-    "timestamp": "2026-11-06T16:26:04+07:00",
-    "level": "INFO",
-    "category": "HTTP",
-    "action": "PUT /api/v1/admin/cms/faq/1",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[200] PUT /api/v1/admin/cms/faq/1 (412ms)",
-    "details": {
-      "duration_ms": 412,
-      "error": "",
-      "method": "PUT",
-      "path": "/api/v1/admin/cms/faq/1",
-      "status": 200,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957164260_3001",
-    "timestamp": "2026-11-06T16:26:04+07:00",
-    "level": "INFO",
-    "category": "HTTP",
-    "action": "PUT /api/v1/admin/cms/faq/1",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[200] PUT /api/v1/admin/cms/faq/1 (267ms)",
-    "details": {
-      "duration_ms": 267,
-      "error": "",
-      "method": "PUT",
-      "path": "/api/v1/admin/cms/faq/1",
-      "status": 200,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957164197_3001",
-    "timestamp": "2026-11-06T16:26:04+07:00",
-    "level": "INFO",
-    "category": "HTTP",
-    "action": "PUT /api/v1/admin/cms/faq/1",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[200] PUT /api/v1/admin/cms/faq/1 (207ms)",
-    "details": {
-      "duration_ms": 207,
-      "error": "",
-      "method": "PUT",
-      "path": "/api/v1/admin/cms/faq/1",
-      "status": 200,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957163879_3001",
-    "timestamp": "2026-11-06T16:26:03+07:00",
-    "level": "WARN",
-    "category": "AUTH",
-    "action": "POST /api/v1/auth/login",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[401] POST /api/v1/auth/login (652ms)",
-    "details": {
-      "duration_ms": 652,
-      "error": "",
-      "method": "PUTT",
-      "path": "/api/v1/admin/cms/",
-      "status": 401,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957163159_3001",
-    "timestamp": "2026-11-06T16:26:03+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "GET /api/v1/admin/cms/faq%27;SELECT%20pg_sleep(5);--",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[404] GET /api/v1/admin/cms/faq%27;SELECT%20pg_sleep(5);-- (0ms)",
-    "details": {
-      "duration_ms": 0,
-      "error": "",
-      "method": "PUT",
-      "path": "/api/v1/admin/cms/faq/1sted/view20pg_sleep(5);--",
-      "status": 404,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957163111_3001",
-    "timestamp": "2026-11-06T16:26:03+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "GET /api/v1/public/posts/%27%20OR%201=1%20--",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[404] GET /api/v1/public/posts/%27%20OR%201=1%20-- (1ms)",
-    "details": {
-      "duration_ms": 1,
-      "error": "",
-      "method": "PUT",
-      "path": "/api/v1/public/posts/%27%20OR%201=1%20--",
-      "status": 404,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957163058_3001",
-    "timestamp": "2026-11-06T16:26:03+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "POST /api/core/contact",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] POST /api/core/contact (0ms)",
-    "details": {
-      "duration_ms": 0,
-      "error": "",
-      "method": "PUTT",
-      "path": "/api/core/contact",
-      "status": 400,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957162935_3001",
-    "timestamp": "2026-11-06T16:26:02+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "POST /api/core/contact",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] POST /api/core/contact (0ms)",
-    "details": {
-      "duration_ms": 0,
-      "error": "",
-      "method": "PUTT",
-      "path": "/api/core/contact",
-      "status": 400,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957162885_3001",
-    "timestamp": "2026-11-06T16:26:02+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "POST /api/core/contact",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] POST /api/core/contact (0ms)",
-    "details": {
-      "duration_ms": 0,
-      "error": "",
-      "method": "POST",
-      "path": "/api/core/contact",
-      "status": 400,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957162508_3001",
-    "timestamp": "2026-11-06T16:26:02+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "POST /api/v1/public/psb/daftar",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] POST /api/v1/public/psb/daftar (265ms)",
-    "details": {
-      "duration_ms": 265,
-      "error": "",
-      "method": "PUTT",
-      "path": "/api/core/contactb/daftar",
-      "status": 400,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957162507_3001",
-    "timestamp": "2026-11-06T16:26:02+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "POST /api/v1/public/psb/daftar",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] POST /api/v1/public/psb/daftar (256ms)",
-    "details": {
-      "duration_ms": 256,
-      "error": "",
-      "method": "POST",
-      "path": "/api/v1/public/psb/daftar",
-      "status": 400,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957162507_3001",
-    "timestamp": "2026-11-06T16:26:02+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "POST /api/v1/public/psb/daftar",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] POST /api/v1/public/psb/daftar (265ms)",
-    "details": {
-      "duration_ms": 265,
-      "error": "",
-      "method": "POST",
-      "path": "/api/v1/public/psb/daftar",
-      "status": 400,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957162507_3001",
-    "timestamp": "2026-11-06T16:26:02+07:00",
-    "level": "INFO",
-    "category": "HTTP",
-    "action": "POST /api/v1/public/psb/daftar",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[201] POST /api/v1/public/psb/daftar (271ms)",
-    "details": {
-      "duration_ms": 271,
-      "error": "",
-      "method": "POST",
-      "path": "/api/v1/public/psb/daftar",
-      "status": 201,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957162507_3001",
-    "timestamp": "2026-11-06T16:26:02+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "POST /api/v1/public/psb/daftar",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] POST /api/v1/public/psb/daftar (235ms)",
-    "details": {
-      "duration_ms": 235,
-      "error": "",
-      "method": "POST",
-      "path": "/api/v1/public/psb/daftar",
-      "status": 400,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957162507_3001",
-    "timestamp": "2026-11-06T16:26:02+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "POST /api/v1/public/psb/daftar",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] POST /api/v1/public/psb/daftar (264ms)",
-    "details": {
-      "duration_ms": 264,
-      "error": "",
-      "method": "POST",
-      "path": "/api/v1/public/psb/daftar",
-      "status": 400,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957162507_3001",
-    "timestamp": "2026-11-06T16:26:02+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "POST /api/v1/public/psb/daftar",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] POST /api/v1/public/psb/daftar (237ms)",
-    "details": {
-      "duration_ms": 237,
-      "error": "",
-      "method": "POST",
-      "path": "/api/v1/public/psb/daftar",
-      "status": 400,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957162507_3001",
-    "timestamp": "2026-11-06T16:26:02+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "POST /api/v1/public/psb/daftar",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] POST /api/v1/public/psb/daftar (232ms)",
-    "details": {
-      "duration_ms": 232,
-      "error": "",
-      "method": "POST",
-      "path": "/api/v1/public/psb/daftar",
-      "status": 400,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957162507_3001",
-    "timestamp": "2026-11-06T16:26:02+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "POST /api/v1/public/psb/daftar",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] POST /api/v1/public/psb/daftar (263ms)",
-    "details": {
-      "duration_ms": 263,
-      "error": "",
-      "method": "POST",
-      "path": "/api/v1/public/psb/daftar",
-      "status": 400,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957162505_3001",
-    "timestamp": "2026-11-06T16:26:02+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "POST /api/v1/public/psb/daftar",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] POST /api/v1/public/psb/daftar (231ms)",
-    "details": {
-      "duration_ms": 231,
-      "error": "",
-      "method": "POST",
-      "path": "/api/v1/public/psb/daftar",
-      "status": 400,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957162184_3001",
-    "timestamp": "2026-11-06T16:26:02+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "POST /api/v1/public/psb/daftar",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] POST /api/v1/public/psb/daftar (0ms)",
-    "details": {
-      "duration_ms": 0,
-      "error": "",
-      "method": "POST",
-      "path": "/api/core/contactb/daftar",
-      "status": 400,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957162110_3001",
-    "timestamp": "2026-11-06T16:26:02+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "POST /api/v1/public/psb/daftar",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] POST /api/v1/public/psb/daftar (0ms)",
-    "details": {
-      "duration_ms": 0,
-      "error": "",
-      "method": "POST",
-      "path": "/api/core/contactb/daftar",
-      "status": 400,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957162034_3001",
-    "timestamp": "2026-11-06T16:26:02+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "POST /api/v1/public/psb/daftar",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] POST /api/v1/public/psb/daftar (0ms)",
-    "details": {
-      "duration_ms": 0,
-      "error": "",
-      "method": "POST",
-      "path": "/api/core/contactb/daftar",
-      "status": 400,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957161961_3001",
-    "timestamp": "2026-11-06T16:26:01+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "POST /api/v1/public/psb/daftar",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] POST /api/v1/public/psb/daftar (0ms)",
-    "details": {
-      "duration_ms": 0,
-      "error": "",
-      "method": "POST",
-      "path": "/api/v1/public/psb/daftar",
-      "status": 400,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957161912_3001",
-    "timestamp": "2026-11-06T16:26:01+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "POST /api/v1/public/psb/daftar",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] POST /api/v1/public/psb/daftar (0ms)",
-    "details": {
-      "duration_ms": 0,
-      "error": "",
-      "method": "POST",
-      "path": "/api/v1/public/psb/daftar",
-      "status": 400,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957161811_3001",
-    "timestamp": "2026-11-06T16:26:01+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "GET /api/v1/admin/cms/faq",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[401] GET /api/v1/admin/cms/faq (0ms)",
-    "details": {
-      "duration_ms": 0,
-      "error": "",
-      "method": "POS",
-      "path": "/api/v1/admin/cms/faq",
-      "status": 401,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957161767_3001",
-    "timestamp": "2026-11-06T16:26:01+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "GET /api/v1/admin/cms/faq",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[401] GET /api/v1/admin/cms/faq (0ms)",
-    "details": {
-      "duration_ms": 0,
-      "error": "",
-      "method": "POS",
-      "path": "/api/v1/admin/cms/faq",
-      "status": 401,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957161713_3001",
-    "timestamp": "2026-11-06T16:26:01+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "GET /api/v1/admin/cms/faq",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[401] GET /api/v1/admin/cms/faq (0ms)",
-    "details": {
-      "duration_ms": 0,
-      "error": "",
-      "method": "POS",
-      "path": "/api/v1/admin/cms/faq",
-      "status": 401,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957161677_3001",
-    "timestamp": "2026-11-06T16:26:01+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "GET /api/v1/admin/cms/faq",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[401] GET /api/v1/admin/cms/faq (0ms)",
-    "details": {
-      "duration_ms": 0,
-      "error": "",
-      "method": "POS",
-      "path": "/api/v1/admin/cms/faq",
-      "status": 401,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957161618_3001",
-    "timestamp": "2026-11-06T16:26:01+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "GET /api/v1/admin/cms/faq",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[401] GET /api/v1/admin/cms/faq (0ms)",
-    "details": {
-      "duration_ms": 0,
-      "error": "",
-      "method": "POS",
-      "path": "/api/v1/admin/cms/faq",
-      "status": 401,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957161564_3001",
-    "timestamp": "2026-11-06T16:26:01+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "GET /api/v1/admin/cms/faq",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[401] GET /api/v1/admin/cms/faq (0ms)",
-    "details": {
-      "duration_ms": 0,
-      "error": "",
-      "method": "POS",
-      "path": "/api/v1/admin/cms/faq",
-      "status": 401,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957161345_3001",
-    "timestamp": "2026-11-06T16:26:01+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "PUT /api/v1/admin/blog/posts/1",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] PUT /api/v1/admin/blog/posts/1 (1ms)",
-    "details": {
-      "duration_ms": 1,
-      "error": "",
-      "method": "PUT",
-      "path": "/api/v1/admin/blog/posts/1",
-      "status": 400,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957161292_3001",
-    "timestamp": "2026-11-06T16:26:01+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "PUT /api/v1/admin/blog/posts/1",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] PUT /api/v1/admin/blog/posts/1 (2ms)",
-    "details": {
-      "duration_ms": 2,
-      "error": "",
-      "method": "POS",
-      "path": "/api/v1/admin/blog/posts/1",
-      "status": 400,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957161225_3001",
-    "timestamp": "2026-11-06T16:26:01+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "PUT /api/v1/admin/psb/pendaftar/1",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] PUT /api/v1/admin/psb/pendaftar/1 (2ms)",
-    "details": {
-      "duration_ms": 2,
-      "error": "",
-      "method": "POS",
-      "path": "/api/v1/admin/blog/posts/1r/1",
-      "status": 400,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957161171_3001",
-    "timestamp": "2026-11-06T16:26:01+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "PUT /api/v1/admin/cms/faq/1",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] PUT /api/v1/admin/cms/faq/1 (5ms)",
-    "details": {
-      "duration_ms": 5,
-      "error": "",
-      "method": "POS",
-      "path": "/api/v1/admin/cms/faq/1",
-      "status": 400,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957161091_3001",
-    "timestamp": "2026-11-06T16:26:01+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "POST /api/v1/admin/cms/fasilitas",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] POST /api/v1/admin/cms/fasilitas (0ms)",
-    "details": {
-      "duration_ms": 0,
-      "error": "",
-      "method": "POST",
-      "path": "/api/v1/admin/blog/posts/1r",
-      "status": 400,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957161023_3001",
-    "timestamp": "2026-11-06T16:26:01+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "POST /api/v1/admin/cms/faq",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] POST /api/v1/admin/cms/faq (1ms)",
-    "details": {
-      "duration_ms": 1,
-      "error": "",
-      "method": "POST",
-      "path": "/api/v1/admin/blog/po",
-      "status": 400,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957160950_3001",
-    "timestamp": "2026-11-06T16:26:00+07:00",
-    "level": "INFO",
-    "category": "AUTH",
-    "action": "POST /api/v1/auth/login",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[200] POST /api/v1/auth/login (248ms)",
-    "details": {
-      "duration_ms": 248,
-      "error": "",
-      "method": "POST",
-      "path": "/api/v1/admin/blog",
-      "status": 200,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957160480_3001",
-    "timestamp": "2026-11-06T16:26:00+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "PUT /api/v1/admin/cms/website-settings",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[401] PUT /api/v1/admin/cms/website-settings (0ms)",
-    "details": {
-      "duration_ms": 0,
-      "error": "",
-      "method": "POS",
-      "path": "/login/absensi/hero-sectionettings",
-      "status": 401,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957160385_3001",
-    "timestamp": "2026-11-06T16:26:00+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "GET /api/v1/admin/blog/posts",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[401] GET /api/v1/admin/blog/posts (0ms)",
-    "details": {
-      "duration_ms": 0,
-      "error": "",
-      "method": "POS",
-      "path": "/login/absensi/hero-sect",
-      "status": 401,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957160338_3001",
-    "timestamp": "2026-11-06T16:26:00+07:00",
-    "level": "INFO",
-    "category": "HTTP",
-    "action": "POST /api/v1/public/psb/daftar",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[201] POST /api/v1/public/psb/daftar (161ms)",
-    "details": {
-      "duration_ms": 161,
-      "error": "",
-      "method": "POST",
-      "path": "/login/absensi/hero-secti",
-      "status": 201,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957160091_3001",
-    "timestamp": "2026-11-06T16:26:00+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "GET /api/v1/admin/cms/website-settings",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[401] GET /api/v1/admin/cms/website-settings (0ms)",
-    "details": {
-      "duration_ms": 0,
-      "error": "",
-      "method": "POS",
-      "path": "/login/absensi/hero-sectionettings",
-      "status": 401,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957160040_3001",
-    "timestamp": "2026-11-06T16:26:00+07:00",
-    "level": "WARN",
-    "category": "PRESENSI",
-    "action": "GET /api/absensi",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[401] GET /api/absensi (0ms)",
-    "details": {
-      "duration_ms": 0,
-      "error": "",
-      "method": "POS",
-      "path": "/api/absensi",
-      "status": 401,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957159896_3001",
-    "timestamp": "2026-11-06T16:25:59+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "GET /api/v1/admin/psb/pendaftar",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[401] GET /api/v1/admin/psb/pendaftar (0ms)",
-    "details": {
-      "duration_ms": 0,
-      "error": "",
-      "method": "POS",
-      "path": "/api/absensiic/fasilitasion",
-      "status": 401,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957159862_3001",
-    "timestamp": "2026-11-06T16:25:59+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "GET /api/v1/admin/blog/posts",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[401] GET /api/v1/admin/blog/posts (0ms)",
-    "details": {
-      "duration_ms": 0,
-      "error": "",
-      "method": "POS",
-      "path": "/api/absensiic/fasilitas",
-      "status": 401,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957159818_3001",
-    "timestamp": "2026-11-06T16:25:59+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "GET /api/v1/admin/cms/fasilitas",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[401] GET /api/v1/admin/cms/fasilitas (0ms)",
-    "details": {
-      "duration_ms": 0,
-      "error": "",
-      "method": "GET",
-      "path": "/api/v1/admin/cms/fasilitas",
-      "status": 401,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957159735_3001",
-    "timestamp": "2026-11-06T16:25:59+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "GET /api/v1/admin/blog/posts",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[401] GET /api/v1/admin/blog/posts (0ms)",
-    "details": {
-      "duration_ms": 0,
-      "error": "",
-      "method": "POS",
-      "path": "/api/absensiic/fasilitas",
-      "status": 401,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957159679_3001",
-    "timestamp": "2026-11-06T16:25:59+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "GET /api/v1/admin/cms/website-settings",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[401] GET /api/v1/admin/cms/website-settings (0ms)",
-    "details": {
-      "duration_ms": 0,
-      "error": "",
-      "method": "GET",
-      "path": "/api/v1/admin/cms/fasilitasettings",
-      "status": 401,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957159621_3001",
-    "timestamp": "2026-11-06T16:25:59+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "GET /api/v1/admin/psb/pendaftar",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[401] GET /api/v1/admin/psb/pendaftar (0ms)",
-    "details": {
-      "duration_ms": 0,
-      "error": "",
-      "method": "GET",
-      "path": "/api/absensiic/fasilitasion",
-      "status": 401,
       "user_agent": "curl/8.14.1"
     }
   }

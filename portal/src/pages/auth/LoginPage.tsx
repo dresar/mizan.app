@@ -3,102 +3,33 @@ import { useAuthStore } from '@/stores/auth-store';
 import { api } from '@/lib/api';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { toast } from 'sonner';
-import { Loader2, Eye, EyeOff, LogIn, UserPlus, ArrowLeft } from 'lucide-react';
+import { Loader2, Eye, EyeOff, LogIn, UserPlus, ArrowLeft, Search } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Logo } from '@/components/shared/Logo';
-interface DemoAccount {
-  roleName: string;
-  roleBadge: string;
-  username: string;
-  password: string;
-  targetPath: string;
-  description: string;
-  icon: string;
-  badgeColor: string;
-}
+import { ALL_DEMO_USERS, DemoUser } from '@/data/demo-accounts';
 
-const DEMO_ACCOUNTS: DemoAccount[] = [
-  {
-    roleName: 'Admin CMS Profil',
-    roleBadge: 'adminwebsite',
-    username: 'adminwebsite',
-    password: 'password123',
-    targetPath: '/admin-cms',
-    description: 'Kelola Konten Profil & Berita',
-    icon: '🌐',
-    badgeColor: 'bg-emerald-500/10 text-emerald-500 border-emerald-500/30',
-  },
-  {
-    roleName: 'Super Admin Mizan',
-    roleBadge: 'SUPER_ADMIN',
-    username: 'admin',
-    password: 'password123',
-    targetPath: '/admin/dashboard',
-    description: 'Sistem Inti Akademik & Absensi',
-    icon: '🛡️',
-    badgeColor: 'bg-indigo-500/10 text-indigo-500 border-indigo-500/30',
-  },
-  {
-    roleName: 'Dewan Guru Pengajar',
-    roleBadge: 'GURU',
-    username: 'nirwan',
-    password: 'password123',
-    targetPath: '/guru/dashboard',
-    description: 'Input Nilai & Jurnal Mengajar',
-    icon: '📚',
-    badgeColor: 'bg-blue-500/10 text-blue-500 border-blue-500/30',
-  },
-  {
-    roleName: 'Pembina BK / Pengasuhan',
-    roleBadge: 'PENGASUHAN',
-    username: 'doli',
-    password: 'password123',
-    targetPath: '/bk/dashboard',
-    description: 'Pelanggaran & Izin Santri',
-    icon: '🕌',
-    badgeColor: 'bg-amber-500/10 text-amber-500 border-amber-500/30',
-  },
-  {
-    roleName: 'Petugas Pos Satpam',
-    roleBadge: 'SATPAM',
-    username: 'satpam',
-    password: 'password123',
-    targetPath: '/satpam',
-    description: 'Pencatatan Gerbang Keamanan',
-    icon: '👮',
-    badgeColor: 'bg-rose-500/10 text-rose-500 border-rose-500/30',
-  },
-  {
-    roleName: 'Wali Santri / Orang Tua',
-    roleBadge: 'ORTU',
-    username: 'ortu',
-    password: 'password123',
-    targetPath: '/ortu/dashboard',
-    description: 'Rapor, Absensi & Tagihan Santri',
-    icon: '👨‍👩‍👧',
-    badgeColor: 'bg-purple-500/10 text-purple-500 border-purple-500/30',
-  },
-  {
-    roleName: 'Santri / Pelajar',
-    roleBadge: 'santri',
-    username: 'santri',
-    password: 'password123',
-    targetPath: '/santri/dashboard',
-    description: 'Jadwal Harian & Hafalan Quran',
-    icon: '🎓',
-    badgeColor: 'bg-teal-500/10 text-teal-500 border-teal-500/30',
-  },
-  {
-    roleName: 'Penulis Warta Pondok',
-    roleBadge: 'author',
-    username: 'penulis',
-    password: 'password123',
-    targetPath: '/author/dashboard',
-    description: 'Publikasi Berita & Jurnal Ilmiah',
-    icon: '✍️',
-    badgeColor: 'bg-orange-500/10 text-orange-500 border-orange-500/30',
-  },
-];
+const getRoleBadgeStyle = (role: string) => {
+  switch (role) {
+    case 'adminwebsite':
+      return { label: 'CMS Profil', color: 'bg-emerald-500/10 text-emerald-500 border-emerald-500/30' };
+    case 'SUPER_ADMIN':
+      return { label: 'Super Admin', color: 'bg-indigo-500/10 text-indigo-500 border-indigo-500/30' };
+    case 'GURU':
+      return { label: 'Guru', color: 'bg-blue-500/10 text-blue-500 border-blue-500/30' };
+    case 'PENGASUHAN':
+      return { label: 'Pengasuhan/BK', color: 'bg-amber-500/10 text-amber-500 border-amber-500/30' };
+    case 'SATPAM':
+      return { label: 'Satpam', color: 'bg-rose-500/10 text-rose-500 border-rose-500/30' };
+    case 'ORTU':
+      return { label: 'Wali Santri', color: 'bg-purple-500/10 text-purple-500 border-purple-500/30' };
+    case 'santri':
+      return { label: 'Santri', color: 'bg-teal-500/10 text-teal-500 border-teal-500/30' };
+    case 'author':
+      return { label: 'Penulis', color: 'bg-orange-500/10 text-orange-500 border-orange-500/30' };
+    default:
+      return { label: role, color: 'bg-secondary text-foreground border-border' };
+  }
+};
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -113,6 +44,8 @@ export default function LoginPage() {
   const [regEmail, setRegEmail] = useState('');
   const [regPhone, setRegPhone] = useState('');
   const [regPassword, setRegPassword] = useState('');
+  const [searchDemo, setSearchDemo] = useState('');
+  const [roleFilter, setRoleFilter] = useState<'ALL' | 'GURU' | 'PENGASUHAN' | 'OTHER'>('ALL');
   useEffect(() => {
     if (location.pathname === '/register') {
       setActiveTab('register');
@@ -269,74 +202,67 @@ export default function LoginPage() {
         setIsLoading(false);
     }
   };
-  const fillDemoLogin = (acc: DemoAccount, autoSubmit = false) => {
-    setUsername(acc.username);
-    setPassword(acc.password);
-    toast.success(`Akun ${acc.roleName} dipilih`);
+  const fillDemoLogin = (user: DemoUser, autoSubmit = false) => {
+    setUsername(user.username);
+    setPassword('password123');
+    toast.success(`Akun ${user.name} dipilih (@${user.username})`);
     if (autoSubmit) {
-      handleLogin(undefined, acc.username, acc.password);
+      handleLogin(undefined, user.username, 'password123');
     }
   };
+  const filteredDemoUsers = ALL_DEMO_USERS.filter((u) => {
+    const matchRole =
+      roleFilter === 'ALL'
+        ? true
+        : roleFilter === 'GURU'
+        ? u.role === 'GURU'
+        : roleFilter === 'PENGASUHAN'
+        ? u.role === 'PENGASUHAN'
+        : u.role !== 'GURU' && u.role !== 'PENGASUHAN';
+    if (!matchRole) return false;
+    if (!searchDemo.trim()) return true;
+    const q = searchDemo.toLowerCase();
+    return (
+      u.name.toLowerCase().includes(q) ||
+      u.username.toLowerCase().includes(q) ||
+      (u.roleTitle || '').toLowerCase().includes(q) ||
+      u.role.toLowerCase().includes(q)
+    );
+  });
   const toggleTab = (tab: 'login' | 'register') => {
     setActiveTab(tab);
     navigate(tab === 'login' ? '/login' : '/register');
   };
   return (
-    <div className="flex min-h-screen bg-background">
-      {}
-      <div className="hidden lg:flex lg:w-1/2 relative bg-slate-900 items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1542816417-0983c9c9ad53?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center opacity-40"></div>
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/50 to-transparent"></div>
-        <div className="relative z-10 p-12 text-white max-w-lg">
-          <Logo variant="icon" iconClassName="w-16 h-16 mb-8 rounded-[4px] border border-border" />
-          <h2 className="text-4xl font-bold mb-6 leading-tight">Membangun Generasi <br/><span className="text-primary">Berakhlak Mulia</span></h2>
-          <p className="text-lg text-slate-300 leading-relaxed">
-            Platform manajemen pesantren modern yang terintegrasi. Memudahkan administrasi, pemantauan akademik, dan komunikasi dengan wali santri.
-          </p>
-          <div className="mt-12 flex items-center gap-4">
-            <div className="flex -space-x-4">
-               {[1,2,3,4].map(i => (
-                 <div key={i} className="w-10 h-10 rounded-full border-2 border-slate-900 bg-slate-700 flex items-center justify-center text-xs">
-                    <img src={`https://ui-avatars.com/api/?name=User+${i}&background=random`} className="w-full h-full rounded-full" alt="" />
-                 </div>
-               ))}
-            </div>
-            <div className="text-sm">
-              <span className="font-bold text-white">1,000+</span> Santri & Wali Santri
-            </div>
-          </div>
-        </div>
-      </div>
-      {}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-4 sm:p-8 md:p-12 bg-background relative">
-        <motion.div 
-            initial={{ opacity: 0, x: 20 }} 
-            animate={{ opacity: 1, x: 0 }} 
-            className="w-full max-w-md space-y-8"
+    <div className="min-h-screen w-full flex flex-col items-center justify-center p-4 sm:p-6 md:p-8 bg-background relative overflow-y-auto">
+      <div className="absolute top-4 left-4 sm:top-6 sm:left-6">
+        <Link 
+          to="/" 
+          className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
         >
-          {}
-          <div className="absolute top-4 left-4 lg:top-8 lg:left-8">
-             <Link 
-              to="/" 
-              className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              Kembali
-            </Link>
-          </div>
-          <div className="text-center lg:text-left">
-            <Link to="/" className="lg:hidden inline-flex items-center gap-2.5 mb-8">
-              <Logo variant="icon" iconClassName="w-10 h-10" />
-            </Link>
-            <h1 className="text-3xl font-bold tracking-tight">
-                {activeTab === 'login' ? 'Selamat Datang' : 'Buat Akun Baru'}
-            </h1>
-            <p className="text-muted-foreground mt-2">
-                {activeTab === 'login' 
-                    ? 'Masuk untuk mengakses dashboard Anda' 
-                    : 'Daftarkan diri Anda untuk memulai'}
-            </p>
-          </div>
+          <ArrowLeft className="w-4 h-4" />
+          Kembali
+        </Link>
+      </div>
+
+      <motion.div 
+        initial={{ opacity: 0, y: 15 }} 
+        animate={{ opacity: 1, y: 0 }} 
+        className="w-full max-w-lg space-y-6 my-8"
+      >
+        <div className="text-center">
+          <Link to="/" className="inline-flex items-center justify-center mb-3">
+            <Logo variant="icon" iconClassName="w-12 h-12 rounded-xl shadow-lg shadow-primary/20" />
+          </Link>
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
+            {activeTab === 'login' ? 'Selamat Datang' : 'Buat Akun Baru'}
+          </h1>
+          <p className="text-muted-foreground text-xs sm:text-sm mt-1.5">
+            {activeTab === 'login' 
+              ? 'Masuk untuk mengakses portal pesantren & sistem akademik' 
+              : 'Daftarkan diri Anda untuk memulai'}
+          </p>
+        </div>
           {}
           <div className="grid grid-cols-2 gap-2 p-1 bg-secondary/50 rounded-xl">
             <button
@@ -511,72 +437,133 @@ export default function LoginPage() {
             </AnimatePresence>
             {}
             {activeTab === 'login' && (
-                <div className="mt-6 pt-5 border-t border-dashed border-border/80">
-                    <div className="flex items-center justify-between mb-2">
+                <div className="mt-8 pt-6 border-t border-dashed border-border/80">
+                    <div className="flex items-center justify-between mb-3">
                         <div className="flex items-center gap-2">
-                            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                            <span className="text-xs font-semibold text-foreground">
-                                Mode Development — Dummy Login
+                            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                            <span className="text-xs sm:text-sm font-semibold text-foreground">
+                                Mode Development — Dummy Login ({ALL_DEMO_USERS.length} Akun)
                             </span>
                         </div>
-                        <span className="text-[10px] uppercase font-bold text-muted-foreground bg-secondary px-2 py-0.5 rounded">
-                            {DEMO_ACCOUNTS.length} Akun
+                        <span className="text-[10px] font-mono text-muted-foreground bg-secondary px-2 py-0.5 rounded">
+                            Pass: password123
                         </span>
                     </div>
-                    <p className="text-[11px] text-muted-foreground mb-3">
-                        Pilih role akun di bawah untuk auto-fill atau klik <strong>Masuk ➔</strong> untuk login instan:
-                    </p>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-80 overflow-y-auto pr-1">
-                        {DEMO_ACCOUNTS.map((acc) => (
-                            <div
-                                key={acc.username}
-                                className="flex flex-col justify-between p-2.5 rounded-xl border border-border bg-card/70 hover:bg-secondary/60 hover:border-primary/40 transition-all text-xs"
+
+                    <div className="space-y-2 mb-3">
+                        <div className="relative">
+                            <input
+                                type="text"
+                                value={searchDemo}
+                                onChange={(e) => setSearchDemo(e.target.value)}
+                                placeholder="Cari ustadz / guru / username..."
+                                className="w-full pl-9 pr-4 py-2 text-xs rounded-xl bg-secondary/40 border border-border focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/20 transition-all"
+                            />
+                            <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                        </div>
+
+                        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs">
+                            <button
+                                type="button"
+                                onClick={() => setRoleFilter('ALL')}
+                                className={`px-2.5 py-1 rounded-lg text-xs font-medium whitespace-nowrap transition-colors ${
+                                    roleFilter === 'ALL'
+                                        ? 'bg-primary text-primary-foreground'
+                                        : 'bg-secondary/60 text-muted-foreground hover:text-foreground'
+                                }`}
                             >
-                                <div>
-                                    <div className="flex items-center justify-between gap-1 mb-1">
-                                        <span className="font-semibold text-foreground flex items-center gap-1.5 truncate">
-                                            <span>{acc.icon}</span>
-                                            <span className="truncate">{acc.roleName}</span>
-                                        </span>
-                                        <span className={`text-[9px] font-mono px-1.5 py-0.5 rounded border ${acc.badgeColor} shrink-0`}>
-                                            {acc.roleBadge}
-                                        </span>
-                                    </div>
-                                    <div className="text-[11px] text-muted-foreground mb-2 truncate">
-                                        {acc.description}
-                                    </div>
-                                </div>
-                                <div className="flex items-center justify-between pt-1 border-t border-border/50 text-[11px]">
-                                    <span className="font-mono text-muted-foreground text-[10px]">
-                                        user: <strong className="text-foreground">{acc.username}</strong>
-                                    </span>
-                                    <div className="flex items-center gap-1">
-                                        <button
-                                            type="button"
-                                            onClick={() => fillDemoLogin(acc, false)}
-                                            className="px-2 py-0.5 rounded text-[10px] font-medium bg-secondary hover:bg-secondary/80 text-foreground transition-colors"
-                                            disabled={isLoading}
-                                        >
-                                            Isi Form
-                                        </button>
-                                        <button
-                                            type="button"
-                                            onClick={() => fillDemoLogin(acc, true)}
-                                            className="px-2 py-0.5 rounded text-[10px] font-semibold bg-primary text-primary-foreground hover:opacity-90 transition-opacity"
-                                            disabled={isLoading}
-                                        >
-                                            Masuk ➔
-                                        </button>
-                                    </div>
-                                </div>
+                                Semua ({ALL_DEMO_USERS.length})
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => setRoleFilter('GURU')}
+                                className={`px-2.5 py-1 rounded-lg text-xs font-medium whitespace-nowrap transition-colors ${
+                                    roleFilter === 'GURU'
+                                        ? 'bg-primary text-primary-foreground'
+                                        : 'bg-secondary/60 text-muted-foreground hover:text-foreground'
+                                }`}
+                            >
+                                Dewan Guru ({ALL_DEMO_USERS.filter((u) => u.role === 'GURU').length})
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => setRoleFilter('PENGASUHAN')}
+                                className={`px-2.5 py-1 rounded-lg text-xs font-medium whitespace-nowrap transition-colors ${
+                                    roleFilter === 'PENGASUHAN'
+                                        ? 'bg-primary text-primary-foreground'
+                                        : 'bg-secondary/60 text-muted-foreground hover:text-foreground'
+                                }`}
+                            >
+                                Pengasuhan/BK ({ALL_DEMO_USERS.filter((u) => u.role === 'PENGASUHAN').length})
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => setRoleFilter('OTHER')}
+                                className={`px-2.5 py-1 rounded-lg text-xs font-medium whitespace-nowrap transition-colors ${
+                                    roleFilter === 'OTHER'
+                                        ? 'bg-primary text-primary-foreground'
+                                        : 'bg-secondary/60 text-muted-foreground hover:text-foreground'
+                                }`}
+                            >
+                                Admin & Lainnya ({ALL_DEMO_USERS.filter((u) => u.role !== 'GURU' && u.role !== 'PENGASUHAN').length})
+                            </button>
+                        </div>
+                    </div>
+
+                    <div className="space-y-1.5 max-h-80 overflow-y-auto pr-1">
+                        {filteredDemoUsers.length === 0 ? (
+                            <div className="text-center py-6 text-xs text-muted-foreground">
+                                Tidak ada akun yang cocok dengan pencarian "{searchDemo}"
                             </div>
-                        ))}
+                        ) : (
+                            filteredDemoUsers.map((user) => {
+                                const badge = getRoleBadgeStyle(user.role);
+                                return (
+                                    <div
+                                        key={user.username}
+                                        className="flex items-center justify-between p-2.5 rounded-xl border border-border bg-card/70 hover:bg-secondary/60 hover:border-primary/40 transition-all text-xs gap-2"
+                                    >
+                                        <div className="min-w-0 flex-1">
+                                            <div className="flex items-center gap-1.5 mb-0.5">
+                                                <span className="font-semibold text-foreground truncate">{user.name}</span>
+                                                <span className={`text-[9px] font-mono px-1.5 py-0.5 rounded border ${badge.color} shrink-0`}>
+                                                    {badge.label}
+                                                </span>
+                                            </div>
+                                            <div className="flex items-center gap-2 text-[11px] text-muted-foreground truncate">
+                                                <span className="font-mono text-primary font-medium">@{user.username}</span>
+                                                {user.roleTitle && (
+                                                    <span className="truncate text-muted-foreground/80">• {user.roleTitle}</span>
+                                                )}
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center gap-1.5 shrink-0">
+                                            <button
+                                                type="button"
+                                                onClick={() => fillDemoLogin(user, false)}
+                                                className="px-2 py-1 rounded-md text-[10px] font-medium bg-secondary hover:bg-secondary/80 text-foreground transition-colors"
+                                                disabled={isLoading}
+                                            >
+                                                Isi Form
+                                            </button>
+                                            <button
+                                                type="button"
+                                                onClick={() => fillDemoLogin(user, true)}
+                                                className="px-2.5 py-1 rounded-md text-[10px] font-semibold bg-primary text-primary-foreground hover:opacity-90 transition-opacity"
+                                                disabled={isLoading}
+                                            >
+                                                Masuk ➔
+                                            </button>
+                                        </div>
+                                    </div>
+                                );
+                            })
+                        )}
                     </div>
                 </div>
             )}
           </div>
         </motion.div>
-      </div>
     </div>
   );
 }
