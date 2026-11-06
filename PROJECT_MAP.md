@@ -14,36 +14,45 @@
 
 ---
 
-## 2. 📁 Struktur Direktori & Rute Halaman (`app/`)
+## 2. 📁 Struktur Direktori & Rute Halaman
 ```text
 mizan.apps/
-├── app/
-│   ├── admin/                 # Admin Panel Master (dashboard, keaktifan-guru, santri, kelas, wali-kelas, absensi, rapor, feedback, users, profil, logs, notifikasi [tambah], kategori-pelanggaran [unsur, indikator], kesehatan, perizinan, keuangan, tahfidz)
-│   ├── guru/                  # Modul Ustadz / Pembina (dashboard, absen, input-penilaian, riwayat, santri, profil - NO financial access)
-│   ├── bk/                    # Modul Pengasuhan BK (dashboard, absen, history, santri, kesehatan [catat], perizinan, keuangan uang saku/SPP, tahfidz)
-│   ├── ortu/dashboard/        # Portal Wali Santri (status harian, progres tahfidz, rekam medis poskestren, mutasi uang saku, kartu QR izin keluar-masuk)
-│   ├── satpam/                # Pos Jaga Gerbang (Scanner QR kartu izin mandiri, verifikasi status & konfirmasi keluar/kembali santri)
-│   ├── santri/profil/         # Profil mandiri santri & skor adab
-│   ├── share/[id]/            # Halaman publik kartu share (stat-*) tanpa perlu login
-│   └── login/                 # Autentikasi multi-role (Admin, Pengasuhan Putra/Putri, Guru, Wali Santri, Satpam)
-├── components/                # UI Components (Header, Sidebar, BottomNav, RoleShell, Modals, Toast)
-├── gobackend/                 # Core Fullstack Go Server (Fiber v2, WebSocket, pgx pool, static web server)
-│   ├── cmd/server/main.go     # Entrypoint Go Fiber (melayani API /api/*, WebSocket /ws, dan static files)
-│   ├── internal/              # Handlers (monitoring, keuangan, santri, auth), models, middleware, database (<500 lines, 0 comments)
-│   ├── mizan-server           # Binary produksi Go Fiber backend aktif (PID aktif melayani port 3000)
-│   └── web/                   # Kompilasi frontend statis Next.js siap saji
-└── lib/                       # Helpers (mizan-context, mock-data, types, utils)
+├── app/                       # Dashboard Operasional Mizan (Next.js 16)
+│   ├── admin/                 # Admin Panel Master Mizan
+│   ├── guru/                  # Modul Ustadz / Pembina
+│   ├── bk/                    # Modul Pengasuhan BK
+│   ├── ortu/dashboard/        # Portal Wali Santri
+│   ├── satpam/                # Pos Jaga Gerbang
+│   ├── santri/profil/         # Profil mandiri santri
+│   └── share/[id]/            # Kartu publik santri
+├── portal/                    # Source Code Portal Publik & Website CMS (React 18 + Vite)
+│   ├── src/                   # Halaman publik, CMS admin, auth, stores, layout
+│   ├── public/                # Logo, ikon, manifest publik
+│   ├── index.html             # Entrypoint portal publik & unified login (/login)
+│   ├── admin.html             # Entrypoint CMS admin panel (/admin-cms)
+│   └── vite.config.ts         # Build output langsung ke ../gobackend/web_public
+├── gobackend/                 # Core Fullstack Go Server (Fiber v2, pgx pool)
+│   ├── cmd/server/main.go     # Fiber engine, dual static router, RBAC auth
+│   ├── internal/              # Handlers, models, middleware, database (<500 lines, 0 comments)
+│   ├── web/                   # Static build dashboard internal Mizan
+│   └── web_public/            # Static build portal profil & website CMS
+├── components/                # UI Components Mizan
+└── lib/                       # Helpers (mizan-context, types, utils)
 ```
 
 ---
 
 ## 3. 🛡️ Keamanan & Standar Koding
 - **RBAC Strict**:
-  - `SUPER_ADMIN`: Akses penuh semua modul administrasi & monitoring.
-  - `PENGASUHAN`: Mengelola pembinaan asrama, kesehatan, perizinan, tahfidz, dan administrasi keuangan uang saku/SPP dengan isolasi gender (Putra / Putri).
-  - `GURU`: Khusus KBM (penilaian & presensi kelas). Akses modul keuangan & perizinan ditolak (403 Forbidden).
-  - `SATPAM`: Khusus pos gerbang scanner QR izin santri (tanpa akses data nilai/finansial).
-  - `ORTU`: Portal monitoring ananda berbasis NIS santri.
+  - `adminwebsite`: Mengelola konten profil publik pesantren di CMS panel (`/admin-cms`).
+  - `SUPER_ADMIN`: Akses penuh administrasi internal & monitoring Mizan (`/admin/dashboard`).
+  - `PENGASUHAN`: Modul pengasuhan BK, asrama, kesehatan, perizinan (`/bk/dashboard`).
+  - `GURU`: Khusus KBM presensi dan penilaian kelas (`/guru/dashboard`).
+  - `SATPAM`: Pos jaga gerbang scanner QR izin santri (`/satpam`).
+  - `ORTU`: Portal monitoring wali santri (`/ortu/dashboard`).
+- **Unified Login (`/login`)**:
+  - Halaman login tunggal melayani seluruh role tanpa tabrakan URL.
+  - Redirect otomatis ke dashboard masing-masing berdasarkan hak akses.
 - **Strict Anti-Komentar (/nokomen)**: Nol komentar kode di file `.go`, `.ts`, `.tsx`.
 - **Modular Code**: Maksimal 500 baris kode per file.
 - **Proteksi Rahasia**: File `.env` & `.env.local` dilarang di-push ke GitHub.

@@ -11,14 +11,14 @@ export function FeedbackButton() {
   return (
     <div className="fixed bottom-20 right-3 sm:right-5 md:bottom-6 md:right-6 z-40 select-none flex flex-col items-end gap-2">
       {isOpenMenu && (
-        <div className="flex flex-col gap-1.5 p-1.5 bg-white/95 backdrop-blur-md rounded-2xl border border-[#E2EBF4] shadow-xl text-[#172033] animate-in fade-in slide-in-from-bottom-2 duration-150">
+        <div className="flex flex-col gap-1.5 p-1.5 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md rounded-2xl border border-[#E2EBF4] dark:border-slate-800 shadow-xl text-[#172033] dark:text-slate-100 animate-in fade-in slide-in-from-bottom-2 duration-150">
           <button
             type="button"
             onClick={() => {
               setIsOpenMenu(false);
               openFeedbackModal("BUG");
             }}
-            className="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-bold text-rose-700 hover:bg-rose-50 transition-colors cursor-pointer"
+            className="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-bold text-rose-700 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors cursor-pointer"
           >
             <Bug className="w-3.5 h-3.5" />
             <span>Bug</span>
@@ -29,7 +29,7 @@ export function FeedbackButton() {
               setIsOpenMenu(false);
               openFeedbackModal("SARAN");
             }}
-            className="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-bold text-[#1B4D3E] hover:bg-[#FAF7EE] transition-colors cursor-pointer"
+            className="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-bold text-[#1B4D3E] dark:text-emerald-400 hover:bg-[#FAF7EE] dark:hover:bg-slate-800 transition-colors cursor-pointer"
           >
             <Lightbulb className="w-3.5 h-3.5 text-[#C5A059]" />
             <span>Saran</span>

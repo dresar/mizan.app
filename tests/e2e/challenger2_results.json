@@ -1,0 +1,583 @@
+{
+  "total": 64,
+  "passed": 64,
+  "failed": 0,
+  "results": [
+    {
+      "id": "AUTH-01",
+      "category": "SETUP",
+      "desc": "Admin authentication",
+      "passed": true,
+      "expected": "200 OK",
+      "actual": "200",
+      "detail": ""
+    },
+    {
+      "id": "EMPTY-BODY-01",
+      "category": "EMPTY_RAW_BODY",
+      "desc": "POST /api/v1/auth/login with raw empty body",
+      "passed": true,
+      "expected": "400",
+      "actual": "400",
+      "detail": "{\"error\":\"Data login tidak valid\"}"
+    },
+    {
+      "id": "EMPTY-BODY-02",
+      "category": "EMPTY_RAW_BODY",
+      "desc": "POST /api/v1/public/psb/daftar with raw empty body",
+      "passed": true,
+      "expected": "400",
+      "actual": "400",
+      "detail": "{\"error\":\"Request body tidak boleh kosong\"}"
+    },
+    {
+      "id": "EMPTY-BODY-03",
+      "category": "EMPTY_RAW_BODY",
+      "desc": "POST /api/core/contact with raw empty body",
+      "passed": true,
+      "expected": "400",
+      "actual": "400",
+      "detail": "{\"error\":\"Invalid payload\"}"
+    },
+    {
+      "id": "EMPTY-BODY-04",
+      "category": "EMPTY_RAW_BODY",
+      "desc": "POST /api/v1/admin/cms/faq with raw empty body",
+      "passed": true,
+      "expected": "400",
+      "actual": "400",
+      "detail": "{\"error\":\"Format JSON tidak valid\"}"
+    },
+    {
+      "id": "EMPTY-BODY-05",
+      "category": "EMPTY_RAW_BODY",
+      "desc": "POST /api/v1/admin/cms/fasilitas with raw empty body",
+      "passed": true,
+      "expected": "400",
+      "actual": "400",
+      "detail": "{\"error\":\"Format JSON tidak valid\"}"
+    },
+    {
+      "id": "EMPTY-BODY-06",
+      "category": "EMPTY_RAW_BODY",
+      "desc": "POST /api/v1/admin/blog/posts with raw empty body",
+      "passed": true,
+      "expected": "400",
+      "actual": "400",
+      "detail": "{\"error\":\"Format JSON tidak valid\"}"
+    },
+    {
+      "id": "EMPTY-BODY-07",
+      "category": "EMPTY_RAW_BODY",
+      "desc": "PUT /api/v1/admin/cms/faq/1 with raw empty body",
+      "passed": true,
+      "expected": "400",
+      "actual": "400",
+      "detail": "{\"error\":\"Format JSON tidak valid\"}"
+    },
+    {
+      "id": "EMPTY-BODY-08",
+      "category": "EMPTY_RAW_BODY",
+      "desc": "PUT /api/v1/admin/blog/posts/1 with raw empty body",
+      "passed": true,
+      "expected": "400",
+      "actual": "400",
+      "detail": "{\"error\":\"Format JSON tidak valid\"}"
+    },
+    {
+      "id": "EMPTY-BODY-09",
+      "category": "EMPTY_RAW_BODY",
+      "desc": "PUT /api/v1/admin/psb/pendaftar/1 with raw empty body",
+      "passed": true,
+      "expected": "400",
+      "actual": "400",
+      "detail": "{\"error\":\"Format JSON tidak valid\"}"
+    },
+    {
+      "id": "EMPTY-BODY-10",
+      "category": "EMPTY_RAW_BODY",
+      "desc": "PUT /api/v1/admin/cms/website-settings/1 with raw empty body",
+      "passed": true,
+      "expected": "400",
+      "actual": "400",
+      "detail": "{\"error\":\"Format JSON tidak valid\"}"
+    },
+    {
+      "id": "MALFORM-JSON-01",
+      "category": "MALFORMED_SYNTAX",
+      "desc": "POST psb/daftar malformed payload #1",
+      "passed": true,
+      "expected": "400",
+      "actual": "400",
+      "detail": "{\"error\":\"Format JSON tidak valid\"}"
+    },
+    {
+      "id": "MALFORM-JSON-02",
+      "category": "MALFORMED_SYNTAX",
+      "desc": "POST psb/daftar malformed payload #2",
+      "passed": true,
+      "expected": "400",
+      "actual": "400",
+      "detail": "{\"error\":\"Format JSON tidak valid\"}"
+    },
+    {
+      "id": "MALFORM-JSON-03",
+      "category": "MALFORMED_SYNTAX",
+      "desc": "POST psb/daftar malformed payload #3",
+      "passed": true,
+      "expected": "400",
+      "actual": "400",
+      "detail": "{\"error\":\"Format JSON tidak valid\"}"
+    },
+    {
+      "id": "MALFORM-JSON-04",
+      "category": "MALFORMED_SYNTAX",
+      "desc": "POST psb/daftar malformed payload #4",
+      "passed": true,
+      "expected": "400",
+      "actual": "400",
+      "detail": "{\"error\":\"Format JSON tidak valid\"}"
+    },
+    {
+      "id": "NON-OBJ-PSB-01",
+      "category": "NON_OBJECT_JSON",
+      "desc": "POST psb/daftar with JSON Array",
+      "passed": true,
+      "expected": "400",
+      "actual": "400",
+      "detail": "{\"error\":\"Format JSON tidak valid\"}"
+    },
+    {
+      "id": "NON-OBJ-CMS-01",
+      "category": "NON_OBJECT_JSON",
+      "desc": "PUT cms/faq/1 with JSON Array",
+      "passed": true,
+      "expected": "400",
+      "actual": "400",
+      "detail": "{\"error\":\"Format JSON tidak valid\"}"
+    },
+    {
+      "id": "NON-OBJ-PSB-02",
+      "category": "NON_OBJECT_JSON",
+      "desc": "POST psb/daftar with JSON String",
+      "passed": true,
+      "expected": "400",
+      "actual": "400",
+      "detail": "{\"error\":\"Format JSON tidak valid\"}"
+    },
+    {
+      "id": "NON-OBJ-CMS-02",
+      "category": "NON_OBJECT_JSON",
+      "desc": "PUT cms/faq/1 with JSON String",
+      "passed": true,
+      "expected": "400",
+      "actual": "400",
+      "detail": "{\"error\":\"Format JSON tidak valid\"}"
+    },
+    {
+      "id": "NON-OBJ-PSB-03",
+      "category": "NON_OBJECT_JSON",
+      "desc": "POST psb/daftar with JSON Number",
+      "passed": true,
+      "expected": "400",
+      "actual": "400",
+      "detail": "{\"error\":\"Format JSON tidak valid\"}"
+    },
+    {
+      "id": "NON-OBJ-CMS-03",
+      "category": "NON_OBJECT_JSON",
+      "desc": "PUT cms/faq/1 with JSON Number",
+      "passed": true,
+      "expected": "400",
+      "actual": "400",
+      "detail": "{\"error\":\"Format JSON tidak valid\"}"
+    },
+    {
+      "id": "NON-OBJ-PSB-04",
+      "category": "NON_OBJECT_JSON",
+      "desc": "POST psb/daftar with JSON Boolean",
+      "passed": true,
+      "expected": "400",
+      "actual": "400",
+      "detail": "{\"error\":\"Format JSON tidak valid\"}"
+    },
+    {
+      "id": "NON-OBJ-CMS-04",
+      "category": "NON_OBJECT_JSON",
+      "desc": "PUT cms/faq/1 with JSON Boolean",
+      "passed": true,
+      "expected": "400",
+      "actual": "400",
+      "detail": "{\"error\":\"Format JSON tidak valid\"}"
+    },
+    {
+      "id": "NON-OBJ-PSB-05",
+      "category": "NON_OBJECT_JSON",
+      "desc": "POST psb/daftar with JSON Null",
+      "passed": true,
+      "expected": "400",
+      "actual": "400",
+      "detail": "{\"error\":\"Nama lengkap dan NISN wajib diisi\"}"
+    },
+    {
+      "id": "NON-OBJ-CMS-05",
+      "category": "NON_OBJECT_JSON",
+      "desc": "PUT cms/faq/1 with JSON Null",
+      "passed": true,
+      "expected": "400",
+      "actual": "400",
+      "detail": "{\"error\":\"Tidak ada kolom valid yang diperbarui\"}"
+    },
+    {
+      "id": "SQLI-PATH-01",
+      "category": "SQL_INJECTION",
+      "desc": "GET /api/v1/public/posts/' OR '1'='1...",
+      "passed": true,
+      "expected": "400 or 404",
+      "actual": "404",
+      "detail": "{\"error\":\"Post not found\"}"
+    },
+    {
+      "id": "SQLI-PATH-02",
+      "category": "SQL_INJECTION",
+      "desc": "GET /api/v1/public/posts/1; DROP TABLE b...",
+      "passed": true,
+      "expected": "400 or 404",
+      "actual": "404",
+      "detail": "{\"error\":\"Post not found\"}"
+    },
+    {
+      "id": "SQLI-PATH-03",
+      "category": "SQL_INJECTION",
+      "desc": "GET /api/v1/public/posts/'; EXEC xp_cmds...",
+      "passed": true,
+      "expected": "400 or 404",
+      "actual": "404",
+      "detail": "{\"error\":\"Post not found\"}"
+    },
+    {
+      "id": "SQLI-PATH-04",
+      "category": "SQL_INJECTION",
+      "desc": "GET /api/v1/public/posts/1' UNION SELECT...",
+      "passed": true,
+      "expected": "400 or 404",
+      "actual": "404",
+      "detail": "{\"error\":\"Post not found\"}"
+    },
+    {
+      "id": "SQLI-PATH-05",
+      "category": "SQL_INJECTION",
+      "desc": "GET /api/v1/public/posts/1 AND 1=cast((S...",
+      "passed": true,
+      "expected": "400 or 404",
+      "actual": "404",
+      "detail": "{\"error\":\"Post not found\"}"
+    },
+    {
+      "id": "SQLI-QUERY-01",
+      "category": "SQL_INJECTION",
+      "desc": "GET /api/v1/public/posts?search=' OR '1'='1...",
+      "passed": true,
+      "expected": "200 or 400",
+      "actual": "200",
+      "detail": "{\"data\":[{\"author\":{\"avatar\":\"\",\"firstName\":\"Super\",\"id\":1,\"lastName\":\"Admin\",\"u"
+    },
+    {
+      "id": "SQLI-QUERY-02",
+      "category": "SQL_INJECTION",
+      "desc": "GET /api/v1/public/posts?search=1; DROP TABLE b...",
+      "passed": true,
+      "expected": "200 or 400",
+      "actual": "200",
+      "detail": "{\"data\":[{\"author\":{\"avatar\":\"\",\"firstName\":\"Super\",\"id\":1,\"lastName\":\"Admin\",\"u"
+    },
+    {
+      "id": "SQLI-QUERY-03",
+      "category": "SQL_INJECTION",
+      "desc": "GET /api/v1/public/posts?search='; EXEC xp_cmds...",
+      "passed": true,
+      "expected": "200 or 400",
+      "actual": "200",
+      "detail": "{\"data\":[{\"author\":{\"avatar\":\"\",\"firstName\":\"Super\",\"id\":1,\"lastName\":\"Admin\",\"u"
+    },
+    {
+      "id": "SQLI-QUERY-04",
+      "category": "SQL_INJECTION",
+      "desc": "GET /api/v1/public/posts?search=1' UNION SELECT...",
+      "passed": true,
+      "expected": "200 or 400",
+      "actual": "200",
+      "detail": "{\"data\":[{\"author\":{\"avatar\":\"\",\"firstName\":\"Super\",\"id\":1,\"lastName\":\"Admin\",\"u"
+    },
+    {
+      "id": "SQLI-BODY-01",
+      "category": "SQL_INJECTION",
+      "desc": "POST psb/daftar with SQLi strings in fields",
+      "passed": true,
+      "expected": "201 or 400",
+      "actual": "400",
+      "detail": "{\"error\":\"NISN tidak boleh lebih dari 20 karakter\"}"
+    },
+    {
+      "id": "SQLI-KEY-01",
+      "category": "SQL_INJECTION",
+      "desc": "PUT admin/blog/posts/1 with SQLi in column keys",
+      "passed": true,
+      "expected": "400",
+      "actual": "400",
+      "detail": "{\"details\":\"Permintaan berisi kolom yang tidak terdaftar pada skema\",\"error\":\"Ko"
+    },
+    {
+      "id": "SQLI-KEY-02",
+      "category": "SQL_INJECTION",
+      "desc": "PUT admin/cms/faq/1 with SQLi in column keys",
+      "passed": true,
+      "expected": "400",
+      "actual": "400",
+      "detail": "{\"error\":\"Tidak ada kolom valid yang diperbarui\"}"
+    },
+    {
+      "id": "TYPE-INV-01",
+      "category": "TYPE_VALIDATION",
+      "desc": "POST psb/daftar Array in string field",
+      "passed": true,
+      "expected": "400",
+      "actual": "400",
+      "detail": "{\"error\":\"Format JSON tidak valid\"}"
+    },
+    {
+      "id": "TYPE-INV-02",
+      "category": "TYPE_VALIDATION",
+      "desc": "POST psb/daftar Object in string field",
+      "passed": true,
+      "expected": "400",
+      "actual": "400",
+      "detail": "{\"error\":\"Format JSON tidak valid\"}"
+    },
+    {
+      "id": "DATE-INV-01",
+      "category": "DATE_VALIDATION",
+      "desc": "PUT admin/psb/pendaftar/1 with Arbitrary string as date (SQLSTATE 22007)",
+      "passed": true,
+      "expected": "[400]",
+      "actual": "400",
+      "detail": "{\"details\":\"Format tanggal tidak valid\",\"error\":\"Format tanggal atau waktu tidak"
+    },
+    {
+      "id": "DATE-INV-02",
+      "category": "DATE_VALIDATION",
+      "desc": "PUT admin/psb/pendaftar/1 with Invalid format date (SQLSTATE 22008)",
+      "passed": true,
+      "expected": "[400, 500]",
+      "actual": "400",
+      "detail": "{\"details\":\"Format tanggal tidak valid\",\"error\":\"Format tanggal atau waktu tidak"
+    },
+    {
+      "id": "DATE-INV-03",
+      "category": "DATE_VALIDATION",
+      "desc": "PUT admin/psb/pendaftar/1 with Non-existent calendar date (SQLSTATE 22008)",
+      "passed": true,
+      "expected": "[400, 500]",
+      "actual": "400",
+      "detail": "{\"details\":\"Format tanggal tidak valid\",\"error\":\"Format tanggal atau waktu tidak"
+    },
+    {
+      "id": "DATE-INV-04",
+      "category": "DATE_VALIDATION",
+      "desc": "PUT admin/psb/pendaftar/1 with Integer instead of date (SQLSTATE 42804)",
+      "passed": true,
+      "expected": "[400, 500]",
+      "actual": "500",
+      "detail": "{\"error\":\"Gagal memperbarui status santri\"}"
+    },
+    {
+      "id": "ID-BOUND-01",
+      "category": "BOUNDARY_ID",
+      "desc": "GET cms/faq/-1 (Negative ID)",
+      "passed": true,
+      "expected": "400 or 404",
+      "actual": "404",
+      "detail": "{\"error\":\"Item not found\"}"
+    },
+    {
+      "id": "ID-BOUND-02",
+      "category": "BOUNDARY_ID",
+      "desc": "GET cms/faq/0 (Zero ID)",
+      "passed": true,
+      "expected": "400 or 404",
+      "actual": "404",
+      "detail": "{\"error\":\"Item not found\"}"
+    },
+    {
+      "id": "ID-BOUND-03",
+      "category": "BOUNDARY_ID",
+      "desc": "GET cms/faq/9999999999999999999999999999999999 (Huge 64-bit overflow ID)",
+      "passed": true,
+      "expected": "400 or 404",
+      "actual": "400",
+      "detail": "{\"error\":\"ID tidak valid\"}"
+    },
+    {
+      "id": "ID-BOUND-04",
+      "category": "BOUNDARY_ID",
+      "desc": "GET cms/faq/abc-not-an-id (Alphanumeric string ID)",
+      "passed": true,
+      "expected": "400 or 404",
+      "actual": "400",
+      "detail": "{\"error\":\"ID tidak valid\"}"
+    },
+    {
+      "id": "OVERSIZE-01",
+      "category": "PAYLOAD_LIMIT",
+      "desc": "POST /api/core/contact with >5000 char message",
+      "passed": true,
+      "expected": "400",
+      "actual": "400",
+      "detail": "{\"error\":\"Pesan tidak boleh lebih dari 5000 karakter\"}"
+    },
+    {
+      "id": "OVERSIZE-02",
+      "category": "PAYLOAD_LIMIT",
+      "desc": "POST psb/daftar with 5MB raw body",
+      "passed": true,
+      "expected": "400, 413, or connection drop",
+      "actual": "Connection dropped safely",
+      "detail": ""
+    },
+    {
+      "id": "NULL-BYTE-01",
+      "category": "PAYLOAD_SAFETY",
+      "desc": "POST psb/daftar with null bytes handled without leak/panic",
+      "passed": true,
+      "expected": "400 or 500 (sanitized)",
+      "actual": "500",
+      "detail": "{\"error\":\"Gagal menyimpan data pendaftaran\"}"
+    },
+    {
+      "id": "CONCUR-RACE-01",
+      "category": "CONCURRENCY",
+      "desc": "25 concurrent same-NISN registrations: 1x201, 24x400, 0x500",
+      "passed": true,
+      "expected": "201: 1, 400: 24, 500: 0",
+      "actual": "201: 1, 400: 24, 500: 0",
+      "detail": ""
+    },
+    {
+      "id": "CONCUR-CMS-01",
+      "category": "CONCURRENCY",
+      "desc": "30 concurrent CMS updates on same record all succeed (200 OK)",
+      "passed": true,
+      "expected": "200: 30, 500: 0",
+      "actual": "200: 30, 500: 0",
+      "detail": ""
+    },
+    {
+      "id": "CONCUR-BLOG-01",
+      "category": "CONCURRENCY",
+      "desc": "30 concurrent Blog updates on same record all succeed (200 OK)",
+      "passed": true,
+      "expected": "200: 30, 500: 0",
+      "actual": "200: 30, 500: 0",
+      "detail": ""
+    },
+    {
+      "id": "CONCUR-PSB-01",
+      "category": "CONCURRENCY",
+      "desc": "30 concurrent PSB updates on same record all succeed (200 OK)",
+      "passed": true,
+      "expected": "200: 30, 500: 0",
+      "actual": "200: 30, 500: 0",
+      "detail": ""
+    },
+    {
+      "id": "CONCUR-READ-01",
+      "category": "CONCURRENCY",
+      "desc": "100 concurrent public reads all succeed (200 OK)",
+      "passed": true,
+      "expected": "200: 100",
+      "actual": "200: 100",
+      "detail": ""
+    },
+    {
+      "id": "METHOD-01",
+      "category": "METHOD_TAMPERING",
+      "desc": "DELETE /api/v1/public/psb/daftar handled with proper status",
+      "passed": true,
+      "expected": "[405, 404]",
+      "actual": "404",
+      "detail": "{\"error\":\"Not Found\"}"
+    },
+    {
+      "id": "METHOD-02",
+      "category": "METHOD_TAMPERING",
+      "desc": "PUT /api/v1/public/psb/daftar handled with proper status",
+      "passed": true,
+      "expected": "[405, 404]",
+      "actual": "404",
+      "detail": "{\"error\":\"Not Found\"}"
+    },
+    {
+      "id": "METHOD-03",
+      "category": "METHOD_TAMPERING",
+      "desc": "GET /api/core/contact handled with proper status",
+      "passed": true,
+      "expected": "[401, 404, 405]",
+      "actual": "401",
+      "detail": "{\"success\":false,\"message\":\"Sesi tidak ditemukan\",\"error\":\"Sesi tidak ditemukan\""
+    },
+    {
+      "id": "METHOD-04",
+      "category": "METHOD_TAMPERING",
+      "desc": "POST /api/v1/public/website-settings handled with proper status",
+      "passed": true,
+      "expected": "[405, 404]",
+      "actual": "404",
+      "detail": "{\"error\":\"Not Found\"}"
+    },
+    {
+      "id": "METHOD-05",
+      "category": "METHOD_TAMPERING",
+      "desc": "DELETE /api/v1/public/hero-section handled with proper status",
+      "passed": true,
+      "expected": "[405, 404]",
+      "actual": "404",
+      "detail": "{\"error\":\"Not Found\"}"
+    },
+    {
+      "id": "METHOD-06",
+      "category": "METHOD_TAMPERING",
+      "desc": "PATCH /api/v1/public/visi-misi handled with proper status",
+      "passed": true,
+      "expected": "[405, 404]",
+      "actual": "404",
+      "detail": "{\"error\":\"Not Found\"}"
+    },
+    {
+      "id": "METHOD-07",
+      "category": "METHOD_TAMPERING",
+      "desc": "GET /api/v1/admin/nonexistent-route-xyz handled with proper status",
+      "passed": true,
+      "expected": "[401, 404]",
+      "actual": "401",
+      "detail": "{\"success\":false,\"message\":\"Sesi tidak valid atau telah kedaluwarsa\",\"error\":\"Se"
+    },
+    {
+      "id": "METHOD-08",
+      "category": "METHOD_TAMPERING",
+      "desc": "POST /api/v1/admin/cms/invalid_table_name handled with proper status",
+      "passed": true,
+      "expected": "[400, 404]",
+      "actual": "404",
+      "detail": "{\"error\":\"Resource not found\"}"
+    },
+    {
+      "id": "HEALTH-01",
+      "category": "SERVER_HEALTH",
+      "desc": "Server healthy and responsive after adversarial stress",
+      "passed": true,
+      "expected": "200 OK",
+      "actual": "200",
+      "detail": ""
+    }
+  ]
+}

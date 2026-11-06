@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"path/filepath"
 	"runtime"
 	"strings"
 	"time"
@@ -243,9 +244,81 @@ func main() {
 		}
 	}))
 
+	publicV1 := app.Group("/api/v1/public")
+	publicV1.Get("/website-settings", handlers.GetPublicWebsiteSettings)
+	publicV1.Get("/hero-section", handlers.GetPublicHeroSection)
+	publicV1.Get("/visi-misi", handlers.GetPublicVisiMisi)
+	publicV1.Get("/fasilitas", handlers.GetPublicFasilitas)
+	publicV1.Get("/tenaga-pengajar", handlers.GetPublicTenagaPengajar)
+	publicV1.Get("/posts", handlers.GetPublicPosts)
+	publicV1.Get("/posts/:slug", handlers.GetPublicPostBySlug)
+	publicV1.Post("/psb/daftar", handlers.PostPublicPSBDaftar)
+	publicV1.Get("/psb/daftar", func(c *fiber.Ctx) error {
+		return c.Status(fiber.StatusMethodNotAllowed).JSON(fiber.Map{
+			"error": "Method Not Allowed",
+		})
+	})
+	publicV1.All("/"+string('*'), func(c *fiber.Ctx) error {
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
+			"error": "Not Found",
+		})
+	})
+
+	core := app.Group("/api/core")
+	core.Get("/settings", handlers.GetPublicWebsiteSettings)
+	core.Get("/hero", handlers.GetPublicHeroSection)
+	core.Get("/visi-misi", handlers.GetPublicVisiMisi)
+	core.Get("/fasilitas", handlers.GetPublicFasilitas)
+	core.Get("/tenaga-pengajar", handlers.GetPublicTenagaPengajar)
+	core.Get("/programs", handlers.GetPublicPrograms)
+	core.Get("/program-pendidikan", handlers.GetPublicProgramPendidikan)
+	core.Get("/sejarah-timeline", handlers.GetPublicSejarahTimeline)
+	core.Get("/ekstrakurikuler", handlers.GetPublicEkstrakurikuler)
+	core.Get("/jadwal-harian", handlers.GetPublicJadwalHarian)
+	core.Get("/persyaratan", handlers.GetPublicPersyaratan)
+	core.Get("/alur-pendaftaran", handlers.GetPublicAlurPendaftaran)
+	core.Get("/registration-flow", handlers.GetPublicAlurPendaftaran)
+	core.Get("/biaya-pendidikan", handlers.GetPublicBiayaPendidikan)
+	core.Get("/statistik", handlers.GetPublicStatistik)
+	core.Get("/founders", handlers.GetPublicFounders)
+	core.Get("/struktur-organisasi", handlers.GetPublicStrukturOrganisasi)
+	core.Get("/form-config", handlers.GetPublicFormConfig)
+	core.Get("/last-updates", handlers.GetPublicLastUpdates)
+	core.Post("/contact", handlers.PostPublicContact)
+
+	blog := app.Group("/api/blog")
+	blog.Get("/posts", handlers.GetPublicPosts)
+	blog.Get("/posts/:slug", handlers.GetPublicPostBySlug)
+	blog.Get("/categories", handlers.GetPublicBlogCategories)
+	blog.Get("/tags", handlers.GetPublicBlogTags)
+	blog.Get("/announcements", handlers.GetPublicBlogAnnouncements)
+	blog.Get("/testimonials", handlers.GetPublicBlogTestimonials)
+
+	psb := app.Group("/api/psb")
+	psb.Post("/daftar", handlers.PostPublicPSBDaftar)
+	psb.Post("/register", handlers.PostPublicPSBDaftar)
+
+	app.Post("/api/v1/auth/login", middleware.AdminLogin(cfg.SessionSecret))
+
+	adminV1 := app.Group("/api/v1/admin", middleware.AdminJWTAuth(cfg.SessionSecret))
+	adminV1.Get("/cms/:section", handlers.GetAdminCMSList)
+	adminV1.Get("/cms/:section/:id", handlers.GetAdminCMSDetail)
+	adminV1.Post("/cms/:section", handlers.PostAdminCMSItem)
+	adminV1.Put("/cms/:section/:id", handlers.PutAdminCMSItem)
+	adminV1.Delete("/cms/:section/:id", handlers.DeleteAdminCMSItem)
+	adminV1.Post("/cms/:section/bulk-delete", handlers.PostAdminCMSBulkDelete)
+	adminV1.Get("/blog/posts", handlers.GetAdminBlogPosts)
+	adminV1.Post("/blog/posts", handlers.PostAdminBlogPost)
+	adminV1.Put("/blog/posts/:id", handlers.PutAdminBlogPost)
+	adminV1.Delete("/blog/posts/:id", handlers.DeleteAdminBlogPost)
+	adminV1.Get("/psb/pendaftar", handlers.GetAdminPSBPendaftar)
+	adminV1.Get("/psb/pendaftar/:id", handlers.GetAdminPSBPendaftarDetail)
+	adminV1.Put("/psb/pendaftar/:id", handlers.PutAdminPSBPendaftar)
+	adminV1.Post("/psb/pendaftar/bulk-action", handlers.PostAdminPSBApplicantBulkAction)
+
 	api := app.Group("/api")
 
-	api.Post("/auth/login", handlers.Login(cfg))
+	api.Post("/auth/login", middleware.DualAuthLogin(handlers.Login(cfg), cfg.SessionSecret))
 	api.Get("/auth/me", handlers.GetMe(cfg))
 	api.Get("/share", handlers.GetShareCard)
 	api.Get("/data", middleware.OptionalAuth(cfg.SessionSecret), handlers.GetData)
@@ -352,38 +425,118 @@ func main() {
 		return c.JSON(fiber.Map{"success": true, "clients": realtimeHub.ClientCount()})
 	})
 
-	if _, err := os.Stat(cfg.StaticWebDir); err == nil {
-		app.Use(func(c *fiber.Ctx) error {
-			p := c.Path()
-			if p == "/sw.js" || p == "/manifest.json" {
-				c.Set("Cache-Control", "no-cache, no-store, must-revalidate")
-			} else if strings.HasPrefix(p, "/_next/static/") {
-				c.Set("Cache-Control", "public, max-age=31536000, immutable")
-			} else if strings.HasSuffix(p, ".txt") || strings.HasSuffix(p, ".html") || p == "/" {
-				c.Set("Cache-Control", "public, max-age=1800, stale-while-revalidate=86400")
-			}
-			return c.Next()
-		})
+	app.Use(func(c *fiber.Ctx) error {
+		p := c.Path()
+		if p == "/sw.js" || p == "/manifest.json" || p == "/site.webmanifest" {
+			c.Set("Cache-Control", "no-cache, no-store, must-revalidate")
+		} else if strings.HasPrefix(p, "/_next/static/") || strings.HasPrefix(p, "/assets/") {
+			c.Set("Cache-Control", "public, max-age=31536000, immutable")
+		} else if p == "/" || strings.HasSuffix(p, ".html") {
+			c.Set("Cache-Control", "no-cache, no-store, must-revalidate")
+		}
+		return c.Next()
+	})
 
+	if _, err := os.Stat(cfg.StaticPublicWebDir + "/assets"); err == nil {
+		app.Static("/assets", cfg.StaticPublicWebDir+"/assets", fiber.Static{
+			Compress:      true,
+			ByteRange:     true,
+			Browse:        false,
+			MaxAge:        31536000,
+			CacheDuration: 365 * 24 * time.Hour,
+		})
+	}
+
+	app.Get("/robots.txt", func(c *fiber.Ctx) error {
+		robotsFile := cfg.StaticPublicWebDir + "/robots.txt"
+		if _, err := os.Stat(robotsFile); err == nil {
+			c.Set("Content-Type", "text/plain; charset=utf-8")
+			return c.SendFile(robotsFile)
+		}
+		return c.Status(fiber.StatusNotFound).SendString("User-agent: *\nAllow: /\n")
+	})
+
+	app.Get("/sitemap.xml", func(c *fiber.Ctx) error {
+		sitemapFile := cfg.StaticPublicWebDir + "/sitemap.xml"
+		if _, err := os.Stat(sitemapFile); err == nil {
+			c.Set("Content-Type", "application/xml; charset=utf-8")
+			return c.SendFile(sitemapFile)
+		}
+		return c.Status(fiber.StatusNotFound).SendString("Sitemap not found")
+	})
+
+	cmsHandler := func(c *fiber.Ctx) error {
+		cmsFile := cfg.StaticPublicWebDir + "/admin.html"
+		if _, err := os.Stat(cmsFile); err == nil {
+			c.Set("Cache-Control", "no-cache, no-store, must-revalidate")
+			return c.SendFile(cmsFile)
+		}
+		return c.Status(fiber.StatusNotFound).SendString("CMS admin.html not found")
+	}
+
+	app.Get("/admin.html", cmsHandler)
+	app.Get("/admin-cms", cmsHandler)
+	app.Get("/admin-cms/"+string('*'), cmsHandler)
+
+	if _, err := os.Stat(cfg.StaticWebDir); err == nil {
 		app.Static("/", cfg.StaticWebDir, fiber.Static{
 			Compress:  true,
 			ByteRange: true,
 			Browse:    false,
+			Next: func(c *fiber.Ctx) bool {
+				return strings.Trim(c.Path(), "/") == ""
+			},
 		})
+	}
 
-		app.Use(func(c *fiber.Ctx) error {
-			if strings.HasPrefix(c.Path(), "/api") || strings.HasPrefix(c.Path(), "/ws") || strings.HasPrefix(c.Path(), "/mcp") {
-				return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
-					"success": false,
-					"error":   "Endpoint tidak ditemukan",
-				})
+	app.Use(func(c *fiber.Ctx) error {
+		p := c.Path()
+		if strings.Contains(p, "..") {
+			return c.Status(fiber.StatusForbidden).SendString("Forbidden")
+		}
+		if strings.HasPrefix(p, "/api") || strings.HasPrefix(p, "/ws") || strings.HasPrefix(p, "/mcp") {
+			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
+				"success": false,
+				"error":   "Endpoint tidak ditemukan",
+			})
+		}
+
+		reqPath := strings.Trim(p, "/")
+		if reqPath == "" {
+			publicIndex := cfg.StaticPublicWebDir + "/index.html"
+			if _, err := os.Stat(publicIndex); err == nil {
+				return c.SendFile(publicIndex)
 			}
+			return c.SendFile(cfg.StaticWebDir + "/index.html")
+		}
 
-			reqPath := strings.Trim(c.Path(), "/")
-			if reqPath == "" {
-				return c.SendFile(cfg.StaticWebDir + "/index.html")
+		if reqPath == "admin-cms" || strings.HasPrefix(reqPath, "admin-cms/") || reqPath == "admin.html" {
+			cmsFile := cfg.StaticPublicWebDir + "/admin.html"
+			if _, err := os.Stat(cmsFile); err == nil {
+				c.Set("Cache-Control", "no-cache, no-store, must-revalidate")
+				return c.SendFile(cmsFile)
 			}
+			return c.Status(fiber.StatusNotFound).SendString("CMS admin.html not found")
+		}
 
+		if reqPath == "login" || reqPath == "register" {
+			publicIndex := cfg.StaticPublicWebDir + "/index.html"
+			if _, err := os.Stat(publicIndex); err == nil {
+				return c.SendFile(publicIndex)
+			}
+			return c.SendFile(cfg.StaticWebDir + "/login.html")
+		}
+
+		isMizanRoute := reqPath == "admin" || strings.HasPrefix(reqPath, "admin/") ||
+			reqPath == "bk" || strings.HasPrefix(reqPath, "bk/") ||
+			reqPath == "guru" || strings.HasPrefix(reqPath, "guru/") ||
+			reqPath == "santri" || strings.HasPrefix(reqPath, "santri/") ||
+			reqPath == "ortu" || strings.HasPrefix(reqPath, "ortu/") ||
+			reqPath == "satpam" || strings.HasPrefix(reqPath, "satpam/") ||
+			reqPath == "share" || strings.HasPrefix(reqPath, "share/") ||
+			strings.HasPrefix(reqPath, "_next")
+
+		if isMizanRoute {
 			isRSC := c.Get("RSC") == "1" || c.Get("Next-Router-Prefetch") == "1" || c.Query("_rsc") != ""
 			if isRSC {
 				txtFile := cfg.StaticWebDir + "/" + reqPath + ".txt"
@@ -407,7 +560,10 @@ func main() {
 			}
 
 			directFile := cfg.StaticWebDir + "/" + reqPath
-			if _, err := os.Stat(directFile); err == nil {
+			if !strings.HasPrefix(filepath.Clean(directFile), filepath.Clean(cfg.StaticWebDir)+string(filepath.Separator)) {
+				return c.Status(fiber.StatusForbidden).SendString("Forbidden")
+			}
+			if info, err := os.Stat(directFile); err == nil && !info.IsDir() {
 				if strings.HasSuffix(reqPath, ".txt") {
 					c.Set("Content-Type", "text/x-component; charset=utf-8")
 					c.Set("Cache-Control", "public, max-age=1800, stale-while-revalidate=86400")
@@ -467,9 +623,34 @@ func main() {
 				return c.Status(fiber.StatusNotFound).SendString("File not found")
 			}
 
+			if strings.HasPrefix(reqPath, "admin/") {
+				cmsFile := cfg.StaticPublicWebDir + "/admin.html"
+				if _, err := os.Stat(cmsFile); err == nil {
+					return c.SendFile(cmsFile)
+				}
+			}
 			return c.SendFile(cfg.StaticWebDir + "/index.html")
-		})
-	}
+		}
+
+		publicDirect := cfg.StaticPublicWebDir + "/" + reqPath
+		if !strings.HasPrefix(filepath.Clean(publicDirect), filepath.Clean(cfg.StaticPublicWebDir)+string(filepath.Separator)) {
+			return c.Status(fiber.StatusForbidden).SendString("Forbidden")
+		}
+		if info, err := os.Stat(publicDirect); err == nil && !info.IsDir() {
+			return c.SendFile(publicDirect)
+		}
+
+		if strings.Contains(reqPath, ".") {
+			return c.Status(fiber.StatusNotFound).SendString("File not found")
+		}
+
+		publicIndex := cfg.StaticPublicWebDir + "/index.html"
+		if _, err := os.Stat(publicIndex); err == nil {
+			return c.SendFile(publicIndex)
+		}
+
+		return c.SendFile(cfg.StaticWebDir + "/index.html")
+	})
 
 	serverAddr := ":" + cfg.Port
 	if err := app.Listen(serverAddr); err != nil {

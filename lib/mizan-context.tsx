@@ -41,6 +41,8 @@ export interface ToastItem {
   type: "success" | "error" | "info";
 }
 
+export type ThemeMode = "light" | "dark" | "system";
+
 export interface ClassInfo {
   id: string;
   name: string;
@@ -55,6 +57,10 @@ export interface ClassInfo {
 }
 
 interface MizanContextType {
+  theme: ThemeMode;
+  resolvedTheme: "light" | "dark";
+  setTheme: (theme: ThemeMode) => void;
+  toggleTheme: () => void;
   currentUser: UserProfile;
   activeRole: Role | null;
   isAuthenticated: boolean;
@@ -198,6 +204,70 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
   const [transaksiList, setTransaksiList] = useState<TransaksiKeuangan[]>([]);
   const [tagihanSppList, setTagihanSppList] = useState<TagihanSPP[]>([]);
   const [catatanMusyrifList, setCatatanMusyrifList] = useState<CatatanMusyrif[]>([]);
+  const [theme, setThemeState] = useState<ThemeMode>("light");
+  const [resolvedTheme, setResolvedTheme] = useState<"light" | "dark">("light");
+
+  useEffect(() => {
+    try {
+      const savedTheme = (localStorage.getItem("mizan_theme") as ThemeMode) || "light";
+      if (savedTheme === "light" || savedTheme === "dark" || savedTheme === "system") {
+        setThemeState(savedTheme);
+      }
+    } catch {
+      void 0;
+    }
+  }, []);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+
+    const updateResolved = () => {
+      let active: "light" | "dark" = "light";
+      if (theme === "system") {
+        active = mediaQuery.matches ? "dark" : "light";
+      } else {
+        active = theme;
+      }
+      setResolvedTheme(active);
+
+      const root = document.documentElement;
+      if (active === "dark") {
+        root.classList.add("dark");
+      } else {
+        root.classList.remove("dark");
+      }
+    };
+
+    updateResolved();
+
+    const listener = () => {
+      if (theme === "system") {
+        updateResolved();
+      }
+    };
+
+    mediaQuery.addEventListener("change", listener);
+    return () => mediaQuery.removeEventListener("change", listener);
+  }, [theme]);
+
+  const setTheme = (newTheme: ThemeMode) => {
+    setThemeState(newTheme);
+    try {
+      localStorage.setItem("mizan_theme", newTheme);
+    } catch {
+      void 0;
+    }
+  };
+
+  const toggleTheme = () => {
+    if (theme === "light") {
+      setTheme("dark");
+    } else if (theme === "dark") {
+      setTheme("system");
+    } else {
+      setTheme("light");
+    }
+  };
 
   useEffect(() => {
     try {
@@ -1881,7 +1951,11 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
         deleteTagihanSpp,
         payTagihanSpp,
         catatanMusyrifList,
-        addCatatanMusyrif
+        addCatatanMusyrif,
+        theme,
+        resolvedTheme,
+        setTheme,
+        toggleTheme
       }}
     >
       {children}

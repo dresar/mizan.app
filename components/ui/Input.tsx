@@ -34,14 +34,14 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         {label && (
           <label
             htmlFor={inputId}
-            className="block text-[11px] font-bold text-[#64748B] uppercase tracking-wider"
+            className="block text-[11px] font-bold text-[#64748B] dark:text-slate-400 uppercase tracking-wider"
           >
             {label}
           </label>
         )}
         <div className="relative flex items-center">
           {icon && (
-            <div className="absolute left-3 text-[#94A3B8] pointer-events-none shrink-0">
+            <div className="absolute left-3 text-[#94A3B8] dark:text-slate-500 pointer-events-none shrink-0">
               {icon}
             </div>
           )}
@@ -49,10 +49,10 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             ref={ref}
             id={inputId}
             disabled={disabled}
-            className={`w-full h-9 rounded-lg border bg-white px-3 text-xs text-[#172033] outline-none transition-all placeholder:text-[#94A3B8] focus:border-[#1B4D3E] focus:ring-1 focus:ring-[#1B4D3E]/30 disabled:opacity-50 disabled:bg-[#F8FAFC] ${
+            className={`w-full h-9 rounded-lg border bg-white dark:bg-slate-900 px-3 text-xs text-[#172033] dark:text-slate-100 outline-none transition-all placeholder:text-[#94A3B8] dark:placeholder:text-slate-500 focus:border-[#1B4D3E] dark:focus:border-emerald-500 focus:ring-1 focus:ring-[#1B4D3E]/30 dark:focus:ring-emerald-500/30 disabled:opacity-50 disabled:bg-[#F8FAFC] dark:disabled:bg-slate-800 ${
               icon ? "pl-9" : ""
             } ${rightAction ? "pr-10" : ""} ${
-              error ? "border-[#DC2626] focus:border-[#DC2626] focus:ring-[#DC2626]/20" : "border-[#E2E8F0]"
+              error ? "border-[#DC2626] focus:border-[#DC2626] focus:ring-[#DC2626]/20" : "border-[#E2E8F0] dark:border-slate-800"
             } ${className}`}
             {...props}
           />
@@ -117,7 +117,7 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
         {label && (
           <label
             htmlFor={selectId}
-            className="block text-[11px] font-bold text-[#64748B] uppercase tracking-wider"
+            className="block text-[11px] font-bold text-[#64748B] dark:text-slate-400 uppercase tracking-wider"
           >
             {label}
           </label>
@@ -127,21 +127,21 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
             ref={ref}
             id={selectId}
             disabled={disabled}
-            className={`w-full h-9 rounded-lg border bg-white px-3 pr-8 text-xs text-[#172033] font-semibold appearance-none outline-none transition-all focus:border-[#1B4D3E] focus:ring-1 focus:ring-[#1B4D3E]/30 disabled:opacity-50 disabled:bg-[#F8FAFC] ${
-              error ? "border-[#DC2626] focus:border-[#DC2626]" : "border-[#E2E8F0]"
+            className={`w-full h-9 rounded-lg border bg-white dark:bg-slate-900 px-3 pr-8 text-xs text-[#172033] dark:text-slate-100 font-semibold appearance-none outline-none transition-all focus:border-[#1B4D3E] dark:focus:border-emerald-500 focus:ring-1 focus:ring-[#1B4D3E]/30 dark:focus:ring-emerald-500/30 disabled:opacity-50 disabled:bg-[#F8FAFC] dark:disabled:bg-slate-800 ${
+              error ? "border-[#DC2626] focus:border-[#DC2626]" : "border-[#E2E8F0] dark:border-slate-800"
             } ${className}`}
             {...props}
           >
             {children}
           </select>
-          <div className="absolute right-2.5 pointer-events-none text-[#94A3B8]">
+          <div className="absolute right-2.5 pointer-events-none text-[#94A3B8] dark:text-slate-500">
             <ChevronDown className="w-3.5 h-3.5" />
           </div>
         </div>
         {error ? (
           <p className="text-[11px] font-medium text-[#DC2626]">{error}</p>
         ) : helperText ? (
-          <p className="text-[11px] text-[#94A3B8]">{helperText}</p>
+          <p className="text-[11px] text-[#94A3B8] dark:text-slate-500">{helperText}</p>
         ) : null}
       </div>
     );
@@ -166,7 +166,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
         {label && (
           <label
             htmlFor={textareaId}
-            className="block text-[11px] font-bold text-[#64748B] uppercase tracking-wider"
+            className="block text-[11px] font-bold text-[#64748B] dark:text-slate-400 uppercase tracking-wider"
           >
             {label}
           </label>
@@ -175,8 +175,8 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
           ref={ref}
           id={textareaId}
           disabled={disabled}
-          className={`w-full rounded-lg border bg-white p-2.5 text-xs text-[#172033] outline-none transition-all placeholder:text-[#94A3B8] focus:border-[#1B4D3E] focus:ring-1 focus:ring-[#1B4D3E]/30 disabled:opacity-50 disabled:bg-[#F8FAFC] ${
-            error ? "border-[#DC2626] focus:border-[#DC2626]" : "border-[#E2E8F0]"
+          className={`w-full rounded-lg border bg-white dark:bg-slate-900 p-2.5 text-xs text-[#172033] dark:text-slate-100 outline-none transition-all placeholder:text-[#94A3B8] dark:placeholder:text-slate-500 focus:border-[#1B4D3E] dark:focus:border-emerald-500 focus:ring-1 focus:ring-[#1B4D3E]/30 dark:focus:ring-emerald-500/30 disabled:opacity-50 disabled:bg-[#F8FAFC] dark:disabled:bg-slate-800 ${
+            error ? "border-[#DC2626] focus:border-[#DC2626]" : "border-[#E2E8F0] dark:border-slate-800"
           } ${className}`}
           {...props}
         />

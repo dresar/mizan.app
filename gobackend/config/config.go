@@ -8,12 +8,13 @@ import (
 )
 
 type Config struct {
-	DatabaseURL   string
-	Port          string
-	SessionSecret string
-	SumopodKey    string
-	ByNaraKey     string
-	StaticWebDir  string
+	DatabaseURL        string
+	Port               string
+	SessionSecret      string
+	SumopodKey         string
+	ByNaraKey          string
+	StaticWebDir       string
+	StaticPublicWebDir string
 }
 
 func LoadConfig() *Config {
@@ -78,12 +79,35 @@ func LoadConfig() *Config {
 		bynaraKey = "sk-nry-0KAezWyaGVZKiUSPmcBpT44F84a7jocNlZCCY7bLn9g"
 	}
 
+	publicWebDir := os.Getenv("STATIC_PUBLIC_WEB_DIR")
+	if publicWebDir == "" {
+		candidates := []string{
+			"./web_public",
+			"./gobackend/web_public",
+			"/opt/data/home/mizan.apps/gobackend/web_public",
+		}
+		if exe, err := os.Executable(); err == nil {
+			exeDir := filepath.Dir(exe)
+			candidates = append([]string{filepath.Join(exeDir, "web_public")}, candidates...)
+		}
+		for _, cand := range candidates {
+			if info, err := os.Stat(cand); err == nil && info.IsDir() {
+				publicWebDir = cand
+				break
+			}
+		}
+		if publicWebDir == "" {
+			publicWebDir = "./web_public"
+		}
+	}
+
 	return &Config{
-		DatabaseURL:   os.Getenv("DATABASE_URL"),
-		Port:          port,
-		SessionSecret: secret,
-		SumopodKey:    sumopodKey,
-		ByNaraKey:     bynaraKey,
-		StaticWebDir:  webDir,
+		DatabaseURL:        os.Getenv("DATABASE_URL"),
+		Port:               port,
+		SessionSecret:      secret,
+		SumopodKey:         sumopodKey,
+		ByNaraKey:          bynaraKey,
+		StaticWebDir:       webDir,
+		StaticPublicWebDir: publicWebDir,
 	}
 }

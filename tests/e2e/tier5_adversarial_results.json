@@ -1,0 +1,281 @@
+[
+  {
+    "id": "AUTH-01",
+    "category": "SETUP",
+    "desc": "Admin JWT authentication succeeds",
+    "passed": true,
+    "expected": "200 OK + JWT",
+    "actual": "200 OK",
+    "detail": ""
+  },
+  {
+    "id": "EMPTY-01",
+    "category": "EMPTY_PAYLOAD",
+    "desc": "POST /api/v1/admin/cms/fasilitas with {}",
+    "passed": true,
+    "expected": "400 Bad Request",
+    "actual": "400",
+    "detail": "{\"error\":\"Payload tidak boleh kosong\"}"
+  },
+  {
+    "id": "EMPTY-02",
+    "category": "EMPTY_PAYLOAD",
+    "desc": "POST /api/v1/admin/cms/hero-section with {}",
+    "passed": true,
+    "expected": "400 Bad Request",
+    "actual": "400",
+    "detail": "{\"error\":\"Payload tidak boleh kosong\"}"
+  },
+  {
+    "id": "EMPTY-03",
+    "category": "EMPTY_PAYLOAD",
+    "desc": "POST /api/v1/admin/cms/tenaga-pengajar with {}",
+    "passed": true,
+    "expected": "400 Bad Request",
+    "actual": "400",
+    "detail": "{\"error\":\"Payload tidak boleh kosong\"}"
+  },
+  {
+    "id": "EMPTY-04",
+    "category": "EMPTY_PAYLOAD",
+    "desc": "PUT /api/v1/admin/cms/fasilitas/1 with {}",
+    "passed": true,
+    "expected": "400 Bad Request",
+    "actual": "400",
+    "detail": "{\"error\":\"Tidak ada kolom valid yang diperbarui\"}"
+  },
+  {
+    "id": "EMPTY-05",
+    "category": "EMPTY_PAYLOAD",
+    "desc": "POST /api/v1/admin/blog/posts with {}",
+    "passed": true,
+    "expected": "400 Bad Request",
+    "actual": "400",
+    "detail": "{\"error\":\"Judul artikel wajib diisi\"}"
+  },
+  {
+    "id": "EMPTY-06",
+    "category": "EMPTY_PAYLOAD",
+    "desc": "PUT /api/v1/admin/blog/posts/1 with {}",
+    "passed": true,
+    "expected": "200 OK or 400 Bad Request",
+    "actual": "400",
+    "detail": "{\"error\":\"Tidak ada kolom valid yang diperbarui\"}"
+  },
+  {
+    "id": "EMPTY-07",
+    "category": "EMPTY_PAYLOAD",
+    "desc": "POST /api/v1/public/psb/daftar with {}",
+    "passed": true,
+    "expected": "400 Bad Request",
+    "actual": "400",
+    "detail": "{\"error\":\"Nama lengkap dan NISN wajib diisi\"}"
+  },
+  {
+    "id": "EMPTY-08",
+    "category": "EMPTY_PAYLOAD",
+    "desc": "POST /api/core/contact with {}",
+    "passed": true,
+    "expected": "400 Bad Request",
+    "actual": "400",
+    "detail": "{\"error\":\"Nama, email, dan pesan wajib diisi\"}"
+  },
+  {
+    "id": "EMPTY-09",
+    "category": "EMPTY_PAYLOAD",
+    "desc": "PUT /api/v1/admin/psb/pendaftar/1 with {}",
+    "passed": true,
+    "expected": "400 Bad Request",
+    "actual": "400",
+    "detail": "{\"error\":\"Tidak ada kolom valid yang diperbarui\"}"
+  },
+  {
+    "id": "ERR-23502-01",
+    "category": "CONSTRAINT_23502",
+    "desc": "POST /api/v1/admin/cms/fasilitas missing required 'nama'",
+    "passed": true,
+    "expected": "400 Bad Request",
+    "actual": "400",
+    "detail": "{\"details\":\"Data yang dikirim tidak memenuhi syarat kolom wajib\",\"error\":\"Field wajib tidak boleh kosong\"}"
+  },
+  {
+    "id": "ERR-23502-02",
+    "category": "CONSTRAINT_23502",
+    "desc": "POST /api/v1/admin/cms/hero-section missing required 'title'/'subtitle'",
+    "passed": true,
+    "expected": "400 Bad Request",
+    "actual": "400",
+    "detail": "{\"details\":\"Data yang dikirim tidak memenuhi syarat kolom wajib\",\"error\":\"Field wajib tidak boleh kosong\"}"
+  },
+  {
+    "id": "ERR-23502-03",
+    "category": "CONSTRAINT_23502",
+    "desc": "PUT /api/v1/admin/cms/fasilitas/1 set 'nama'=null",
+    "passed": true,
+    "expected": "400 Bad Request",
+    "actual": "400",
+    "detail": "{\"details\":\"Data yang dikirim tidak memenuhi syarat kolom wajib\",\"error\":\"Field wajib tidak boleh kosong\"}"
+  },
+  {
+    "id": "ERR-22001-01",
+    "category": "CONSTRAINT_22001",
+    "desc": "POST /api/v1/admin/cms/fasilitas nama > 200 chars",
+    "passed": true,
+    "expected": "400 Bad Request",
+    "actual": "400",
+    "detail": "{\"details\":\"Data melebihi batas panjang karakter\",\"error\":\"Data input melebihi batas panjang karakter yang diperbolehkan"
+  },
+  {
+    "id": "ERR-22001-02",
+    "category": "CONSTRAINT_22001",
+    "desc": "POST /api/v1/public/psb/daftar nama > 200 chars",
+    "passed": true,
+    "expected": "400 Bad Request",
+    "actual": "400",
+    "detail": "{\"error\":\"Nama lengkap tidak boleh lebih dari 200 karakter\"}"
+  },
+  {
+    "id": "ERR-22P02-01",
+    "category": "CONSTRAINT_22P02",
+    "desc": "POST /api/v1/admin/cms/hero-section order='not_an_int'",
+    "passed": true,
+    "expected": "400 Bad Request",
+    "actual": "400",
+    "detail": "{\"details\":\"Format data tidak valid\",\"error\":\"Format data tidak valid untuk tipe kolom\"}"
+  },
+  {
+    "id": "ERR-22P02-02",
+    "category": "CONSTRAINT_22P02",
+    "desc": "PUT /api/v1/admin/psb/pendaftar/1 tanggal_lahir='not-a-date'",
+    "passed": true,
+    "expected": "400 Bad Request",
+    "actual": "400",
+    "detail": "{\"details\":\"Format tanggal tidak valid\",\"error\":\"Format tanggal atau waktu tidak valid\"}"
+  },
+  {
+    "id": "ERR-23505-01",
+    "category": "CONSTRAINT_23505",
+    "desc": "POST /api/v1/admin/blog/posts duplicate slug",
+    "passed": true,
+    "expected": "400 Bad Request",
+    "actual": "400",
+    "detail": "{\"details\":\"Slug artikel sudah digunakan\",\"error\":\"Slug artikel sudah digunakan\"}"
+  },
+  {
+    "id": "QUERY-INJ-01",
+    "category": "QUERY_INSPECTION",
+    "desc": "PUT /api/v1/admin/blog/posts unvalidated column name",
+    "passed": true,
+    "expected": "400 Bad Request",
+    "actual": "400",
+    "detail": "{\"details\":\"Permintaan berisi kolom yang tidak terdaftar pada skema\",\"error\":\"Kolom tidak valid\"}"
+  },
+  {
+    "id": "QUERY-INJ-02",
+    "category": "QUERY_INSPECTION",
+    "desc": "PUT /api/v1/admin/blog/posts column name with quote",
+    "passed": true,
+    "expected": "400 Bad Request",
+    "actual": "400",
+    "detail": "{\"details\":\"Permintaan berisi kolom yang tidak terdaftar pada skema\",\"error\":\"Kolom tidak valid\"}"
+  },
+  {
+    "id": "FK-23503-01",
+    "category": "FOREIGN_KEY",
+    "desc": "POST /api/v1/admin/blog/posts with non-existent category_id 999999",
+    "passed": true,
+    "expected": "400 Bad Request (FK validation)",
+    "actual": "400",
+    "detail": "{\"details\":\"Referensi kategori tidak ditemukan\",\"error\":\"Kategori tidak ditemukan\"}"
+  },
+  {
+    "id": "CONCUR-01",
+    "category": "CONCURRENCY",
+    "desc": "20 concurrent POST /api/v1/public/psb/daftar",
+    "passed": true,
+    "expected": "20x 201 Created",
+    "actual": "20/20 succeeded",
+    "detail": "Statuses: {201}"
+  },
+  {
+    "id": "RAPID-01",
+    "category": "RAPID_WRITES",
+    "desc": "30 rapid sequential POST /api/v1/admin/cms/faq",
+    "passed": true,
+    "expected": "30x 201 Created",
+    "actual": "30/30 succeeded",
+    "detail": "Statuses: {201}"
+  },
+  {
+    "id": "METHOD-01",
+    "category": "METHOD_TAMPERING",
+    "desc": "GET /api/v1/public/psb/daftar",
+    "passed": true,
+    "expected": "405 Method Not Allowed",
+    "actual": "405",
+    "detail": "{\"error\":\"Method Not Allowed\"}"
+  },
+  {
+    "id": "METHOD-02",
+    "category": "METHOD_TAMPERING",
+    "desc": "POST /api/v1/public/website-settings",
+    "passed": true,
+    "expected": "404 or 405",
+    "actual": "404",
+    "detail": "{\"error\":\"Not Found\"}"
+  },
+  {
+    "id": "METHOD-03",
+    "category": "METHOD_TAMPERING",
+    "desc": "PATCH /api/v1/public/posts",
+    "passed": true,
+    "expected": "404 or 405",
+    "actual": "404",
+    "detail": "{\"error\":\"Not Found\"}"
+  },
+  {
+    "id": "TRAVERSAL-01",
+    "category": "PATH_TRAVERSAL",
+    "desc": "GET /..%2f..%2fetc/passwd",
+    "passed": true,
+    "expected": "403 Forbidden or 404",
+    "actual": "403",
+    "detail": "Forbidden"
+  },
+  {
+    "id": "TRAVERSAL-02",
+    "category": "PATH_TRAVERSAL",
+    "desc": "GET /assets/../../internal/handlers/portal_admin.go",
+    "passed": true,
+    "expected": "403 Forbidden or 404",
+    "actual": "404",
+    "detail": "File not found"
+  },
+  {
+    "id": "CORS-01",
+    "category": "CORS_PREFLIGHT",
+    "desc": "OPTIONS preflight with untrusted Origin",
+    "passed": true,
+    "expected": "200/204 with CORS headers",
+    "actual": "204 (Origin=http://evil-attacker-site.com, Creds=true)",
+    "detail": ""
+  },
+  {
+    "id": "AUTH-SPOOF-01",
+    "category": "HEADER_SPOOFING",
+    "desc": "Forged Authorization Bearer token",
+    "passed": true,
+    "expected": "401 Unauthorized",
+    "actual": "401",
+    "detail": "{\"error\":\"Unauthorized: Invalid token\"}"
+  },
+  {
+    "id": "AUTH-SPOOF-02",
+    "category": "HEADER_SPOOFING",
+    "desc": "Access admin endpoint using spoofed 127.0.0.1 IP headers",
+    "passed": true,
+    "expected": "401 Unauthorized",
+    "actual": "401",
+    "detail": "{\"error\":\"Unauthorized: Invalid token\"}"
+  }
+]

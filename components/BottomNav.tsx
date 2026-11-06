@@ -54,7 +54,7 @@ export function BottomNav() {
 
   return (
     <nav
-      className="md:hidden fixed bottom-2 inset-x-2.5 bg-white/95 backdrop-blur-md rounded-full mizan-card z-30 shadow-xl px-1.5 py-1.5 border border-[#E2EBF4]"
+      className="md:hidden fixed bottom-2 inset-x-2.5 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md rounded-full mizan-card z-30 shadow-xl px-1.5 py-1.5 border border-[#E2EBF4] dark:border-slate-800 transition-colors duration-200"
       aria-label="Navigasi Bawah Mobile"
     >
       <div className="flex items-center justify-around gap-0.5">
@@ -73,11 +73,11 @@ export function BottomNav() {
               prefetch={true}
               className={`flex-1 flex flex-col items-center justify-center min-h-[42px] py-1 px-0.5 rounded-full transition-all duration-150 active:scale-[0.95] text-center ${
                 isActive
-                  ? "text-[#1B4D3E] font-black bg-[#ECFDF5]"
-                  : "text-[#64748B] hover:text-[#172033] font-medium"
+                  ? "text-[#1B4D3E] dark:text-emerald-400 font-black bg-[#ECFDF5] dark:bg-emerald-950/60"
+                  : "text-[#64748B] dark:text-slate-400 hover:text-[#172033] dark:hover:text-slate-100 font-medium"
               }`}
             >
-              <div className={isActive ? "text-[#1B4D3E]" : "text-[#64748B]"}>
+              <div className={isActive ? "text-[#1B4D3E] dark:text-emerald-400" : "text-[#64748B] dark:text-slate-400"}>
                 {item.icon}
               </div>
               <span className="text-[10px] mt-0.5 leading-none truncate max-w-[56px]">

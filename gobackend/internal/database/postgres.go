@@ -12,6 +12,9 @@ import (
 //go:embed schema.sql
 var schemaSQL string
 
+//go:embed portal_schema.sql
+var portalSchemaSQL string
+
 var globalPool *pgxpool.Pool
 
 func InitDB(databaseURL string) (*pgxpool.Pool, error) {
@@ -55,6 +58,9 @@ func ensureTables(ctx context.Context, pool *pgxpool.Pool) error {
 	if schemaSQL != "" {
 		_, _ = pool.Exec(ctx, schemaSQL)
 	}
+	if portalSchemaSQL != "" {
+		_, _ = pool.Exec(ctx, portalSchemaSQL)
+	}
 
 	queries := []string{
 		`ALTER TABLE public_shares ADD COLUMN IF NOT EXISTS expires_at TIMESTAMPTZ;`,
@@ -74,6 +80,17 @@ func ensureTables(ctx context.Context, pool *pgxpool.Pool) error {
 		`ALTER TABLE users ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ DEFAULT NOW();`,
 		`ALTER TABLE santri ADD COLUMN IF NOT EXISTS created_at TIMESTAMPTZ DEFAULT NOW();`,
 		`ALTER TABLE santri ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ DEFAULT NOW();`,
+		`SELECT setval(pg_get_serial_sequence('core_websitesettings', 'id'), COALESCE((SELECT MAX(id) FROM core_websitesettings), 1));`,
+		`SELECT setval(pg_get_serial_sequence('core_herosection', 'id'), COALESCE((SELECT MAX(id) FROM core_herosection), 1));`,
+		`SELECT setval(pg_get_serial_sequence('core_visimisi', 'id'), COALESCE((SELECT MAX(id) FROM core_visimisi), 1));`,
+		`SELECT setval(pg_get_serial_sequence('core_fasilitas', 'id'), COALESCE((SELECT MAX(id) FROM core_fasilitas), 1));`,
+		`SELECT setval(pg_get_serial_sequence('core_tenagapengajar', 'id'), COALESCE((SELECT MAX(id) FROM core_tenagapengajar), 1));`,
+		`SELECT setval(pg_get_serial_sequence('core_program', 'id'), COALESCE((SELECT MAX(id) FROM core_program), 1));`,
+		`SELECT setval(pg_get_serial_sequence('core_faq', 'id'), COALESCE((SELECT MAX(id) FROM core_faq), 1));`,
+		`SELECT setval(pg_get_serial_sequence('core_statistik', 'id'), COALESCE((SELECT MAX(id) FROM core_statistik), 1));`,
+		`SELECT setval(pg_get_serial_sequence('blog_category', 'id'), COALESCE((SELECT MAX(id) FROM blog_category), 1));`,
+		`SELECT setval(pg_get_serial_sequence('users_user', 'id'), COALESCE((SELECT MAX(id) FROM users_user), 1));`,
+		`SELECT setval(pg_get_serial_sequence('blog_blogpost', 'id'), COALESCE((SELECT MAX(id) FROM blog_blogpost), 1));`,
 	}
 
 	for _, q := range queries {

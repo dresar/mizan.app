@@ -63,15 +63,15 @@ export function Modal({
         />
 
         <div
-          className={`relative w-full ${maxWidthClass} bg-white rounded-2xl border border-[#E2E8F0] shadow-xl overflow-hidden flex flex-col max-h-[90vh] z-10 animate-in zoom-in-95 duration-150 ${className}`}
+          className={`relative w-full ${maxWidthClass} bg-white dark:bg-slate-900 rounded-2xl border border-[#E2E8F0] dark:border-slate-800 shadow-xl overflow-hidden flex flex-col max-h-[90vh] z-10 animate-in zoom-in-95 duration-150 ${className}`}
         >
-          <div className="flex items-start justify-between gap-3 p-4 border-b border-[#EEF2F6]">
+          <div className="flex items-start justify-between gap-3 p-4 border-b border-[#EEF2F6] dark:border-slate-800">
             <div>
-              <h3 className="font-bold text-[#172033] text-sm sm:text-base leading-tight">
+              <h3 className="font-bold text-[#172033] dark:text-slate-100 text-sm sm:text-base leading-tight">
                 {title}
               </h3>
               {description && (
-                <p className="text-xs text-[#64748B] mt-0.5 leading-normal">
+                <p className="text-xs text-[#64748B] dark:text-slate-400 mt-0.5 leading-normal">
                   {description}
                 </p>
               )}
@@ -80,7 +80,7 @@ export function Modal({
               type="button"
               onClick={onClose}
               aria-label="Tutup"
-              className="p-1 rounded-lg text-[#94A3B8] hover:text-[#172033] hover:bg-[#F1F5F9] transition-colors shrink-0"
+              className="p-1 rounded-lg text-[#94A3B8] dark:text-slate-400 hover:text-[#172033] dark:hover:text-slate-100 hover:bg-[#F1F5F9] dark:hover:bg-slate-800 transition-colors shrink-0"
             >
               <X className="w-4 h-4" />
             </button>
@@ -89,7 +89,7 @@ export function Modal({
           <div className="p-4 overflow-y-auto flex-1">{children}</div>
 
           {footer && (
-            <div className="p-3.5 bg-[#FAF7F2] border-t border-[#EEF2F6] flex items-center justify-end gap-2">
+            <div className="p-3.5 bg-[#FAF7F2] dark:bg-slate-850 border-t border-[#EEF2F6] dark:border-slate-800 flex items-center justify-end gap-2">
               {footer}
             </div>
           )}

@@ -122,18 +122,18 @@ export function Sidebar() {
   return (
     <>
       <aside
-        className="hidden md:flex flex-col w-60 shrink-0 sticky top-14 self-start h-[calc(100vh-3.5rem)] bg-white/80 backdrop-blur-md border-r border-[#E2EBF4] p-3 overflow-y-auto select-none z-30"
+        className="hidden md:flex flex-col w-60 shrink-0 sticky top-14 self-start h-[calc(100vh-3.5rem)] bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-r border-[#E2EBF4] dark:border-slate-800 p-3 overflow-y-auto select-none z-30 transition-colors duration-200"
         aria-label="Sidebar Menu"
       >
-        <div className="p-3 mb-3 rounded-2xl mizan-card-sub bg-white">
+        <div className="p-3 mb-3 rounded-2xl mizan-card-sub bg-white dark:bg-slate-850">
           <div className="flex items-center gap-1.5 text-[11px] font-bold text-[#A8833E]">
             <Building2 className="w-3.5 h-3.5 text-[#A8833E]" />
             <span>{roleLabel}</span>
           </div>
-          <p className="text-xs font-bold text-[#172033] mt-0.5 truncate">
+          <p className="text-xs font-bold text-[#172033] dark:text-slate-100 mt-0.5 truncate">
             {currentUser?.name || "Akun"}
           </p>
-          <span className="inline-block text-[10px] text-[#94A3B8] font-medium">
+          <span className="inline-block text-[10px] text-[#94A3B8] dark:text-slate-400 font-medium">
             {currentUser?.roleTitle || (activeRole === "SUPER_ADMIN" ? "Super Admin" : "Pengasuhan")}
           </span>
         </div>
@@ -155,17 +155,17 @@ export function Sidebar() {
                 className={`flex items-center gap-3 px-3.5 py-2.5 rounded-2xl transition-all duration-150 active:scale-[0.98] text-xs ${
                   isActive
                     ? "bg-[#1B4D3E] text-white font-bold shadow-sm"
-                    : "text-[#64748B] hover:text-[#172033] hover:bg-[#FAF7F2] font-semibold"
+                    : "text-[#64748B] dark:text-slate-400 hover:text-[#172033] dark:hover:text-slate-100 hover:bg-[#FAF7F2] dark:hover:bg-slate-800/60 font-semibold"
                 }`}
               >
-                <div className={isActive ? "text-[#C5A059]" : "text-[#64748B]"}>
+                <div className={isActive ? "text-[#C5A059]" : "text-[#64748B] dark:text-slate-400"}>
                   {item.icon}
                 </div>
                 <div className="min-w-0">
                   <span className="block truncate">{item.label}</span>
                   <span
                     className={`block text-[10px] truncate ${
-                      isActive ? "text-emerald-100" : "text-[#94A3B8]"
+                      isActive ? "text-emerald-100" : "text-[#94A3B8] dark:text-slate-500"
                     }`}
                   >
                     {item.description}
@@ -185,14 +185,14 @@ export function Sidebar() {
             aria-hidden="true"
           />
 
-          <div className="relative w-[285px] max-w-[85vw] bg-white h-full shadow-2xl flex flex-col p-4 border-r border-[#E2EBF4] z-10 overflow-y-auto">
-            <div className="flex items-center justify-between pb-3 mb-3 border-b border-[#E2EBF4]">
+          <div className="relative w-[285px] max-w-[85vw] bg-white dark:bg-slate-900 h-full shadow-2xl flex flex-col p-4 border-r border-[#E2EBF4] dark:border-slate-800 z-10 overflow-y-auto">
+            <div className="flex items-center justify-between pb-3 mb-3 border-b border-[#E2EBF4] dark:border-slate-800">
               <div className="flex items-center gap-2.5">
                 <div className="w-8 h-8 rounded-xl bg-[#1B4D3E] p-1 flex items-center justify-center overflow-hidden">
                   <Image src={appLogo} alt="Mizan Logo" width={32} height={32} className="w-full h-full object-contain" unoptimized />
                 </div>
                 <div>
-                  <span className="font-serif font-black tracking-wide text-[#1B4D3E] text-base block leading-none">
+                  <span className="font-serif font-black tracking-wide text-[#1B4D3E] dark:text-emerald-400 text-base block leading-none">
                     MIZAN
                   </span>
                   <span className="text-[10px] font-bold text-[#A8833E] mt-0.5 block">
@@ -204,14 +204,14 @@ export function Sidebar() {
               <button
                 type="button"
                 onClick={() => setIsMobileNavOpen(false)}
-                className="p-1.5 rounded-xl hover:bg-black/5 text-[#64748B] hover:text-[#172033] transition-colors"
+                className="p-1.5 rounded-xl hover:bg-black/5 dark:hover:bg-white/10 text-[#64748B] dark:text-slate-400 hover:text-[#172033] dark:hover:text-slate-100 transition-colors"
                 aria-label="Tutup Menu"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <div className="p-3 mb-3 rounded-2xl mizan-card-sub bg-[#FAF7EE] border border-[#C5A059]/20">
+            <div className="p-3 mb-3 rounded-2xl mizan-card-sub bg-[#FAF7EE] dark:bg-slate-800/80 border border-[#C5A059]/20 dark:border-slate-700">
               <div className="flex items-center gap-2.5">
                 <Avatar
                   src={currentUser?.avatarUrl}
@@ -220,7 +220,7 @@ export function Sidebar() {
                   variant="primary"
                 />
                 <div className="min-w-0 flex-1">
-                  <p className="text-xs font-bold text-[#172033] truncate">
+                  <p className="text-xs font-bold text-[#172033] dark:text-slate-100 truncate">
                     {currentUser?.name || "Administrator"}
                   </p>
                   <span className="inline-block text-[10px] text-[#A8833E] font-bold">
@@ -248,17 +248,17 @@ export function Sidebar() {
                     className={`flex items-center gap-3 px-3.5 py-2.5 rounded-2xl transition-all duration-150 active:scale-[0.98] text-xs ${
                       isActive
                         ? "bg-[#1B4D3E] text-white font-bold shadow-sm"
-                        : "text-[#64748B] hover:text-[#172033] hover:bg-[#FAF7F2] font-semibold"
+                        : "text-[#64748B] dark:text-slate-400 hover:text-[#172033] dark:hover:text-slate-100 hover:bg-[#FAF7F2] dark:hover:bg-slate-800/60 font-semibold"
                     }`}
                   >
-                    <div className={isActive ? "text-[#C5A059]" : "text-[#64748B]"}>
+                    <div className={isActive ? "text-[#C5A059]" : "text-[#64748B] dark:text-slate-400"}>
                       {item.icon}
                     </div>
                     <div className="min-w-0 flex-1">
                       <span className="block truncate">{item.label}</span>
                       <span
                         className={`block text-[10px] truncate ${
-                          isActive ? "text-emerald-100" : "text-[#94A3B8]"
+                          isActive ? "text-emerald-100" : "text-[#94A3B8] dark:text-slate-500"
                         }`}
                       >
                         {item.description}
@@ -269,11 +269,11 @@ export function Sidebar() {
               })}
             </nav>
 
-            <div className="pt-3 border-t border-[#E2EBF4] mt-auto">
+            <div className="pt-3 border-t border-[#E2EBF4] dark:border-slate-800 mt-auto">
               <button
                 type="button"
                 onClick={() => setIsMobileNavOpen(false)}
-                className="w-full py-2.5 rounded-2xl bg-[#FAF7EE] text-[#172033] hover:bg-[#FAF7EE]/80 border border-[#D4C9B5] text-xs font-bold transition-colors"
+                className="w-full py-2.5 rounded-2xl bg-[#FAF7EE] dark:bg-slate-800 text-[#172033] dark:text-slate-100 hover:bg-[#FAF7EE]/80 dark:hover:bg-slate-700 border border-[#D4C9B5] dark:border-slate-700 text-xs font-bold transition-colors"
               >
                 Tutup
               </button>

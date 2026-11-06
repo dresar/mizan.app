@@ -1,0 +1,248 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Amiri:wght@400;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+    --primary: 160 84% 39%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220 14% 96%;
+    --secondary-foreground: 240 10% 3.9%;
+    --muted: 220 14% 96%;
+    --muted-foreground: 220 9% 46%;
+    --accent: 160 84% 39%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 160 84% 39%;
+    --radius: 4px;
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 10% 3.9%;
+    --sidebar-primary: 160 84% 39%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 220 14% 94%;
+    --sidebar-accent-foreground: 240 10% 3.9%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 160 84% 39%;
+    --gold: 38 92% 50%;
+    --gold-foreground: 0 0% 10%;
+    --emerald: 160 84% 39%;
+    --emerald-light: 158 64% 52%;
+    --emerald-dark: 161 94% 24%;
+    --surface: 0 0% 98%;
+    --surface-elevated: 0 0% 100%;
+    --font-heading: 'Plus Jakarta Sans', system-ui, sans-serif;
+    --font-body: 'Plus Jakarta Sans', system-ui, sans-serif;
+    --font-arabic: 'Amiri', serif;
+    --success: 160 84% 39%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 10%;
+    --info: 217 91% 60%;
+    --info-foreground: 0 0% 100%;
+    --chart-1: 160 84% 39%;
+    --chart-2: 38 92% 50%;
+    --chart-3: 217 91% 60%;
+    --chart-4: 158 64% 52%;
+    --chart-5: 0 84% 60%;
+
+    --card-bg: #ffffff;
+    --card-text: #172033;
+    --card-muted: #667085;
+    --card-border: #e4e7ec;
+    --card-accent: #10b981;
+    --card-radius: 4px;
+    --card-shadow: 0 2px 8px rgb(16 24 40 / 8%), inset 0 1px 2px rgb(255 255 255 / 85%), inset 0 -1px 2px rgb(16 24 40 / 4%);
+    --card-shadow-hover: 0 4px 12px rgb(16 24 40 / 11%), inset 0 1px 2px rgb(255 255 255 / 85%), inset 0 -1px 2px rgb(16 24 40 / 4%);
+  }
+
+  .dark {
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 240 7% 7.8%;
+    --card-foreground: 0 0% 98%;
+    --popover: 240 7% 7.8%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 160 84% 39%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 240 4% 16%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 4% 16%;
+    --muted-foreground: 240 5% 65%;
+    --accent: 160 84% 39%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 160 84% 39%;
+    --radius: 4px;
+    --sidebar-background: 240 10% 3.9%;
+    --sidebar-foreground: 0 0% 98%;
+    --sidebar-primary: 160 84% 39%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 4% 16%;
+    --sidebar-accent-foreground: 0 0% 98%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 160 84% 39%;
+    --gold: 38 92% 50%;
+    --gold-foreground: 0 0% 10%;
+    --emerald: 160 84% 39%;
+    --emerald-light: 158 64% 52%;
+    --emerald-dark: 161 94% 24%;
+    --surface: 240 7% 7.8%;
+    --surface-elevated: 240 6% 10%;
+    --font-heading: 'Plus Jakarta Sans', system-ui, sans-serif;
+    --font-body: 'Plus Jakarta Sans', system-ui, sans-serif;
+    --font-arabic: 'Amiri', serif;
+    --success: 160 84% 39%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 10%;
+    --info: 217 91% 60%;
+    --info-foreground: 0 0% 100%;
+    --chart-1: 160 84% 39%;
+    --chart-2: 38 92% 50%;
+    --chart-3: 217 91% 60%;
+    --chart-4: 158 64% 52%;
+    --chart-5: 0 84% 60%;
+
+    --card-bg: #121215;
+    --card-text: #f4f4f5;
+    --card-muted: #a1a1aa;
+    --card-border: #27272a;
+    --card-accent: #10b981;
+    --card-radius: 4px;
+    --card-shadow: 0 2px 8px rgb(0 0 0 / 40%), inset 0 1px 2px rgb(255 255 255 / 7%), inset 0 -1px 2px rgb(0 0 0 / 25%);
+    --card-shadow-hover: 0 4px 12px rgb(0 0 0 / 60%), inset 0 1px 2px rgb(255 255 255 / 10%), inset 0 -1px 2px rgb(0 0 0 / 30%);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: var(--font-body);
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+  }
+  .font-arabic {
+    font-family: var(--font-arabic);
+  }
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-muted/20;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-muted-foreground/30 rounded-[4px];
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-muted-foreground/50;
+  }
+}
+
+@layer components {
+  .card {
+    box-sizing: border-box;
+    border: 1px solid var(--card-border);
+    border-radius: 4px !important;
+    background: var(--card-bg);
+    color: var(--card-text);
+    box-shadow: var(--card-shadow);
+    overflow: hidden;
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
+  }
+
+  .card:hover {
+    box-shadow: var(--card-shadow-hover);
+  }
+
+  .card--accent {
+    border-inline-start: 3px solid var(--card-accent) !important;
+  }
+
+  .shadow-card {
+    box-shadow: var(--card-shadow);
+  }
+
+  .shadow-card-hover {
+    box-shadow: var(--card-shadow-hover);
+  }
+
+  .gradient-primary {
+    @apply bg-primary text-primary-foreground;
+  }
+
+  .gradient-gold {
+    @apply bg-amber-500 text-white;
+  }
+
+  .gradient-dark {
+    @apply bg-card text-card-foreground;
+  }
+
+  .gradient-card {
+    @apply bg-card;
+  }
+
+  .text-gradient-primary {
+    @apply text-primary font-bold;
+  }
+
+  .shadow-glow {
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+  }
+
+  .badge-pending { @apply bg-warning/15 text-warning border-warning/30 rounded-[4px]; }
+  .badge-verified { @apply bg-info/15 text-info border-info/30 rounded-[4px]; }
+  .badge-accepted { @apply bg-success/15 text-success border-success/30 rounded-[4px]; }
+  .badge-rejected { @apply bg-destructive/15 text-destructive border-destructive/30 rounded-[4px]; }
+  .badge-draft { @apply bg-muted text-muted-foreground border-border rounded-[4px]; }
+  .badge-published { @apply bg-primary/15 text-primary border-primary/30 rounded-[4px]; }
+}
+
+@layer utilities {
+  .hover-lift {
+    @apply transition-transform duration-200;
+  }
+  .hover-lift:hover {
+    transform: translateY(-2px);
+  }
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  .text-balance {
+    text-wrap: balance;
+  }
+}

@@ -15,6 +15,7 @@
     - Vite assets: `/assets/*` -> `./web_public/assets/*` (1-year immutable caching)
     - SEO endpoints: `/robots.txt` (`text/plain`), `/sitemap.xml` (`application/xml`) -> `./web_public/`
     - Operational Mizan Apps: `/admin/*`, `/bk/*`, `/guru/*`, `/santri/*`, `/login`, `/_next/*` -> `./web/` (strictly preserved)
+    - Path traversal protection: early `..` check returning HTTP 403 Forbidden and `filepath.Clean` directory confinement
   - API Endpoints (`internal/handlers/`):
     - Public Unauthenticated (`/api/v1/public/*` and legacy aliases)
     - Protected Admin CMS (`/api/v1/admin/*`) via HS256 JWT auth
@@ -51,10 +52,10 @@
 ## Milestones
 | # | Name | Scope | Dependencies | Status |
 |---|------|-------|-------------|--------|
-| M1 | Frontend Dual-Entry & SEO | Configure Vite MPA, create `admin.html` + lazy admin imports, augment SEO/Schema.org, build & copy to `web_public` | none | PLANNED |
-| M2 | Golang Fiber Routing & Domain Separation | Update `cmd/server/main.go` and `config/config.go` for dual static serving & Mizan preservation | none | PLANNED |
-| M3 | Port API Endpoints & Neon DB | Database table initialization, public unauthenticated APIs, JWT auth, and admin CMS APIs | none | PLANNED |
-| M4 | Final Milestone: E2E Verification & Audit | 100% E2E test pass (Tiers 1-4), adversarial test hardening (Tier 5), forensic integrity audit | M1, M2, M3 | PLANNED |
+| M1 | Frontend Dual-Entry & SEO | Configure Vite MPA, create `admin.html` + lazy admin imports, augment SEO/Schema.org, build & copy to `web_public` | none | DONE |
+| M2 | Golang Fiber Routing & Domain Separation | Update `cmd/server/main.go` and `config/config.go` for dual static serving & Mizan preservation | none | DONE |
+| M3 | Port API Endpoints & Neon DB | Database table initialization, public unauthenticated APIs, JWT auth, and admin CMS APIs | none | DONE |
+| M4 | Final Milestone: E2E Verification & Audit | 100% E2E test pass (Tiers 1-4), adversarial test hardening (Tier 5), forensic integrity audit | M1, M2, M3 | IN_PROGRESS |
 
 ## Code Layout
 - Frontend (`/opt/data/home/pesantren-hub`):

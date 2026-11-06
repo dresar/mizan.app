@@ -1,0 +1,35 @@
+User-agent: Googlebot
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+Disallow: /app/
+Disallow: /santri/
+Disallow: /author/
+Crawl-delay: 1
+
+User-agent: Bingbot
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+Disallow: /app/
+Crawl-delay: 2
+
+User-agent: Twitterbot
+Allow: /
+Disallow: /admin/
+
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+Disallow: /app/
+Disallow: /santri/
+Disallow: /author/
+Disallow: /login
+Disallow: /register
+Crawl-delay: 5
+
+Sitemap: https://rdsmahato.ponpes.id/sitemap.xml

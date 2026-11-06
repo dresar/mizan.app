@@ -1,0 +1,26 @@
+{
+  "name": "Pondok Pesantren Modern Raudhatussalam Mahato",
+  "short_name": "Raudhatussalam",
+  "description": "Portal resmi Pondok Pesantren Modern Raudhatussalam Mahato, Rokan Hulu, Riau. Berbasis KMI Gontor.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#020617",
+  "theme_color": "#0f766e",
+  "lang": "id",
+  "icons": [
+    {
+      "src": "/logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable any"
+    }
+  ],
+  "categories": ["education", "religion"],
+  "screenshots": [
+    {
+      "src": "/og-image.jpg",
+      "sizes": "1200x630",
+      "type": "image/jpeg"
+    }
+  ]
+}

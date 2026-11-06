@@ -190,19 +190,19 @@ export function FeedbackModal() {
         onClick={handleClose}
       >
       <div
-        className="w-full max-w-xl max-h-[90vh] bg-white rounded-3xl border border-[#E2EBF4] shadow-2xl flex flex-col overflow-hidden text-[#172033] animate-in fade-in zoom-in-95 duration-150"
+        className="w-full max-w-xl max-h-[90vh] bg-white dark:bg-slate-900 rounded-3xl border border-[#E2EBF4] dark:border-slate-800 shadow-2xl flex flex-col overflow-hidden text-[#172033] dark:text-slate-100 animate-in fade-in zoom-in-95 duration-150"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between px-5 py-4 border-b border-[#E2EBF4] bg-[#FAF7EE]/60">
+        <div className="flex items-center justify-between px-5 py-4 border-b border-[#E2EBF4] dark:border-slate-800 bg-[#FAF7EE]/60 dark:bg-slate-850">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-[#1B4D3E]/10 text-[#1B4D3E] flex items-center justify-center font-bold">
+            <div className="w-8 h-8 rounded-xl bg-[#1B4D3E]/10 dark:bg-emerald-950/60 text-[#1B4D3E] dark:text-emerald-400 flex items-center justify-center font-bold">
               {type === "BUG" ? <Bug className="w-4 h-4" /> : <Lightbulb className="w-4 h-4 text-[#C5A059]" />}
             </div>
             <div>
-              <h3 className="text-sm font-bold text-[#172033]">
+              <h3 className="text-sm font-bold text-[#172033] dark:text-slate-100">
                 {type === "BUG" ? "Lapor Kendala & Analisis Kode" : "Saran Pengembangan Sistem"}
               </h3>
-              <p className="text-[11px] text-[#64748B]">
+              <p className="text-[11px] text-[#64748B] dark:text-slate-400">
                 {currentUser?.name ? `${currentUser.name} (${activeRole || "Pengguna"})` : "Pengguna Mizan"}
               </p>
             </div>
@@ -210,14 +210,14 @@ export function FeedbackModal() {
           <button
             type="button"
             onClick={handleClose}
-            className="w-7 h-7 rounded-lg text-[#64748B] hover:text-[#172033] hover:bg-black/5 flex items-center justify-center transition-colors cursor-pointer"
+            className="w-7 h-7 rounded-lg text-[#64748B] dark:text-slate-400 hover:text-[#172033] dark:hover:text-slate-100 hover:bg-black/5 dark:hover:bg-white/10 flex items-center justify-center transition-colors cursor-pointer"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-5 space-y-4">
-          <div className="flex items-center p-1 bg-[#F5F1E8] rounded-xl gap-1">
+          <div className="flex items-center p-1 bg-[#F5F1E8] dark:bg-slate-800 rounded-xl gap-1">
             <button
               type="button"
               onClick={() => {
@@ -225,7 +225,7 @@ export function FeedbackModal() {
                 setAiAnalysis(null);
               }}
               className={`flex-1 py-1.5 px-3 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
-                type === "SARAN" ? "bg-white text-[#1B4D3E] shadow-xs" : "text-[#64748B] hover:text-[#172033]"
+                type === "SARAN" ? "bg-white dark:bg-slate-700 text-[#1B4D3E] dark:text-emerald-400 shadow-xs" : "text-[#64748B] dark:text-slate-400 hover:text-[#172033] dark:hover:text-slate-100"
               }`}
             >
               <Lightbulb className="w-3.5 h-3.5 text-[#C5A059]" />
@@ -235,7 +235,7 @@ export function FeedbackModal() {
               type="button"
               onClick={() => setType("BUG")}
               className={`flex-1 py-1.5 px-3 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
-                type === "BUG" ? "bg-white text-rose-700 shadow-xs" : "text-[#64748B] hover:text-[#172033]"
+                type === "BUG" ? "bg-white dark:bg-slate-700 text-rose-700 dark:text-rose-400 shadow-xs" : "text-[#64748B] dark:text-slate-400 hover:text-[#172033] dark:hover:text-slate-100"
               }`}
             >
               <Bug className="w-3.5 h-3.5" />

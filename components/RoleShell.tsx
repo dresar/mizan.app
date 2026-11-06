@@ -168,10 +168,10 @@ export function RoleShell({ children }: RoleShellProps) {
 
   if (!isAuthorized) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-[#F5F1E8] p-4 text-center">
-        <div className="max-w-md w-full p-6 rounded-3xl bg-white border border-[#E2EBF4] shadow-sm space-y-3">
-          <h2 className="text-base font-bold text-[#172033]">Akses Ditolak</h2>
-          <p className="text-xs text-[#64748B]">
+      <div className="min-h-screen flex flex-col items-center justify-center bg-[#F5F1E8] dark:bg-[#0a0f1d] p-4 text-center">
+        <div className="max-w-md w-full p-6 rounded-3xl bg-white dark:bg-slate-900 border border-[#E2EBF4] dark:border-slate-800 shadow-sm space-y-3">
+          <h2 className="text-base font-bold text-[#172033] dark:text-slate-100">Akses Ditolak</h2>
+          <p className="text-xs text-[#64748B] dark:text-slate-400">
             Anda tidak memiliki wewenang untuk membuka halaman ini.
           </p>
         </div>
@@ -180,7 +180,7 @@ export function RoleShell({ children }: RoleShellProps) {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#F5F1E8]">
+    <div className="min-h-screen flex flex-col bg-[#F5F1E8] dark:bg-[#0a0f1d] text-[#172033] dark:text-[#f1f5f9] transition-colors duration-200">
       <Header />
       <div className="flex-1 flex w-full">
         <Sidebar />

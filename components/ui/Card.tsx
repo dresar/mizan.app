@@ -81,11 +81,11 @@ export function CardHeader({
   return (
     <div className={`flex items-start justify-between gap-3 mb-3 ${className}`}>
       <div>
-        <h3 className="font-bold text-[#172033] text-sm sm:text-base leading-tight">
+        <h3 className="font-bold text-[#172033] dark:text-slate-100 text-sm sm:text-base leading-tight">
           {title}
         </h3>
         {subtitle && (
-          <p className="text-[11px] sm:text-xs text-[#64748B] mt-0.5 leading-normal">
+          <p className="text-[11px] sm:text-xs text-[#64748B] dark:text-slate-400 mt-0.5 leading-normal">
             {subtitle}
           </p>
         )}
@@ -114,7 +114,7 @@ export function CardFooter({
 }) {
   return (
     <div
-      className={`mt-3 pt-3 border-t border-[#E2EBF4] flex items-center justify-between gap-2 ${className}`}
+      className={`mt-3 pt-3 border-t border-[#E2EBF4] dark:border-slate-800 flex items-center justify-between gap-2 ${className}`}
     >
       {children}
     </div>

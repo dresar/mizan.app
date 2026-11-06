@@ -3,11 +3,12 @@ package models
 type Role string
 
 const (
-	RoleSuperAdmin Role = "SUPER_ADMIN"
-	RolePengasuhan Role = "PENGASUHAN"
-	RoleGuru       Role = "GURU"
-	RoleOrtu       Role = "ORTU"
-	RoleSatpam     Role = "SATPAM"
+	RoleSuperAdmin   Role = "SUPER_ADMIN"
+	RolePengasuhan   Role = "PENGASUHAN"
+	RoleGuru         Role = "GURU"
+	RoleOrtu         Role = "ORTU"
+	RoleSatpam       Role = "SATPAM"
+	RoleAdminWebsite Role = "adminwebsite"
 )
 
 type UserProfile struct {
