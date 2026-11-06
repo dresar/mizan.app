@@ -206,10 +206,10 @@ export default function PengasuhanKeuanganPage() {
               </div>
               <div>
                 <h1 className="text-base sm:text-xl font-bold text-[#172033] tracking-tight">
-                  Finansial & Uang Saku Santri {currentUser?.gender ? `(${currentUser.gender})` : ""}
+                  Keuangan Santri {currentUser?.gender ? `(${currentUser.gender === "Putra" ? "L" : "P"})` : ""}
                 </h1>
                 <p className="text-xs text-[#64748B]">
-                  Pencatatan uang saku manual dari wali, mutasi belanja kantin, dan verifikasi SPP
+                  Uang saku & tagihan SPP
                 </p>
               </div>
             </div>
@@ -272,7 +272,7 @@ export default function PengasuhanKeuanganPage() {
                   : "text-[#64748B] hover:text-[#172033]"
               }`}
             >
-              Buku Kas Uang Saku ({filteredTransaksi.length})
+              Uang Saku ({filteredTransaksi.length})
             </button>
             <button
               type="button"
@@ -286,7 +286,7 @@ export default function PengasuhanKeuanganPage() {
                   : "text-[#64748B] hover:text-[#172033]"
               }`}
             >
-              Tagihan & SPP Santri ({filteredSpp.length})
+              SPP ({filteredSpp.length})
             </button>
           </div>
 

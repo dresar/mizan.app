@@ -39,8 +39,8 @@ const SEVEN_PRAYERS: WaktuSholat[] = [
 
 export function PrayerAttendanceChart({
   absensiList,
-  title = "Tingkat Kehadiran Sholat Santri",
-  subtitle = "Analisis tingkat kepatuhan sholat santri berdasarkan log presensi"
+  title = "Presensi Sholat",
+  subtitle = "Kepatuhan sholat santri"
 }: PrayerAttendanceChartProps) {
   const [prayerMode, setPrayerMode] = useState<"5_WAKTU" | "7_WAKTU">("5_WAKTU");
 

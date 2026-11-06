@@ -31,21 +31,19 @@ export default function AdminDashboardPage() {
     const updateTime = () => {
       const now = new Date();
       const dateStr = now.toLocaleDateString("id-ID", {
-        weekday: "long",
+        weekday: "short",
         day: "numeric",
-        month: "long",
-        year: "numeric"
+        month: "short"
       });
       const timeStr = now.toLocaleTimeString("id-ID", {
         hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit"
+        minute: "2-digit"
       }).replace(/\./g, ":");
       setCurrentDateTime(`${dateStr} • ${timeStr} WIB`);
     };
 
     updateTime();
-    const timer = setInterval(updateTime, 1000);
+    const timer = setInterval(updateTime, 10000);
     return () => clearInterval(timer);
   }, []);
 
@@ -92,25 +90,20 @@ export default function AdminDashboardPage() {
   return (
     <RoleShell>
       <div className="w-full space-y-4 overflow-x-hidden pb-36">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
-          <div>
-            <div className="flex items-center gap-2 flex-wrap">
-              <h1 className="text-xl sm:text-2xl font-serif font-black text-[#172033] tracking-tight">
-                Kendali Pengasuhan & Monitoring
-              </h1>
-              {currentDateTime && (
-                <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#FAF7EE] border border-[#C5A059]/40 text-[#854D0E] text-[11px] font-bold font-mono shadow-2xs">
-                  <Clock className="w-3 h-3 text-[#C5A059]" />
-                  <span>{currentDateTime}</span>
-                </div>
-              )}
-            </div>
-            <p className="text-xs text-[#64748B] mt-0.5">
-              Monitoring akhlak, absensi, serta pelaporan asatidz & pembina
-            </p>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+          <div className="flex items-center gap-2 flex-wrap">
+            <h1 className="text-xl sm:text-2xl font-serif font-black text-[#172033] tracking-tight">
+              Dashboard
+            </h1>
+            {currentDateTime && (
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#FAF7EE] border border-[#C5A059]/40 text-[#854D0E] text-[11px] font-bold font-mono shadow-2xs">
+                <Clock className="w-3 h-3 text-[#C5A059]" />
+                <span>{currentDateTime}</span>
+              </div>
+            )}
           </div>
 
-          <div className="flex items-center gap-2 self-start md:self-auto">
+          <div className="flex items-center gap-2 self-start sm:self-auto">
             <a
               href="/api/admin/backup?download=1"
               className="px-3.5 py-2 rounded-2xl bg-[#FAF7EE] border border-[#C5A059]/40 text-[#854D0E] text-xs font-bold flex items-center gap-1.5 shadow-2xs hover:bg-[#FEFCE8] transition-colors"
@@ -199,11 +192,11 @@ export default function AdminDashboardPage() {
               <div className="flex items-center gap-2">
                 <Trophy className="w-4 h-4 text-[#A8833E]" />
                 <h2 className="text-xs sm:text-sm font-bold text-[#172033] uppercase tracking-wider">
-                  Peringkat Santri & Santriwati Teladan
+                  Santri Teladan
                 </h2>
               </div>
               <p className="text-[11px] text-[#64748B] mt-0.5">
-                5 L & 5 P peraih capaian akhlak tertinggi pondok
+                5 L & 5 P skor tertinggi
               </p>
             </div>
 
@@ -275,7 +268,7 @@ export default function AdminDashboardPage() {
                         {santri.name}
                       </p>
                       <p className="text-[10px] text-[#64748B] font-mono">
-                        {santri.class} • {santri.gender}
+                        {santri.class} • {santri.gender === "Putra" ? "L" : "P"}
                       </p>
                     </div>
                   </div>

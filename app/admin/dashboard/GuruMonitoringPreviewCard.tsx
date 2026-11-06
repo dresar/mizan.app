@@ -92,11 +92,11 @@ export function GuruMonitoringPreviewCard({
           <div className="flex items-center gap-2">
             <Users className="w-4 h-4 text-[#1B4D3E]" />
             <h2 className="text-xs sm:text-sm font-bold text-[#172033] uppercase tracking-wider">
-              Monitoring Keaktifan Laporan
+              Keaktifan Pembina
             </h2>
           </div>
           <p className="text-[11px] text-[#64748B] mt-0.5">
-            Evaluasi pelaporan piket sholat & adab santri (7 Hari Terakhir)
+            Piket & adab (7 hari)
           </p>
         </div>
 

@@ -278,16 +278,11 @@ export default function AdminKelasPage() {
     <RoleShell>
       <div className="w-full space-y-4 overflow-x-hidden pb-36">
         <div className="mizan-card p-4 sm:p-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-3 bg-white border border-[#E2EBF4]">
-          <div>
-            <div className="flex items-center gap-2">
-              <GraduationCap className="w-5 h-5 text-[#1B4D3E]" />
-              <h1 className="text-base sm:text-xl font-serif font-black text-[#172033] tracking-tight">
-                Manajemen & Detail Kelas
-              </h1>
-            </div>
-            <p className="text-xs text-[#64748B] mt-0.5">
-              Pantau seluruh santri dan santriwati, rata-rata skor, tingkat prestasi, serta pelanggaran secara lengkap dalam satu halaman
-            </p>
+          <div className="flex items-center gap-2">
+            <GraduationCap className="w-5 h-5 text-[#1B4D3E]" />
+            <h1 className="text-base sm:text-xl font-serif font-black text-[#172033] tracking-tight">
+              Data Kelas
+            </h1>
           </div>
 
           <button

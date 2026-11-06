@@ -165,7 +165,7 @@ export default function SatpamGatePage() {
                     {scannedRecord.santriName}
                   </h3>
                   <p className="text-xs text-[#64748B]">
-                    Kelas {scannedRecord.santriClass} • {scannedRecord.gender}
+                    Kelas {scannedRecord.santriClass} • {scannedRecord.gender === "Putra" ? "L" : "P"}
                   </p>
                 </div>
 

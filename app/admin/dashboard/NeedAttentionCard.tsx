@@ -93,18 +93,18 @@ export function NeedAttentionCard({ santriList }: NeedAttentionCardProps) {
             )}
             <h2 className="text-xs sm:text-sm font-bold text-[#172033] uppercase tracking-wider">
               {isCriticalAlert
-                ? "Santri Perlu Pembinaan Segera (Skor < 50,000)"
+                ? "Perlu Pembinaan"
                 : isWarningAlert
-                ? "Santri Perlu Perhatian Khusus (Skor 50,000 - 69,999)"
-                : "Monitoring Skor Santri Terendah (Seluruhnya Aman >= 70,000)"}
+                ? "Perlu Perhatian"
+                : "Skor Terendah"}
             </h2>
           </div>
           <p className="text-[11px] text-[#64748B] mt-0.5">
             {isCriticalAlert
-              ? "Santri dengan perolehan skor akhlak di bawah standar 50,000 yang memerlukan pembinaan intensif"
+              ? "Skor akhlak di bawah 50,000"
               : isWarningAlert
-              ? "Santri dengan skor mendekati batas aman yang membutuhkan bimbingan pembina"
-              : "5 L & 5 P posisi skor terendah. Seluruh santri memenuhi batas standar aman (70,000)"}
+              ? "Skor mendekati batas aman (50 - 70)"
+              : "5 L & 5 P terendah"}
           </p>
         </div>
 
@@ -157,7 +157,7 @@ export function NeedAttentionCard({ santriList }: NeedAttentionCardProps) {
                     {santri.name}
                   </p>
                   <p className="text-[10px] text-[#64748B] font-mono">
-                    {santri.class} • {santri.gender}
+                    {santri.class} • {santri.gender === "Putra" ? "L" : "P"}
                   </p>
                 </div>
               </div>

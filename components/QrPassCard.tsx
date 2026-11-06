@@ -54,7 +54,7 @@ export function QrPassCard({ record, onClose }: QrPassCardProps) {
 
       ctx.fillStyle = "#64748B";
       ctx.font = "14px monospace";
-      ctx.fillText(`Kelas: ${record.santriClass}  •  Gender: ${record.gender}`, canvas.width / 2, 202);
+      ctx.fillText(`Kelas: ${record.santriClass}  •  ${record.gender === "Putra" ? "L" : "P"}`, canvas.width / 2, 202);
 
       const qrImg = new Image();
       qrImg.crossOrigin = "anonymous";
@@ -132,7 +132,7 @@ export function QrPassCard({ record, onClose }: QrPassCardProps) {
       <div ref={cardRef} className="p-4 rounded-2xl bg-[#FAF7EE] border border-[#C5A059]/30 text-center space-y-3">
         <div>
           <h4 className="text-sm font-bold text-[#172033]">{record.santriName}</h4>
-          <p className="text-[10px] text-[#64748B] font-mono">Kelas {record.santriClass} • {record.gender}</p>
+          <p className="text-[10px] text-[#64748B] font-mono">Kelas {record.santriClass} • {record.gender === "Putra" ? "L" : "P"}</p>
         </div>
 
         <div className="p-2.5 bg-white rounded-xl inline-block border border-[#E2E8F0] shadow-2xs">

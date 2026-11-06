@@ -181,40 +181,37 @@ export default function AdminAbsensiRekapPage() {
   return (
     <RoleShell>
       <div className="p-3 sm:p-5 md:p-7 max-w-7xl mx-auto space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-[#E2E8F0]">
-          <div className="flex items-center gap-2">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-2 border-b border-[#E2E8F0]">
+          <div className="flex items-center gap-1.5">
             <Link
               href="/admin/absensi"
-              className="px-3.5 py-2 rounded-2xl bg-white border border-[#E2EBF4] text-[#172033] text-xs font-bold hover:bg-[#FAF7EE] transition-all flex items-center gap-1.5 shadow-2xs"
+              className="px-3 py-1.5 rounded-xl bg-white border border-[#E2EBF4] text-[#172033] text-xs font-bold hover:bg-[#FAF7EE] transition-all flex items-center gap-1 shadow-2xs"
             >
-              <ArrowLeft className="w-4 h-4 text-[#1B4D3E]" />
+              <ArrowLeft className="w-3.5 h-3.5 text-[#1B4D3E]" />
               <span>Monitoring</span>
             </Link>
             <span className="text-xs text-[#94A3B8]">/</span>
-            <span className="text-xs font-bold text-[#64748B]">Rekapitulasi Bulanan</span>
+            <span className="text-xs font-bold text-[#172033]">Rekap Presensi</span>
           </div>
 
           <div className="flex items-center gap-2">
             <button
               type="button"
               onClick={handleExportCSV}
-              className="px-3.5 py-2 rounded-2xl bg-white border border-[#E2EBF4] text-[#172033] text-xs font-bold hover:bg-[#FAF7EE] transition-all flex items-center gap-1.5 shadow-2xs cursor-pointer"
+              className="px-3 py-1.5 rounded-xl bg-white border border-[#E2EBF4] text-[#172033] text-xs font-bold hover:bg-[#FAF7EE] transition-all flex items-center gap-1 shadow-2xs cursor-pointer"
             >
               <Download className="w-3.5 h-3.5 text-[#1B4D3E]" />
-              <span>Unduh Rekap Excel/CSV</span>
+              <span>Unduh CSV</span>
             </button>
           </div>
         </div>
 
-        <Card className="p-4 sm:p-5 bg-white space-y-4">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[#E2E8F0]">
+        <Card className="p-3 sm:p-4 bg-white space-y-3">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-2 border-b border-[#E2E8F0]">
             <div>
-              <h1 className="text-lg sm:text-xl font-serif font-black text-[#172033]">
-                Rekapitulasi Presensi Sholat Harian & Bulanan
+              <h1 className="text-base sm:text-lg font-serif font-black text-[#172033]">
+                Rekap Presensi
               </h1>
-              <p className="text-xs text-[#64748B] mt-0.5">
-                Evaluasi tingkat disiplin jama&apos;ah sholat santri Raudhatussalam Mahato
-              </p>
             </div>
 
             <div className="flex items-center gap-2 flex-wrap">

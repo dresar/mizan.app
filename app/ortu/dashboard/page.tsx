@@ -543,7 +543,7 @@ export default function OrtuDashboardPage() {
                           {santri.name}
                         </p>
                         <p className="text-[10px] text-[#94A3B8] font-mono">
-                          NIS: {santri.nis} • {santri.class} ({santri.gender})
+                          NIS: {santri.nis} • {santri.class} ({santri.gender === "Putra" ? "L" : "P"})
                         </p>
                       </div>
                     </div>
@@ -657,12 +657,12 @@ export default function OrtuDashboardPage() {
                   <h2 className="text-base sm:text-lg font-bold text-[#172033]">
                     {selectedSantri.name}
                   </h2>
-                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${
+                  <span className={`text-[10px] font-black px-2 py-0.5 rounded-full border ${
                     selectedSantri.gender === "Putri"
-                      ? "bg-amber-50 text-amber-800 border-amber-200"
-                      : "bg-emerald-50 text-emerald-800 border-emerald-200"
+                      ? "bg-pink-50 text-pink-800 border-pink-200"
+                      : "bg-blue-50 text-blue-800 border-blue-200"
                   }`}>
-                    Santri {selectedSantri.gender}
+                    {selectedSantri.gender === "Putra" ? "L" : "P"}
                   </span>
                 </div>
 
