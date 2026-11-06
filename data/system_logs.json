@@ -1,5 +1,341 @@
 [
   {
+    "id": "log_1793971067250_3001",
+    "timestamp": "2026-11-06T20:17:47+07:00",
+    "level": "INFO",
+    "category": "AUTH",
+    "action": "POST /api/auth/login",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[200] POST /api/auth/login (2ms)",
+    "details": {
+      "duration_ms": 2,
+      "error": "",
+      "method": "POST",
+      "path": "/api/auth/login",
+      "status": 200,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971067203_3001",
+    "timestamp": "2026-11-06T20:17:47+07:00",
+    "level": "INFO",
+    "category": "AUTH",
+    "action": "POST /api/auth/login",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[200] POST /api/auth/login (73ms)",
+    "details": {
+      "duration_ms": 73,
+      "error": "",
+      "method": "POST",
+      "path": "/api/auth/login",
+      "status": 200,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971067076_3001",
+    "timestamp": "2026-11-06T20:17:47+07:00",
+    "level": "INFO",
+    "category": "AUTH",
+    "action": "POST /api/auth/login",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[200] POST /api/auth/login (67ms)",
+    "details": {
+      "duration_ms": 67,
+      "error": "",
+      "method": "POST",
+      "path": "/api/auth/login",
+      "status": 200,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971066963_3001",
+    "timestamp": "2026-11-06T20:17:46+07:00",
+    "level": "INFO",
+    "category": "AUTH",
+    "action": "POST /api/auth/login",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[200] POST /api/auth/login (72ms)",
+    "details": {
+      "duration_ms": 72,
+      "error": "",
+      "method": "POST",
+      "path": "/api/auth/login",
+      "status": 200,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971066838_3001",
+    "timestamp": "2026-11-06T20:17:46+07:00",
+    "level": "INFO",
+    "category": "AUTH",
+    "action": "POST /api/auth/login",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[200] POST /api/auth/login (1ms)",
+    "details": {
+      "duration_ms": 1,
+      "error": "",
+      "method": "POST",
+      "path": "/api/auth/login",
+      "status": 200,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971066788_3001",
+    "timestamp": "2026-11-06T20:17:46+07:00",
+    "level": "INFO",
+    "category": "AUTH",
+    "action": "POST /api/auth/login",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[200] POST /api/auth/login (1ms)",
+    "details": {
+      "duration_ms": 1,
+      "error": "",
+      "method": "POST",
+      "path": "/api/auth/login",
+      "status": 200,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971066722_3001",
+    "timestamp": "2026-11-06T20:17:46+07:00",
+    "level": "INFO",
+    "category": "AUTH",
+    "action": "POST /api/auth/login",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[200] POST /api/auth/login (2ms)",
+    "details": {
+      "duration_ms": 2,
+      "error": "",
+      "method": "POST",
+      "path": "/api/auth/login",
+      "status": 200,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971066673_3001",
+    "timestamp": "2026-11-06T20:17:46+07:00",
+    "level": "INFO",
+    "category": "AUTH",
+    "action": "POST /api/auth/login",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[200] POST /api/auth/login (70ms)",
+    "details": {
+      "duration_ms": 70,
+      "error": "",
+      "method": "POST",
+      "path": "/api/auth/login",
+      "status": 200,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793971066552_3001",
+    "timestamp": "2026-11-06T20:17:46+07:00",
+    "level": "INFO",
+    "category": "AUTH",
+    "action": "POST /api/auth/login",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[200] POST /api/auth/login (70ms)",
+    "details": {
+      "duration_ms": 70,
+      "error": "",
+      "method": "POST",
+      "path": "/api/auth/login",
+      "status": 200,
+      "user_agent": "curl/8.14.1"
+    }
+  },
+  {
+    "id": "log_1793970893462_3001",
+    "timestamp": "2026-11-06T20:14:53+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "GET /api/core/faq",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[401] GET /api/core/faq (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "POS",
+      "path": "/api/core/faq",
+      "status": 401,
+      "user_agent": "curl/8.14.1 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36"
+    }
+  },
+  {
+    "id": "log_1793970892752_3001",
+    "timestamp": "2026-11-06T20:14:52+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "GET /api/core/whatsapp-templates",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[401] GET /api/core/whatsapp-templates (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "POS",
+      "path": "/api/core/faqtsapp-templates",
+      "status": 401,
+      "user_agent": "curl/8.14.1 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36"
+    }
+  },
+  {
+    "id": "log_1793970891142_3001",
+    "timestamp": "2026-11-06T20:14:51+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "GET /api/core/faq",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[401] GET /api/core/faq (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "POS",
+      "path": "/api/core/faq",
+      "status": 401,
+      "user_agent": "curl/8.14.1 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36"
+    }
+  },
+  {
+    "id": "log_1793970889831_3001",
+    "timestamp": "2026-11-06T20:14:49+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "GET /api/core/faq",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[401] GET /api/core/faq (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "POS",
+      "path": "/api/core/faq",
+      "status": 401,
+      "user_agent": "curl/8.14.1 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36"
+    }
+  },
+  {
+    "id": "log_1793970888445_3001",
+    "timestamp": "2026-11-06T20:14:48+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "GET /api/core/whatsapp-templates",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[401] GET /api/core/whatsapp-templates (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "GET",
+      "path": "/api/core/faqeader-DkaJh5un.",
+      "status": 401,
+      "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36"
+    }
+  },
+  {
+    "id": "log_1793970886122_3001",
+    "timestamp": "2026-11-06T20:14:46+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "GET /api/core/whatsapp-templates",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[401] GET /api/core/whatsapp-templates (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "GET",
+      "path": "/api/core/whatsapp-templates",
+      "status": 401,
+      "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36"
+    }
+  },
+  {
+    "id": "log_1793970884795_3001",
+    "timestamp": "2026-11-06T20:14:44+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "GET /api/core/whatsapp-templates",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[401] GET /api/core/whatsapp-templates (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "GET",
+      "path": "/api/core/whatsapp-templates",
+      "status": 401,
+      "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36"
+    }
+  },
+  {
     "id": "log_1793968212291_3001",
     "timestamp": "2026-11-06T19:30:12+07:00",
     "level": "INFO",
@@ -62651,342 +62987,6 @@
       "error": "",
       "method": "GET",
       "path": "/api/absensiic/fasilitasion",
-      "status": 401,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957159581_3001",
-    "timestamp": "2026-11-06T16:25:59+07:00",
-    "level": "INFO",
-    "category": "HTTP",
-    "action": "POST /api/v1/public/psb/daftar",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[201] POST /api/v1/public/psb/daftar (620ms)",
-    "details": {
-      "duration_ms": 620,
-      "error": "",
-      "method": "GETT",
-      "path": "/api/v1/public/psb/daftar",
-      "status": 201,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957158913_3001",
-    "timestamp": "2026-11-06T16:25:58+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "PUT /api/v1/admin/psb/pendaftar/-1",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[401] PUT /api/v1/admin/psb/pendaftar/-1 (0ms)",
-    "details": {
-      "duration_ms": 0,
-      "error": "",
-      "method": "GET",
-      "path": "/api/v1/public/psb/daftarar/-1",
-      "status": 401,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957158874_3001",
-    "timestamp": "2026-11-06T16:25:58+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "GET /api/v1/admin/psb/pendaftar",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[401] GET /api/v1/admin/psb/pendaftar (0ms)",
-    "details": {
-      "duration_ms": 0,
-      "error": "",
-      "method": "GET",
-      "path": "/api/v1/public/psb/daftarar",
-      "status": 401,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957158844_3001",
-    "timestamp": "2026-11-06T16:25:58+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "PUT /api/v1/admin/psb/pendaftar/1",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[401] PUT /api/v1/admin/psb/pendaftar/1 (0ms)",
-    "details": {
-      "duration_ms": 0,
-      "error": "",
-      "method": "PUT",
-      "path": "/api/v1/public/psb/daftarar/-",
-      "status": 401,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957158807_3001",
-    "timestamp": "2026-11-06T16:25:58+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "GET /api/v1/admin/psb/pendaftar/999999",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[401] GET /api/v1/admin/psb/pendaftar/999999 (0ms)",
-    "details": {
-      "duration_ms": 0,
-      "error": "",
-      "method": "PUT",
-      "path": "/api/v1/public/psb/daftarar/-19999",
-      "status": 401,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957158765_3001",
-    "timestamp": "2026-11-06T16:25:58+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "GET /api/v1/admin/psb/pendaftar",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[401] GET /api/v1/admin/psb/pendaftar (0ms)",
-    "details": {
-      "duration_ms": 0,
-      "error": "",
-      "method": "PUT",
-      "path": "/api/v1/admin/psb/pendaftar",
-      "status": 401,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957158716_3001",
-    "timestamp": "2026-11-06T16:25:58+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "GET /api/v1/admin/blog/posts/-1",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[401] GET /api/v1/admin/blog/posts/-1 (0ms)",
-    "details": {
-      "duration_ms": 0,
-      "error": "",
-      "method": "PUT",
-      "path": "/api/v1/admin/psb/pendaftar",
-      "status": 401,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957158671_3001",
-    "timestamp": "2026-11-06T16:25:58+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "POST /api/v1/admin/blog/posts",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[401] POST /api/v1/admin/blog/posts (0ms)",
-    "details": {
-      "duration_ms": 0,
-      "error": "",
-      "method": "PUTT",
-      "path": "/api/v1/admin/psb/pendaf",
-      "status": 401,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957158624_3001",
-    "timestamp": "2026-11-06T16:25:58+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "DELETE /api/v1/admin/blog/posts/999999",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[401] DELETE /api/v1/admin/blog/posts/999999 (0ms)",
-    "details": {
-      "duration_ms": 0,
-      "error": "",
-      "method": "PUTTTE",
-      "path": "/api/v1/admin/psb/pendaftar9999",
-      "status": 401,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957158581_3001",
-    "timestamp": "2026-11-06T16:25:58+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "PUT /api/v1/admin/blog/posts/999999",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[401] PUT /api/v1/admin/blog/posts/999999 (0ms)",
-    "details": {
-      "duration_ms": 0,
-      "error": "",
-      "method": "PUT",
-      "path": "/api/v1/admin/psb/pendaftar9999",
-      "status": 401,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957158544_3001",
-    "timestamp": "2026-11-06T16:25:58+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "POST /api/v1/admin/blog/posts",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[401] POST /api/v1/admin/blog/posts (0ms)",
-    "details": {
-      "duration_ms": 0,
-      "error": "",
-      "method": "POST",
-      "path": "/api/v1/admin/blog/posts",
-      "status": 401,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957158496_3001",
-    "timestamp": "2026-11-06T16:25:58+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "POST /api/v1/admin/cms/fasilitas",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[401] POST /api/v1/admin/cms/fasilitas (0ms)",
-    "details": {
-      "duration_ms": 0,
-      "error": "",
-      "method": "PUTT",
-      "path": "/api/v1/admin/blog/poststas",
-      "status": 401,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957158457_3001",
-    "timestamp": "2026-11-06T16:25:58+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "DELETE /api/v1/admin/cms/fasilitas/not_a_number",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[401] DELETE /api/v1/admin/cms/fasilitas/not_a_number (0ms)",
-    "details": {
-      "duration_ms": 0,
-      "error": "",
-      "method": "PUTTTE",
-      "path": "/api/v1/admin/blog/poststas/not_a_number",
-      "status": 401,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957158401_3001",
-    "timestamp": "2026-11-06T16:25:58+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "PUT /api/v1/admin/cms/fasilitas/-1",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[401] PUT /api/v1/admin/cms/fasilitas/-1 (0ms)",
-    "details": {
-      "duration_ms": 0,
-      "error": "",
-      "method": "PUT",
-      "path": "/api/v1/admin/cms/fasilitas/-1",
-      "status": 401,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957158351_3001",
-    "timestamp": "2026-11-06T16:25:58+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "GET /api/v1/admin/cms/..%2F..%2Fetc%2Fpasswd",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[401] GET /api/v1/admin/cms/..%2F..%2Fetc%2Fpasswd (0ms)",
-    "details": {
-      "duration_ms": 0,
-      "error": "",
-      "method": "PUT",
-      "path": "/api/v1/admin/cms/..%2F..%2Fetc%2Fpasswd",
-      "status": 401,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957158312_3001",
-    "timestamp": "2026-11-06T16:25:58+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "GET /api/v1/admin/cms/%3Cscript%3E",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[401] GET /api/v1/admin/cms/%3Cscript%3E (0ms)",
-    "details": {
-      "duration_ms": 0,
-      "error": "",
-      "method": "PUT",
-      "path": "/api/v1/admin/cms/%3Cscript%3E",
       "status": 401,
       "user_agent": "curl/8.14.1"
     }

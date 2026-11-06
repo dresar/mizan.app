@@ -6,6 +6,100 @@ import { toast } from 'sonner';
 import { Loader2, Eye, EyeOff, LogIn, UserPlus, ArrowLeft } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Logo } from '@/components/shared/Logo';
+interface DemoAccount {
+  roleName: string;
+  roleBadge: string;
+  username: string;
+  password: string;
+  targetPath: string;
+  description: string;
+  icon: string;
+  badgeColor: string;
+}
+
+const DEMO_ACCOUNTS: DemoAccount[] = [
+  {
+    roleName: 'Admin CMS Profil',
+    roleBadge: 'adminwebsite',
+    username: 'adminwebsite',
+    password: 'password123',
+    targetPath: '/admin-cms',
+    description: 'Kelola Konten Profil & Berita',
+    icon: '🌐',
+    badgeColor: 'bg-emerald-500/10 text-emerald-500 border-emerald-500/30',
+  },
+  {
+    roleName: 'Super Admin Mizan',
+    roleBadge: 'SUPER_ADMIN',
+    username: 'admin',
+    password: 'password123',
+    targetPath: '/admin/dashboard',
+    description: 'Sistem Inti Akademik & Absensi',
+    icon: '🛡️',
+    badgeColor: 'bg-indigo-500/10 text-indigo-500 border-indigo-500/30',
+  },
+  {
+    roleName: 'Dewan Guru Pengajar',
+    roleBadge: 'GURU',
+    username: 'nirwan',
+    password: 'password123',
+    targetPath: '/guru/dashboard',
+    description: 'Input Nilai & Jurnal Mengajar',
+    icon: '📚',
+    badgeColor: 'bg-blue-500/10 text-blue-500 border-blue-500/30',
+  },
+  {
+    roleName: 'Pembina BK / Pengasuhan',
+    roleBadge: 'PENGASUHAN',
+    username: 'doli',
+    password: 'password123',
+    targetPath: '/bk/dashboard',
+    description: 'Pelanggaran & Izin Santri',
+    icon: '🕌',
+    badgeColor: 'bg-amber-500/10 text-amber-500 border-amber-500/30',
+  },
+  {
+    roleName: 'Petugas Pos Satpam',
+    roleBadge: 'SATPAM',
+    username: 'satpam',
+    password: 'password123',
+    targetPath: '/satpam',
+    description: 'Pencatatan Gerbang Keamanan',
+    icon: '👮',
+    badgeColor: 'bg-rose-500/10 text-rose-500 border-rose-500/30',
+  },
+  {
+    roleName: 'Wali Santri / Orang Tua',
+    roleBadge: 'ORTU',
+    username: 'ortu',
+    password: 'password123',
+    targetPath: '/ortu/dashboard',
+    description: 'Rapor, Absensi & Tagihan Santri',
+    icon: '👨‍👩‍👧',
+    badgeColor: 'bg-purple-500/10 text-purple-500 border-purple-500/30',
+  },
+  {
+    roleName: 'Santri / Pelajar',
+    roleBadge: 'santri',
+    username: 'santri',
+    password: 'password123',
+    targetPath: '/santri/dashboard',
+    description: 'Jadwal Harian & Hafalan Quran',
+    icon: '🎓',
+    badgeColor: 'bg-teal-500/10 text-teal-500 border-teal-500/30',
+  },
+  {
+    roleName: 'Penulis Warta Pondok',
+    roleBadge: 'author',
+    username: 'penulis',
+    password: 'password123',
+    targetPath: '/author/dashboard',
+    description: 'Publikasi Berita & Jurnal Ilmiah',
+    icon: '✍️',
+    badgeColor: 'bg-orange-500/10 text-orange-500 border-orange-500/30',
+  },
+];
+
 export default function LoginPage() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -73,11 +167,17 @@ export default function LoginPage() {
       window.location.href = '/admin-cms';
     }
   }, [navigate]);
-  const handleLogin = async (e?: React.FormEvent) => {
+  const handleLogin = async (e?: React.FormEvent, customUser?: string, customPass?: string) => {
     if (e) e.preventDefault();
+    const u = customUser || username;
+    const p = customPass || password;
+    if (!u || !p) {
+      toast.error('Username dan password wajib diisi');
+      return;
+    }
     setIsLoading(true);
     try {
-      const response = await api.post('/auth/login', { username, password });
+      const response = await api.post('/auth/login', { username: u, password: p });
       const { user, token } = response.data;
       if (!user) {
         toast.error('Data pengguna tidak ditemukan');
@@ -169,19 +269,12 @@ export default function LoginPage() {
         setIsLoading(false);
     }
   };
-  const fillDemoLogin = (role: 'admin' | 'santri' | 'penulis') => {
-    if (role === 'admin') {
-      setUsername('admin');
-      setPassword('password123');
-      toast.success('Form terisi dengan akun Admin Panel');
-    } else if (role === 'santri') {
-      setUsername('santri');
-      setPassword('password123');
-      toast.success('Form terisi dengan akun Santri');
-    } else if (role === 'penulis') {
-      setUsername('penulis');
-      setPassword('password123');
-      toast.success('Form terisi dengan akun Penulis');
+  const fillDemoLogin = (acc: DemoAccount, autoSubmit = false) => {
+    setUsername(acc.username);
+    setPassword(acc.password);
+    toast.success(`Akun ${acc.roleName} dipilih`);
+    if (autoSubmit) {
+      handleLogin(undefined, acc.username, acc.password);
     }
   };
   const toggleTab = (tab: 'login' | 'register') => {
@@ -417,38 +510,67 @@ export default function LoginPage() {
                 )}
             </AnimatePresence>
             {}
-            {import.meta.env.VITE_SHOW_DEMO_LOGIN === 'true' && activeTab === 'login' && (
-                <div className="mt-6 pt-6 border-t border-dashed border-border/60">
-                    <div className="text-center mb-4">
-                        <span className="text-[10px] font-bold text-muted-foreground bg-secondary px-2 py-0.5 rounded uppercase tracking-wider">
-                            Demo Logins (Auto-Fill)
+            {activeTab === 'login' && (
+                <div className="mt-6 pt-5 border-t border-dashed border-border/80">
+                    <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center gap-2">
+                            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                            <span className="text-xs font-semibold text-foreground">
+                                Mode Development — Dummy Login
+                            </span>
+                        </div>
+                        <span className="text-[10px] uppercase font-bold text-muted-foreground bg-secondary px-2 py-0.5 rounded">
+                            {DEMO_ACCOUNTS.length} Akun
                         </span>
                     </div>
-                    <div className="grid grid-cols-1 gap-2">
-                        <button 
-                            type="button"
-                            className="w-full flex items-center justify-center gap-2 px-4 py-2.5 text-xs font-semibold rounded-lg border border-dashed border-blue-500/40 text-blue-600 bg-blue-500/5 hover:bg-blue-500/10 transition-colors"
-                            onClick={() => fillDemoLogin('admin')}
-                            disabled={isLoading}
-                        >
-                            🛡️ Admin Panel
-                        </button>
-                        <button 
-                            type="button"
-                            className="w-full flex items-center justify-center gap-2 px-4 py-2.5 text-xs font-semibold rounded-lg border border-dashed border-green-500/40 text-green-600 bg-green-500/5 hover:bg-green-500/10 transition-colors"
-                            onClick={() => fillDemoLogin('santri')}
-                            disabled={isLoading}
-                        >
-                            👤 Santri
-                        </button>
-                        <button 
-                            type="button"
-                            className="w-full flex items-center justify-center gap-2 px-4 py-2.5 text-xs font-semibold rounded-lg border border-dashed border-orange-500/40 text-orange-600 bg-orange-500/5 hover:bg-orange-500/10 transition-colors"
-                            onClick={() => fillDemoLogin('penulis')}
-                            disabled={isLoading}
-                        >
-                            ✍️ Penulis
-                        </button>
+                    <p className="text-[11px] text-muted-foreground mb-3">
+                        Pilih role akun di bawah untuk auto-fill atau klik <strong>Masuk ➔</strong> untuk login instan:
+                    </p>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-80 overflow-y-auto pr-1">
+                        {DEMO_ACCOUNTS.map((acc) => (
+                            <div
+                                key={acc.username}
+                                className="flex flex-col justify-between p-2.5 rounded-xl border border-border bg-card/70 hover:bg-secondary/60 hover:border-primary/40 transition-all text-xs"
+                            >
+                                <div>
+                                    <div className="flex items-center justify-between gap-1 mb-1">
+                                        <span className="font-semibold text-foreground flex items-center gap-1.5 truncate">
+                                            <span>{acc.icon}</span>
+                                            <span className="truncate">{acc.roleName}</span>
+                                        </span>
+                                        <span className={`text-[9px] font-mono px-1.5 py-0.5 rounded border ${acc.badgeColor} shrink-0`}>
+                                            {acc.roleBadge}
+                                        </span>
+                                    </div>
+                                    <div className="text-[11px] text-muted-foreground mb-2 truncate">
+                                        {acc.description}
+                                    </div>
+                                </div>
+                                <div className="flex items-center justify-between pt-1 border-t border-border/50 text-[11px]">
+                                    <span className="font-mono text-muted-foreground text-[10px]">
+                                        user: <strong className="text-foreground">{acc.username}</strong>
+                                    </span>
+                                    <div className="flex items-center gap-1">
+                                        <button
+                                            type="button"
+                                            onClick={() => fillDemoLogin(acc, false)}
+                                            className="px-2 py-0.5 rounded text-[10px] font-medium bg-secondary hover:bg-secondary/80 text-foreground transition-colors"
+                                            disabled={isLoading}
+                                        >
+                                            Isi Form
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={() => fillDemoLogin(acc, true)}
+                                            className="px-2 py-0.5 rounded text-[10px] font-semibold bg-primary text-primary-foreground hover:opacity-90 transition-opacity"
+                                            disabled={isLoading}
+                                        >
+                                            Masuk ➔
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 </div>
             )}
