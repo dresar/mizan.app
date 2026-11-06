@@ -47,6 +47,9 @@ export interface ClassInfo {
   gender: "Putra" | "Putri";
   waliKelas: string;
   guruId: string;
+  pendampingWali?: string;
+  pendampingId?: string;
+  asistenWali?: string[];
   studentCount: number;
   avgScore: number;
 }
@@ -85,8 +88,8 @@ interface MizanContextType {
   deleteAbsensiBulk: (ids: string[]) => Promise<{ success: boolean; message: string }>;
   kelasList: string[];
   classList: ClassInfo[];
-  addClass: (newClass: string, gender?: "Putra" | "Putri", waliKelas?: string, guruId?: string) => Promise<{ success: boolean; message: string }>;
-  updateClass: (name: string, data: { newName?: string; gender?: "Putra" | "Putri"; waliKelas?: string; guruId?: string }) => Promise<{ success: boolean; message: string }>;
+  addClass: (newClass: string, gender?: "Putra" | "Putri", waliKelas?: string, guruId?: string, pendampingWali?: string, pendampingId?: string, asistenWali?: string[]) => Promise<{ success: boolean; message: string }>;
+  updateClass: (name: string, data: { newName?: string; gender?: "Putra" | "Putri"; waliKelas?: string; guruId?: string; pendampingWali?: string; pendampingId?: string; asistenWali?: string[] }) => Promise<{ success: boolean; message: string }>;
   removeClass: (className: string) => void;
   removeClassBulk: (classNames: string[]) => Promise<{ success: boolean; message: string }>;
   settings: AppSettings;
@@ -919,7 +922,15 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const addClass = async (newClass: string, gender: "Putra" | "Putri" = "Putra", waliKelas = "", guruId = ""): Promise<{ success: boolean; message: string }> => {
+  const addClass = async (
+    newClass: string,
+    gender: "Putra" | "Putri" = "Putra",
+    waliKelas = "",
+    guruId = "",
+    pendampingWali = "",
+    pendampingId = "",
+    asistenWali: string[] = []
+  ): Promise<{ success: boolean; message: string }> => {
     const clean = newClass.trim().toUpperCase();
     if (!clean) return { success: false, message: "Nama kelas wajib diisi." };
     if (kelasList.includes(clean)) {
@@ -932,7 +943,7 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
       const res = await fetch("/api/classes", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: clean, gender, waliKelas, guruId })
+        body: JSON.stringify({ name: clean, gender, waliKelas, guruId, pendampingWali, pendampingId, asistenWali })
       });
       const data = await res.json();
       await refreshData();
@@ -943,7 +954,18 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const updateClass = async (name: string, data: { newName?: string; gender?: "Putra" | "Putri"; waliKelas?: string; guruId?: string }): Promise<{ success: boolean; message: string }> => {
+  const updateClass = async (
+    name: string,
+    data: {
+      newName?: string;
+      gender?: "Putra" | "Putri";
+      waliKelas?: string;
+      guruId?: string;
+      pendampingWali?: string;
+      pendampingId?: string;
+      asistenWali?: string[];
+    }
+  ): Promise<{ success: boolean; message: string }> => {
     try {
       const res = await fetch("/api/classes", {
         method: "PUT",

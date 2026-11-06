@@ -1,0 +1,41 @@
+[
+  {
+    "id": "log_1793939456385_3",
+    "timestamp": "2026-11-06T11:30:56+07:00",
+    "level": "INFO",
+    "category": "SYSTEM",
+    "action": "SERVER_INIT",
+    "actor": {
+      "name": "Mizan Core Engine",
+      "role": "SYSTEM",
+      "ip": "127.0.0.1"
+    },
+    "message": "Backend engine Mizan Go siap melayani"
+  },
+  {
+    "id": "log_1793939208568_2",
+    "timestamp": "2026-11-06T11:26:48+07:00",
+    "level": "WARN",
+    "category": "AUTH",
+    "action": "SESSION_CHECK",
+    "actor": {
+      "name": "Admin Test",
+      "role": "SUPER_ADMIN",
+      "ip": "127.0.0.1"
+    },
+    "message": "Uji coba log aktivitas"
+  },
+  {
+    "id": "log_1793939196450_1",
+    "timestamp": "2026-11-06T11:26:36+07:00",
+    "level": "INFO",
+    "category": "SYSTEM",
+    "action": "SERVER_INIT",
+    "actor": {
+      "name": "Mizan Core Engine",
+      "role": "SYSTEM",
+      "ip": "127.0.0.1"
+    },
+    "message": "Backend engine Mizan Go siap melayani"
+  }
+]

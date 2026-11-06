@@ -19,6 +19,7 @@ import (
 	"gobackend/internal/database"
 	"gobackend/internal/handlers"
 	"gobackend/internal/hub"
+	"gobackend/internal/logger"
 	mizanserver "gobackend/internal/mcp"
 	"gobackend/internal/middleware"
 	"gobackend/internal/models"
@@ -48,6 +49,98 @@ func main() {
 
 	realtimeHub := hub.NewHub()
 	go realtimeHub.Run()
+
+	logSvc := logger.InitLogger("data/system_logs.json", realtimeHub)
+	logSvc.Log(logger.LogEntry{
+		Level:    "INFO",
+		Category: "SYSTEM",
+		Action:   "SERVER_INIT",
+		Actor: logger.LogActor{
+			Name: "Mizan Core Engine",
+			Role: "SYSTEM",
+			IP:   "127.0.0.1",
+		},
+		Message: "Backend engine Mizan Go siap melayani",
+	})
+
+	app.Use(func(c *fiber.Ctx) error {
+		start := time.Now()
+		err := c.Next()
+		duration := time.Since(start)
+
+		p := c.Path()
+		method := c.Method()
+		status := c.Response().StatusCode()
+
+		if strings.HasPrefix(p, "/api/") && p != "/api/logs" && p != "/health" {
+			level := "INFO"
+			category := "HTTP"
+
+			if strings.Contains(p, "auth") {
+				category = "AUTH"
+			} else if strings.Contains(p, "absensi") {
+				category = "PRESENSI"
+			} else if strings.Contains(p, "penilaian") {
+				category = "PENILAIAN"
+			} else if strings.Contains(p, "santri") {
+				category = "SANTRI"
+			} else if strings.Contains(p, "classes") {
+				category = "KELAS"
+			} else if strings.Contains(p, "categories") {
+				category = "KATEGORI"
+			} else if strings.Contains(p, "feedback") {
+				category = "FEEDBACK"
+			}
+
+			if status >= 500 {
+				level = "ERROR"
+			} else if status >= 400 {
+				level = "WARN"
+			}
+
+			if method != "GET" || status >= 400 {
+				actorName := "Guest"
+				actorRole := "PUBLIC"
+				actorID := ""
+				if uname, ok := c.Locals("username").(string); ok && uname != "" {
+					actorName = uname
+				}
+				if urole, ok := c.Locals("role").(string); ok && urole != "" {
+					actorRole = urole
+				}
+				if uid, ok := c.Locals("user_id").(string); ok && uid != "" {
+					actorID = uid
+				}
+
+				errMsg := ""
+				if err != nil {
+					errMsg = err.Error()
+				}
+
+				logSvc.Log(logger.LogEntry{
+					Level:    level,
+					Category: category,
+					Action:   method + " " + p,
+					Actor: logger.LogActor{
+						ID:   actorID,
+						Name: actorName,
+						Role: actorRole,
+						IP:   c.IP(),
+					},
+					Message: fmt.Sprintf("[%d] %s %s (%dms)", status, method, p, duration.Milliseconds()),
+					Details: map[string]interface{}{
+						"method":      method,
+						"path":        p,
+						"status":      status,
+						"duration_ms": duration.Milliseconds(),
+						"error":       errMsg,
+						"user_agent":  c.Get("User-Agent"),
+					},
+				})
+			}
+		}
+		return err
+	})
 
 	startTime := time.Now()
 
@@ -160,6 +253,10 @@ func main() {
 	api.Get("/notifications", middleware.OptionalAuth(cfg.SessionSecret), handlers.GetNotifications)
 	api.Get("/classes", handlers.GetClasses)
 	api.Get("/categories", handlers.GetCategories)
+	api.Get("/logs", handlers.GetLogs(logSvc))
+	api.Post("/logs", handlers.CreateLog(logSvc))
+	api.Get("/logs/stats", handlers.GetLogStats(logSvc))
+	api.Delete("/logs", handlers.ClearLogs(logSvc))
 
 	api.Use(middleware.AuthRequired(cfg.SessionSecret))
 

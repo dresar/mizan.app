@@ -67,6 +67,13 @@ func ensureTables(ctx context.Context, pool *pgxpool.Pool) error {
 		`ALTER TABLE santri ADD COLUMN IF NOT EXISTS daily_pocket_limit NUMERIC(12,2) DEFAULT 25000;`,
 		`ALTER TABLE santri ADD COLUMN IF NOT EXISTS pocket_balance NUMERIC(12,2) DEFAULT 0;`,
 		`ALTER TABLE santri ADD COLUMN IF NOT EXISTS current_health_status VARCHAR(32) DEFAULT 'Sehat';`,
+		`ALTER TABLE classes ADD COLUMN IF NOT EXISTS pendamping_wali VARCHAR(128) DEFAULT '';`,
+		`ALTER TABLE classes ADD COLUMN IF NOT EXISTS pendamping_id VARCHAR(64) DEFAULT '';`,
+		`ALTER TABLE classes ADD COLUMN IF NOT EXISTS asisten_wali JSONB DEFAULT '[]'::jsonb;`,
+		`ALTER TABLE users ADD COLUMN IF NOT EXISTS santri_id VARCHAR(64) DEFAULT '';`,
+		`ALTER TABLE users ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ DEFAULT NOW();`,
+		`ALTER TABLE santri ADD COLUMN IF NOT EXISTS created_at TIMESTAMPTZ DEFAULT NOW();`,
+		`ALTER TABLE santri ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ DEFAULT NOW();`,
 	}
 
 	for _, q := range queries {

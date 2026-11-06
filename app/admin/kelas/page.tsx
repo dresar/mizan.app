@@ -104,12 +104,15 @@ export default function AdminKelasPage() {
         id: matchDb?.id || `cls-${clsName.toLowerCase()}`,
         name: clsName,
         gender: defaultGender,
-        waliKelas: assignedTeacher?.name || matchDb?.waliKelas || "Belum Ditugaskan",
-        guruId: assignedTeacher?.id || matchDb?.guruId || "",
+        waliKelas: matchDb?.waliKelas || assignedTeacher?.name || "Belum Ditugaskan",
+        guruId: matchDb?.guruId || assignedTeacher?.id || "",
+        pendampingWali: matchDb?.pendampingWali || "",
+        pendampingId: matchDb?.pendampingId || "",
+        asistenWali: matchDb?.asistenWali || [],
         teacherAvatarUrl: assignedTeacher?.avatarUrl,
         teacherInitials:
           assignedTeacher?.avatarInitials ||
-          (assignedTeacher?.name || matchDb?.waliKelas || "WK").slice(0, 2).toUpperCase(),
+          (matchDb?.waliKelas || assignedTeacher?.name || "WK").slice(0, 2).toUpperCase(),
         studentCount: students.length,
         avgScore: avg,
         asrama: dominantAsrama,
@@ -173,7 +176,10 @@ export default function AdminKelasPage() {
       newName: cleanNew,
       gender: editGender,
       waliKelas: teacher?.name || "",
-      guruId: editWaliId
+      guruId: editWaliId,
+      pendampingWali: targetEditClass.pendampingWali,
+      pendampingId: targetEditClass.pendampingId,
+      asistenWali: targetEditClass.asistenWali
     });
 
     if (res.success) {
@@ -196,7 +202,10 @@ export default function AdminKelasPage() {
     const teacher = userList.find((u) => u.id === quickWaliId);
     const res = await updateClass(targetWaliClass.name, {
       waliKelas: teacher?.name || "",
-      guruId: quickWaliId
+      guruId: quickWaliId,
+      pendampingWali: targetWaliClass.pendampingWali,
+      pendampingId: targetWaliClass.pendampingId,
+      asistenWali: targetWaliClass.asistenWali
     });
 
     if (res.success) {

@@ -20,6 +20,9 @@ export interface EnrichedClassItem {
   gender: "Putra" | "Putri";
   waliKelas: string;
   guruId: string;
+  pendampingWali?: string;
+  pendampingId?: string;
+  asistenWali?: string[];
   teacherAvatarUrl?: string;
   teacherInitials: string;
   studentCount: number;
@@ -125,21 +128,29 @@ export function ClassTableView({
                   </span>
                 </td>
                 <td className="py-3.5 px-3.5">
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-start gap-3">
                     <Avatar
                       src={cls.teacherAvatarUrl}
                       initials={cls.teacherInitials}
                       size="md"
                       variant={cls.gender === "Putri" ? "gold" : "primary"}
-                      className="w-12 h-12 shadow-2xs shrink-0"
+                      className="w-11 h-11 shadow-2xs shrink-0 mt-0.5"
                     />
-                    <div className="min-w-0">
-                      <p className="font-bold text-[#172033] text-sm truncate">
+                    <div className="min-w-0 space-y-0.5">
+                      <p className="font-bold text-[#172033] text-xs sm:text-sm truncate">
                         {cls.waliKelas}
                       </p>
-                      <p className="text-[10px] text-[#64748B]">
-                        Wali Pembina
-                      </p>
+                      {cls.pendampingWali && (
+                        <p className="text-[11px] text-[#065F46] font-semibold truncate flex items-center gap-1">
+                          <span className="text-[9px] px-1 py-0.2 rounded bg-emerald-50 border border-emerald-200">Pendamping</span>
+                          <span>{cls.pendampingWali}</span>
+                        </p>
+                      )}
+                      {cls.asistenWali && cls.asistenWali.length > 0 && (
+                        <p className="text-[10px] text-[#64748B] truncate" title={cls.asistenWali.join(", ")}>
+                          <span className="font-bold text-[#A8833E]">{cls.asistenWali.length} Asisten:</span> {cls.asistenWali.join(", ")}
+                        </p>
+                      )}
                     </div>
                   </div>
                 </td>

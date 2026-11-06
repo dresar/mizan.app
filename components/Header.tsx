@@ -86,7 +86,7 @@ export default function Header() {
   if (activeRole === "PENGASUHAN") dashboardHref = "/bk/dashboard";
 
   let profileHref = "/guru/profil";
-  if (activeRole === "SUPER_ADMIN") profileHref = "/admin/users";
+  if (activeRole === "SUPER_ADMIN") profileHref = "/admin/profil";
   if (activeRole === "PENGASUHAN") profileHref = "/bk/profil";
 
   const roleTitle =

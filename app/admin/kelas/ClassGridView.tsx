@@ -209,13 +209,31 @@ export function ClassGridView({
                   </div>
                 </div>
 
-                <div>
-                  <span className="text-[8px] sm:text-[9px] font-extrabold uppercase tracking-widest text-[#C5A059] block">
-                    Wali Kelas
-                  </span>
-                  <h4 className="text-xs sm:text-sm font-black text-[#172033] group-hover:text-[#1B4D3E] transition-colors truncate mt-0.5">
-                    {cls.waliKelas}
-                  </h4>
+                <div className="space-y-1">
+                  <div>
+                    <span className="text-[8px] sm:text-[9px] font-extrabold uppercase tracking-widest text-[#C5A059] block">
+                      Wali Kelas
+                    </span>
+                    <h4 className="text-xs sm:text-sm font-black text-[#172033] group-hover:text-[#1B4D3E] transition-colors truncate mt-0.5">
+                      {cls.waliKelas}
+                    </h4>
+                  </div>
+                  {cls.pendampingWali && (
+                    <p className="text-[9px] sm:text-[10px] text-[#065F46] font-bold truncate">
+                      <span className="text-[#94A3B8] font-normal">Pendamping: </span>
+                      {cls.pendampingWali}
+                    </p>
+                  )}
+                  {cls.asistenWali && cls.asistenWali.length > 0 && (
+                    <div className="flex items-center gap-1 flex-wrap pt-0.5">
+                      <span className="text-[8px] sm:text-[9px] font-bold px-1.5 py-0.5 rounded-md bg-[#FAF7EE] text-[#A8833E] border border-[#C5A059]/30" title={cls.asistenWali.join(", ")}>
+                        {cls.asistenWali.length} Asisten
+                      </span>
+                      <span className="text-[9px] text-[#64748B] truncate max-w-[120px]">
+                        {cls.asistenWali[0]}
+                      </span>
+                    </div>
+                  )}
                   <p className="text-[10px] sm:text-xs text-[#64748B] flex items-center gap-1 pt-0.5 truncate">
                     <Building2 className="w-3 h-3 text-[#C5A059] shrink-0" />
                     <span>{cls.studentCount} Santri Terdaftar</span>

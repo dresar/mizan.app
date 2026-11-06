@@ -25,6 +25,7 @@ import {
   Wallet,
   BookOpen,
   ShieldCheck,
+  Activity,
   X
 } from "lucide-react";
 import { useMizan } from "@/lib/mizan-context";
@@ -78,7 +79,9 @@ export function Sidebar() {
       { label: "Master Kategori", href: "/admin/kategori-pelanggaran", icon: <Sliders className="w-4 h-4" />, description: "Hasanah & Sayyi'ah" },
       { label: "Pengaturan Nilai", href: "/admin/pengaturan-nilai", icon: <Settings className="w-4 h-4" />, description: "Konfigurasi bobot" },
       { label: "Pusat Notifikasi", href: "/admin/notifikasi", icon: <Bell className="w-4 h-4" />, description: "Kelola peringatan & info" },
-      { label: "Feedback & Bug", href: "/admin/feedback", icon: <MessageSquarePlus className="w-4 h-4" />, description: "Masukan & analisis bug" }
+      { label: "Feedback & Bug", href: "/admin/feedback", icon: <MessageSquarePlus className="w-4 h-4" />, description: "Masukan & analisis bug" },
+      { label: "Log Real-Time", href: "/admin/logs", icon: <Activity className="w-4 h-4" />, description: "Audit & log sistem" },
+      { label: "Profil Admin", href: "/admin/profil", icon: <User className="w-4 h-4" />, description: "Data akun & keamanan" }
     ];
   } else if (activeRole === "PENGASUHAN") {
     navItems = [

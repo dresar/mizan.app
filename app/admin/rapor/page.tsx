@@ -27,6 +27,8 @@ interface ClassRaporCardItem {
   name: string;
   gender: "Putra" | "Putri";
   waliKelas: string;
+  pendampingWali?: string;
+  asistenWali?: string[];
   waliAvatar: string;
   studentCount: number;
   avgScore: number;
@@ -93,7 +95,9 @@ export default function AdminRaporPage() {
         id: matchDb?.id || `cls-${clsName.toLowerCase()}`,
         name: clsName,
         gender: defaultGender,
-        waliKelas: assignedTeacher?.name || matchDb?.waliKelas || "Ust. Pembina Kelas",
+        waliKelas: matchDb?.waliKelas || assignedTeacher?.name || "Ust. Pembina Kelas",
+        pendampingWali: matchDb?.pendampingWali || "",
+        asistenWali: matchDb?.asistenWali || [],
         waliAvatar: assignedTeacher?.avatarUrl || defaultAvatar,
         studentCount: students.length,
         avgScore,
@@ -301,6 +305,16 @@ export default function AdminRaporPage() {
                           <Building2 className="w-3 h-3 text-[#C5A059] shrink-0" />
                           <span>{cls.studentCount} Santri Terdaftar</span>
                         </p>
+                        {cls.pendampingWali && (
+                          <p className="text-[9px] text-[#065F46] font-semibold truncate pt-0.5">
+                            Pendamping: {cls.pendampingWali}
+                          </p>
+                        )}
+                        {cls.asistenWali && cls.asistenWali.length > 0 && (
+                          <p className="text-[9px] text-[#A8833E] font-medium truncate pt-0.5" title={cls.asistenWali.join(", ")}>
+                            {cls.asistenWali.length} Asisten Belajar Malam
+                          </p>
+                        )}
                       </div>
                     </div>
 

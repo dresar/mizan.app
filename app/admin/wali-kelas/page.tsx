@@ -54,7 +54,9 @@ export default function AdminWaliKelasPage() {
   } = useMizan();
 
   const [selectedGender, setSelectedGender] = useState<"ALL" | "Putra" | "Putri">("ALL");
-  const [selectedRole, setSelectedRole] = useState<"ALL" | "GURU" | "PENGASUHAN">("ALL");
+  const [selectedRole, setSelectedRole] = useState<
+    "ALL" | "WALI_UTAMA" | "PENDAMPING" | "ASISTEN" | "PENGASUHAN"
+  >("ALL");
   const [searchQuery, setSearchQuery] = useState("");
   const [viewMode, setViewMode] = useState<"grid" | "table">("grid");
   const [currentPage, setCurrentPage] = useState(1);
@@ -125,16 +127,32 @@ export default function AdminWaliKelasPage() {
     return userList.filter((u) => u.role === "GURU" || u.role === "PENGASUHAN");
   }, [userList]);
 
-  const teachers = useMemo(() => {
-    return allPembina.filter((u) => {
-      if (selectedRole === "ALL") return true;
-      return u.role === selectedRole;
-    });
-  }, [allPembina, selectedRole]);
-
   const enrichedTeachers = useMemo(() => {
-    return teachers.map((teacher) => {
-      const assignedClass = teacher.assignedClass?.toUpperCase() || "";
+    return allPembina.map((teacher) => {
+      const matchClassAsWali = classList.find(
+        (c) => c.guruId === teacher.id || c.waliKelas === teacher.name
+      );
+      const matchClassAsPendamping = classList.find(
+        (c) => c.pendampingId === teacher.id || c.pendampingWali === teacher.name
+      );
+      const matchClassAsAsisten = classList.find(
+        (c) => c.asistenWali && c.asistenWali.includes(teacher.name)
+      );
+
+      let roleInClass: "Wali Kelas Utama" | "Wali Kelas Pendamping" | "Asisten Wali Kelas" | "Pembina Asrama" = "Pembina Asrama";
+      let assignedClass = teacher.assignedClass?.toUpperCase() || "";
+
+      if (matchClassAsWali) {
+        roleInClass = "Wali Kelas Utama";
+        assignedClass = matchClassAsWali.name;
+      } else if (matchClassAsPendamping) {
+        roleInClass = "Wali Kelas Pendamping";
+        assignedClass = matchClassAsPendamping.name;
+      } else if (matchClassAsAsisten) {
+        roleInClass = "Asisten Wali Kelas";
+        assignedClass = matchClassAsAsisten.name;
+      }
+
       const students = santriList.filter((s) => s.class.toUpperCase() === assignedClass);
       const avgScore =
         students.length > 0
@@ -145,10 +163,9 @@ export default function AdminWaliKelasPage() {
         (p) => p.guruId === teacher.id || p.guruName === teacher.name
       ).length;
 
-      const monitoringItem = guruList.find((g) => g.id === teacher.id || g.name === teacher.name);
-
       return {
         ...teacher,
+        roleInClass,
         assignedClass,
         studentsCount: students.length,
         avgScore,
@@ -157,20 +174,31 @@ export default function AdminWaliKelasPage() {
         status: reportsToday > 0 ? "Aktif" : "-"
       };
     });
-  }, [teachers, santriList, penilaianList, guruList]);
+  }, [allPembina, classList, santriList, penilaianList]);
 
   const filteredTeachers = useMemo(() => {
     return enrichedTeachers.filter((t) => {
       const matchGender = selectedGender === "ALL" || t.gender === selectedGender;
+      let matchRole = true;
+      if (selectedRole === "WALI_UTAMA") {
+        matchRole = t.roleInClass === "Wali Kelas Utama";
+      } else if (selectedRole === "PENDAMPING") {
+        matchRole = t.roleInClass === "Wali Kelas Pendamping";
+      } else if (selectedRole === "ASISTEN") {
+        matchRole = t.roleInClass === "Asisten Wali Kelas";
+      } else if (selectedRole === "PENGASUHAN") {
+        matchRole = t.role === "PENGASUHAN";
+      }
       const q = searchQuery.toLowerCase().trim();
       const matchSearch =
         !q ||
         t.name.toLowerCase().includes(q) ||
         (t.username ? t.username.toLowerCase().includes(q) : false) ||
-        t.assignedClass.toLowerCase().includes(q);
-      return matchGender && matchSearch;
+        t.assignedClass.toLowerCase().includes(q) ||
+        t.roleInClass.toLowerCase().includes(q);
+      return matchGender && matchRole && matchSearch;
     });
-  }, [enrichedTeachers, selectedGender, searchQuery]);
+  }, [enrichedTeachers, selectedGender, selectedRole, searchQuery]);
 
   const totalPages = Math.ceil(filteredTeachers.length / PAGE_SIZE) || 1;
 
@@ -185,10 +213,8 @@ export default function AdminWaliKelasPage() {
       name: t.name,
       subtitle: t.username ? `@${t.username}` : undefined,
       tag: t.assignedClass
-        ? `${t.assignedClass} • ${t.role === "GURU" ? "Guru Kelas" : "Pengasuhan BK"}`
-        : t.role === "GURU"
-        ? "Guru Kelas"
-        : "Pengasuhan BK",
+        ? `${t.assignedClass} • ${t.roleInClass}`
+        : t.roleInClass,
       photoUrl: t.avatarUrl,
       initials: t.avatarInitials,
       gender: t.gender as "Putra" | "Putri"
@@ -412,22 +438,30 @@ export default function AdminWaliKelasPage() {
                 ))}
               </div>
 
-              <div className="flex items-center gap-1 p-1 rounded-2xl bg-[#EEF2F6] text-xs font-bold">
-                {(["ALL", "GURU", "PENGASUHAN"] as const).map((r) => (
+              <div className="flex items-center gap-1 p-1 rounded-2xl bg-[#EEF2F6] text-xs font-bold flex-wrap">
+                {(
+                  [
+                    { id: "ALL", label: "Semua Peran" },
+                    { id: "WALI_UTAMA", label: "Wali Utama" },
+                    { id: "PENDAMPING", label: "Pendamping" },
+                    { id: "ASISTEN", label: "Asisten Wali" },
+                    { id: "PENGASUHAN", label: "Pengasuhan BK" }
+                  ] as const
+                ).map((r) => (
                   <button
-                    key={r}
+                    key={r.id}
                     type="button"
                     onClick={() => {
-                      setSelectedRole(r);
+                      setSelectedRole(r.id);
                       setCurrentPage(1);
                     }}
                     className={`py-1.5 px-3 rounded-xl transition-all text-center ${
-                      selectedRole === r
+                      selectedRole === r.id
                         ? "bg-[#1B4D3E] text-white shadow-xs"
                         : "text-[#64748B] hover:text-[#172033]"
                     }`}
                   >
-                    {r === "ALL" ? "Semua Peran" : r === "GURU" ? "Guru Kelas" : "Pengasuhan BK"}
+                    {r.label}
                   </button>
                 ))}
               </div>
@@ -662,8 +696,8 @@ export default function AdminWaliKelasPage() {
                       </div>
 
                       <div>
-                        <span className="text-[8px] sm:text-[9px] font-extrabold uppercase tracking-widest text-[#C5A059] block">
-                          Wali Pembina
+                        <span className="text-[8px] sm:text-[9px] font-extrabold uppercase tracking-widest text-[#C5A059] block truncate">
+                          {teacher.roleInClass}
                         </span>
                         <h4 className="text-xs sm:text-sm font-black text-[#172033] group-hover:text-[#1B4D3E] transition-colors truncate mt-0.5">
                           {teacher.name}
@@ -835,7 +869,19 @@ export default function AdminWaliKelasPage() {
 
                         {visibleColumns.role && (
                           <td className="py-3 px-3.5 text-[#475569] text-xs">
-                            {teacher.role === "GURU" ? "Guru Kelas" : "Pengasuhan BK"}
+                            <span
+                              className={`inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold ${
+                                teacher.roleInClass === "Wali Kelas Utama"
+                                  ? "bg-[#1B4D3E]/10 text-[#1B4D3E] border border-[#1B4D3E]/20"
+                                  : teacher.roleInClass === "Wali Kelas Pendamping"
+                                  ? "bg-amber-50 text-amber-800 border border-amber-200"
+                                  : teacher.roleInClass === "Asisten Wali Kelas"
+                                  ? "bg-blue-50 text-blue-800 border border-blue-200"
+                                  : "bg-slate-100 text-slate-700 border border-slate-200"
+                              }`}
+                            >
+                              {teacher.roleInClass}
+                            </span>
                           </td>
                         )}
 
@@ -979,7 +1025,7 @@ export default function AdminWaliKelasPage() {
                       <span>Gender {activeTeacherDetail.gender === "Putra" ? "L" : "P"}</span>
                       <span className="inline-block w-1 h-1 rounded-full bg-slate-300" />
                       <span className="font-bold text-[#1B4D3E]">
-                        Kelas: {activeTeacherDetail.assignedClass || "Belum Ditugaskan"}
+                        {activeTeacherDetailEnriched?.roleInClass || "Wali Pembina"} • Kelas {activeTeacherDetailEnriched?.assignedClass || activeTeacherDetail.assignedClass || "-"}
                       </span>
                       <span className="inline-block w-1 h-1 rounded-full bg-slate-300" />
                       <span className="font-mono text-[#94A3B8]">@{activeTeacherDetail.username}</span>

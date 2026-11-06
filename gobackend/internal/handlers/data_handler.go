@@ -215,10 +215,12 @@ func GetData(c *fiber.Ctx) error {
 		SELECT 
 			c.id, c.name, COALESCE(c.gender, 'Putra'),
 			COALESCE(c.wali_kelas, ''), COALESCE(c.guru_id, ''),
+			COALESCE(c.pendamping_wali, ''), COALESCE(c.pendamping_id, ''),
+			COALESCE(c.asisten_wali, '[]'::jsonb),
 			COUNT(s.id)::int, COALESCE(ROUND(AVG(s.current_score), 3), 70.000)
 		FROM classes c
 		LEFT JOIN santri s ON UPPER(s.class) = UPPER(c.name)
-		GROUP BY c.id, c.name, c.gender, c.wali_kelas, c.guru_id
+		GROUP BY c.id, c.name, c.gender, c.wali_kelas, c.guru_id, c.pendamping_wali, c.pendamping_id, c.asisten_wali
 		ORDER BY c.name ASC
 	`)
 	var classList []models.ClassInfo
@@ -226,10 +228,18 @@ func GetData(c *fiber.Ctx) error {
 		defer classRows.Close()
 		for classRows.Next() {
 			var cl models.ClassInfo
+			var asistenRaw []byte
 			if err := classRows.Scan(
 				&cl.ID, &cl.Name, &cl.Gender, &cl.WaliKelas, &cl.GuruID,
+				&cl.PendampingWali, &cl.PendampingID, &asistenRaw,
 				&cl.StudentCount, &cl.AvgScore,
 			); err == nil {
+				if len(asistenRaw) > 0 {
+					_ = json.Unmarshal(asistenRaw, &cl.AsistenWali)
+				}
+				if cl.AsistenWali == nil {
+					cl.AsistenWali = []string{}
+				}
 				classList = append(classList, cl)
 			}
 		}

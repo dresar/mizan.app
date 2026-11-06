@@ -85,10 +85,14 @@ function TugaskanContent() {
       });
 
       if (assignedClass) {
+        const targetClsObj = classList.find((c) => c.name.toUpperCase() === assignedClass.toUpperCase());
         await updateClass(assignedClass, {
           waliKelas: selectedTeacher.name,
           guruId: selectedTeacher.id,
-          gender: selectedTeacher.gender
+          gender: selectedTeacher.gender,
+          pendampingWali: targetClsObj?.pendampingWali,
+          pendampingId: targetClsObj?.pendampingId,
+          asistenWali: targetClsObj?.asistenWali
         });
       }
 
@@ -97,9 +101,13 @@ function TugaskanContent() {
           (t) => t.id !== selectedTeacher.id && t.assignedClass === oldClass
         );
         if (!stillOtherWali) {
+          const oldClsObj = classList.find((c) => c.name.toUpperCase() === oldClass.toUpperCase());
           await updateClass(oldClass, {
             waliKelas: "Belum Ditugaskan",
-            guruId: ""
+            guruId: "",
+            pendampingWali: oldClsObj?.pendampingWali,
+            pendampingId: oldClsObj?.pendampingId,
+            asistenWali: oldClsObj?.asistenWali
           });
         }
       }

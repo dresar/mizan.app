@@ -99,7 +99,9 @@ export default function ClassRaporDetailPage() {
     return {
       name: classId,
       gender: defaultGender,
-      waliKelas: assignedTeacher?.name || matchDb?.waliKelas || "Ust. Pembina Kelas",
+      waliKelas: matchDb?.waliKelas || assignedTeacher?.name || "Ust. Pembina Kelas",
+      pendampingWali: matchDb?.pendampingWali || "",
+      asistenWali: matchDb?.asistenWali || [],
       waliAvatar: assignedTeacher?.avatarUrl || defaultAvatar,
       asrama: defaultGender === "Putra" ? "Asrama Salman Al-Farisi" : "Asrama Khadijah"
     };
@@ -290,11 +292,21 @@ export default function ClassRaporDetailPage() {
 
           <CardSub className="p-3.5 bg-white text-center">
             <span className="text-[10px] text-[#64748B] font-bold uppercase tracking-wider block">
-              Wali Kelas
+              Tim Pembina Kelas
             </span>
-            <span className="text-xs sm:text-sm font-black text-[#172033] mt-1.5 block truncate">
+            <span className="text-xs sm:text-sm font-black text-[#172033] mt-1.5 block truncate" title={classData.waliKelas}>
               {classData.waliKelas}
             </span>
+            {classData.pendampingWali && (
+              <span className="text-[10px] text-[#065F46] font-semibold block truncate mt-0.5" title={classData.pendampingWali}>
+                Co: {classData.pendampingWali}
+              </span>
+            )}
+            {classData.asistenWali && classData.asistenWali.length > 0 && (
+              <span className="text-[9px] text-[#A8833E] font-medium block truncate mt-0.5" title={classData.asistenWali.join(", ")}>
+                {classData.asistenWali.length} Asisten Belajar Malam
+              </span>
+            )}
             <span className="text-[10px] text-[#C5A059] block mt-0.5 font-bold truncate">
               {classData.asrama}
             </span>
@@ -446,7 +458,7 @@ export default function ClassRaporDetailPage() {
             </table>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:hidden">
+          <div className="grid grid-cols-2 gap-2 sm:gap-3 md:hidden">
             {filteredRankedStudents.map((santri) => {
               const pred = getPredikatAdab(santri.currentScore);
               const defaultAvatar =
@@ -458,50 +470,52 @@ export default function ClassRaporDetailPage() {
               return (
                 <div
                   key={santri.id}
-                  className="p-3.5 rounded-2xl bg-white border border-[#E2EBF4] shadow-2xs space-y-3"
+                  className="p-2.5 sm:p-3.5 rounded-2xl bg-white border border-[#E2EBF4] shadow-2xs space-y-2 flex flex-col justify-between text-left"
                 >
-                  <div className="flex items-start justify-between gap-2">
-                    <div className="flex items-center gap-2.5 min-w-0">
-                      <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-[#1B4D3E]/10 text-[#1B4D3E] font-black font-mono text-xs shrink-0">
-                        #{santri.rank}
-                      </span>
-                      <img
-                        src={santriPhoto}
-                        alt={santri.name}
-                        onError={(e) => {
-                          const target = e.currentTarget;
-                          if (target.src !== defaultAvatar && !target.src.endsWith(defaultAvatar)) {
-                            target.src = defaultAvatar;
-                          }
-                        }}
-                        className="w-10 h-10 rounded-xl object-cover border border-[#E2EBF4] shrink-0"
-                      />
-                      <div className="min-w-0">
-                        <h4 className="text-xs font-bold text-[#172033] truncate">
-                          {santri.name}
-                        </h4>
-                        <span className="text-[10px] font-mono text-[#64748B] block">
-                          NIS: {santri.nis}
+                  <div className="space-y-1.5">
+                    <div className="flex items-start justify-between gap-1">
+                      <div className="flex items-center gap-1.5 min-w-0">
+                        <span className="inline-flex items-center justify-center w-6 h-6 rounded-md bg-[#1B4D3E]/10 text-[#1B4D3E] font-black font-mono text-[10px] shrink-0">
+                          #{santri.rank}
                         </span>
+                        <img
+                          src={santriPhoto}
+                          alt={santri.name}
+                          onError={(e) => {
+                            const target = e.currentTarget;
+                            if (target.src !== defaultAvatar && !target.src.endsWith(defaultAvatar)) {
+                              target.src = defaultAvatar;
+                            }
+                          }}
+                          className="w-8 h-8 rounded-lg object-cover border border-[#E2EBF4] shrink-0"
+                        />
                       </div>
+                      <span className={`px-1.5 py-0.2 rounded-full text-[8px] font-bold shrink-0 ${pred.badgeCls}`}>
+                        {pred.label}
+                      </span>
                     </div>
 
-                    <span className={`px-2 py-0.5 rounded-full text-[9px] font-bold shrink-0 ${pred.badgeCls}`}>
-                      {pred.label}
-                    </span>
+                    <div className="min-w-0">
+                      <h4 className="text-xs font-black text-[#172033] truncate">
+                        {santri.name}
+                      </h4>
+                      <span className="text-[9px] font-mono text-[#64748B] block truncate">
+                        NIS: {santri.nis}
+                      </span>
+                    </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-2 p-2 rounded-xl bg-[#F8FAFC] border border-[#E2EBF4] text-center">
+                  <div className="grid grid-cols-2 gap-1 p-1.5 rounded-xl bg-[#F8FAFC] border border-[#E2EBF4] text-center">
                     <div>
-                      <span className="text-[9px] text-[#64748B] block">Skor Akhlak</span>
-                      <span className="text-xs font-black font-mono text-[#1B4D3E]">
-                        {santri.currentScore.toFixed(3).replace(".", ",")}
+                      <span className="text-[8px] text-[#64748B] block">Skor</span>
+                      <span className="text-[11px] font-black font-mono text-[#1B4D3E]">
+                        {santri.currentScore.toFixed(2).replace(".", ",")}
                       </span>
                     </div>
                     <div>
-                      <span className="text-[9px] text-[#64748B] block">Sholat 7 Waktu</span>
-                      <span className="text-xs font-black font-mono text-[#065F46]">
-                        {santri.sholatRate.toFixed(1).replace(".", ",")}%
+                      <span className="text-[8px] text-[#64748B] block">Sholat</span>
+                      <span className="text-[11px] font-black font-mono text-[#065F46]">
+                        {santri.sholatRate.toFixed(0)}%
                       </span>
                     </div>
                   </div>
@@ -510,14 +524,14 @@ export default function ClassRaporDetailPage() {
                     type="button"
                     onClick={() => handleDownloadSingle(santri)}
                     disabled={downloadingSantriId === santri.id}
-                    className="w-full py-2 rounded-xl bg-[#1B4D3E] text-white hover:bg-[#153e32] disabled:opacity-50 text-xs font-bold transition-all flex items-center justify-center gap-1.5 shadow-2xs cursor-pointer active:scale-95"
+                    className="w-full py-1.5 rounded-xl bg-[#1B4D3E] text-white hover:bg-[#153e32] disabled:opacity-50 text-[11px] font-bold transition-all flex items-center justify-center gap-1 shadow-2xs cursor-pointer active:scale-95"
                   >
                     {downloadingSantriId === santri.id ? (
-                      <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      <div className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin" />
                     ) : (
-                      <Download className="w-3.5 h-3.5" />
+                      <Download className="w-3 h-3" />
                     )}
-                    <span>Unduh PDF Rapor</span>
+                    <span>Unduh PDF</span>
                   </button>
                 </div>
               );

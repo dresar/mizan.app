@@ -27,13 +27,16 @@ type Santri struct {
 }
 
 type ClassInfo struct {
-	ID           string  `json:"id"`
-	Name         string  `json:"name"`
-	Gender       string  `json:"gender"`
-	WaliKelas    string  `json:"waliKelas"`
-	GuruID       string  `json:"guruId"`
-	StudentCount int     `json:"studentCount"`
-	AvgScore     float64 `json:"avgScore"`
+	ID             string   `json:"id"`
+	Name           string   `json:"name"`
+	Gender         string   `json:"gender"`
+	WaliKelas      string   `json:"waliKelas"`
+	GuruID         string   `json:"guruId"`
+	PendampingWali string   `json:"pendampingWali"`
+	PendampingID   string   `json:"pendampingId"`
+	AsistenWali    []string `json:"asistenWali"`
+	StudentCount   int      `json:"studentCount"`
+	AvgScore       float64  `json:"avgScore"`
 }
 
 type GuruMonitoring struct {

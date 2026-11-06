@@ -7,9 +7,9 @@ import {
   ArrowLeft,
   GraduationCap,
   Edit2,
-  UserCheck,
   X,
-  Save
+  Save,
+  Plus
 } from "lucide-react";
 import { useMizan } from "@/lib/mizan-context";
 import { RoleShell } from "@/components/RoleShell";
@@ -31,28 +31,59 @@ export default function ClassDetailPage() {
     showToast
   } = useMizan();
 
-  const rawId = (params?.id as string) || "1A";
-  const classId = decodeURIComponent(rawId).trim().toUpperCase();
+  const rawId = (params?.id as string) || "";
+  const [effectiveClassId, setEffectiveClassId] = useState<string>(() => {
+    if (typeof window !== "undefined") {
+      const parts = window.location.pathname.split("/").filter(Boolean);
+      const last = parts[parts.length - 1];
+      if (last && last.toUpperCase() !== "DETAIL") {
+        return decodeURIComponent(last).trim().toUpperCase();
+      }
+    }
+    const cleanRaw = decodeURIComponent(rawId).trim().toUpperCase();
+    if (cleanRaw && cleanRaw !== "DETAIL") {
+      return cleanRaw;
+    }
+    return "1A";
+  });
 
-  const [isEditingClass, setIsEditingClass] = useState(false);
+  React.useEffect(() => {
+    if (typeof window !== "undefined") {
+      const parts = window.location.pathname.split("/").filter(Boolean);
+      const last = parts[parts.length - 1];
+      if (last && last.toUpperCase() !== "DETAIL") {
+        setEffectiveClassId(decodeURIComponent(last).trim().toUpperCase());
+        return;
+      }
+    }
+    const cleanRaw = decodeURIComponent((params?.id as string) || "").trim().toUpperCase();
+    if (cleanRaw && cleanRaw !== "DETAIL") {
+      setEffectiveClassId(cleanRaw);
+    }
+  }, [params?.id]);
+
+  const [isEditing, setIsEditing] = useState(false);
   const [editClassName, setEditClassName] = useState("");
   const [editGender, setEditGender] = useState<"Putra" | "Putri">("Putra");
   const [editWaliId, setEditWaliId] = useState("");
-
-  const [isEditingWali, setIsEditingWali] = useState(false);
-  const [quickWaliId, setQuickWaliId] = useState("");
+  const [editPendampingId, setEditPendampingId] = useState("");
+  const [editAsistenList, setEditAsistenList] = useState<string[]>([]);
+  const [selectedNewAsisten, setSelectedNewAsisten] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
 
   const availableTeachers = useMemo(() => {
     return userList.filter((u) => u.role === "GURU" || u.role === "PENGASUHAN");
   }, [userList]);
 
   const currentClass = useMemo(() => {
-    const matchDb = classList.find((c) => c.name.toUpperCase() === classId);
-    const existsInList = kelasList.some((k) => k.toUpperCase() === classId);
+    const targetId = effectiveClassId || "1A";
+    const matchDb = classList.find((c) => c.name.toUpperCase() === targetId);
+    const existsInList = kelasList.some((k) => k.toUpperCase() === targetId);
+    const isStandardClass = /^[1-6][A-D]$/.test(targetId);
 
-    if (!matchDb && !existsInList) return null;
+    if (!matchDb && !existsInList && !isStandardClass) return null;
 
-    const students = santriList.filter((s) => s.class.toUpperCase() === classId);
+    const students = santriList.filter((s) => s.class.toUpperCase() === targetId);
     const avg =
       students.length > 0
         ? students.reduce((acc, s) => acc + s.currentScore, 0) / students.length
@@ -61,38 +92,41 @@ export default function ClassDetailPage() {
     let defaultGender: "Putra" | "Putri" = "Putra";
     if (matchDb?.gender) {
       defaultGender = matchDb.gender;
-    } else if (classId.endsWith("C") || classId.endsWith("D")) {
+    } else if (targetId.endsWith("B") || targetId.endsWith("C") || targetId.endsWith("D")) {
       defaultGender = "Putri";
     }
 
     const assignedTeacher = userList.find(
-      (u) => u.assignedClass?.toUpperCase() === classId && (u.role === "GURU" || u.role === "PENGASUHAN")
+      (u) => u.assignedClass?.toUpperCase() === targetId && (u.role === "GURU" || u.role === "PENGASUHAN")
     );
 
     return {
-      id: matchDb?.id || `cls-${classId.toLowerCase()}`,
-      name: classId,
+      id: matchDb?.id || `cls-${targetId.toLowerCase()}`,
+      name: targetId,
       gender: defaultGender,
-      waliKelas: assignedTeacher?.name || matchDb?.waliKelas || "Belum Ditugaskan",
-      guruId: assignedTeacher?.id || matchDb?.guruId || "",
+      waliKelas: matchDb?.waliKelas || assignedTeacher?.name || "Belum Ditugaskan",
+      guruId: matchDb?.guruId || assignedTeacher?.id || "",
+      pendampingWali: matchDb?.pendampingWali || "",
+      pendampingId: matchDb?.pendampingId || "",
+      asistenWali: matchDb?.asistenWali || [],
       teacherAvatarUrl: assignedTeacher?.avatarUrl,
       teacherInitials:
         assignedTeacher?.avatarInitials ||
-        (assignedTeacher?.name || matchDb?.waliKelas || "WK").slice(0, 2).toUpperCase(),
+        (matchDb?.waliKelas || assignedTeacher?.name || "WK").slice(0, 2).toUpperCase(),
       studentCount: students.length,
       avgScore: avg
     };
-  }, [classId, classList, kelasList, santriList, userList]);
+  }, [effectiveClassId, classList, kelasList, santriList, userList]);
 
   const classStudents = useMemo(() => {
-    return santriList.filter((s) => s.class.toUpperCase() === classId);
-  }, [santriList, classId]);
+    return santriList.filter((s) => s.class.toUpperCase() === effectiveClassId);
+  }, [santriList, effectiveClassId]);
 
   const classPenilaianList = useMemo(() => {
     return penilaianList.filter(
-      (p) => p.santriClass?.toUpperCase() === classId
+      (p) => p.santriClass?.toUpperCase() === effectiveClassId
     );
-  }, [penilaianList, classId]);
+  }, [penilaianList, effectiveClassId]);
 
   const stats = useMemo(() => {
     const hasanahRecords = classPenilaianList.filter((p) => p.type === "HASANAH");
@@ -130,17 +164,44 @@ export default function ClassDetailPage() {
     return map;
   }, [classStudents, classPenilaianList]);
 
-  const handleOpenEditClass = () => {
+  const handleStartEdit = () => {
     if (!currentClass) return;
     setEditClassName(currentClass.name);
     setEditGender(currentClass.gender);
-    setEditWaliId(currentClass.guruId);
-    setIsEditingClass(true);
-    setIsEditingWali(false);
+    const matchWali = userList.find(
+      (u) => (currentClass.guruId && u.id === currentClass.guruId) || u.name === currentClass.waliKelas
+    );
+    setEditWaliId(matchWali?.id || currentClass.guruId || "");
+
+    const matchPendamping = userList.find(
+      (u) => (currentClass.pendampingId && u.id === currentClass.pendampingId) || u.name === currentClass.pendampingWali
+    );
+    setEditPendampingId(matchPendamping?.id || currentClass.pendampingId || "");
+
+    setEditAsistenList([...(currentClass.asistenWali || [])]);
+    setSelectedNewAsisten("");
+    setIsEditing(true);
   };
 
-  const handleSaveEditClass = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleCancelEdit = () => {
+    setIsEditing(false);
+    setSelectedNewAsisten("");
+  };
+
+  const handleAddAsisten = (teacherName: string) => {
+    if (!teacherName) return;
+    if (!editAsistenList.includes(teacherName)) {
+      setEditAsistenList([...editAsistenList, teacherName]);
+    }
+    setSelectedNewAsisten("");
+  };
+
+  const handleRemoveAsisten = (teacherNameToRemove: string) => {
+    setEditAsistenList(editAsistenList.filter((a) => a !== teacherNameToRemove));
+  };
+
+  const handleSaveAll = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
     if (!currentClass) return;
 
     const cleanNew = editClassName.trim().toUpperCase();
@@ -149,41 +210,34 @@ export default function ClassDetailPage() {
       return;
     }
 
-    const teacher = userList.find((u) => u.id === editWaliId);
-    const res = await updateClass(currentClass.name, {
-      newName: cleanNew,
-      gender: editGender,
-      waliKelas: teacher?.name || "",
-      guruId: editWaliId
-    });
+    const waliTeacher = userList.find((u) => u.id === editWaliId);
+    const pendampingTeacher = userList.find((u) => u.id === editPendampingId);
 
-    if (res.success) {
-      setIsEditingClass(false);
-      if (cleanNew !== currentClass.name) {
-        router.push(`/admin/kelas/${cleanNew}`);
+    setIsSaving(true);
+    try {
+      const res = await updateClass(currentClass.name, {
+        newName: cleanNew,
+        gender: editGender,
+        waliKelas: waliTeacher ? waliTeacher.name : editWaliId ? editWaliId : "Belum Ditugaskan",
+        guruId: editWaliId,
+        pendampingWali: pendampingTeacher ? pendampingTeacher.name : "",
+        pendampingId: editPendampingId,
+        asistenWali: editAsistenList
+      });
+
+      if (res.success) {
+        showToast("Data kelas dan tim pembina berhasil diperbarui", "success");
+        setIsEditing(false);
+        if (cleanNew !== currentClass.name) {
+          router.push(`/admin/kelas/${cleanNew}`);
+        }
+      } else {
+        showToast(res.message || "Gagal memperbarui data kelas", "error");
       }
-    }
-  };
-
-  const handleOpenEditWali = () => {
-    if (!currentClass) return;
-    setQuickWaliId(currentClass.guruId);
-    setIsEditingWali(true);
-    setIsEditingClass(false);
-  };
-
-  const handleSaveQuickWali = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!currentClass) return;
-
-    const teacher = userList.find((u) => u.id === quickWaliId);
-    const res = await updateClass(currentClass.name, {
-      waliKelas: teacher?.name || "",
-      guruId: quickWaliId
-    });
-
-    if (res.success) {
-      setIsEditingWali(false);
+    } catch {
+      showToast("Terjadi kesalahan saat menyimpan kelas", "error");
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -202,14 +256,22 @@ export default function ClassDetailPage() {
             <GraduationCap className="w-12 h-12 text-[#94A3B8] mx-auto opacity-50" />
             <h2 className="text-base font-bold text-[#172033]">Kelas Tidak Ditemukan</h2>
             <p className="text-xs text-[#64748B]">
-              Kelas {classId} tidak tercatat dalam basis data sistem Mizan.
+              Kelas {effectiveClassId} tidak tercatat dalam basis data sistem Mizan.
             </p>
-            <Link
-              href="/admin/kelas"
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#1B4D3E] text-white text-xs font-bold hover:bg-[#153e32] transition-colors"
-            >
-              Lihat Seluruh Kelas
-            </Link>
+            <div className="flex items-center justify-center gap-2 pt-2 flex-wrap">
+              <Link
+                href="/admin/kelas"
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#1B4D3E] text-white text-xs font-bold hover:bg-[#153e32] transition-colors"
+              >
+                Lihat Seluruh Kelas
+              </Link>
+              <Link
+                href="/admin/kelas/1A"
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#FAF7EE] text-[#A8833E] border border-[#C5A059]/40 text-xs font-bold hover:bg-[#F5EED9] transition-colors"
+              >
+                Buka Kelas 1A
+              </Link>
+            </div>
           </div>
         </div>
       </RoleShell>
@@ -229,55 +291,316 @@ export default function ClassDetailPage() {
           </Link>
 
           <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={handleOpenEditWali}
-              className="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-[#EFF6FF] text-[#1E3A8A] border border-blue-200 hover:bg-[#DBEAFE] transition-colors flex items-center gap-1.5 cursor-pointer"
-            >
-              <UserCheck className="w-3.5 h-3.5" />
-              <span>Ganti Wali</span>
-            </button>
-            <button
-              type="button"
-              onClick={handleOpenEditClass}
-              className="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-[#FAF7EE] text-[#A8833E] border border-[#C5A059]/40 hover:bg-[#F5EED9] transition-colors flex items-center gap-1.5 cursor-pointer"
-            >
-              <Edit2 className="w-3.5 h-3.5" />
-              <span>Ubah Kelas</span>
-            </button>
+            {isEditing ? (
+              <>
+                <button
+                  type="button"
+                  onClick={handleCancelEdit}
+                  className="px-3.5 py-1.5 rounded-xl text-xs font-bold text-[#64748B] bg-white border border-[#E2E8F0] hover:bg-[#EEF2F6] transition-colors flex items-center gap-1.5 cursor-pointer"
+                >
+                  <X className="w-3.5 h-3.5" />
+                  <span>Batal</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleSaveAll()}
+                  disabled={isSaving}
+                  className="px-4 py-1.5 rounded-xl text-xs font-bold bg-[#1B4D3E] text-white hover:bg-[#153e32] transition-colors flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+                >
+                  <Save className="w-3.5 h-3.5" />
+                  <span>{isSaving ? "Menyimpan..." : "Simpan Perubahan"}</span>
+                </button>
+              </>
+            ) : (
+              <button
+                type="button"
+                onClick={handleStartEdit}
+                className="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-[#FAF7EE] text-[#A8833E] border border-[#C5A059]/40 hover:bg-[#F5EED9] transition-colors flex items-center gap-1.5 cursor-pointer shadow-xs"
+              >
+                <Edit2 className="w-3.5 h-3.5" />
+                <span>Ubah Kelas & Tim Pembina</span>
+              </button>
+            )}
           </div>
         </div>
 
-        <div className="mizan-card p-4 sm:p-5 bg-white border border-[#E2EBF4] flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-          <div className="flex items-center gap-3.5">
-            <Avatar
-              src={currentClass.teacherAvatarUrl}
-              initials={currentClass.teacherInitials}
-              size="lg"
-              variant={currentClass.gender === "Putri" ? "gold" : "primary"}
-              className="w-16 h-16 shadow-xs shrink-0"
-            />
-            <div>
-              <div className="flex items-center gap-2 flex-wrap">
-                <h1 className="text-xl sm:text-2xl font-serif font-black text-[#172033]">
-                  Kelas {currentClass.name}
-                </h1>
-                <span
-                  className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full ${
-                    currentClass.gender === "Putra"
-                      ? "bg-[#ECFDF5] text-[#065F46]"
-                      : "bg-[#FAF7EE] text-[#A8833E]"
-                  }`}
-                >
-                  {currentClass.gender}
+        {isEditing ? (
+          <form
+            onSubmit={handleSaveAll}
+            className="mizan-card p-4 sm:p-5 bg-white border-2 border-[#1B4D3E]/30 rounded-3xl shadow-sm space-y-4"
+          >
+            <div className="flex items-center justify-between pb-2 border-b border-[#F1F5F9]">
+              <div className="flex items-center gap-2">
+                <Edit2 className="w-4 h-4 text-[#1B4D3E]" />
+                <h2 className="text-sm font-serif font-black text-[#172033]">
+                  Edit Informasi Kelas & Penugasan Pembina
+                </h2>
+              </div>
+              <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-[#ECFDF5] text-[#065F46] border border-[#A7F3D0]">
+                Mode Ubah Aktif
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+              <div>
+                <label className="block text-[11px] font-bold text-[#475569] uppercase mb-1">
+                  Nama Kelas
+                </label>
+                <input
+                  type="text"
+                  value={editClassName}
+                  onChange={(e) => setEditClassName(e.target.value)}
+                  className="w-full px-3 py-2 text-xs bg-[#FAF7EE] border border-[#E2EBF4] rounded-xl text-[#172033] font-bold uppercase focus:outline-none focus:border-[#1B4D3E]"
+                  placeholder="Contoh: 1A"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-bold text-[#475569] uppercase mb-1">
+                  Kategori Gender Santri
+                </label>
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setEditGender("Putra")}
+                    className={`py-2 px-3 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                      editGender === "Putra"
+                        ? "bg-[#1B4D3E] text-white shadow-xs"
+                        : "bg-[#F8FAFC] text-[#64748B] border border-[#E2EBF4]"
+                    }`}
+                  >
+                    Santri Putra (L)
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setEditGender("Putri")}
+                    className={`py-2 px-3 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                      editGender === "Putri"
+                        ? "bg-[#A8833E] text-white shadow-xs"
+                        : "bg-[#F8FAFC] text-[#64748B] border border-[#E2EBF4]"
+                    }`}
+                  >
+                    Santriwati Putri (P)
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div className="pt-2 border-t border-[#F1F5F9] space-y-3">
+              <span className="text-xs font-bold text-[#172033] block">
+                Penugasan Wali Kelas & Pendamping
+              </span>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+                <div>
+                  <label className="block text-[11px] font-bold text-[#475569] uppercase mb-1">
+                    Wali Kelas Utama
+                  </label>
+                  <select
+                    value={editWaliId}
+                    onChange={(e) => setEditWaliId(e.target.value)}
+                    className="w-full px-3 py-2 text-xs bg-[#FAF7EE] border border-[#E2EBF4] rounded-xl text-[#172033] font-semibold focus:outline-none focus:border-[#1B4D3E]"
+                  >
+                    <option value="">-- Belum Ditugaskan --</option>
+                    {availableTeachers.map((t) => (
+                      <option key={t.id} value={t.id}>
+                        {t.name} ({t.gender === "Putra" ? "Ustadz" : "Ustadzah"})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-bold text-[#475569] uppercase mb-1">
+                    Wali Kelas Pendamping / Co-Wali
+                  </label>
+                  <select
+                    value={editPendampingId}
+                    onChange={(e) => setEditPendampingId(e.target.value)}
+                    className="w-full px-3 py-2 text-xs bg-[#ECFDF5] border border-[#A7F3D0] rounded-xl text-[#065F46] font-semibold focus:outline-none focus:border-[#1B4D3E]"
+                  >
+                    <option value="">-- Tidak Ada Pendamping (Opsional) --</option>
+                    {availableTeachers.map((t) => (
+                      <option key={t.id} value={t.id}>
+                        {t.name} ({t.gender === "Putra" ? "Ustadz" : "Ustadzah"})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div className="pt-2 border-t border-[#F1F5F9] space-y-2.5">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-[#172033]">
+                  Asisten Pembina Belajar Malam ({editAsistenList.length})
+                </span>
+                <span className="text-[10px] text-[#64748B]">
+                  Dapat menambahkan lebih dari 1 guru
                 </span>
               </div>
-              <p className="text-xs text-[#64748B] mt-1">
-                Wali: <strong className="text-[#172033] font-semibold">{currentClass.waliKelas}</strong> • Total Santri: <strong className="text-[#172033] font-semibold">{classStudents.length} Santri</strong>
-              </p>
+
+              <div className="flex flex-wrap gap-2 min-h-[36px] p-2.5 rounded-2xl bg-[#F8FAFC] border border-[#E2EBF4]">
+                {editAsistenList.map((asisten, idx) => (
+                  <span
+                    key={idx}
+                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl text-xs font-semibold bg-white border border-[#E2EBF4] text-[#172033] shadow-2xs"
+                  >
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#1B4D3E]" />
+                    <span>{asisten}</span>
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveAsisten(asisten)}
+                      className="p-0.5 rounded-md text-[#94A3B8] hover:text-red-600 hover:bg-red-50 transition-colors cursor-pointer"
+                      title={`Hapus ${asisten}`}
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </button>
+                  </span>
+                ))}
+                {editAsistenList.length === 0 && (
+                  <span className="text-xs text-[#94A3B8] italic p-1">
+                    Belum ada asisten belajar malam yang dipilih.
+                  </span>
+                )}
+              </div>
+
+              <div className="flex items-center gap-2">
+                <select
+                  value={selectedNewAsisten}
+                  onChange={(e) => setSelectedNewAsisten(e.target.value)}
+                  className="flex-1 px-3 py-2 text-xs bg-white border border-[#E2EBF4] rounded-xl text-[#172033] font-semibold focus:outline-none focus:border-[#1B4D3E]"
+                >
+                  <option value="">-- Pilih Guru untuk Ditambahkan sebagai Asisten --</option>
+                  {availableTeachers
+                    .filter((t) => !editAsistenList.includes(t.name))
+                    .map((t) => (
+                      <option key={t.id} value={t.name}>
+                        {t.name} ({t.gender === "Putra" ? "Ustadz" : "Ustadzah"}) • {t.role === "GURU" ? "Guru Kelas" : "Pengasuhan"}
+                      </option>
+                    ))}
+                </select>
+                <button
+                  type="button"
+                  onClick={() => handleAddAsisten(selectedNewAsisten)}
+                  disabled={!selectedNewAsisten}
+                  className="px-4 py-2 rounded-xl text-xs font-bold bg-[#1B4D3E] text-white hover:bg-[#153e32] transition-colors flex items-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer shrink-0"
+                >
+                  <Plus className="w-3.5 h-3.5" />
+                  <span>Tambah Asisten</span>
+                </button>
+              </div>
             </div>
-          </div>
-        </div>
+
+            <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-[#F1F5F9]">
+              <button
+                type="button"
+                onClick={handleCancelEdit}
+                className="px-4 py-2 rounded-xl text-xs font-bold text-[#64748B] hover:bg-[#EEF2F6] transition-colors cursor-pointer"
+              >
+                Batal
+              </button>
+              <button
+                type="submit"
+                disabled={isSaving}
+                className="px-5 py-2 rounded-xl bg-[#1B4D3E] text-white text-xs font-bold hover:bg-[#153e32] transition-colors flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+              >
+                <Save className="w-3.5 h-3.5" />
+                <span>{isSaving ? "Menyimpan..." : "Simpan Perubahan"}</span>
+              </button>
+            </div>
+          </form>
+        ) : (
+          <>
+            <div className="mizan-card p-4 sm:p-5 bg-white border border-[#E2EBF4] flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+              <div className="flex items-center gap-3.5">
+                <Avatar
+                  src={currentClass.teacherAvatarUrl}
+                  initials={currentClass.teacherInitials}
+                  size="lg"
+                  variant={currentClass.gender === "Putri" ? "gold" : "primary"}
+                  gender={currentClass.gender}
+                  className="w-16 h-16 shadow-xs shrink-0"
+                />
+                <div>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <h1 className="text-xl sm:text-2xl font-serif font-black text-[#172033]">
+                      Kelas {currentClass.name}
+                    </h1>
+                    <span
+                      className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full ${
+                        currentClass.gender === "Putra"
+                          ? "bg-[#ECFDF5] text-[#065F46]"
+                          : "bg-[#FAF7EE] text-[#A8833E]"
+                      }`}
+                    >
+                      {currentClass.gender}
+                    </span>
+                  </div>
+                  <p className="text-xs text-[#64748B] mt-1">
+                    Wali: <strong className="text-[#172033] font-semibold">{currentClass.waliKelas}</strong>
+                    {currentClass.pendampingWali && (
+                      <span> • Pendamping: <strong className="text-[#065F46] font-semibold">{currentClass.pendampingWali}</strong></span>
+                    )}
+                    <span> • Total Santri: <strong className="text-[#172033] font-semibold">{classStudents.length} Santri</strong></span>
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="p-4 sm:p-5 rounded-2xl bg-white border border-[#E2EBF4] shadow-xs space-y-3">
+              <div className="flex items-center justify-between border-b border-[#F1F5F9] pb-2.5">
+                <h2 className="text-xs font-bold uppercase tracking-wider text-[#1B4D3E]">
+                  Tim Pembina & Asisten Belajar Malam Kelas {currentClass.name}
+                </h2>
+                <span className="text-[11px] font-mono text-[#64748B]">
+                  {(currentClass.asistenWali?.length || 0) + (currentClass.pendampingWali ? 2 : 1)} Pembina Terdaftar
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div className="p-3 rounded-xl bg-[#FAF7EE] border border-[#C5A059]/30 space-y-1">
+                  <span className="text-[10px] font-black uppercase tracking-wider text-[#A8833E]">
+                    Wali Kelas Utama
+                  </span>
+                  <p className="text-sm font-bold text-[#172033]">
+                    {currentClass.waliKelas}
+                  </p>
+                </div>
+
+                {currentClass.pendampingWali && (
+                  <div className="p-3 rounded-xl bg-[#ECFDF5] border border-[#A7F3D0] space-y-1">
+                    <span className="text-[10px] font-black uppercase tracking-wider text-[#065F46]">
+                      Wali Kelas Pendamping
+                    </span>
+                    <p className="text-sm font-bold text-[#172033]">
+                      {currentClass.pendampingWali}
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              {currentClass.asistenWali && currentClass.asistenWali.length > 0 && (
+                <div className="space-y-1.5 pt-1">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#64748B] block">
+                    Asisten Pembina Belajar Malam ({currentClass.asistenWali.length})
+                  </span>
+                  <div className="flex flex-wrap gap-2">
+                    {currentClass.asistenWali.map((asisten, idx) => (
+                      <span
+                        key={idx}
+                        className="px-2.5 py-1 rounded-xl text-xs font-semibold bg-white border border-[#E2EBF4] text-[#172033] shadow-2xs flex items-center gap-1.5"
+                      >
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#1B4D3E]" />
+                        <span>{asisten}</span>
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </>
+        )}
 
         <ClassStats avgScore={currentClass.avgScore} stats={stats} />
 
@@ -291,159 +614,6 @@ export default function ClassDetailPage() {
           classNameTitle={currentClass.name}
           logs={classPenilaianList}
         />
-
-        {isEditingClass && (
-          <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
-            <div className="bg-white w-full max-w-lg rounded-3xl shadow-2xl border border-[#E2EBF4] p-5 space-y-4">
-              <div className="flex items-center justify-between pb-2 border-b border-[#E2E8F0]">
-                <div className="flex items-center gap-2">
-                  <Edit2 className="w-4 h-4 text-[#1B4D3E]" />
-                  <h2 className="text-sm font-bold text-[#172033] uppercase tracking-wider">
-                    Ubah Kelas
-                  </h2>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setIsEditingClass(false)}
-                  className="p-1 rounded-lg text-[#64748B] hover:text-[#172033] cursor-pointer"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
-
-              <form onSubmit={handleSaveEditClass} className="space-y-4">
-                <div>
-                  <label className="block text-xs font-bold text-[#172033] mb-1">
-                    Nama Kelas
-                  </label>
-                  <input
-                    type="text"
-                    value={editClassName}
-                    onChange={(e) => setEditClassName(e.target.value)}
-                    className="w-full px-3 py-2 text-xs bg-[#FAF7EE] border border-[#E2EBF4] rounded-xl text-[#172033] font-bold focus:outline-none focus:border-[#1B4D3E]"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold text-[#172033] mb-1">
-                    Kategori Gender Santri
-                  </label>
-                  <div className="grid grid-cols-2 gap-2">
-                    {(["Putra", "Putri"] as const).map((g) => (
-                      <button
-                        key={g}
-                        type="button"
-                        onClick={() => setEditGender(g)}
-                        className={`py-2 text-xs font-bold rounded-xl border transition-all cursor-pointer ${
-                          editGender === g
-                            ? "bg-[#1B4D3E] text-white border-[#1B4D3E] shadow-xs"
-                            : "bg-[#FAF7EE] text-[#64748B] border-[#E2EBF4] hover:bg-white"
-                        }`}
-                      >
-                        {g}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold text-[#172033] mb-1">
-                    Pilih Wali Kelas
-                  </label>
-                  <select
-                    value={editWaliId}
-                    onChange={(e) => setEditWaliId(e.target.value)}
-                    className="w-full px-3 py-2 text-xs bg-[#FAF7EE] border border-[#E2EBF4] rounded-xl text-[#172033] font-bold focus:outline-none focus:border-[#1B4D3E]"
-                  >
-                    <option value="">-- Belum Ditugaskan --</option>
-                    {availableTeachers.map((t) => (
-                      <option key={t.id} value={t.id}>
-                        {t.name} ({t.role})
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="flex items-center justify-end gap-2 pt-2 border-t border-[#E2E8F0]">
-                  <button
-                    type="button"
-                    onClick={() => setIsEditingClass(false)}
-                    className="px-4 py-2 rounded-xl text-xs font-bold text-[#64748B] hover:bg-[#EEF2F6] transition-colors cursor-pointer"
-                  >
-                    Batal
-                  </button>
-                  <button
-                    type="submit"
-                    className="px-5 py-2 rounded-xl bg-[#1B4D3E] text-white text-xs font-bold hover:bg-[#153e32] transition-colors flex items-center gap-1.5 cursor-pointer"
-                  >
-                    <Save className="w-3.5 h-3.5" />
-                    <span>Simpan</span>
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        )}
-
-        {isEditingWali && (
-          <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
-            <div className="bg-white w-full max-w-md rounded-3xl shadow-2xl border border-[#E2EBF4] p-5 space-y-4">
-              <div className="flex items-center justify-between pb-2 border-b border-[#E2E8F0]">
-                <div className="flex items-center gap-2">
-                  <UserCheck className="w-4 h-4 text-[#1B4D3E]" />
-                  <h2 className="text-sm font-bold text-[#172033] uppercase tracking-wider">
-                    Ganti Wali Kelas {currentClass.name}
-                  </h2>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setIsEditingWali(false)}
-                  className="p-1 rounded-lg text-[#64748B] hover:text-[#172033] cursor-pointer"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
-
-              <form onSubmit={handleSaveQuickWali} className="space-y-4">
-                <div>
-                  <label className="block text-xs font-bold text-[#172033] mb-1">
-                    Pilih Guru Pembina
-                  </label>
-                  <select
-                    value={quickWaliId}
-                    onChange={(e) => setQuickWaliId(e.target.value)}
-                    className="w-full px-3 py-2 text-xs bg-[#FAF7EE] border border-[#E2EBF4] rounded-xl text-[#172033] font-bold focus:outline-none focus:border-[#1B4D3E]"
-                  >
-                    <option value="">-- Belum Ditugaskan --</option>
-                    {availableTeachers.map((t) => (
-                      <option key={t.id} value={t.id}>
-                        {t.name} ({t.role})
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="flex items-center justify-end gap-2 pt-2 border-t border-[#E2E8F0]">
-                  <button
-                    type="button"
-                    onClick={() => setIsEditingWali(false)}
-                    className="px-4 py-2 rounded-xl text-xs font-bold text-[#64748B] hover:bg-[#EEF2F6] transition-colors cursor-pointer"
-                  >
-                    Batal
-                  </button>
-                  <button
-                    type="submit"
-                    className="px-5 py-2 rounded-xl bg-[#1B4D3E] text-white text-xs font-bold hover:bg-[#153e32] transition-colors flex items-center gap-1.5 cursor-pointer"
-                  >
-                    <Save className="w-3.5 h-3.5" />
-                    <span>Tugaskan</span>
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        )}
       </div>
     </RoleShell>
   );

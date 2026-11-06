@@ -218,7 +218,7 @@ export default function AdminDashboardPage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+          <div className="grid grid-cols-2 gap-2 sm:gap-2.5">
             {rankedSantriList.map((santri, idx) => {
               const rank = idx + 1;
               const isFirst = rank === 1;
@@ -229,7 +229,7 @@ export default function AdminDashboardPage() {
                 <Link
                   key={santri.id}
                   href={`/guru/santri/${santri.id}`}
-                  className={`p-3 rounded-2xl mizan-card-sub flex items-center justify-between gap-2.5 transition-all group ${
+                  className={`p-2.5 sm:p-3 rounded-2xl mizan-card-sub flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-2.5 transition-all group ${
                     isFirst
                       ? "border-[#C5A059] bg-[#FAF7EE]/50"
                       : isSecond
@@ -239,9 +239,9 @@ export default function AdminDashboardPage() {
                       : "hover:border-[#1B4D3E]/40"
                   }`}
                 >
-                  <div className="flex items-center gap-2.5 min-w-0">
+                  <div className="flex items-center gap-2 sm:gap-2.5 min-w-0 w-full sm:w-auto">
                     <div
-                      className={`w-7 h-7 rounded-xl flex items-center justify-center font-bold text-xs shrink-0 ${
+                      className={`w-6 h-6 sm:w-7 sm:h-7 rounded-xl flex items-center justify-center font-bold text-xs shrink-0 ${
                         isFirst
                           ? "bg-[#C5A059] text-white shadow-xs"
                           : isSecond
@@ -259,11 +259,11 @@ export default function AdminDashboardPage() {
                       name={santri.name}
                       gender={santri.gender}
                       initials={santri.avatar}
-                      size="md"
+                      size="sm"
                       variant={isFirst ? "gold" : santri.gender === "Putra" ? "primary" : "gold"}
                     />
 
-                    <div className="min-w-0">
+                    <div className="min-w-0 flex-1">
                       <p className="text-xs font-bold text-[#172033] truncate group-hover:text-[#1B4D3E] transition-colors">
                         {santri.name}
                       </p>
@@ -273,11 +273,11 @@ export default function AdminDashboardPage() {
                     </div>
                   </div>
 
-                  <div className="text-right shrink-0">
+                  <div className="text-left sm:text-right shrink-0 w-full sm:w-auto flex sm:flex-col items-center sm:items-end justify-between border-t sm:border-t-0 pt-1.5 sm:pt-0 border-[#E2E8F0]">
                     <span className="text-xs font-black font-mono text-[#1B4D3E] block">
                       {formatScore(santri.currentScore)}
                     </span>
-                    <span className="inline-flex items-center gap-1 text-[10px] font-bold text-[#A8833E] bg-[#FAF7EE] border border-[#C5A059]/30 px-2.5 py-0.5 rounded-full mt-1">
+                    <span className="inline-flex items-center gap-1 text-[9px] sm:text-[10px] font-bold text-[#A8833E] bg-[#FAF7EE] border border-[#C5A059]/30 px-2 py-0.5 rounded-full">
                       <Award className="w-3 h-3 text-[#A8833E]" />
                       Peringkat {rank}
                     </span>

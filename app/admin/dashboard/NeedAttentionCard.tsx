@@ -126,7 +126,7 @@ export function NeedAttentionCard({ santriList }: NeedAttentionCardProps) {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+      <div className="grid grid-cols-2 gap-2 sm:gap-2.5">
         {needAttentionSantri.map((santri, idx) => {
           const rank = idx + 1;
           const style = getCardStyle(santri.currentScore);
@@ -134,11 +134,11 @@ export function NeedAttentionCard({ santriList }: NeedAttentionCardProps) {
             <Link
               key={santri.id}
               href={`/guru/santri/${santri.id}`}
-              className={`p-3 rounded-2xl border flex items-center justify-between gap-2.5 transition-all group ${style.card}`}
+              className={`p-2.5 sm:p-3 rounded-2xl border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-2.5 transition-all group ${style.card}`}
             >
-              <div className="flex items-center gap-2.5 min-w-0">
+              <div className="flex items-center gap-2 sm:gap-2.5 min-w-0 w-full sm:w-auto">
                 <div
-                  className={`w-7 h-7 rounded-xl flex items-center justify-center font-bold text-xs shrink-0 ${style.rank}`}
+                  className={`w-6 h-6 sm:w-7 sm:h-7 rounded-xl flex items-center justify-center font-bold text-xs shrink-0 ${style.rank}`}
                 >
                   {rank}
                 </div>
@@ -148,11 +148,11 @@ export function NeedAttentionCard({ santriList }: NeedAttentionCardProps) {
                   name={santri.name}
                   gender={santri.gender}
                   initials={santri.avatar}
-                  size="md"
+                  size="sm"
                   variant={santri.gender === "Putra" ? "primary" : "gold"}
                 />
 
-                <div className="min-w-0">
+                <div className="min-w-0 flex-1">
                   <p className={`text-xs font-bold text-[#172033] truncate transition-colors ${style.nameHover}`}>
                     {santri.name}
                   </p>
@@ -162,11 +162,11 @@ export function NeedAttentionCard({ santriList }: NeedAttentionCardProps) {
                 </div>
               </div>
 
-              <div className="text-right shrink-0">
+              <div className="text-left sm:text-right shrink-0 w-full sm:w-auto flex sm:flex-col items-center sm:items-end justify-between border-t sm:border-t-0 pt-1.5 sm:pt-0 border-[#E2E8F0]">
                 <span className={`text-xs font-black font-mono block ${style.scoreColor}`}>
                   {formatScore(santri.currentScore)}
                 </span>
-                <span className={`inline-flex items-center gap-1 text-[10px] font-bold border px-2.5 py-0.5 rounded-full mt-1 ${style.badge}`}>
+                <span className={`inline-flex items-center gap-1 text-[9px] sm:text-[10px] font-bold border px-2 py-0.5 rounded-full ${style.badge}`}>
                   {style.icon}
                   {santri.currentScore >= 70 ? (santri.status || "Aman") : style.statusLabel}
                 </span>

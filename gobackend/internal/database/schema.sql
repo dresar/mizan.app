@@ -10,7 +10,9 @@ CREATE TABLE IF NOT EXISTS users (
     gender VARCHAR(16) DEFAULT 'Putra',
     assigned_class VARCHAR(32) DEFAULT '',
     is_active BOOLEAN DEFAULT true,
-    created_at TIMESTAMPTZ DEFAULT NOW()
+    santri_id VARCHAR(64) DEFAULT '',
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
 CREATE TABLE IF NOT EXISTS santri (
@@ -28,7 +30,17 @@ CREATE TABLE IF NOT EXISTS santri (
     wali_name VARCHAR(128),
     wali_phone VARCHAR(32),
     total_hadir INTEGER DEFAULT 28,
-    total_alpa INTEGER DEFAULT 0
+    total_alpa INTEGER DEFAULT 0,
+    musyrif_id VARCHAR(64) DEFAULT '',
+    musyrif_name VARCHAR(128) DEFAULT '',
+    musyrif_phone VARCHAR(32) DEFAULT '',
+    riwayat_alergi TEXT DEFAULT '',
+    riwayat_penyakit TEXT DEFAULT '',
+    daily_pocket_limit NUMERIC(12,2) DEFAULT 25000,
+    pocket_balance NUMERIC(12,2) DEFAULT 0,
+    current_health_status VARCHAR(32) DEFAULT 'Sehat',
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
 CREATE TABLE IF NOT EXISTS classes (
@@ -37,7 +49,10 @@ CREATE TABLE IF NOT EXISTS classes (
     created_at TIMESTAMPTZ DEFAULT NOW(),
     gender VARCHAR(16) DEFAULT 'Putra',
     wali_kelas VARCHAR(128),
-    guru_id VARCHAR(64)
+    guru_id VARCHAR(64),
+    pendamping_wali VARCHAR(128) DEFAULT '',
+    pendamping_id VARCHAR(64) DEFAULT '',
+    asisten_wali JSONB DEFAULT '[]'::jsonb
 );
 
 CREATE TABLE IF NOT EXISTS absensi (
@@ -168,14 +183,6 @@ CREATE TABLE IF NOT EXISTS notifications (
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
-CREATE INDEX IF NOT EXISTS idx_santri_nis ON santri (nis);
-CREATE INDEX IF NOT EXISTS idx_santri_class ON santri (class);
-CREATE INDEX IF NOT EXISTS idx_users_username ON users (username);
-CREATE INDEX IF NOT EXISTS idx_absensi_santri_id ON absensi (santri_id);
-CREATE INDEX IF NOT EXISTS idx_absensi_date ON absensi (date);
-CREATE INDEX IF NOT EXISTS idx_penilaian_santri_id ON penilaian (santri_id);
-CREATE INDEX IF NOT EXISTS idx_public_shares_expires_at ON public_shares (expires_at);
-
 CREATE TABLE IF NOT EXISTS tahfidz_records (
     id VARCHAR(64) PRIMARY KEY,
     santri_id VARCHAR(64) NOT NULL,
@@ -296,10 +303,93 @@ CREATE TABLE IF NOT EXISTS catatan_musyrif (
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
+CREATE TABLE IF NOT EXISTS audit_logs (
+    id VARCHAR(64) PRIMARY KEY,
+    user_id VARCHAR(64),
+    user_name VARCHAR(128),
+    user_role VARCHAR(32),
+    action VARCHAR(64) NOT NULL,
+    entity_type VARCHAR(64) NOT NULL,
+    entity_id VARCHAR(64),
+    details JSONB DEFAULT '{}'::jsonb,
+    ip_address VARCHAR(64),
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS system_backups (
+    id VARCHAR(64) PRIMARY KEY,
+    filename VARCHAR(255) NOT NULL,
+    file_size BIGINT NOT NULL DEFAULT 0,
+    backup_type VARCHAR(32) DEFAULT 'MANUAL',
+    status VARCHAR(32) DEFAULT 'COMPLETED',
+    created_by VARCHAR(128),
+    notes TEXT,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS user_sessions (
+    id VARCHAR(64) PRIMARY KEY,
+    user_id VARCHAR(64) NOT NULL,
+    token_hash VARCHAR(128) NOT NULL UNIQUE,
+    user_agent TEXT,
+    ip_address VARCHAR(64),
+    expires_at TIMESTAMPTZ NOT NULL,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE users ADD COLUMN IF NOT EXISTS santri_id VARCHAR(64) DEFAULT '';
+ALTER TABLE users ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ DEFAULT NOW();
+ALTER TABLE santri ADD COLUMN IF NOT EXISTS created_at TIMESTAMPTZ DEFAULT NOW();
+ALTER TABLE santri ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ DEFAULT NOW();
+ALTER TABLE santri ADD COLUMN IF NOT EXISTS musyrif_id VARCHAR(64) DEFAULT '';
+ALTER TABLE santri ADD COLUMN IF NOT EXISTS musyrif_name VARCHAR(128) DEFAULT '';
+ALTER TABLE santri ADD COLUMN IF NOT EXISTS musyrif_phone VARCHAR(32) DEFAULT '';
+ALTER TABLE santri ADD COLUMN IF NOT EXISTS riwayat_alergi TEXT DEFAULT '';
+ALTER TABLE santri ADD COLUMN IF NOT EXISTS riwayat_penyakit TEXT DEFAULT '';
+ALTER TABLE santri ADD COLUMN IF NOT EXISTS daily_pocket_limit NUMERIC(12,2) DEFAULT 25000;
+ALTER TABLE santri ADD COLUMN IF NOT EXISTS pocket_balance NUMERIC(12,2) DEFAULT 0;
+ALTER TABLE santri ADD COLUMN IF NOT EXISTS current_health_status VARCHAR(32) DEFAULT 'Sehat';
+ALTER TABLE classes ADD COLUMN IF NOT EXISTS pendamping_wali VARCHAR(128) DEFAULT '';
+ALTER TABLE classes ADD COLUMN IF NOT EXISTS pendamping_id VARCHAR(64) DEFAULT '';
+ALTER TABLE classes ADD COLUMN IF NOT EXISTS asisten_wali JSONB DEFAULT '[]'::jsonb;
+ALTER TABLE public_shares ADD COLUMN IF NOT EXISTS expires_at TIMESTAMPTZ;
+
+CREATE INDEX IF NOT EXISTS idx_users_username ON users (username);
+CREATE INDEX IF NOT EXISTS idx_users_role ON users (role);
+CREATE INDEX IF NOT EXISTS idx_users_santri_id ON users (santri_id);
+CREATE INDEX IF NOT EXISTS idx_santri_nis ON santri (nis);
+CREATE INDEX IF NOT EXISTS idx_santri_class ON santri (class);
+CREATE INDEX IF NOT EXISTS idx_santri_gender ON santri (gender);
+CREATE INDEX IF NOT EXISTS idx_classes_name ON classes (name);
+CREATE INDEX IF NOT EXISTS idx_classes_gender ON classes (gender);
+CREATE INDEX IF NOT EXISTS idx_absensi_santri_id ON absensi (santri_id);
+CREATE INDEX IF NOT EXISTS idx_absensi_date ON absensi (date);
+CREATE INDEX IF NOT EXISTS idx_absensi_class ON absensi (santri_class);
+CREATE INDEX IF NOT EXISTS idx_absensi_waktu_sholat ON absensi (waktu_sholat);
+CREATE INDEX IF NOT EXISTS idx_penilaian_santri_id ON penilaian (santri_id);
+CREATE INDEX IF NOT EXISTS idx_penilaian_guru_id ON penilaian (guru_id);
+CREATE INDEX IF NOT EXISTS idx_penilaian_date_key ON penilaian (date_key);
+CREATE INDEX IF NOT EXISTS idx_penilaian_type ON penilaian (type);
+CREATE INDEX IF NOT EXISTS idx_unsurs_category_name ON unsurs (category_name);
+CREATE INDEX IF NOT EXISTS idx_indicators_unsur_id ON indicators (unsur_id);
+CREATE INDEX IF NOT EXISTS idx_feedbacks_status ON feedbacks (status);
+CREATE INDEX IF NOT EXISTS idx_feedbacks_user_id ON feedbacks (user_id);
+CREATE INDEX IF NOT EXISTS idx_public_shares_expires_at ON public_shares (expires_at);
+CREATE INDEX IF NOT EXISTS idx_notifications_target_role ON notifications (target_role);
+CREATE INDEX IF NOT EXISTS idx_notifications_is_active ON notifications (is_active);
 CREATE INDEX IF NOT EXISTS idx_tahfidz_santri_id ON tahfidz_records (santri_id);
 CREATE INDEX IF NOT EXISTS idx_kesehatan_santri_id ON kesehatan_records (santri_id);
 CREATE INDEX IF NOT EXISTS idx_perizinan_santri_id ON perizinan_records (santri_id);
+CREATE INDEX IF NOT EXISTS idx_perizinan_status ON perizinan_records (status);
 CREATE INDEX IF NOT EXISTS idx_perizinan_qr_token ON perizinan_records (qr_code_token);
+CREATE INDEX IF NOT EXISTS idx_sambangan_santri_id ON sambangan_records (santri_id);
 CREATE INDEX IF NOT EXISTS idx_transaksi_santri_id ON transaksi_keuangan (santri_id);
+CREATE INDEX IF NOT EXISTS idx_transaksi_tanggal ON transaksi_keuangan (tanggal);
 CREATE INDEX IF NOT EXISTS idx_tagihan_spp_santri_id ON tagihan_spp (santri_id);
+CREATE INDEX IF NOT EXISTS idx_tagihan_spp_status ON tagihan_spp (status);
 CREATE INDEX IF NOT EXISTS idx_catatan_musyrif_santri_id ON catatan_musyrif (santri_id);
+CREATE INDEX IF NOT EXISTS idx_audit_logs_user_id ON audit_logs (user_id);
+CREATE INDEX IF NOT EXISTS idx_audit_logs_action ON audit_logs (action);
+CREATE INDEX IF NOT EXISTS idx_audit_logs_created_at ON audit_logs (created_at);
+CREATE INDEX IF NOT EXISTS idx_user_sessions_user_id ON user_sessions (user_id);
+CREATE INDEX IF NOT EXISTS idx_user_sessions_expires_at ON user_sessions (expires_at);

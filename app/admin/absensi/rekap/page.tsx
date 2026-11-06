@@ -359,7 +359,12 @@ export default function AdminAbsensiRekapPage() {
                           {c.class.gender === "Putra" ? "L" : "P"}
                         </span>
                       </td>
-                      <td className="p-3 text-[#64748B]">{c.class.waliKelas}</td>
+                      <td className="p-3 text-[#64748B]">
+                        <div className="font-semibold text-[#172033]">{c.class.waliKelas}</div>
+                        {c.class.pendampingWali && (
+                          <div className="text-[10px] text-[#065F46]">Co: {c.class.pendampingWali}</div>
+                        )}
+                      </td>
                       <td className="p-3 text-center font-mono font-semibold">
                         {c.prayerRates.Subuh > 0 ? `${c.prayerRates.Subuh}%` : "-"}
                       </td>

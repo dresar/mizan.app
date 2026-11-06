@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"time"
 
@@ -25,10 +26,12 @@ func GetClasses(c *fiber.Ctx) error {
 		SELECT 
 			c.id, c.name, COALESCE(c.gender, 'Putra'),
 			COALESCE(c.wali_kelas, ''), COALESCE(c.guru_id, ''),
+			COALESCE(c.pendamping_wali, ''), COALESCE(c.pendamping_id, ''),
+			COALESCE(c.asisten_wali, '[]'::jsonb),
 			COUNT(s.id)::int, COALESCE(ROUND(AVG(s.current_score), 3), 70.000)
 		FROM classes c
 		LEFT JOIN santri s ON UPPER(s.class) = UPPER(c.name)
-		GROUP BY c.id, c.name, c.gender, c.wali_kelas, c.guru_id
+		GROUP BY c.id, c.name, c.gender, c.wali_kelas, c.guru_id, c.pendamping_wali, c.pendamping_id, c.asisten_wali
 		ORDER BY c.name ASC
 	`)
 	if err != nil {
@@ -39,10 +42,18 @@ func GetClasses(c *fiber.Ctx) error {
 	var list []models.ClassInfo
 	for rows.Next() {
 		var cl models.ClassInfo
+		var asistenRaw []byte
 		if err := rows.Scan(
 			&cl.ID, &cl.Name, &cl.Gender, &cl.WaliKelas, &cl.GuruID,
+			&cl.PendampingWali, &cl.PendampingID, &asistenRaw,
 			&cl.StudentCount, &cl.AvgScore,
 		); err == nil {
+			if len(asistenRaw) > 0 {
+				_ = json.Unmarshal(asistenRaw, &cl.AsistenWali)
+			}
+			if cl.AsistenWali == nil {
+				cl.AsistenWali = []string{}
+			}
 			list = append(list, cl)
 		}
 	}
@@ -55,10 +66,13 @@ func GetClasses(c *fiber.Ctx) error {
 
 func CreateClass(c *fiber.Ctx) error {
 	var req struct {
-		Name      string `json:"name"`
-		Gender    string `json:"gender"`
-		WaliKelas string `json:"waliKelas"`
-		GuruID    string `json:"guruId"`
+		Name           string   `json:"name"`
+		Gender         string   `json:"gender"`
+		WaliKelas      string   `json:"waliKelas"`
+		GuruID         string   `json:"guruId"`
+		PendampingWali string   `json:"pendampingWali"`
+		PendampingID   string   `json:"pendampingId"`
+		AsistenWali    []string `json:"asistenWali"`
 	}
 	if err := c.BodyParser(&req); err != nil || req.Name == "" {
 		return utils.SendError(c, fiber.StatusBadRequest, "Nama kelas wajib diisi")
@@ -78,14 +92,22 @@ func CreateClass(c *fiber.Ctx) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
+	asistenJSON, _ := json.Marshal(req.AsistenWali)
+	if len(req.AsistenWali) == 0 {
+		asistenJSON = []byte("[]")
+	}
+
 	_, err := pool.Exec(ctx, `
-		INSERT INTO classes (id, name, gender, wali_kelas, guru_id)
-		VALUES ($1, $2, $3, $4, $5)
+		INSERT INTO classes (id, name, gender, wali_kelas, guru_id, pendamping_wali, pendamping_id, asisten_wali)
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
 		ON CONFLICT (name) DO UPDATE SET
 			gender = EXCLUDED.gender,
 			wali_kelas = EXCLUDED.wali_kelas,
-			guru_id = EXCLUDED.guru_id
-	`, id, req.Name, req.Gender, req.WaliKelas, req.GuruID)
+			guru_id = EXCLUDED.guru_id,
+			pendamping_wali = EXCLUDED.pendamping_wali,
+			pendamping_id = EXCLUDED.pendamping_id,
+			asisten_wali = EXCLUDED.asisten_wali
+	`, id, req.Name, req.Gender, req.WaliKelas, req.GuruID, req.PendampingWali, req.PendampingID, asistenJSON)
 	if err != nil {
 		return utils.SendError(c, fiber.StatusInternalServerError, err.Error())
 	}
@@ -95,11 +117,14 @@ func CreateClass(c *fiber.Ctx) error {
 
 func UpdateClass(c *fiber.Ctx) error {
 	var req struct {
-		Name      string `json:"name"`
-		NewName   string `json:"newName"`
-		Gender    string `json:"gender"`
-		WaliKelas string `json:"waliKelas"`
-		GuruID    string `json:"guruId"`
+		Name           string    `json:"name"`
+		NewName        string    `json:"newName"`
+		Gender         string    `json:"gender"`
+		WaliKelas      string    `json:"waliKelas"`
+		GuruID         string    `json:"guruId"`
+		PendampingWali string    `json:"pendampingWali"`
+		PendampingID   string    `json:"pendampingId"`
+		AsistenWali    *[]string `json:"asistenWali"`
 	}
 	if err := c.BodyParser(&req); err != nil || req.Name == "" {
 		return utils.SendError(c, fiber.StatusBadRequest, "Nama kelas asal wajib diisi")
@@ -118,14 +143,22 @@ func UpdateClass(c *fiber.Ctx) error {
 		targetName = req.NewName
 	}
 
+	var asistenJSON []byte
+	if req.AsistenWali != nil {
+		asistenJSON, _ = json.Marshal(*req.AsistenWali)
+	}
+
 	_, err := pool.Exec(ctx, `
 		UPDATE classes SET
 			name = $1,
 			gender = COALESCE(NULLIF($2, ''), gender),
 			wali_kelas = COALESCE(NULLIF($3, ''), wali_kelas),
-			guru_id = COALESCE(NULLIF($4, ''), guru_id)
-		WHERE name = $5
-	`, targetName, req.Gender, req.WaliKelas, req.GuruID, req.Name)
+			guru_id = COALESCE(NULLIF($4, ''), guru_id),
+			pendamping_wali = COALESCE(NULLIF($5, ''), pendamping_wali),
+			pendamping_id = COALESCE(NULLIF($6, ''), pendamping_id),
+			asisten_wali = CASE WHEN $7::jsonb IS NOT NULL THEN $7::jsonb ELSE asisten_wali END
+		WHERE name = $8
+	`, targetName, req.Gender, req.WaliKelas, req.GuruID, req.PendampingWali, req.PendampingID, asistenJSON, req.Name)
 	if err != nil {
 		return utils.SendError(c, fiber.StatusInternalServerError, err.Error())
 	}

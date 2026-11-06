@@ -47,6 +47,7 @@ next.log
 !.env.example
 
 # vercel
+.agents/teamwork/
 .vercel
 
 # typescript

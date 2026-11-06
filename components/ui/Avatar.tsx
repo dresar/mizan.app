@@ -21,7 +21,30 @@ export function Avatar({
   variant = "primary",
   className = ""
 }: AvatarProps) {
-  const [imgError, setImgError] = useState(false);
+  const isFemale = gender === "Putri" || variant === "gold";
+  const defaultAvatar = isFemale
+    ? "/default-avatar-ustadzah.jpg"
+    : "/default-avatar-ustadz.jpg";
+
+  const isRealImageUrl = (url?: string | null): boolean => {
+    if (!url) return false;
+    const clean = url.trim();
+    return (
+      clean.startsWith("/") ||
+      clean.startsWith("http://") ||
+      clean.startsWith("https://") ||
+      clean.startsWith("data:image")
+    );
+  };
+
+  const initialSrc = isRealImageUrl(src) ? src!.trim() : defaultAvatar;
+  const [currentSrc, setCurrentSrc] = useState<string>(initialSrc);
+  const [hasFailedDefault, setHasFailedDefault] = useState(false);
+
+  React.useEffect(() => {
+    setCurrentSrc(isRealImageUrl(src) ? src!.trim() : defaultAvatar);
+    setHasFailedDefault(false);
+  }, [src, defaultAvatar]);
 
   let sizeClass = "w-12 h-12 text-sm font-bold";
   if (size === "xs") sizeClass = "w-7 h-7 text-[11px] font-semibold";
@@ -35,28 +58,23 @@ export function Avatar({
   if (variant === "gold") colorClass = "bg-[#C5A059] text-white border border-[#AD8742]";
   if (variant === "neutral") colorClass = "bg-[#FAF7F2] text-[#1B4D3E] border border-[#E5DECE]";
 
-  const effectiveSrc =
-    src !== undefined
-      ? src
-      : gender === "Putri"
-      ? "/default-avatar-ustadzah.jpg"
-      : gender === "Putra"
-      ? "/default-avatar-ustadz.jpg"
-      : variant === "gold"
-      ? "/default-avatar-ustadzah.jpg"
-      : "/default-avatar-ustadz.jpg";
-
-  if (effectiveSrc && !imgError) {
+  if (!hasFailedDefault) {
     return (
       <div
         title={name || initials}
         className={`inline-flex items-center justify-center shrink-0 rounded-2xl overflow-hidden shadow-xs border border-[#E2EBF4] ${sizeClass} ${className}`}
       >
         <img
-          src={effectiveSrc}
+          src={currentSrc}
           alt={name || initials}
-          onError={() => setImgError(true)}
-          className="w-full h-full object-cover"
+          onError={() => {
+            if (currentSrc !== defaultAvatar) {
+              setCurrentSrc(defaultAvatar);
+            } else {
+              setHasFailedDefault(true);
+            }
+          }}
+          className="w-full h-full object-cover object-top"
         />
       </div>
     );

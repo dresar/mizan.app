@@ -112,7 +112,7 @@ export default function GuruSantriListPage() {
                 })}
               </div>
 
-              <div className="flex items-center p-0.5 rounded-xl bg-white border border-[#E2EBF4] shadow-2xs shrink-0">
+              <div className="hidden md:flex items-center p-0.5 rounded-xl bg-white border border-[#E2EBF4] shadow-2xs shrink-0">
                 <button
                   type="button"
                   onClick={() => setViewMode("grid")}
@@ -144,7 +144,7 @@ export default function GuruSantriListPage() {
           </div>
 
           {viewMode === "grid" ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-3.5">
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3.5">
               {paginatedSantri.map((santri) => {
                 const pred = getPredikatBadge(santri.currentScore);
 
@@ -152,12 +152,13 @@ export default function GuruSantriListPage() {
                   <Link
                     key={santri.id}
                     href={`/guru/santri/${santri.id}`}
-                    className="mizan-card-sub p-3 flex flex-col justify-between gap-2.5 hover:border-[#1B4D3E]/40 group"
+                    className="mizan-card-sub p-2.5 sm:p-3 flex flex-col justify-between gap-2 hover:border-[#1B4D3E]/40 group"
                   >
                     <div className="flex items-center gap-2 min-w-0">
                       <Avatar
                         initials={santri.avatar}
                         size="sm"
+                        gender={santri.gender}
                         variant={santri.gender === "Putra" ? "primary" : "gold"}
                       />
                       <div className="min-w-0 flex-1">
@@ -186,63 +187,108 @@ export default function GuruSantriListPage() {
               })}
             </div>
           ) : (
-            <div className="space-y-2">
-              {paginatedSantri.map((santri) => {
-                const pred = getPredikatBadge(santri.currentScore);
-                return (
-                  <Link
-                    key={santri.id}
-                    href={`/guru/santri/${santri.id}`}
-                    className="p-3 sm:p-3.5 rounded-2xl bg-white border border-[#E2EBF4] hover:border-[#1B4D3E]/40 transition-all flex items-center justify-between gap-3 shadow-xs group"
-                  >
-                    <div className="flex items-center gap-3 min-w-0">
-                      <Avatar
-                        initials={santri.avatar}
-                        size="md"
-                        variant={santri.gender === "Putra" ? "primary" : "gold"}
-                      />
-                      <div className="min-w-0">
-                        <div className="flex items-center gap-2 flex-wrap">
-                          <h3 className="font-bold text-xs sm:text-sm text-[#172033] group-hover:text-[#1B4D3E] transition-colors truncate">
+            <>
+              <div className="grid grid-cols-2 gap-2 md:hidden">
+                {paginatedSantri.map((santri) => {
+                  const pred = getPredikatBadge(santri.currentScore);
+
+                  return (
+                    <Link
+                      key={santri.id}
+                      href={`/guru/santri/${santri.id}`}
+                      className="mizan-card-sub p-2.5 flex flex-col justify-between gap-2 hover:border-[#1B4D3E]/40 group"
+                    >
+                      <div className="flex items-center gap-2 min-w-0">
+                        <Avatar
+                          initials={santri.avatar}
+                          size="sm"
+                          gender={santri.gender}
+                          variant={santri.gender === "Putra" ? "primary" : "gold"}
+                        />
+                        <div className="min-w-0 flex-1">
+                          <h3 className="text-xs font-bold text-[#172033] group-hover:text-[#1B4D3E] transition-colors truncate">
                             {santri.name}
                           </h3>
-                          <span
-                            className={`text-[9px] font-bold px-2 py-0.5 rounded-full ${
-                              santri.gender === "Putra"
-                                ? "bg-[#ECFDF5] text-[#065F46]"
-                                : "bg-[#FAF7EE] text-[#A8833E]"
-                            }`}
-                          >
-                            {santri.gender}
-                          </span>
-                          <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-[#EEF2F6] text-[#172033] whitespace-nowrap">
-                            {santri.class}
-                          </span>
-                          <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full border ${pred.color}`}>
-                            {pred.label}
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-2 text-[10px] text-[#64748B] mt-0.5">
-                          <span>NIS: <strong className="font-mono text-[#172033]">{santri.nis}</strong></span>
+                          <p className="text-[10px] text-[#64748B] truncate mt-0.5">
+                            {santri.class} • {santri.nis}
+                          </p>
                         </div>
                       </div>
-                    </div>
 
-                    <div className="flex items-center gap-3 shrink-0">
-                      <div className="text-right">
-                        <span className="text-[9px] text-[#94A3B8] font-bold block uppercase">
-                          Skor Adab
-                        </span>
-                        <span className="text-xs sm:text-sm font-black font-mono text-[#1B4D3E]">
-                          {formatScore(santri.currentScore)}
+                      <div className="flex items-center justify-between pt-1.5 border-t border-[#EEF2F6]">
+                        <div>
+                          <span className="font-mono text-xs font-black text-[#1B4D3E]">
+                            {formatScore(santri.currentScore)}
+                          </span>
+                        </div>
+
+                        <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-full border ${pred.color}`}>
+                          {pred.label}
                         </span>
                       </div>
-                      <ChevronRight className="w-4 h-4 text-[#94A3B8] group-hover:text-[#1B4D3E] transition-colors" />
-                    </div>
-                  </Link>
-                );
-              })}
-            </div>
+                    </Link>
+                  );
+                })}
+              </div>
+
+              <div className="hidden md:block space-y-2">
+                {paginatedSantri.map((santri) => {
+                  const pred = getPredikatBadge(santri.currentScore);
+                  return (
+                    <Link
+                      key={santri.id}
+                      href={`/guru/santri/${santri.id}`}
+                      className="p-3 sm:p-3.5 rounded-2xl bg-white border border-[#E2EBF4] hover:border-[#1B4D3E]/40 transition-all flex items-center justify-between gap-3 shadow-xs group"
+                    >
+                      <div className="flex items-center gap-3 min-w-0">
+                        <Avatar
+                          initials={santri.avatar}
+                          size="md"
+                          variant={santri.gender === "Putra" ? "primary" : "gold"}
+                        />
+                        <div className="min-w-0">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <h3 className="font-bold text-xs sm:text-sm text-[#172033] group-hover:text-[#1B4D3E] transition-colors truncate">
+                              {santri.name}
+                            </h3>
+                            <span
+                              className={`text-[9px] font-bold px-2 py-0.5 rounded-full ${
+                                santri.gender === "Putra"
+                                  ? "bg-[#ECFDF5] text-[#065F46]"
+                                  : "bg-[#FAF7EE] text-[#A8833E]"
+                              }`}
+                            >
+                              {santri.gender}
+                            </span>
+                            <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-[#EEF2F6] text-[#172033] whitespace-nowrap">
+                              {santri.class}
+                            </span>
+                            <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full border ${pred.color}`}>
+                              {pred.label}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-2 text-[10px] text-[#64748B] mt-0.5">
+                            <span>NIS: <strong className="font-mono text-[#172033]">{santri.nis}</strong></span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-3 shrink-0">
+                        <div className="text-right">
+                          <span className="text-[9px] text-[#94A3B8] font-bold block uppercase">
+                            Skor Adab
+                          </span>
+                          <span className="text-xs sm:text-sm font-black font-mono text-[#1B4D3E]">
+                            {formatScore(santri.currentScore)}
+                          </span>
+                        </div>
+                        <ChevronRight className="w-4 h-4 text-[#94A3B8] group-hover:text-[#1B4D3E] transition-colors" />
+                      </div>
+                    </Link>
+                  );
+                })}
+              </div>
+            </>
           )}
 
           <Pagination
