@@ -5,7 +5,6 @@ import {
   Ticket,
   Search,
   CheckCircle2,
-  XCircle,
   Calendar,
   Clock,
   QrCode,
@@ -52,7 +51,8 @@ export default function AdminPerizinanPage() {
         (p) =>
           p.santriName.toLowerCase().includes(q) ||
           p.jenisIzin.toLowerCase().includes(q) ||
-          p.alasan.toLowerCase().includes(q)
+          p.alasan.toLowerCase().includes(q) ||
+          p.qrCodeToken.toLowerCase().includes(q)
       );
     }
     return list;
@@ -86,131 +86,139 @@ export default function AdminPerizinanPage() {
 
   return (
     <RoleShell>
-      <div className="space-y-4 pb-20">
-        <div className="mizan-card p-4 sm:p-6 bg-white space-y-4">
-          <div className="flex items-center justify-between gap-3 flex-wrap">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-2xl bg-amber-50 text-amber-700 flex items-center justify-center border border-amber-200 shadow-xs">
-                <Ticket className="w-5 h-5" />
+      <div className="space-y-3.5 pb-24">
+        <div className="p-3.5 sm:p-4 rounded-2xl bg-white border border-[#E2EBF4] shadow-2xs space-y-3">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center border border-amber-200 shrink-0">
+                <Ticket className="w-4 h-4" />
               </div>
               <div>
-                <h1 className="text-base sm:text-xl font-bold text-[#172033] tracking-tight">
-                  Rekapitulasi Perizinan & Sambang (Admin Panel)
+                <h1 className="text-base sm:text-lg font-serif font-black text-[#172033] tracking-tight">
+                  Perizinan & Sambang
                 </h1>
-                <p className="text-xs text-[#64748B]">
-                  Pengawasan perizinan keluar gerbang santri dan rekapitulasi kedatangan wali murid
-                </p>
+                <p className="text-[10px] text-[#64748B]">Log izin santri & pos gerbang</p>
               </div>
             </div>
 
-            <div className="flex items-center gap-1.5 p-1 rounded-2xl bg-[#EEF2F6]">
-              {(["ALL", "Putra", "Putri"] as const).map((g) => (
+            <div className="flex items-center gap-1.5 flex-wrap">
+              <div className="inline-flex rounded-xl p-0.5 bg-[#EEF2F6]">
                 <button
-                  key={g}
                   type="button"
-                  onClick={() => setGenderFilter(g)}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
-                    genderFilter === g
+                  onClick={() => setActiveTab("IZIN")}
+                  className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all ${
+                    activeTab === "IZIN"
                       ? "bg-white text-[#1B4D3E] shadow-2xs"
                       : "text-[#64748B] hover:text-[#172033]"
                   }`}
                 >
-                  {g === "ALL" ? "Semua Gender" : g}
+                  Izin ({filteredPerizinan.length})
                 </button>
-              ))}
+                <button
+                  type="button"
+                  onClick={() => setActiveTab("SAMBANG")}
+                  className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all ${
+                    activeTab === "SAMBANG"
+                      ? "bg-white text-[#1B4D3E] shadow-2xs"
+                      : "text-[#64748B] hover:text-[#172033]"
+                  }`}
+                >
+                  Sambang ({filteredSambangan.length})
+                </button>
+              </div>
+
+              <div className="inline-flex rounded-xl p-0.5 bg-[#EEF2F6]">
+                {(["ALL", "Putra", "Putri"] as const).map((g) => (
+                  <button
+                    key={g}
+                    type="button"
+                    onClick={() => setGenderFilter(g)}
+                    className={`px-2 py-1 rounded-lg text-xs font-bold transition-all ${
+                      genderFilter === g
+                        ? "bg-white text-[#1B4D3E] shadow-2xs"
+                        : "text-[#64748B] hover:text-[#172033]"
+                    }`}
+                  >
+                    {g === "ALL" ? "Semua" : g === "Putra" ? "L" : "P"}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
 
-          <div className="flex items-center justify-between gap-3 flex-wrap pt-2 border-t border-[#E2EBF4]">
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={() => setActiveTab("IZIN")}
-                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
-                  activeTab === "IZIN"
-                    ? "bg-[#1B4D3E] text-white shadow-xs"
-                    : "bg-[#FAF7EE] text-[#64748B] hover:text-[#172033]"
-                }`}
-              >
-                Permohonan Izin ({filteredPerizinan.length})
-              </button>
-              <button
-                type="button"
-                onClick={() => setActiveTab("SAMBANG")}
-                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
-                  activeTab === "SAMBANG"
-                    ? "bg-[#1B4D3E] text-white shadow-xs"
-                    : "bg-[#FAF7EE] text-[#64748B] hover:text-[#172033]"
-                }`}
-              >
-                Reservasi Sambangan ({filteredSambangan.length})
-              </button>
+          <div className="flex items-center gap-2 flex-wrap pt-2 border-t border-[#E2EBF4]">
+            <div className="relative flex-1 min-w-[180px]">
+              <Search className="w-3.5 h-3.5 text-[#94A3B8] absolute left-2.5 top-1/2 -translate-y-1/2" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Cari..."
+                className="w-full pl-8 pr-2.5 py-1.5 rounded-xl bg-[#FAF7EE] border border-[#D4C9B5] text-xs font-medium text-[#172033] focus:outline-hidden"
+              />
             </div>
 
-            <div className="flex items-center gap-1.5 flex-wrap">
-              {activeTab === "IZIN" &&
-                ["ALL", "MENUNGGU", "DISETUJUI", "BERJALAN", "SELESAI", "DITOLAK"].map((st) => (
+            {activeTab === "IZIN" && (
+              <div className="flex items-center gap-1 overflow-x-auto py-0.5">
+                {[
+                  { key: "ALL", label: "Semua" },
+                  { key: "MENUNGGU", label: "Menunggu" },
+                  { key: "DISETUJUI", label: "Disetujui" },
+                  { key: "BERJALAN", label: "Berjalan" },
+                  { key: "SELESAI", label: "Selesai" },
+                  { key: "DITOLAK", label: "Ditolak" }
+                ].map((st) => (
                   <button
-                    key={st}
+                    key={st.key}
                     type="button"
-                    onClick={() => setStatusFilter(st)}
-                    className={`px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase transition-all ${
-                      statusFilter === st
-                        ? "bg-[#172033] text-white"
+                    onClick={() => setStatusFilter(st.key)}
+                    className={`px-2.5 py-1 rounded-lg text-[11px] font-bold whitespace-nowrap transition-all ${
+                      statusFilter === st.key
+                        ? "bg-[#1B4D3E] text-white shadow-2xs"
                         : "bg-[#FAF7EE] text-[#64748B] hover:text-[#172033]"
                     }`}
                   >
-                    {st === "ALL" ? "Semua Status" : st}
+                    {st.label}
                   </button>
                 ))}
-            </div>
-          </div>
-
-          <div className="relative">
-            <Search className="w-4 h-4 text-[#94A3B8] absolute left-3 top-1/2 -translate-y-1/2" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Cari santri, alasan, atau nama wali..."
-              className="w-full pl-9 pr-3 py-2 rounded-xl bg-[#FAF7EE] border border-[#D4C9B5] text-xs font-medium text-[#172033] focus:outline-hidden"
-            />
+              </div>
+            )}
           </div>
         </div>
 
         {deleteConfirmId && (
-          <div className="p-4 rounded-2xl bg-red-50 border border-red-200 flex items-center justify-between gap-3 text-xs animate-in fade-in">
-            <div className="flex items-center gap-2 text-red-800">
+          <div className="p-3.5 rounded-2xl bg-rose-50 border border-rose-200 flex items-center justify-between gap-3 text-xs animate-in fade-in">
+            <div className="flex items-center gap-2 text-rose-800">
               <AlertTriangle className="w-4 h-4 shrink-0" />
-              <span>Yakin ingin menghapus data perizinan/sambangan ini secara permanen?</span>
+              <span>Hapus data ini secara permanen?</span>
             </div>
-            <div className="flex items-center gap-2 shrink-0">
+            <div className="flex items-center gap-1.5 shrink-0">
               <button
                 type="button"
                 onClick={() => setDeleteConfirmId(null)}
-                className="px-3 py-1.5 rounded-xl bg-white border border-gray-300 text-gray-700 font-bold hover:bg-gray-50"
+                className="px-3 py-1 rounded-xl bg-white border border-gray-300 text-gray-700 font-bold hover:bg-gray-50"
               >
                 Batal
               </button>
               <button
                 type="button"
                 onClick={handleDeleteConfirmed}
-                className="px-3 py-1.5 rounded-xl bg-red-600 text-white font-bold hover:bg-red-700"
+                className="px-3 py-1 rounded-xl bg-rose-600 text-white font-bold hover:bg-rose-700"
               >
-                Ya, Hapus
+                Hapus
               </button>
             </div>
           </div>
         )}
 
         {selectedQrRecord && (
-          <div className="p-4 rounded-3xl bg-white border border-[#E2EBF4] shadow-md space-y-3">
+          <div className="p-3.5 sm:p-4 rounded-3xl bg-white border border-[#E2EBF4] shadow-md space-y-3">
             <div className="flex items-center justify-between pb-2 border-b border-[#E2EBF4]">
-              <span className="text-xs font-bold text-[#172033]">Pratinjau & Unduh Kartu QR Pass Resmi</span>
+              <span className="text-xs font-bold text-[#172033]">Kartu QR Izin Resmi</span>
               <button
                 type="button"
                 onClick={() => setSelectedQrRecord(null)}
-                className="w-7 h-7 rounded-lg text-[#64748B] hover:bg-[#F8FAFC] flex items-center justify-center"
+                className="w-7 h-7 rounded-lg text-[#64748B] hover:bg-[#F8FAFC] flex items-center justify-center cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -220,187 +228,195 @@ export default function AdminPerizinanPage() {
         )}
 
         {activeTab === "IZIN" ? (
-          <div className="mizan-card bg-white overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="w-full text-xs text-left">
-                <thead className="bg-[#FAF7EE] text-[#64748B] uppercase font-bold text-[10px] border-b border-[#E2EBF4]">
-                  <tr>
-                    <th className="p-3">Santri</th>
-                    <th className="p-3">Gender</th>
-                    <th className="p-3">Jenis Izin</th>
-                    <th className="p-3">Rencana Keluar - Kembali</th>
-                    <th className="p-3">Status</th>
-                    <th className="p-3">Token QR</th>
-                    <th className="p-3">Waktu Riil Gerbang</th>
-                    <th className="p-3 text-right">Aksi</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-[#E2EBF4]">
-                  {filteredPerizinan.length === 0 ? (
-                    <tr>
-                      <td colSpan={8} className="p-8 text-center text-[#64748B]">
-                        Tidak ada riwayat perizinan santri
-                      </td>
-                    </tr>
-                  ) : (
-                    filteredPerizinan.map((p) => (
-                      <tr key={p.id} className="hover:bg-[#FAF7EE]/50 transition-colors">
-                        <td className="p-3 font-bold text-[#172033]">
-                          {p.santriName} <span className="text-[10px] text-[#64748B] block">Kelas {p.santriClass}</span>
-                        </td>
-                        <td className="p-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+            {filteredPerizinan.length === 0 ? (
+              <div className="col-span-full p-8 text-center bg-white rounded-2xl border border-[#E2EBF4] text-[#64748B] space-y-1">
+                <Ticket className="w-8 h-8 text-[#94A3B8] mx-auto" />
+                <p className="text-xs font-semibold">Tidak ada data perizinan</p>
+              </div>
+            ) : (
+              filteredPerizinan.map((p) => (
+                <div
+                  key={p.id}
+                  className="p-3.5 rounded-2xl bg-white border border-[#E2EBF4] flex flex-col justify-between space-y-2.5 shadow-2xs hover:border-[#1B4D3E]/30 transition-all"
+                >
+                  <div className="space-y-2">
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="min-w-0">
+                        <div className="flex items-center gap-1.5">
+                          <h3 className="text-xs sm:text-sm font-bold text-[#172033] truncate">
+                            {p.santriName}
+                          </h3>
                           <span
-                            className={`px-2 py-0.5 rounded-lg text-[10px] font-bold ${
-                              p.gender === "Putra" ? "bg-blue-100 text-blue-800" : "bg-pink-100 text-pink-800"
-                            }`}
-                          >
-                            {p.gender}
-                          </span>
-                        </td>
-                        <td className="p-3 font-semibold text-[#172033]">
-                          {p.jenisIzin}
-                          {p.alasan && <span className="text-[10px] text-[#64748B] block truncate max-w-[150px]">{p.alasan}</span>}
-                        </td>
-                        <td className="p-3 text-[#64748B]">
-                          {p.tglKeluar} s/d {p.tglKembali}
-                        </td>
-                        <td className="p-3">
-                          <span
-                            className={`px-2.5 py-1 rounded-xl text-[10px] font-bold ${
-                              p.status === "DISETUJUI"
-                                ? "bg-emerald-100 text-emerald-800"
-                                : p.status === "BERJALAN"
-                                ? "bg-amber-100 text-amber-800"
-                                : p.status === "SELESAI"
+                            className={`px-1.5 py-0.2 rounded text-[10px] font-black shrink-0 ${
+                              p.gender === "Putra"
                                 ? "bg-blue-100 text-blue-800"
-                                : p.status === "MENUNGGU"
-                                ? "bg-yellow-100 text-yellow-800"
-                                : "bg-rose-100 text-rose-800"
+                                : "bg-pink-100 text-pink-800"
                             }`}
                           >
-                            {p.status}
+                            {p.gender === "Putra" ? "L" : "P"}
                           </span>
-                        </td>
-                        <td className="p-3 font-mono text-[10px] text-[#A8833E]">{p.qrCodeToken}</td>
-                        <td className="p-3 text-[10px] text-[#64748B]">
+                        </div>
+                        <p className="text-[10px] text-[#64748B] font-mono">Kelas {p.santriClass}</p>
+                      </div>
+
+                      <span
+                        className={`px-2 py-0.5 rounded-lg text-[10px] font-bold shrink-0 ${
+                          p.status === "DISETUJUI"
+                            ? "bg-emerald-100 text-emerald-800"
+                            : p.status === "BERJALAN"
+                            ? "bg-amber-100 text-amber-800"
+                            : p.status === "SELESAI"
+                            ? "bg-blue-100 text-blue-800"
+                            : p.status === "MENUNGGU"
+                            ? "bg-yellow-100 text-yellow-800"
+                            : "bg-rose-100 text-rose-800"
+                        }`}
+                      >
+                        {p.status}
+                      </span>
+                    </div>
+
+                    <div className="p-2 rounded-xl bg-[#FAF7EE] text-[11px] space-y-1">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[#94A3B8]">Jenis:</span>
+                        <span className="font-bold text-[#172033]">{p.jenisIzin}</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-[#94A3B8]">Jadwal:</span>
+                        <span className="font-medium text-[#172033]">{p.tglKeluar} - {p.tglKembali}</span>
+                      </div>
+                      {p.alasan && (
+                        <p className="text-[#172033] pt-1 border-t border-[#D4C9B5]/40 truncate">
+                          <span className="text-[#94A3B8]">Alasan: </span>
+                          {p.alasan}
+                        </p>
+                      )}
+                      {(p.waktuKeluarRiil || p.waktuKembaliRiil) && (
+                        <div className="text-[10px] text-[#065F46] pt-1 border-t border-[#D4C9B5]/40 font-mono">
                           {p.waktuKeluarRiil && <div>Keluar: {p.waktuKeluarRiil}</div>}
                           {p.waktuKembaliRiil && <div>Kembali: {p.waktuKembaliRiil}</div>}
-                          {!p.waktuKeluarRiil && !p.waktuKembaliRiil && <span>Belum lewat gerbang</span>}
-                        </td>
-                        <td className="p-3 text-right">
-                          <div className="flex items-center justify-end gap-1.5">
-                            {p.status === "MENUNGGU" && (
-                              <>
-                                <button
-                                  type="button"
-                                  onClick={() => approvePerizinan(p.id, "DISETUJUI")}
-                                  className="px-2 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-[10px] font-bold"
-                                >
-                                  Sahkan
-                                </button>
-                                <button
-                                  type="button"
-                                  onClick={() => approvePerizinan(p.id, "DITOLAK")}
-                                  className="px-2 py-1 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 text-[10px] font-bold"
-                                >
-                                  Tolak
-                                </button>
-                              </>
-                            )}
+                        </div>
+                      )}
+                    </div>
+                  </div>
 
-                            <button
-                              type="button"
-                              onClick={() => setSelectedQrRecord(p)}
-                              className="w-7 h-7 rounded-lg text-[#854D0E] hover:bg-[#FAF7EE] flex items-center justify-center transition-colors border border-[#C5A059]/30"
-                              title="Lihat / Unduh Kartu QR"
-                            >
-                              <QrCode className="w-3.5 h-3.5" />
-                            </button>
+                  <div className="pt-2 border-t border-[#E2EBF4] flex items-center justify-between gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setSelectedQrRecord(p)}
+                      className="inline-flex items-center gap-1 font-mono text-[10px] text-[#854D0E] bg-[#FAF7EE] hover:bg-[#FEFCE8] px-2 py-1 rounded-lg border border-[#C5A059]/40 font-bold transition-colors cursor-pointer"
+                    >
+                      <QrCode className="w-3 h-3 text-[#C5A059]" />
+                      <span>QR Pass</span>
+                    </button>
 
-                            <button
-                              type="button"
-                              onClick={() => {
-                                setDeleteTargetType("IZIN");
-                                setDeleteConfirmId(p.id);
-                              }}
-                              className="w-7 h-7 rounded-lg text-[#94A3B8] hover:text-red-700 hover:bg-red-50 flex items-center justify-center transition-colors"
-                              title="Hapus Izin"
-                            >
-                              <Trash2 className="w-3.5 h-3.5" />
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        ) : (
-          <div className="mizan-card bg-white overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="w-full text-xs text-left">
-                <thead className="bg-[#FAF7EE] text-[#64748B] uppercase font-bold text-[10px] border-b border-[#E2EBF4]">
-                  <tr>
-                    <th className="p-3">Santri</th>
-                    <th className="p-3">Gender</th>
-                    <th className="p-3">Wali Pengunjung</th>
-                    <th className="p-3">Tanggal Sambang</th>
-                    <th className="p-3">Sesi Waktu</th>
-                    <th className="p-3">Pengunjung</th>
-                    <th className="p-3">Status</th>
-                    <th className="p-3 text-right">Aksi</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-[#E2EBF4]">
-                  {filteredSambangan.length === 0 ? (
-                    <tr>
-                      <td colSpan={8} className="p-8 text-center text-[#64748B]">
-                        Tidak ada riwayat reservasi sambangan
-                      </td>
-                    </tr>
-                  ) : (
-                    filteredSambangan.map((s) => (
-                      <tr key={s.id} className="hover:bg-[#FAF7EE]/50 transition-colors">
-                        <td className="p-3 font-bold text-[#172033]">{s.santriName}</td>
-                        <td className="p-3">
-                          <span
-                            className={`px-2 py-0.5 rounded-lg text-[10px] font-bold ${
-                              s.gender === "Putra" ? "bg-blue-100 text-blue-800" : "bg-pink-100 text-pink-800"
-                            }`}
-                          >
-                            {s.gender}
-                          </span>
-                        </td>
-                        <td className="p-3 font-semibold text-[#172033]">{s.waliName}</td>
-                        <td className="p-3 text-[#64748B]">{s.tanggalSambang}</td>
-                        <td className="p-3 text-[#172033]">{s.sesiWaktu}</td>
-                        <td className="p-3 text-[#64748B]">{s.jumlahPengunjung} Orang</td>
-                        <td className="p-3">
-                          <span className="px-2.5 py-1 rounded-xl text-[10px] font-bold bg-emerald-100 text-emerald-800">
-                            {s.status}
-                          </span>
-                        </td>
-                        <td className="p-3 text-right">
+                    <div className="flex items-center gap-1">
+                      {p.status === "MENUNGGU" && (
+                        <>
                           <button
                             type="button"
-                            onClick={() => {
-                              setDeleteTargetType("SAMBANG");
-                              setDeleteConfirmId(s.id);
-                            }}
-                            className="w-7 h-7 rounded-lg text-[#94A3B8] hover:text-red-700 hover:bg-red-50 inline-flex items-center justify-center transition-colors"
-                            title="Hapus Sambangan"
+                            onClick={() => approvePerizinan(p.id, "DISETUJUI")}
+                            className="px-2 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-[10px] font-bold"
                           >
-                            <Trash2 className="w-3.5 h-3.5" />
+                            Sahkan
                           </button>
-                        </td>
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
-            </div>
+                          <button
+                            type="button"
+                            onClick={() => approvePerizinan(p.id, "DITOLAK")}
+                            className="px-2 py-1 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 text-[10px] font-bold"
+                          >
+                            Tolak
+                          </button>
+                        </>
+                      )}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setDeleteTargetType("IZIN");
+                          setDeleteConfirmId(p.id);
+                        }}
+                        className="w-7 h-7 rounded-lg text-[#94A3B8] hover:text-rose-700 hover:bg-rose-50 flex items-center justify-center transition-colors cursor-pointer"
+                        title="Hapus Izin"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+            {filteredSambangan.length === 0 ? (
+              <div className="col-span-full p-8 text-center bg-white rounded-2xl border border-[#E2EBF4] text-[#64748B] space-y-1">
+                <Users className="w-8 h-8 text-[#94A3B8] mx-auto" />
+                <p className="text-xs font-semibold">Tidak ada jadwal sambangan</p>
+              </div>
+            ) : (
+              filteredSambangan.map((s) => (
+                <div
+                  key={s.id}
+                  className="p-3.5 rounded-2xl bg-white border border-[#E2EBF4] flex flex-col justify-between space-y-2.5 shadow-2xs hover:border-[#1B4D3E]/30 transition-all"
+                >
+                  <div className="space-y-2">
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="min-w-0">
+                        <div className="flex items-center gap-1.5">
+                          <h3 className="text-xs sm:text-sm font-bold text-[#172033] truncate">
+                            {s.santriName}
+                          </h3>
+                          <span
+                            className={`px-1.5 py-0.2 rounded text-[10px] font-black shrink-0 ${
+                              s.gender === "Putra"
+                                ? "bg-blue-100 text-blue-800"
+                                : "bg-pink-100 text-pink-800"
+                            }`}
+                          >
+                            {s.gender === "Putra" ? "L" : "P"}
+                          </span>
+                        </div>
+                        <p className="text-[10px] text-[#64748B]">Wali: {s.waliName}</p>
+                      </div>
+
+                      <span className="px-2 py-0.5 rounded-lg text-[10px] font-bold bg-emerald-100 text-emerald-800 shrink-0">
+                        {s.status}
+                      </span>
+                    </div>
+
+                    <div className="p-2 rounded-xl bg-[#FAF7EE] text-[11px] space-y-1">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[#94A3B8]">Tanggal:</span>
+                        <span className="font-bold text-[#172033]">{s.tanggalSambang}</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-[#94A3B8]">Sesi:</span>
+                        <span className="font-medium text-[#172033]">{s.sesiWaktu}</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-[#94A3B8]">Pengunjung:</span>
+                        <span className="font-medium text-[#172033]">{s.jumlahPengunjung} Orang</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="pt-2 border-t border-[#E2EBF4] flex items-center justify-end">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setDeleteTargetType("SAMBANG");
+                        setDeleteConfirmId(s.id);
+                      }}
+                      className="w-7 h-7 rounded-lg text-[#94A3B8] hover:text-rose-700 hover:bg-rose-50 flex items-center justify-center transition-colors cursor-pointer"
+                      title="Hapus Sambangan"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         )}
       </div>

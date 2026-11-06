@@ -276,7 +276,7 @@ export function GuruMonitoringCard({
             }}
             className="px-2.5 py-1.5 text-xs bg-[#F8FAFC] border border-[#E2EBF4] rounded-xl font-bold text-[#172033] focus:outline-none"
           >
-            <option value="ALL">Semua Gender</option>
+            <option value="ALL">Semua</option>
             <option value="Putra">L</option>
             <option value="Putri">P</option>
           </select>

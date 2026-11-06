@@ -98,7 +98,7 @@ export default function PengasuhanDashboardPage() {
                         : "text-[#64748B] hover:text-[#172033]"
                     }`}
                   >
-                    {g}
+                    {g === "Semua" ? "Semua" : g === "Putra" ? "L" : "P"}
                   </button>
                 ))}
               </div>

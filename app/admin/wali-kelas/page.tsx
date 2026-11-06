@@ -407,7 +407,7 @@ export default function AdminWaliKelasPage() {
                         : "text-[#64748B] hover:text-[#172033]"
                     }`}
                   >
-                    {g === "ALL" ? "Semua Gender" : g === "Putra" ? "L" : "P"}
+                    {g === "ALL" ? "Semua" : g === "Putra" ? "L" : "P"}
                   </button>
                 ))}
               </div>

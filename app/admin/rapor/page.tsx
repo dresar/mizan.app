@@ -214,7 +214,7 @@ export default function AdminRaporPage() {
                     : "text-[#64748B] hover:text-[#172033] hover:bg-[#FAF7EE]"
                 }`}
               >
-                {gender === "ALL" ? "Semua Gender" : gender === "Putra" ? "Putra (L)" : "Putri (P)"}
+                {gender === "ALL" ? "Semua" : gender === "Putra" ? "L" : "P"}
               </button>
             ))}
           </div>

@@ -1,1 +1,0 @@
-self.__SSG_MANIFEST=new Set(["\u002Fadmin\u002Fkategori-pelanggaran\u002F[id]","\u002Fadmin\u002Fkelas\u002F[id]","\u002Fadmin\u002Frapor\u002F[id]","\u002Fbk\u002Fsantri\u002F[id]","\u002Fguru\u002Fsantri\u002F[id]","\u002Fshare\u002F[id]"]);self.__SSG_MANIFEST_CB&&self.__SSG_MANIFEST_CB()

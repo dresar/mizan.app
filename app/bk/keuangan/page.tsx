@@ -611,9 +611,18 @@ export default function PengasuhanKeuanganPage() {
                       )}
                     </div>
                     <div className="min-w-0">
-                      <p className="text-xs font-bold text-[#172033] truncate">
-                        {t.santriName} <span className="font-normal text-[#64748B] font-mono">({t.kategori})</span>
-                      </p>
+                      <div className="flex items-center gap-1.5">
+                        <p className="text-xs font-bold text-[#172033] truncate">
+                          {t.santriName}
+                        </p>
+                        <span
+                          className={`px-1.5 py-0.2 rounded text-[10px] font-black shrink-0 ${
+                            t.gender === "Putra" ? "bg-blue-100 text-blue-800" : "bg-pink-100 text-pink-800"
+                          }`}
+                        >
+                          {t.gender === "Putra" ? "L" : "P"}
+                        </span>
+                      </div>
                       <p className="text-[11px] text-[#64748B] truncate">
                         {t.deskripsi} • <span className="font-mono">{t.tanggal}</span>
                       </p>
@@ -662,7 +671,16 @@ export default function PengasuhanKeuanganPage() {
                   <div className="space-y-2">
                     <div className="flex items-start justify-between gap-2">
                       <div>
-                        <h4 className="text-xs sm:text-sm font-bold text-[#172033]">{s.santriName}</h4>
+                        <div className="flex items-center gap-1.5">
+                          <h4 className="text-xs sm:text-sm font-bold text-[#172033]">{s.santriName}</h4>
+                          <span
+                            className={`px-1.5 py-0.2 rounded text-[10px] font-black shrink-0 ${
+                              s.gender === "Putra" ? "bg-blue-100 text-blue-800" : "bg-pink-100 text-pink-800"
+                            }`}
+                          >
+                            {s.gender === "Putra" ? "L" : "P"}
+                          </span>
+                        </div>
                         <span className="text-[10px] text-[#64748B] font-mono">Bulan: {s.bulan} {s.tahun}</span>
                       </div>
                       <div className="flex items-center gap-1">

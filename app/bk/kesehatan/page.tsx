@@ -60,10 +60,10 @@ export default function PengasuhanKesehatanPage() {
               </div>
               <div>
                 <h1 className="text-base sm:text-xl font-bold text-[#172033] tracking-tight">
-                  Poskestren & Kesehatan Santri {currentUser?.gender ? `(${currentUser.gender})` : ""}
+                  Kesehatan Santri {currentUser?.gender ? `(${currentUser.gender === "Putra" ? "L" : "P"})` : ""}
                 </h1>
                 <p className="text-xs text-[#64748B]">
-                  Pencatatan keluhan sakit, rawat inap asrama, obat, dan status klinis santri
+                  Poskestren & rekam medis
                 </p>
               </div>
             </div>
@@ -126,7 +126,16 @@ export default function PengasuhanKesehatanPage() {
                         variant={r.gender === "Putra" ? "primary" : "gold"}
                       />
                       <div>
-                        <h3 className="text-xs sm:text-sm font-bold text-[#172033]">{r.santriName}</h3>
+                        <div className="flex items-center gap-1.5">
+                          <h3 className="text-xs sm:text-sm font-bold text-[#172033]">{r.santriName}</h3>
+                          <span
+                            className={`px-1.5 py-0.2 rounded text-[10px] font-black shrink-0 ${
+                              r.gender === "Putra" ? "bg-blue-100 text-blue-800" : "bg-pink-100 text-pink-800"
+                            }`}
+                          >
+                            {r.gender === "Putra" ? "L" : "P"}
+                          </span>
+                        </div>
                         <span className="text-[10px] text-[#64748B] flex items-center gap-1">
                           <Calendar className="w-3 h-3" /> {r.tanggal}
                         </span>

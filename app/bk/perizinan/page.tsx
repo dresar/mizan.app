@@ -625,7 +625,16 @@ export default function PengasuhanPerizinanPage() {
                           variant={p.gender === "Putra" ? "primary" : "gold"}
                         />
                         <div className="min-w-0">
-                          <h3 className="text-xs sm:text-sm font-bold text-[#172033] truncate">{p.santriName}</h3>
+                          <div className="flex items-center gap-1.5">
+                            <h3 className="text-xs sm:text-sm font-bold text-[#172033] truncate">{p.santriName}</h3>
+                            <span
+                              className={`px-1.5 py-0.2 rounded text-[10px] font-black shrink-0 ${
+                                p.gender === "Putra" ? "bg-blue-100 text-blue-800" : "bg-pink-100 text-pink-800"
+                              }`}
+                            >
+                              {p.gender === "Putra" ? "L" : "P"}
+                            </span>
+                          </div>
                           <span className="text-[10px] text-[#64748B] font-mono">Kelas {p.santriClass}</span>
                         </div>
                       </div>
@@ -741,7 +750,16 @@ export default function PengasuhanPerizinanPage() {
                   <div className="space-y-2">
                     <div className="flex items-start justify-between gap-2">
                       <div>
-                        <h3 className="text-xs sm:text-sm font-bold text-[#172033]">{s.santriName}</h3>
+                        <div className="flex items-center gap-1.5">
+                          <h3 className="text-xs sm:text-sm font-bold text-[#172033]">{s.santriName}</h3>
+                          <span
+                            className={`px-1.5 py-0.2 rounded text-[10px] font-black shrink-0 ${
+                              s.gender === "Putra" ? "bg-blue-100 text-blue-800" : "bg-pink-100 text-pink-800"
+                            }`}
+                          >
+                            {s.gender === "Putra" ? "L" : "P"}
+                          </span>
+                        </div>
                         <p className="text-[10px] text-[#64748B]">Wali: {s.waliName}</p>
                       </div>
                       <div className="flex items-center gap-1">
