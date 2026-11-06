@@ -1,5 +1,202 @@
 [
   {
+    "id": "log_1793972553805_3001",
+    "timestamp": "2026-11-06T20:42:33+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "GET /api/monitoring/keuangan",
+    "actor": {
+      "id": "u-satpam-1",
+      "name": "satpam",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[403] GET /api/monitoring/keuangan (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "GET",
+      "path": "/api/monitoring/keuangan",
+      "status": 403,
+      "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36"
+    }
+  },
+  {
+    "id": "log_1793972553788_3001",
+    "timestamp": "2026-11-06T20:42:33+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "GET /api/monitoring/spp",
+    "actor": {
+      "id": "u-satpam-1",
+      "name": "satpam",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[403] GET /api/monitoring/spp (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "GET",
+      "path": "/api/monitoring/spp",
+      "status": 403,
+      "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36"
+    }
+  },
+  {
+    "id": "log_1793972501863_3001",
+    "timestamp": "2026-11-06T20:41:41+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "GET /api/monitoring/keuangan",
+    "actor": {
+      "id": "u-satpam-1",
+      "name": "satpam",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[403] GET /api/monitoring/keuangan (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "GET",
+      "path": "/guru/dashboard/keuangan",
+      "status": 403,
+      "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36"
+    }
+  },
+  {
+    "id": "log_1793972501862_3001",
+    "timestamp": "2026-11-06T20:41:41+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "GET /api/monitoring/spp",
+    "actor": {
+      "id": "u-satpam-1",
+      "name": "satpam",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[403] GET /api/monitoring/spp (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "GET",
+      "path": "/api/monitoring/spp",
+      "status": 403,
+      "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36"
+    }
+  },
+  {
+    "id": "log_1793972489681_3001",
+    "timestamp": "2026-11-06T20:41:29+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "GET /api/admin/generic/websiteSettings",
+    "actor": {
+      "id": "u-satpam-1",
+      "name": "satpam",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[404] GET /api/admin/generic/websiteSettings (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "GET",
+      "path": "/api/monitoring/kesehatanhcfpeutd6",
+      "status": 404,
+      "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36"
+    }
+  },
+  {
+    "id": "log_1793972489676_3001",
+    "timestamp": "2026-11-06T20:41:29+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "GET /api/admin/stats",
+    "actor": {
+      "id": "u-satpam-1",
+      "name": "satpam",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[404] GET /api/admin/stats (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "GET",
+      "path": "/api/admin/stats",
+      "status": 404,
+      "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36"
+    }
+  },
+  {
+    "id": "log_1793972488177_3001",
+    "timestamp": "2026-11-06T20:41:28+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "GET /api/admin/generic/websiteSettings",
+    "actor": {
+      "id": "u-satpam-1",
+      "name": "satpam",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[404] GET /api/admin/generic/websiteSettings (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "GET",
+      "path": "/api/monitoring/kesehatanhcfpeutd6",
+      "status": 404,
+      "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36"
+    }
+  },
+  {
+    "id": "log_1793972488173_3001",
+    "timestamp": "2026-11-06T20:41:28+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "GET /api/admin/stats",
+    "actor": {
+      "id": "u-satpam-1",
+      "name": "satpam",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[404] GET /api/admin/stats (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "GET",
+      "path": "/api/admin/stats",
+      "status": 404,
+      "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36"
+    }
+  },
+  {
+    "id": "log_1793972487363_3001",
+    "timestamp": "2026-11-06T20:41:27+07:00",
+    "level": "INFO",
+    "category": "AUTH",
+    "action": "POST /api/auth/login",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[200] POST /api/auth/login (21ms)",
+    "details": {
+      "duration_ms": 21,
+      "error": "",
+      "method": "GETT",
+      "path": "/api/auth/login",
+      "status": 200,
+      "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36"
+    }
+  },
+  {
     "id": "log_1793971308307_3001",
     "timestamp": "2026-11-06T20:21:48+07:00",
     "level": "INFO",
@@ -14,8 +211,8 @@
     "details": {
       "duration_ms": 188,
       "error": "",
-      "method": "PUT",
-      "path": "/api/v1/admin/cms/faq/1",
+      "method": "GET",
+      "path": "/assets/Logo-DZDvqbAB.j",
       "status": 200,
       "user_agent": "curl/8.14.1"
     }
@@ -35,8 +232,8 @@
     "details": {
       "duration_ms": 186,
       "error": "",
-      "method": "PUT",
-      "path": "/api/v1/admin/cms/faq/1",
+      "method": "GET",
+      "path": "/assets/main-I8N8RKXP.j",
       "status": 200,
       "user_agent": "curl/8.14.1"
     }
@@ -62799,195 +62996,6 @@
       "method": "PUT",
       "path": "/api/v1/admin/cms/fasilitasLECT%20pg_sleep(5);--",
       "status": 404,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957200310_3001",
-    "timestamp": "2026-11-06T16:26:40+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "GET /api/v1/public/posts/%27%20OR%201=1%20--",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[404] GET /api/v1/public/posts/%27%20OR%201=1%20-- (2ms)",
-    "details": {
-      "duration_ms": 2,
-      "error": "",
-      "method": "PUT",
-      "path": "/api/v1/admin/cms/fasilitasLECT%20pg_sle",
-      "status": 404,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957200261_3001",
-    "timestamp": "2026-11-06T16:26:40+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "POST /api/core/contact",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] POST /api/core/contact (0ms)",
-    "details": {
-      "duration_ms": 0,
-      "error": "",
-      "method": "PUTT",
-      "path": "/api/core/contact",
-      "status": 400,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957200171_3001",
-    "timestamp": "2026-11-06T16:26:40+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "POST /api/core/contact",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] POST /api/core/contact (0ms)",
-    "details": {
-      "duration_ms": 0,
-      "error": "",
-      "method": "PUTT",
-      "path": "/api/core/contact",
-      "status": 400,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957200093_3001",
-    "timestamp": "2026-11-06T16:26:40+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "POST /api/core/contact",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] POST /api/core/contact (0ms)",
-    "details": {
-      "duration_ms": 0,
-      "error": "",
-      "method": "PUTT",
-      "path": "/api/core/contact",
-      "status": 400,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957199669_3001",
-    "timestamp": "2026-11-06T16:26:39+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "POST /api/v1/public/psb/daftar",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] POST /api/v1/public/psb/daftar (33ms)",
-    "details": {
-      "duration_ms": 33,
-      "error": "",
-      "method": "PUTT",
-      "path": "/api/v1/public/psb/daftar",
-      "status": 400,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957199669_3001",
-    "timestamp": "2026-11-06T16:26:39+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "POST /api/v1/public/psb/daftar",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] POST /api/v1/public/psb/daftar (33ms)",
-    "details": {
-      "duration_ms": 33,
-      "error": "",
-      "method": "POST",
-      "path": "/api/core/contactb/daftar",
-      "status": 400,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957199636_3001",
-    "timestamp": "2026-11-06T16:26:39+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "POST /api/v1/public/psb/daftar",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] POST /api/v1/public/psb/daftar (19ms)",
-    "details": {
-      "duration_ms": 19,
-      "error": "",
-      "method": "POST",
-      "path": "/api/v1/public/psb/daftar",
-      "status": 400,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957199636_3001",
-    "timestamp": "2026-11-06T16:26:39+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "POST /api/v1/public/psb/daftar",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] POST /api/v1/public/psb/daftar (14ms)",
-    "details": {
-      "duration_ms": 14,
-      "error": "",
-      "method": "POST",
-      "path": "/api/v1/public/psb/daftar",
-      "status": 400,
-      "user_agent": "curl/8.14.1"
-    }
-  },
-  {
-    "id": "log_1793957199636_3001",
-    "timestamp": "2026-11-06T16:26:39+07:00",
-    "level": "WARN",
-    "category": "HTTP",
-    "action": "POST /api/v1/public/psb/daftar",
-    "actor": {
-      "name": "Guest",
-      "role": "PUBLIC",
-      "ip": "127.0.0.1"
-    },
-    "message": "[400] POST /api/v1/public/psb/daftar (14ms)",
-    "details": {
-      "duration_ms": 14,
-      "error": "",
-      "method": "POST",
-      "path": "/api/v1/public/psb/daftar",
-      "status": 400,
       "user_agent": "curl/8.14.1"
     }
   }

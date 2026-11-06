@@ -23,12 +23,12 @@ export function ToastContainer() {
           <div
             key={toast.id}
             role="alert"
-            className={`pointer-events-auto flex items-center gap-2 px-3 py-2 rounded-xl shadow-md border transition-all text-xs font-semibold ${
+            className={`pointer-events-auto flex items-center gap-2 px-3 py-2 rounded-xl shadow-lg border backdrop-blur-md transition-all text-xs font-semibold ${
               isSuccess
-                ? "bg-white border-[#1B4D3E]/30 text-[#065F46]"
+                ? "bg-white dark:bg-slate-900 border-[#1B4D3E]/30 dark:border-emerald-700/50 text-[#065F46] dark:text-emerald-300"
                 : isError
-                ? "bg-white border-red-300 text-red-700"
-                : "bg-white border-amber-300 text-[#172033]"
+                ? "bg-white dark:bg-slate-900 border-red-300 dark:border-red-800 text-red-700 dark:text-red-300"
+                : "bg-white dark:bg-slate-900 border-amber-300 dark:border-amber-700/60 text-[#172033] dark:text-slate-100"
             }`}
           >
             <div className="shrink-0">

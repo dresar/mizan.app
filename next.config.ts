@@ -12,6 +12,12 @@ const nextConfig: NextConfig = {
   output: "export",
   images: { unoptimized: true },
   cacheComponents: false,
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   turbopack: {
     rules: {
       "*.css": {

@@ -1,4 +1,7 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=Inter:wght@400;500;600;700&display=swap');
+
+@custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
   --color-sand-50: #fbf9f5;
@@ -33,13 +36,29 @@
   --card-radius: 24px;
 }
 
+.dark {
+  --bg-app: #0a0f1d;
+  --card-bg: #111a2e;
+  --card-text: #f8fafc;
+  --card-muted: #94a3b8;
+  --card-border: #1e293b;
+  --card-accent: #236350;
+  color-scheme: dark;
+}
+
 body {
   background-color: #f4f6f8;
   color: #172033;
   min-height: 100vh;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  letter-spacing: -0.011em;
+}
+
+.dark body {
+  background-color: #0a0f1d;
+  color: #f8fafc;
 }
 
 button, a, input, select, textarea {
@@ -54,12 +73,61 @@ button, a, input, select, textarea {
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+.dark .mizan-card {
+  background: #111a2e !important;
+  border-color: rgba(51, 65, 85, 0.6) !important;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.05) !important;
+  color: #f8fafc !important;
+}
+
 .mizan-card-sub {
   background: #ffffff;
   border-radius: 20px;
   border: 1px solid rgba(226, 235, 244, 0.75);
   box-shadow: 4px 4px 12px rgba(160, 175, 195, 0.16), -4px -4px 12px rgba(255, 255, 255, 0.95);
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dark .mizan-card-sub {
+  background: #152238 !important;
+  border-color: rgba(51, 65, 85, 0.5) !important;
+  box-shadow: 0 2px 10px -1px rgba(0, 0, 0, 0.5) !important;
+  color: #f8fafc !important;
+}
+
+.dark .text-\[\#172033\],
+.dark .text-\[\#1C2826\] {
+  color: #f8fafc !important;
+}
+
+.dark .text-\[\#64748B\],
+.dark .text-\[\#94A3B8\] {
+  color: #94a3b8 !important;
+}
+
+.dark .border-\[\#E2EBF4\],
+.dark .border-\[\#E2E8F0\],
+.dark .border-\[\#D4C9B5\] {
+  border-color: rgba(51, 65, 85, 0.5) !important;
+}
+
+.dark .bg-\[\#FAF7EE\],
+.dark .bg-\[\#FAF7F2\],
+.dark .bg-\[\#F5F1E8\] {
+  background-color: #0d1527 !important;
+}
+
+.dark input:not([type="checkbox"]):not([type="radio"]),
+.dark select,
+.dark textarea {
+  background-color: #0d1527 !important;
+  color: #f8fafc !important;
+  border-color: #334155 !important;
+}
+
+.dark input::placeholder,
+.dark textarea::placeholder {
+  color: #64748b !important;
 }
 
 .mizan-card-sub:hover {

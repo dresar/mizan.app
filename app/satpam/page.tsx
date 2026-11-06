@@ -83,17 +83,17 @@ export default function SatpamGatePage() {
   return (
     <RoleShell>
       <div className="max-w-xl mx-auto space-y-4 pb-20">
-        <div className="mizan-card p-5 bg-white space-y-4">
-          <div className="flex items-center justify-between pb-3 border-b border-[#E2EBF4]">
+        <div className="mizan-card p-5 bg-white dark:bg-slate-900 border border-[#E2EBF4] dark:border-slate-800 space-y-4">
+          <div className="flex items-center justify-between pb-3 border-b border-[#E2EBF4] dark:border-slate-800">
             <div className="flex items-center gap-2.5">
               <div className="w-9 h-9 rounded-2xl bg-[#1B4D3E] text-white flex items-center justify-center shadow-xs">
                 <ShieldCheck className="w-5 h-5 text-[#C5A059]" />
               </div>
               <div>
-                <h1 className="text-sm sm:text-base font-bold text-[#172033] tracking-tight">
+                <h1 className="text-sm sm:text-base font-bold text-[#172033] dark:text-slate-100 tracking-tight">
                   Pos Jaga Gerbang Pesantren
                 </h1>
-                <p className="text-[11px] text-[#64748B]">
+                <p className="text-[11px] text-[#64748B] dark:text-slate-400">
                   Verifikasi Surat Izin Keluar / Masuk Santri • {currentUser?.name || "Petugas Keamanan"}
                 </p>
               </div>
@@ -102,7 +102,7 @@ export default function SatpamGatePage() {
             <button
               type="button"
               onClick={logoutUser}
-              className="p-2 rounded-xl text-[#64748B] hover:text-rose-600 hover:bg-rose-50 transition-colors"
+              className="p-2 rounded-xl text-[#64748B] dark:text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors"
               title="Keluar"
             >
               <LogOut className="w-4 h-4" />
@@ -110,18 +110,18 @@ export default function SatpamGatePage() {
           </div>
 
           <div className="space-y-2">
-            <label className="block text-xs font-bold text-[#172033]">
+            <label className="block text-xs font-bold text-[#172033] dark:text-slate-200">
               Scan atau Masukkan Kode QR Izin Santri:
             </label>
             <div className="flex gap-2">
               <div className="relative flex-1">
-                <QrCode className="w-4 h-4 text-[#94A3B8] absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <QrCode className="w-4 h-4 text-[#94A3B8] dark:text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
                 <input
                   type="text"
                   value={tokenInput}
                   onChange={(e) => setTokenInput(e.target.value)}
                   placeholder="Contoh: QR-17300000-xxxx atau tempel kode..."
-                  className="w-full pl-10 pr-3.5 py-2.5 rounded-2xl bg-[#FAF7EE] border border-[#D4C9B5] text-xs font-semibold text-[#172033] focus:outline-hidden focus:ring-2 focus:ring-[#1B4D3E]/30"
+                  className="w-full pl-10 pr-3.5 py-2.5 rounded-2xl bg-[#FAF7EE] dark:bg-slate-800/80 border border-[#D4C9B5] dark:border-slate-700 text-xs font-semibold text-[#172033] dark:text-slate-100 placeholder:text-[#94A3B8] dark:placeholder:text-slate-500 focus:outline-hidden focus:ring-2 focus:ring-[#1B4D3E]/30"
                 />
               </div>
               <button
@@ -155,16 +155,16 @@ export default function SatpamGatePage() {
           )}
 
           {scannedRecord && (
-            <div className="p-4 rounded-2xl bg-[#FAF7EE] border border-[#C5A059]/30 space-y-3.5">
+            <div className="p-4 rounded-2xl bg-[#FAF7EE] dark:bg-slate-800/70 border border-[#C5A059]/30 dark:border-slate-700 space-y-3.5">
               <div className="flex items-start justify-between gap-2">
                 <div>
-                  <span className="text-[10px] font-bold text-[#A8833E] uppercase tracking-wider block">
+                  <span className="text-[10px] font-bold text-[#A8833E] dark:text-amber-400 uppercase tracking-wider block">
                     Kartu Izin Resmi
                   </span>
-                  <h3 className="text-sm font-bold text-[#172033] mt-0.5">
+                  <h3 className="text-sm font-bold text-[#172033] dark:text-slate-100 mt-0.5">
                     {scannedRecord.santriName}
                   </h3>
-                  <p className="text-xs text-[#64748B]">
+                  <p className="text-xs text-[#64748B] dark:text-slate-400">
                     Kelas {scannedRecord.santriClass} • {scannedRecord.gender === "Putra" ? "L" : "P"}
                   </p>
                 </div>
@@ -172,41 +172,41 @@ export default function SatpamGatePage() {
                 <span
                   className={`px-3 py-1 rounded-xl text-[11px] font-bold ${
                     scannedRecord.status === "DISETUJUI"
-                      ? "bg-emerald-100 text-emerald-800"
+                      ? "bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300"
                       : scannedRecord.status === "BERJALAN"
-                      ? "bg-amber-100 text-amber-800"
+                      ? "bg-amber-100 dark:bg-amber-950/80 text-amber-800 dark:text-amber-300"
                       : scannedRecord.status === "SELESAI"
-                      ? "bg-blue-100 text-blue-800"
-                      : "bg-gray-100 text-gray-700"
+                      ? "bg-blue-100 dark:bg-blue-950/80 text-blue-800 dark:text-blue-300"
+                      : "bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-300"
                   }`}
                 >
                   {scannedRecord.status}
                 </span>
               </div>
 
-              <div className="grid grid-cols-2 gap-2 text-xs pt-2 border-t border-[#D4C9B5]/40">
-                <div className="p-2 rounded-xl bg-white/70">
-                  <span className="text-[10px] text-[#94A3B8] block">Jenis Izin</span>
-                  <span className="font-bold text-[#172033]">{scannedRecord.jenisIzin}</span>
+              <div className="grid grid-cols-2 gap-2 text-xs pt-2 border-t border-[#D4C9B5]/40 dark:border-slate-700">
+                <div className="p-2 rounded-xl bg-white/70 dark:bg-slate-900/70 border border-transparent dark:border-slate-800">
+                  <span className="text-[10px] text-[#94A3B8] dark:text-slate-400 block">Jenis Izin</span>
+                  <span className="font-bold text-[#172033] dark:text-slate-100">{scannedRecord.jenisIzin}</span>
                 </div>
-                <div className="p-2 rounded-xl bg-white/70">
-                  <span className="text-[10px] text-[#94A3B8] block">Disetujui Oleh</span>
-                  <span className="font-bold text-[#172033]">{scannedRecord.disetujuiOleh || "Pengasuhan"}</span>
+                <div className="p-2 rounded-xl bg-white/70 dark:bg-slate-900/70 border border-transparent dark:border-slate-800">
+                  <span className="text-[10px] text-[#94A3B8] dark:text-slate-400 block">Disetujui Oleh</span>
+                  <span className="font-bold text-[#172033] dark:text-slate-100">{scannedRecord.disetujuiOleh || "Pengasuhan"}</span>
                 </div>
-                <div className="p-2 rounded-xl bg-white/70">
-                  <span className="text-[10px] text-[#94A3B8] block">Rencana Keluar</span>
-                  <span className="font-bold text-[#172033]">{scannedRecord.tglKeluar}</span>
+                <div className="p-2 rounded-xl bg-white/70 dark:bg-slate-900/70 border border-transparent dark:border-slate-800">
+                  <span className="text-[10px] text-[#94A3B8] dark:text-slate-400 block">Rencana Keluar</span>
+                  <span className="font-bold text-[#172033] dark:text-slate-100">{scannedRecord.tglKeluar}</span>
                 </div>
-                <div className="p-2 rounded-xl bg-white/70">
-                  <span className="text-[10px] text-[#94A3B8] block">Wajib Kembali</span>
-                  <span className="font-bold text-[#172033]">{scannedRecord.tglKembali}</span>
+                <div className="p-2 rounded-xl bg-white/70 dark:bg-slate-900/70 border border-transparent dark:border-slate-800">
+                  <span className="text-[10px] text-[#94A3B8] dark:text-slate-400 block">Wajib Kembali</span>
+                  <span className="font-bold text-[#172033] dark:text-slate-100">{scannedRecord.tglKembali}</span>
                 </div>
               </div>
 
               {scannedRecord.alasan && (
-                <div className="p-2.5 rounded-xl bg-white/80 text-xs">
-                  <span className="text-[10px] text-[#94A3B8] block font-medium">Alasan / Keterangan:</span>
-                  <p className="text-[#172033] mt-0.5">{scannedRecord.alasan}</p>
+                <div className="p-2.5 rounded-xl bg-white/80 dark:bg-slate-900/80 border border-transparent dark:border-slate-800 text-xs">
+                  <span className="text-[10px] text-[#94A3B8] dark:text-slate-400 block font-medium">Alasan / Keterangan:</span>
+                  <p className="text-[#172033] dark:text-slate-200 mt-0.5">{scannedRecord.alasan}</p>
                 </div>
               )}
 
@@ -250,7 +250,7 @@ export default function SatpamGatePage() {
                 <button
                   type="button"
                   onClick={resetScanner}
-                  className="text-xs text-[#64748B] hover:text-[#172033] font-semibold underline"
+                  className="text-xs text-[#64748B] dark:text-slate-400 hover:text-[#172033] dark:hover:text-slate-100 font-semibold underline"
                 >
                   Periksa Izin Santri Lain
                 </button>
