@@ -1,5 +1,403 @@
 [
   {
+    "id": "log_1793947190040_33",
+    "timestamp": "2026-11-06T13:39:50+07:00",
+    "level": "INFO",
+    "category": "SYSTEM",
+    "action": "SERVER_INIT",
+    "actor": {
+      "name": "Mizan Core Engine",
+      "role": "SYSTEM",
+      "ip": "127.0.0.1"
+    },
+    "message": "Backend engine Mizan Go siap melayani"
+  },
+  {
+    "id": "log_1793947187946_32",
+    "timestamp": "2026-11-06T13:39:47+07:00",
+    "level": "INFO",
+    "category": "SYSTEM",
+    "action": "SERVER_INIT",
+    "actor": {
+      "name": "Mizan Core Engine",
+      "role": "SYSTEM",
+      "ip": "127.0.0.1"
+    },
+    "message": "Backend engine Mizan Go siap melayani"
+  },
+  {
+    "id": "log_1793947185835_31",
+    "timestamp": "2026-11-06T13:39:45+07:00",
+    "level": "INFO",
+    "category": "SYSTEM",
+    "action": "SERVER_INIT",
+    "actor": {
+      "name": "Mizan Core Engine",
+      "role": "SYSTEM",
+      "ip": "127.0.0.1"
+    },
+    "message": "Backend engine Mizan Go siap melayani"
+  },
+  {
+    "id": "log_1793947183713_30",
+    "timestamp": "2026-11-06T13:39:43+07:00",
+    "level": "INFO",
+    "category": "SYSTEM",
+    "action": "SERVER_INIT",
+    "actor": {
+      "name": "Mizan Core Engine",
+      "role": "SYSTEM",
+      "ip": "127.0.0.1"
+    },
+    "message": "Backend engine Mizan Go siap melayani"
+  },
+  {
+    "id": "log_1793947181576_29",
+    "timestamp": "2026-11-06T13:39:41+07:00",
+    "level": "INFO",
+    "category": "SYSTEM",
+    "action": "SERVER_INIT",
+    "actor": {
+      "name": "Mizan Core Engine",
+      "role": "SYSTEM",
+      "ip": "127.0.0.1"
+    },
+    "message": "Backend engine Mizan Go siap melayani"
+  },
+  {
+    "id": "log_1793947179476_28",
+    "timestamp": "2026-11-06T13:39:39+07:00",
+    "level": "INFO",
+    "category": "SYSTEM",
+    "action": "SERVER_INIT",
+    "actor": {
+      "name": "Mizan Core Engine",
+      "role": "SYSTEM",
+      "ip": "127.0.0.1"
+    },
+    "message": "Backend engine Mizan Go siap melayani"
+  },
+  {
+    "id": "log_1793947177388_27",
+    "timestamp": "2026-11-06T13:39:37+07:00",
+    "level": "INFO",
+    "category": "SYSTEM",
+    "action": "SERVER_INIT",
+    "actor": {
+      "name": "Mizan Core Engine",
+      "role": "SYSTEM",
+      "ip": "127.0.0.1"
+    },
+    "message": "Backend engine Mizan Go siap melayani"
+  },
+  {
+    "id": "log_1793947175294_26",
+    "timestamp": "2026-11-06T13:39:35+07:00",
+    "level": "INFO",
+    "category": "SYSTEM",
+    "action": "SERVER_INIT",
+    "actor": {
+      "name": "Mizan Core Engine",
+      "role": "SYSTEM",
+      "ip": "127.0.0.1"
+    },
+    "message": "Backend engine Mizan Go siap melayani"
+  },
+  {
+    "id": "log_1793947173188_25",
+    "timestamp": "2026-11-06T13:39:33+07:00",
+    "level": "INFO",
+    "category": "SYSTEM",
+    "action": "SERVER_INIT",
+    "actor": {
+      "name": "Mizan Core Engine",
+      "role": "SYSTEM",
+      "ip": "127.0.0.1"
+    },
+    "message": "Backend engine Mizan Go siap melayani"
+  },
+  {
+    "id": "log_1793947171096_24",
+    "timestamp": "2026-11-06T13:39:31+07:00",
+    "level": "INFO",
+    "category": "SYSTEM",
+    "action": "SERVER_INIT",
+    "actor": {
+      "name": "Mizan Core Engine",
+      "role": "SYSTEM",
+      "ip": "127.0.0.1"
+    },
+    "message": "Backend engine Mizan Go siap melayani"
+  },
+  {
+    "id": "log_1793947169003_23",
+    "timestamp": "2026-11-06T13:39:29+07:00",
+    "level": "INFO",
+    "category": "SYSTEM",
+    "action": "SERVER_INIT",
+    "actor": {
+      "name": "Mizan Core Engine",
+      "role": "SYSTEM",
+      "ip": "127.0.0.1"
+    },
+    "message": "Backend engine Mizan Go siap melayani"
+  },
+  {
+    "id": "log_1793947166918_22",
+    "timestamp": "2026-11-06T13:39:26+07:00",
+    "level": "INFO",
+    "category": "SYSTEM",
+    "action": "SERVER_INIT",
+    "actor": {
+      "name": "Mizan Core Engine",
+      "role": "SYSTEM",
+      "ip": "127.0.0.1"
+    },
+    "message": "Backend engine Mizan Go siap melayani"
+  },
+  {
+    "id": "log_1793947164824_21",
+    "timestamp": "2026-11-06T13:39:24+07:00",
+    "level": "INFO",
+    "category": "SYSTEM",
+    "action": "SERVER_INIT",
+    "actor": {
+      "name": "Mizan Core Engine",
+      "role": "SYSTEM",
+      "ip": "127.0.0.1"
+    },
+    "message": "Backend engine Mizan Go siap melayani"
+  },
+  {
+    "id": "log_1793947162725_20",
+    "timestamp": "2026-11-06T13:39:22+07:00",
+    "level": "INFO",
+    "category": "SYSTEM",
+    "action": "SERVER_INIT",
+    "actor": {
+      "name": "Mizan Core Engine",
+      "role": "SYSTEM",
+      "ip": "127.0.0.1"
+    },
+    "message": "Backend engine Mizan Go siap melayani"
+  },
+  {
+    "id": "log_1793947160642_19",
+    "timestamp": "2026-11-06T13:39:20+07:00",
+    "level": "INFO",
+    "category": "SYSTEM",
+    "action": "SERVER_INIT",
+    "actor": {
+      "name": "Mizan Core Engine",
+      "role": "SYSTEM",
+      "ip": "127.0.0.1"
+    },
+    "message": "Backend engine Mizan Go siap melayani"
+  },
+  {
+    "id": "log_1793947158558_18",
+    "timestamp": "2026-11-06T13:39:18+07:00",
+    "level": "INFO",
+    "category": "SYSTEM",
+    "action": "SERVER_INIT",
+    "actor": {
+      "name": "Mizan Core Engine",
+      "role": "SYSTEM",
+      "ip": "127.0.0.1"
+    },
+    "message": "Backend engine Mizan Go siap melayani"
+  },
+  {
+    "id": "log_1793947156483_17",
+    "timestamp": "2026-11-06T13:39:16+07:00",
+    "level": "INFO",
+    "category": "SYSTEM",
+    "action": "SERVER_INIT",
+    "actor": {
+      "name": "Mizan Core Engine",
+      "role": "SYSTEM",
+      "ip": "127.0.0.1"
+    },
+    "message": "Backend engine Mizan Go siap melayani"
+  },
+  {
+    "id": "log_1793947154396_16",
+    "timestamp": "2026-11-06T13:39:14+07:00",
+    "level": "INFO",
+    "category": "SYSTEM",
+    "action": "SERVER_INIT",
+    "actor": {
+      "name": "Mizan Core Engine",
+      "role": "SYSTEM",
+      "ip": "127.0.0.1"
+    },
+    "message": "Backend engine Mizan Go siap melayani"
+  },
+  {
+    "id": "log_1793947152269_15",
+    "timestamp": "2026-11-06T13:39:12+07:00",
+    "level": "INFO",
+    "category": "SYSTEM",
+    "action": "SERVER_INIT",
+    "actor": {
+      "name": "Mizan Core Engine",
+      "role": "SYSTEM",
+      "ip": "127.0.0.1"
+    },
+    "message": "Backend engine Mizan Go siap melayani"
+  },
+  {
+    "id": "log_1793947150156_14",
+    "timestamp": "2026-11-06T13:39:10+07:00",
+    "level": "INFO",
+    "category": "SYSTEM",
+    "action": "SERVER_INIT",
+    "actor": {
+      "name": "Mizan Core Engine",
+      "role": "SYSTEM",
+      "ip": "127.0.0.1"
+    },
+    "message": "Backend engine Mizan Go siap melayani"
+  },
+  {
+    "id": "log_1793947148066_13",
+    "timestamp": "2026-11-06T13:39:08+07:00",
+    "level": "INFO",
+    "category": "SYSTEM",
+    "action": "SERVER_INIT",
+    "actor": {
+      "name": "Mizan Core Engine",
+      "role": "SYSTEM",
+      "ip": "127.0.0.1"
+    },
+    "message": "Backend engine Mizan Go siap melayani"
+  },
+  {
+    "id": "log_1793947145991_12",
+    "timestamp": "2026-11-06T13:39:05+07:00",
+    "level": "INFO",
+    "category": "SYSTEM",
+    "action": "SERVER_INIT",
+    "actor": {
+      "name": "Mizan Core Engine",
+      "role": "SYSTEM",
+      "ip": "127.0.0.1"
+    },
+    "message": "Backend engine Mizan Go siap melayani"
+  },
+  {
+    "id": "log_1793947140833_11",
+    "timestamp": "2026-11-06T13:39:00+07:00",
+    "level": "INFO",
+    "category": "SYSTEM",
+    "action": "SERVER_INIT",
+    "actor": {
+      "name": "Mizan Core Engine",
+      "role": "SYSTEM",
+      "ip": "127.0.0.1"
+    },
+    "message": "Backend engine Mizan Go siap melayani"
+  },
+  {
+    "id": "log_1793947136689_10",
+    "timestamp": "2026-11-06T13:38:56+07:00",
+    "level": "INFO",
+    "category": "SYSTEM",
+    "action": "SERVER_INIT",
+    "actor": {
+      "name": "Mizan Core Engine",
+      "role": "SYSTEM",
+      "ip": "127.0.0.1"
+    },
+    "message": "Backend engine Mizan Go siap melayani"
+  },
+  {
+    "id": "log_1793947133271_9",
+    "timestamp": "2026-11-06T13:38:53+07:00",
+    "level": "INFO",
+    "category": "SYSTEM",
+    "action": "SERVER_INIT",
+    "actor": {
+      "name": "Mizan Core Engine",
+      "role": "SYSTEM",
+      "ip": "127.0.0.1"
+    },
+    "message": "Backend engine Mizan Go siap melayani"
+  },
+  {
+    "id": "log_1793947130152_8",
+    "timestamp": "2026-11-06T13:38:50+07:00",
+    "level": "INFO",
+    "category": "SYSTEM",
+    "action": "SERVER_INIT",
+    "actor": {
+      "name": "Mizan Core Engine",
+      "role": "SYSTEM",
+      "ip": "127.0.0.1"
+    },
+    "message": "Backend engine Mizan Go siap melayani"
+  },
+  {
+    "id": "log_1793947117743_7",
+    "timestamp": "2026-11-06T13:38:37+07:00",
+    "level": "INFO",
+    "category": "SYSTEM",
+    "action": "SERVER_INIT",
+    "actor": {
+      "name": "Mizan Core Engine",
+      "role": "SYSTEM",
+      "ip": "127.0.0.1"
+    },
+    "message": "Backend engine Mizan Go siap melayani"
+  },
+  {
+    "id": "log_1793947093069_6",
+    "timestamp": "2026-11-06T13:38:13+07:00",
+    "level": "INFO",
+    "category": "SYSTEM",
+    "action": "SERVER_INIT",
+    "actor": {
+      "name": "Mizan Core Engine",
+      "role": "SYSTEM",
+      "ip": "127.0.0.1"
+    },
+    "message": "Backend engine Mizan Go siap melayani"
+  },
+  {
+    "id": "log_1793946815903_5",
+    "timestamp": "2026-11-06T13:33:35+07:00",
+    "level": "INFO",
+    "category": "SYSTEM",
+    "action": "SERVER_INIT",
+    "actor": {
+      "name": "Mizan Core Engine",
+      "role": "SYSTEM",
+      "ip": "127.0.0.1"
+    },
+    "message": "Backend engine Mizan Go siap melayani"
+  },
+  {
+    "id": "log_1793939726652_4",
+    "timestamp": "2026-11-06T11:35:26+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "GET /api/.env",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[401] GET /api/.env (1ms)",
+    "details": {
+      "duration_ms": 1,
+      "error": "",
+      "method": "GET",
+      "path": "/api/.env",
+      "status": 401,
+      "user_agent": "Go-http-client/2.0"
+    }
+  },
+  {
     "id": "log_1793939456385_3",
     "timestamp": "2026-11-06T11:30:56+07:00",
     "level": "INFO",

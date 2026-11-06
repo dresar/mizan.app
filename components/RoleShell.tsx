@@ -80,6 +80,65 @@ export function RoleShell({ children }: RoleShellProps) {
     }
   }, [isAuthLoading, isAuthenticated, currentUser, activeRole, pathname, router]);
 
+  useEffect(() => {
+    if (!isAuthenticated || !activeRole) return;
+
+    const routes: string[] = [];
+    if (activeRole === "SUPER_ADMIN") {
+      routes.push(
+        "/admin/dashboard",
+        "/admin/santri",
+        "/admin/kelas",
+        "/admin/wali-kelas",
+        "/admin/absensi",
+        "/admin/rapor",
+        "/admin/kesehatan",
+        "/admin/perizinan",
+        "/admin/keuangan",
+        "/admin/tahfidz",
+        "/admin/users",
+        "/admin/kategori-pelanggaran",
+        "/admin/pengaturan-nilai",
+        "/admin/notifikasi",
+        "/admin/feedback",
+        "/admin/logs",
+        "/admin/profil"
+      );
+    } else if (activeRole === "PENGASUHAN") {
+      routes.push(
+        "/bk/dashboard",
+        "/bk/kesehatan",
+        "/bk/perizinan",
+        "/bk/keuangan",
+        "/bk/tahfidz",
+        "/bk/penilaian",
+        "/bk/santri",
+        "/bk/absen",
+        "/bk/history",
+        "/bk/profil"
+      );
+    } else if (activeRole === "GURU") {
+      routes.push(
+        "/guru/dashboard",
+        "/guru/santri",
+        "/guru/input-penilaian",
+        "/guru/riwayat",
+        "/guru/profil"
+      );
+    }
+
+    const timer = setTimeout(() => {
+      routes.forEach((r) => {
+        try {
+          router.prefetch(r);
+        } catch {
+        }
+      });
+    }, 400);
+
+    return () => clearTimeout(timer);
+  }, [isAuthenticated, activeRole, router]);
+
   if (isAuthLoading) {
     return null;
   }

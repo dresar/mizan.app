@@ -481,7 +481,7 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
         }
         refreshData();
       }
-    }, 6000);
+    }, 30000);
     const handleVisibility = () => {
       if (!document.hidden) {
         if (typeof window !== "undefined") {
@@ -537,6 +537,7 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
       localStorage.setItem(STORAGE_KEY_USER, user.id);
       localStorage.setItem("mizan_user_cache_v4", JSON.stringify(user));
       document.cookie = `mizan_auth=${user.role}; path=/; max-age=86400; SameSite=Lax`;
+      void refreshData();
     } catch {
       void 0;
     }

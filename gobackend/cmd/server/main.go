@@ -359,8 +359,8 @@ func main() {
 				c.Set("Cache-Control", "no-cache, no-store, must-revalidate")
 			} else if strings.HasPrefix(p, "/_next/static/") {
 				c.Set("Cache-Control", "public, max-age=31536000, immutable")
-			} else if p == "/" || strings.HasSuffix(p, ".html") {
-				c.Set("Cache-Control", "no-cache, no-store, must-revalidate")
+			} else if strings.HasSuffix(p, ".txt") || strings.HasSuffix(p, ".html") || p == "/" {
+				c.Set("Cache-Control", "public, max-age=1800, stale-while-revalidate=86400")
 			}
 			return c.Next()
 		})
@@ -384,13 +384,34 @@ func main() {
 				return c.SendFile(cfg.StaticWebDir + "/index.html")
 			}
 
+			isRSC := c.Get("RSC") == "1" || c.Get("Next-Router-Prefetch") == "1" || c.Query("_rsc") != ""
+			if isRSC {
+				txtFile := cfg.StaticWebDir + "/" + reqPath + ".txt"
+				if _, err := os.Stat(txtFile); err == nil {
+					c.Set("Content-Type", "text/x-component; charset=utf-8")
+					c.Set("Cache-Control", "public, max-age=1800, stale-while-revalidate=86400")
+					return c.SendFile(txtFile)
+				}
+				nestedTxt := cfg.StaticWebDir + "/" + reqPath + "/__next._full.txt"
+				if _, err := os.Stat(nestedTxt); err == nil {
+					c.Set("Content-Type", "text/x-component; charset=utf-8")
+					c.Set("Cache-Control", "public, max-age=1800, stale-while-revalidate=86400")
+					return c.SendFile(nestedTxt)
+				}
+			}
+
 			htmlFile := cfg.StaticWebDir + "/" + reqPath + ".html"
 			if _, err := os.Stat(htmlFile); err == nil {
+				c.Set("Cache-Control", "public, max-age=1800, stale-while-revalidate=86400")
 				return c.SendFile(htmlFile)
 			}
 
 			directFile := cfg.StaticWebDir + "/" + reqPath
 			if _, err := os.Stat(directFile); err == nil {
+				if strings.HasSuffix(reqPath, ".txt") {
+					c.Set("Content-Type", "text/x-component; charset=utf-8")
+					c.Set("Cache-Control", "public, max-age=1800, stale-while-revalidate=86400")
+				}
 				return c.SendFile(directFile)
 			}
 
