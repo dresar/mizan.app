@@ -46,8 +46,7 @@ const CATEGORIES: NotificationCategory[] = [
   "Evaluasi Rapor",
   "Presensi Sholat",
   "Peringatan Disiplin",
-  "Pengumuman Pondok",
-  "Sistem"
+  "Pengumuman Pondok"
 ];
 
 const INITIAL_FORM_DATA: NotificationFormData = {
@@ -255,14 +254,13 @@ export default function AdminNotificationPage() {
           </div>
 
           <div className="flex items-center gap-2 shrink-0 flex-wrap">
-            <button
-              type="button"
-              onClick={handleOpenAddModal}
+            <Link
+              href="/admin/notifikasi/tambah"
               className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#1B4D3E] text-white hover:bg-[#153e32] text-xs font-bold shadow-xs transition-colors cursor-pointer"
             >
               <Plus className="w-3.5 h-3.5" />
               <span>Tambah</span>
-            </button>
+            </Link>
 
             {stats.unread > 0 && (
               <button

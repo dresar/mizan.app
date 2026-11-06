@@ -64,8 +64,16 @@ export default function InputPenilaianPage() {
     addPenilaian,
     showToast,
     penilaianList,
-    settings
+    settings,
+    categories
   } = useMizan();
+
+  const liveCategories: CategoryItem[] = useMemo(() => {
+    if (categories && categories.length > 0) {
+      return categories as unknown as CategoryItem[];
+    }
+    return categoriesMasterData as unknown as CategoryItem[];
+  }, [categories]);
 
   const [selectedSantriId, setSelectedSantriId] = useState<string>(accessibleSantriList[0]?.id || "santri-1");
   const [penilaianType, setPenilaianType] = useState<"HASANAH" | "SAYYIAH">("HASANAH");
@@ -123,7 +131,7 @@ export default function InputPenilaianPage() {
 
   const allMasterItems: MasterFlatItem[] = useMemo(() => {
     const list: MasterFlatItem[] = [];
-    (categoriesMasterData as unknown as CategoryItem[]).forEach((cat) => {
+    liveCategories.forEach((cat) => {
       (cat.unsurs || []).forEach((u) => {
         const uType = (u.type || "HASANAH") as "HASANAH" | "SAYYIAH";
         const cName = cleanUnsurName(u.name);
@@ -146,7 +154,7 @@ export default function InputPenilaianPage() {
       });
     });
     return list;
-  }, []);
+  }, [liveCategories]);
 
   const liveSearchResults = useMemo(() => {
     const q = liveSearchQuery.trim().toLowerCase();
@@ -170,14 +178,14 @@ export default function InputPenilaianPage() {
   }, [allMasterItems, modalSearchQuery, modalTypeFilter, modalCategoryFilter]);
 
   const categoriesForType: CategoryItem[] = useMemo(() => {
-    return (categoriesMasterData as unknown as CategoryItem[])
+    return liveCategories
       .map((cat) => ({
         code: cat.code,
         name: cat.name,
         unsurs: (cat.unsurs || []).filter((u: UnsurItem) => u.type === penilaianType)
       }))
       .filter((cat) => cat.unsurs.length > 0);
-  }, [penilaianType]);
+  }, [penilaianType, liveCategories]);
 
   const allUnsursForType = useMemo(() => {
     return categoriesForType.flatMap((cat) =>
@@ -267,7 +275,7 @@ export default function InputPenilaianPage() {
   const handleSwitchPenilaianType = (type: "HASANAH" | "SAYYIAH") => {
     setPenilaianType(type);
     setLiveSearchQuery("");
-    const cats = (categoriesMasterData as unknown as CategoryItem[])
+    const cats = liveCategories
       .map((cat) => ({
         code: cat.code,
         name: cat.name,
@@ -1071,7 +1079,7 @@ export default function InputPenilaianPage() {
                     className="px-2.5 py-1 text-[11px] font-bold bg-[#EEF2F6] border border-transparent rounded-xl text-[#172033] focus:outline-none shrink-0"
                   >
                     <option value="ALL">Semua Kategori</option>
-                    {(categoriesMasterData as unknown as CategoryItem[]).map((c) => (
+                    {liveCategories.map((c) => (
                       <option key={c.code} value={c.name}>
                         {c.code}. {c.name}
                       </option>

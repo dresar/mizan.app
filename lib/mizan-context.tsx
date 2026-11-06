@@ -1035,11 +1035,24 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const saveOfflineCategories = (updatedCats: Kategori[]) => {
+    try {
+      const raw = localStorage.getItem("mizan_offline_data_v1");
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        parsed.categories = updatedCats;
+        localStorage.setItem("mizan_offline_data_v1", JSON.stringify(parsed));
+      }
+    } catch {
+      void 0;
+    }
+  };
+
   const addIndikatorToUnsur = (unsurId: string, ind: Omit<Indikator, "id">) => {
-    const id = "ind-" + Date.now();
+    const id = "ind-" + Date.now() + "-" + Math.random().toString(36).substring(2, 7);
     const newIndikator: Indikator = { ...ind, id };
-    setCategories((prev) =>
-      prev.map((cat) => ({
+    setCategories((prev) => {
+      const next = prev.map((cat) => ({
         ...cat,
         unsurs: cat.unsurs.map((uns) => {
           if (uns.id === unsurId) {
@@ -1047,21 +1060,24 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
           }
           return uns;
         })
-      }))
-    );
+      }));
+      saveOfflineCategories(next);
+      return next;
+    });
 
-    fetch("/api/categories", {
+    fetch("/api/categories/indicator", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ action: "ADD_INDICATOR", unsurId, ...ind })
+      credentials: "include",
+      body: JSON.stringify({ id, unsurId, ...ind })
     }).catch(() => void 0);
 
     showToast("Indikator ditambahkan", "success");
   };
 
   const updateIndikatorItem = (indId: string, updated: Partial<Indikator>) => {
-    setCategories((prev) =>
-      prev.map((cat) => ({
+    setCategories((prev) => {
+      const next = prev.map((cat) => ({
         ...cat,
         unsurs: cat.unsurs.map((uns) => ({
           ...uns,
@@ -1069,33 +1085,37 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
             ind.id === indId ? { ...ind, ...updated } : ind
           )
         }))
-      }))
-    );
+      }));
+      saveOfflineCategories(next);
+      return next;
+    });
 
-    fetch("/api/categories", {
-      method: "POST",
+    fetch("/api/categories/indicator", {
+      method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ action: "UPDATE_INDICATOR", indId, ...updated })
+      credentials: "include",
+      body: JSON.stringify({ id: indId, ...updated })
     }).catch(() => void 0);
 
     showToast("Indikator diperbarui", "success");
   };
 
   const deleteIndikatorItem = (indId: string) => {
-    setCategories((prev) =>
-      prev.map((cat) => ({
+    setCategories((prev) => {
+      const next = prev.map((cat) => ({
         ...cat,
         unsurs: cat.unsurs.map((uns) => ({
           ...uns,
           indicators: uns.indicators.filter((ind) => ind.id !== indId)
         }))
-      }))
-    );
+      }));
+      saveOfflineCategories(next);
+      return next;
+    });
 
-    fetch("/api/categories", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ action: "DELETE_INDICATOR", indId })
+    fetch(`/api/categories/indicator/${encodeURIComponent(indId)}`, {
+      method: "DELETE",
+      credentials: "include"
     }).catch(() => void 0);
 
     showToast("Indikator dihapus", "info");
@@ -1107,23 +1127,44 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
       name,
       unsurs: []
     };
-    setCategories((prev) => [...prev, newCat]);
+    setCategories((prev) => {
+      const next = [...prev, newCat];
+      saveOfflineCategories(next);
+      return next;
+    });
+    fetch("/api/categories", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ code, name })
+    }).catch(() => void 0);
     showToast(`Kategori ${name} ditambahkan`, "success");
   };
 
   const addUnsurToCategory = (categoryName: string, unsurName: string) => {
+    const id = "unsur-" + Date.now() + "-" + Math.random().toString(36).substring(2, 7);
     const newUnsur: Unsur = {
-      id: "unsur-" + Date.now(),
+      id,
       name: unsurName,
       indicators: []
     };
-    setCategories((prev) =>
-      prev.map((cat) =>
+    setCategories((prev) => {
+      const next = prev.map((cat) =>
         cat.name === categoryName
           ? { ...cat, unsurs: [...cat.unsurs, newUnsur] }
           : cat
-      )
-    );
+      );
+      saveOfflineCategories(next);
+      return next;
+    });
+
+    fetch("/api/categories/unsur", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ categoryName, name: unsurName, type: "HASANAH" })
+    }).catch(() => void 0);
+
     showToast(`Unsur ${unsurName} ditambahkan`, "success");
   };
 

@@ -56,7 +56,8 @@ export default function AdminFeedbackPage() {
     const bugCount = feedbackList.filter((f) => f.type === "BUG").length;
     const saranCount = feedbackList.filter((f) => f.type === "SARAN").length;
     const pendingCount = feedbackList.filter((f) => f.status === "Baru" || f.status === "Ditinjau").length;
-    return { total, bugCount, saranCount, pendingCount };
+    const resolvedCount = feedbackList.filter((f) => f.status === "Selesai").length;
+    return { total, bugCount, saranCount, pendingCount, resolvedCount };
   }, [feedbackList]);
 
   const filteredList = useMemo(() => {
@@ -182,7 +183,7 @@ export default function AdminFeedbackPage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        <div className="grid grid-cols-2 lg:grid-cols-5 gap-3">
           <div className="p-4 rounded-2xl bg-white border border-[#E2EBF4] shadow-xs">
             <span className="text-[11px] font-bold text-[#64748B]">Total Masukan</span>
             <p className="text-xl font-bold text-[#172033] mt-1">{stats.total}</p>
@@ -198,6 +199,13 @@ export default function AdminFeedbackPage() {
           <div className="p-4 rounded-2xl bg-white border border-[#E2EBF4] shadow-xs">
             <span className="text-[11px] font-bold text-amber-700">Menunggu Tindakan</span>
             <p className="text-xl font-bold text-amber-700 mt-1">{stats.pendingCount}</p>
+          </div>
+          <div className="p-4 rounded-2xl bg-[#ECFDF5] border border-[#A7F3D0] shadow-xs col-span-2 lg:col-span-1">
+            <span className="text-[11px] font-bold text-[#065F46] flex items-center gap-1">
+              <CheckCircle2 className="w-3.5 h-3.5 text-[#065F46]" />
+              <span>Sudah Diperbaiki</span>
+            </span>
+            <p className="text-xl font-bold text-[#065F46] mt-1">{stats.resolvedCount}</p>
           </div>
         </div>
 
@@ -272,7 +280,11 @@ export default function AdminFeedbackPage() {
               {filteredList.map((item) => (
                 <div
                   key={item.id}
-                  className="p-3.5 rounded-2xl bg-[#FAF7EE]/40 border border-[#E2EBF4] hover:bg-white hover:shadow-xs transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3"
+                  className={`p-3.5 rounded-2xl border border-[#E2EBF4] hover:bg-white hover:shadow-xs transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${
+                    item.status === "Selesai"
+                      ? "border-l-4 border-l-emerald-600 bg-emerald-50/20"
+                      : "bg-[#FAF7EE]/40"
+                  }`}
                 >
                   <div className="space-y-1.5 flex-1 min-w-0">
                     <div className="flex flex-wrap items-center gap-2">
@@ -287,9 +299,16 @@ export default function AdminFeedbackPage() {
                         <span>{item.type}</span>
                       </span>
 
-                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md border ${getStatusBadge(item.status)}`}>
-                        {item.status}
-                      </span>
+                      {item.status === "Selesai" ? (
+                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-md border bg-emerald-100 text-emerald-800 border-emerald-300 flex items-center gap-1">
+                          <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                          <span>Sudah Diperbaiki</span>
+                        </span>
+                      ) : (
+                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md border ${getStatusBadge(item.status)}`}>
+                          {item.status}
+                        </span>
+                      )}
 
                       {item.aiAnalysis?.severity && (
                         <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md border ${getSeverityBadge(item.aiAnalysis.severity)}`}>
@@ -311,6 +330,18 @@ export default function AdminFeedbackPage() {
                       {item.description}
                     </p>
 
+                    {item.adminNotes && (
+                      <div className="mt-2 p-2 rounded-xl bg-emerald-50/80 border border-emerald-200 text-xs text-emerald-900 flex items-start gap-1.5">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
+                        <div className="min-w-0">
+                          <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-800 block">
+                            Catatan Perbaikan / Tindak Lanjut:
+                          </span>
+                          <span className="text-xs text-emerald-950 font-medium">{item.adminNotes}</span>
+                        </div>
+                      </div>
+                    )}
+
                     <div className="flex flex-wrap items-center gap-3 text-[11px] text-[#64748B] pt-0.5">
                       <span className="flex items-center gap-1 font-medium">
                         <User className="w-3 h-3 text-[#94A3B8]" />
@@ -328,6 +359,26 @@ export default function AdminFeedbackPage() {
                   </div>
 
                   <div className="flex items-center gap-1.5 self-end sm:self-center">
+                    {item.status !== "Selesai" ? (
+                      <button
+                        type="button"
+                        onClick={async () => {
+                          await updateFeedbackStatus(item.id, "Selesai", "Telah diperbaiki dan diverifikasi oleh sistem.");
+                          showToast("Status diubah menjadi Sudah Diperbaiki", "success");
+                        }}
+                        className="px-2.5 py-1.5 rounded-xl bg-emerald-50 border border-emerald-200 text-xs font-bold text-emerald-800 hover:bg-emerald-100 flex items-center gap-1 transition-colors cursor-pointer"
+                        title="Tandai Sudah Diperbaiki"
+                      >
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                        <span className="hidden sm:inline">Tandai Selesai</span>
+                      </button>
+                    ) : (
+                      <span className="px-2.5 py-1.5 rounded-xl bg-emerald-100/70 border border-emerald-200 text-xs font-bold text-emerald-800 flex items-center gap-1">
+                        <Check className="w-3.5 h-3.5 text-emerald-600" />
+                        <span className="hidden sm:inline">Selesai</span>
+                      </span>
+                    )}
+
                     <button
                       type="button"
                       onClick={() => handleOpenDetail(item)}

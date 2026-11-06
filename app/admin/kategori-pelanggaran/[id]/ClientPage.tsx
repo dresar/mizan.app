@@ -183,7 +183,7 @@ function CategoryDetailContent() {
 
         <div className="flex flex-wrap items-center gap-2 shrink-0">
           <Link
-            href={`/admin/kategori-pelanggaran/unsur`}
+            href={`/admin/kategori-pelanggaran/unsur?kategori=${encodeURIComponent(currentCategory?.name || "")}`}
             className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-2xl bg-white border border-[#E2EBF4] text-[#172033] text-xs font-bold hover:bg-[#FAF7EE] transition-colors shadow-2xs"
           >
             <Layers className="w-3.5 h-3.5 text-[#1B4D3E]" />
@@ -191,7 +191,7 @@ function CategoryDetailContent() {
           </Link>
 
           <Link
-            href={`/admin/kategori-pelanggaran/indikator`}
+            href={`/admin/kategori-pelanggaran/indikator?kategori=${encodeURIComponent(currentCategory?.name || "")}`}
             className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-2xl bg-[#1B4D3E] text-white text-xs font-bold hover:bg-[#153e32] transition-colors shadow-xs"
           >
             <span>Indikator</span>
@@ -311,7 +311,7 @@ function CategoryDetailContent() {
 
                 <div className="flex items-center gap-2 self-start sm:self-auto">
                   <Link
-                    href={`/admin/kategori-pelanggaran/indikator`}
+                    href={`/admin/kategori-pelanggaran/indikator?kategori=${encodeURIComponent(currentCategory?.name || "")}&unsurId=${encodeURIComponent(unsur.id)}`}
                     className="px-2.5 py-1 text-[11px] font-bold rounded-xl bg-[#EEF2F6] text-[#172033] hover:bg-[#E2E8F0] transition-colors inline-flex items-center gap-1"
                   >
                     <span>Indikator</span>

@@ -149,3 +149,100 @@ func CreateUnsur(c *fiber.Ctx) error {
 
 	return utils.SendSuccess(c, fiber.Map{"id": id}, "Unsur berhasil ditambahkan")
 }
+
+func CreateIndicator(c *fiber.Ctx) error {
+	var req struct {
+		ID           string  `json:"id"`
+		UnsurID      string  `json:"unsurId"`
+		Text         string  `json:"text"`
+		Type         string  `json:"type"`
+		DefaultScore float64 `json:"defaultScore"`
+		Tingkat      string  `json:"tingkat"`
+	}
+	if err := c.BodyParser(&req); err != nil || req.UnsurID == "" || req.Text == "" {
+		return utils.SendError(c, fiber.StatusBadRequest, "Data indikator tidak lengkap")
+	}
+
+	pool := database.GetPool()
+	if pool == nil {
+		return utils.SendError(c, fiber.StatusServiceUnavailable, "Database belum terhubung")
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	if req.ID == "" {
+		req.ID = fmt.Sprintf("ind-%d", time.Now().UnixNano())
+	}
+	if req.Type == "" {
+		req.Type = "HASANAH"
+	}
+	if req.Tingkat == "" {
+		req.Tingkat = "Sedang"
+	}
+
+	_, err := pool.Exec(ctx, "INSERT INTO indicators (id, unsur_id, text, type, default_score, tingkat) VALUES ($1,$2,$3,$4,$5,$6)", req.ID, req.UnsurID, req.Text, req.Type, req.DefaultScore, req.Tingkat)
+	if err != nil {
+		return utils.SendError(c, fiber.StatusInternalServerError, err.Error())
+	}
+
+	return utils.SendSuccess(c, fiber.Map{"id": req.ID}, "Indikator berhasil ditambahkan")
+}
+
+func UpdateIndicator(c *fiber.Ctx) error {
+	var req struct {
+		ID           string   `json:"id"`
+		Text         *string  `json:"text"`
+		Type         *string  `json:"type"`
+		DefaultScore *float64 `json:"defaultScore"`
+		Tingkat      *string  `json:"tingkat"`
+	}
+	if err := c.BodyParser(&req); err != nil || req.ID == "" {
+		return utils.SendError(c, fiber.StatusBadRequest, "ID indikator wajib diisi")
+	}
+
+	pool := database.GetPool()
+	if pool == nil {
+		return utils.SendError(c, fiber.StatusServiceUnavailable, "Database belum terhubung")
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	if req.Text != nil {
+		_, _ = pool.Exec(ctx, "UPDATE indicators SET text = $1 WHERE id = $2", *req.Text, req.ID)
+	}
+	if req.Type != nil {
+		_, _ = pool.Exec(ctx, "UPDATE indicators SET type = $1 WHERE id = $2", *req.Type, req.ID)
+	}
+	if req.DefaultScore != nil {
+		_, _ = pool.Exec(ctx, "UPDATE indicators SET default_score = $1 WHERE id = $2", *req.DefaultScore, req.ID)
+	}
+	if req.Tingkat != nil {
+		_, _ = pool.Exec(ctx, "UPDATE indicators SET tingkat = $1 WHERE id = $2", *req.Tingkat, req.ID)
+	}
+
+	return utils.SendSuccess(c, fiber.Map{"id": req.ID}, "Indikator berhasil diperbarui")
+}
+
+func DeleteIndicator(c *fiber.Ctx) error {
+	id := c.Params("id")
+	if id == "" {
+		return utils.SendError(c, fiber.StatusBadRequest, "ID indikator wajib diisi")
+	}
+
+	pool := database.GetPool()
+	if pool == nil {
+		return utils.SendError(c, fiber.StatusServiceUnavailable, "Database belum terhubung")
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	_, err := pool.Exec(ctx, "DELETE FROM indicators WHERE id = $1", id)
+	if err != nil {
+		return utils.SendError(c, fiber.StatusInternalServerError, err.Error())
+	}
+
+	return utils.SendSuccess(c, fiber.Map{"id": id}, "Indikator berhasil dihapus")
+}

@@ -18,7 +18,7 @@
 ```text
 mizan.apps/
 ├── app/
-│   ├── admin/                 # Admin Panel Master (dashboard, keaktifan-guru, santri, kelas, wali-kelas, absensi, rapor, feedback, users, kesehatan, perizinan, keuangan, tahfidz)
+│   ├── admin/                 # Admin Panel Master (dashboard, keaktifan-guru, santri, kelas, wali-kelas, absensi, rapor, feedback, users, notifikasi [tambah], kategori-pelanggaran [unsur, indikator], kesehatan, perizinan, keuangan, tahfidz)
 │   ├── guru/                  # Modul Ustadz / Pembina (dashboard, absen, input-penilaian, riwayat, santri, profil - NO financial access)
 │   ├── bk/                    # Modul Pengasuhan BK (dashboard, absen, history, santri, kesehatan [catat], perizinan, keuangan uang saku/SPP, tahfidz)
 │   ├── ortu/dashboard/        # Portal Wali Santri (status harian, progres tahfidz, rekam medis poskestren, mutasi uang saku, kartu QR izin keluar-masuk)

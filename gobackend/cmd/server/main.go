@@ -176,6 +176,9 @@ func main() {
 
 	api.Post("/categories", middleware.RequireRoles(models.RoleSuperAdmin), handlers.CreateCategory)
 	api.Post("/categories/unsur", middleware.RequireRoles(models.RoleSuperAdmin), handlers.CreateUnsur)
+	api.Post("/categories/indicator", middleware.RequireRoles(models.RoleSuperAdmin), handlers.CreateIndicator)
+	api.Put("/categories/indicator", middleware.RequireRoles(models.RoleSuperAdmin), handlers.UpdateIndicator)
+	api.Delete("/categories/indicator/:id", middleware.RequireRoles(models.RoleSuperAdmin), handlers.DeleteIndicator)
 
 	api.Get("/absensi", handlers.GetAbsensi)
 	api.Post("/absensi", middleware.RequireRoles(models.RoleSuperAdmin, models.RolePengasuhan, models.RoleGuru), handlers.CreateAbsensi(realtimeHub))

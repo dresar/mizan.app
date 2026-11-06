@@ -3,7 +3,7 @@
 import React, { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { ArrowLeft, Save } from "lucide-react";
+import { ArrowLeft, Save, AlertCircle } from "lucide-react";
 import { useMizan } from "@/lib/mizan-context";
 import { RoleShell } from "@/components/RoleShell";
 import { Card } from "@/components/ui/Card";
@@ -13,6 +13,8 @@ function IndikatorFormContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const editId = searchParams.get("id");
+  const preCategory = searchParams.get("kategori");
+  const preUnsurId = searchParams.get("unsurId");
 
   const {
     categories,
@@ -32,15 +34,51 @@ function IndikatorFormContent() {
     tingkat: Tingkat;
     score: number;
     keterangan?: string;
-  }>({
-    kategoriName: (effectiveCategories[0]?.name as KategoriUtama) || "Kedisiplinan",
-    unsurId: effectiveCategories[0]?.unsurs[0]?.id || "",
-    text: "",
-    type: "HASANAH",
-    tingkat: "Sedang",
-    score: 0.150,
-    keterangan: "Sesuai pedoman adab pondok"
+  }>(() => {
+    let initialCatName = (effectiveCategories[0]?.name as KategoriUtama) || "Kedisiplinan";
+    let initialUnsurId = effectiveCategories[0]?.unsurs[0]?.id || "";
+
+    if (preCategory) {
+      const matchedCat = effectiveCategories.find(
+        (c) => c.name.toLowerCase() === preCategory.toLowerCase() || c.code.toLowerCase() === preCategory.toLowerCase()
+      );
+      if (matchedCat) {
+        initialCatName = matchedCat.name as KategoriUtama;
+        if (preUnsurId && matchedCat.unsurs.some((u) => u.id === preUnsurId)) {
+          initialUnsurId = preUnsurId;
+        } else if (matchedCat.unsurs[0]) {
+          initialUnsurId = matchedCat.unsurs[0].id;
+        }
+      }
+    }
+
+    return {
+      kategoriName: initialCatName,
+      unsurId: initialUnsurId,
+      text: "",
+      type: "HASANAH",
+      tingkat: "Sedang",
+      score: 0.150,
+      keterangan: "Sesuai pedoman adab pondok"
+    };
   });
+
+  useEffect(() => {
+    if (!editId && preCategory) {
+      const matchedCat = effectiveCategories.find(
+        (c) => c.name.toLowerCase() === preCategory.toLowerCase() || c.code.toLowerCase() === preCategory.toLowerCase()
+      );
+      if (matchedCat) {
+        setFormData((prev) => ({
+          ...prev,
+          kategoriName: matchedCat.name as KategoriUtama,
+          unsurId: preUnsurId && matchedCat.unsurs.some((u) => u.id === preUnsurId)
+            ? preUnsurId
+            : matchedCat.unsurs[0]?.id || ""
+        }));
+      }
+    }
+  }, [preCategory, preUnsurId, editId, effectiveCategories]);
 
   useEffect(() => {
     if (!editId || effectiveCategories.length === 0) return;
@@ -151,7 +189,7 @@ function IndikatorFormContent() {
                   <button
                     type="button"
                     onClick={() => handleTypeChange("HASANAH")}
-                    className={`py-2.5 px-4 rounded-xl text-xs font-bold border transition-all ${
+                    className={`py-2.5 px-4 rounded-xl text-xs font-bold border transition-all cursor-pointer ${
                       formData.type === "HASANAH"
                         ? "bg-[#ECFDF5] border-[#1B4D3E] text-[#065F46] shadow-xs"
                         : "bg-white border-[#E2E8F0] text-[#64748B] hover:bg-[#FAF7F2]"
@@ -162,7 +200,7 @@ function IndikatorFormContent() {
                   <button
                     type="button"
                     onClick={() => handleTypeChange("SAYYIAH")}
-                    className={`py-2.5 px-4 rounded-xl text-xs font-bold border transition-all ${
+                    className={`py-2.5 px-4 rounded-xl text-xs font-bold border transition-all cursor-pointer ${
                       formData.type === "SAYYIAH"
                         ? "bg-[#FEF2F2] border-red-500 text-red-700 shadow-xs"
                         : "bg-white border-[#E2E8F0] text-[#64748B] hover:bg-[#FAF7F2]"
@@ -181,7 +219,7 @@ function IndikatorFormContent() {
                   value={formData.kategoriName}
                   onChange={(e) => {
                     const catName = e.target.value as KategoriUtama;
-                    const catObj = categories.find((c) => c.name === catName);
+                    const catObj = effectiveCategories.find((c) => c.name === catName);
                     setFormData((prev) => ({
                       ...prev,
                       kategoriName: catName,
@@ -202,17 +240,29 @@ function IndikatorFormContent() {
                 <label className="block text-xs font-bold text-[#172033] mb-1.5 uppercase tracking-wider">
                   Unsur Penilaian
                 </label>
-                <select
-                  value={formData.unsurId}
-                  onChange={(e) => setFormData({ ...formData, unsurId: e.target.value })}
-                  className="w-full px-3.5 py-2.5 text-xs bg-[#EEF2F6] border border-transparent rounded-xl focus:bg-white focus:border-[#1B4D3E] focus:outline-none text-[#172033] font-semibold"
-                >
-                  {activeCategory?.unsurs.map((u) => (
-                    <option key={u.id} value={u.id}>
-                      {u.name}
-                    </option>
-                  ))}
-                </select>
+                {activeCategory?.unsurs && activeCategory.unsurs.length > 0 ? (
+                  <select
+                    value={formData.unsurId}
+                    onChange={(e) => setFormData({ ...formData, unsurId: e.target.value })}
+                    className="w-full px-3.5 py-2.5 text-xs bg-[#EEF2F6] border border-transparent rounded-xl focus:bg-white focus:border-[#1B4D3E] focus:outline-none text-[#172033] font-semibold"
+                  >
+                    {activeCategory.unsurs.map((u) => (
+                      <option key={u.id} value={u.id}>
+                        {u.name}
+                      </option>
+                    ))}
+                  </select>
+                ) : (
+                  <div className="p-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-xs flex items-center justify-between">
+                    <span>Kategori ini belum memiliki unsur penilaian.</span>
+                    <Link
+                      href={`/admin/kategori-pelanggaran/unsur?kategori=${encodeURIComponent(formData.kategoriName)}`}
+                      className="font-bold underline text-[#1B4D3E]"
+                    >
+                      + Buat Unsur Dulu
+                    </Link>
+                  </div>
+                )}
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -290,7 +340,7 @@ function IndikatorFormContent() {
                 </Link>
                 <button
                   type="submit"
-                  className="px-5 py-2.5 text-xs font-bold rounded-xl bg-[#1B4D3E] text-white hover:bg-[#153e32] shadow-sm transition-colors flex items-center gap-1.5"
+                  className="px-5 py-2.5 text-xs font-bold rounded-xl bg-[#1B4D3E] text-white hover:bg-[#153e32] shadow-sm transition-colors flex items-center gap-1.5 cursor-pointer"
                 >
                   <Save className="w-3.5 h-3.5" />
                   <span>Simpan</span>
