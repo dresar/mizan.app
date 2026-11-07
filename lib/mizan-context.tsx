@@ -616,6 +616,14 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
 
   const logoutUser = () => {
     try {
+      fetch("/api/auth/logout", {
+        method: "POST",
+        credentials: "include"
+      }).catch(() => void 0);
+    } catch {
+      void 0;
+    }
+    try {
       localStorage.removeItem("mizan_token");
     } catch {
       void 0;
@@ -628,15 +636,15 @@ export function MizanProvider({ children }: { children: React.ReactNode }) {
       localStorage.removeItem(STORAGE_KEY_USER);
       localStorage.removeItem("mizan_user_cache_v4");
       sessionStorage.removeItem("mizan_entered_app");
-      document.cookie = "mizan_session=; path=/; max-age=0; SameSite=Lax";
-      document.cookie = "mizan_auth=; path=/; max-age=0; SameSite=Lax";
-      document.cookie = "mizan_uid=; path=/; max-age=0; SameSite=Lax";
+      document.cookie = "mizan_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; max-age=0; SameSite=Lax";
+      document.cookie = "mizan_auth=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; max-age=0; SameSite=Lax";
+      document.cookie = "mizan_uid=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; max-age=0; SameSite=Lax";
     } catch {
       void 0;
     }
     showToast("Anda telah keluar dari aplikasi.", "info");
     if (typeof window !== "undefined") {
-      window.location.href = "/login";
+      window.location.href = "/logout";
     }
   };
 

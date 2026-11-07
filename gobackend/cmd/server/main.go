@@ -319,6 +319,10 @@ func main() {
 	api := app.Group("/api")
 
 	api.Post("/auth/login", middleware.DualAuthLogin(handlers.Login(cfg), cfg.SessionSecret))
+	api.Post("/auth/logout", handlers.Logout(cfg))
+	api.Get("/auth/logout", handlers.Logout(cfg))
+	app.Post("/api/v1/auth/logout", handlers.Logout(cfg))
+	app.Get("/api/v1/auth/logout", handlers.Logout(cfg))
 	api.Get("/auth/me", handlers.GetMe(cfg))
 	api.Get("/share", handlers.GetShareCard)
 	api.Get("/data", middleware.OptionalAuth(cfg.SessionSecret), handlers.GetData)
@@ -519,12 +523,50 @@ func main() {
 			return c.Status(fiber.StatusNotFound).SendString("CMS admin.html not found")
 		}
 
+		if reqPath == "logout" {
+			isHTTPS := c.Protocol() == "https" || c.Get("X-Forwarded-Proto") == "https"
+			c.Cookie(&fiber.Cookie{
+				Name:     "mizan_session",
+				Value:    "",
+				Expires:  time.Now().Add(-24 * time.Hour),
+				HTTPOnly: true,
+				Path:     "/",
+				SameSite: "Lax",
+				Secure:   isHTTPS,
+				MaxAge:   -1,
+			})
+			c.Cookie(&fiber.Cookie{
+				Name:     "mizan_auth",
+				Value:    "",
+				Expires:  time.Now().Add(-24 * time.Hour),
+				Path:     "/",
+				SameSite: "Lax",
+				Secure:   isHTTPS,
+				MaxAge:   -1,
+			})
+			c.Cookie(&fiber.Cookie{
+				Name:     "mizan_uid",
+				Value:    "",
+				Expires:  time.Now().Add(-24 * time.Hour),
+				Path:     "/",
+				SameSite: "Lax",
+				Secure:   isHTTPS,
+				MaxAge:   -1,
+			})
+			return c.Redirect("/login")
+		}
+
 		if reqPath == "login" || reqPath == "register" {
+			loginFile := cfg.StaticWebDir + "/login.html"
+			if _, err := os.Stat(loginFile); err == nil {
+				c.Set("Cache-Control", "no-cache, no-store, must-revalidate")
+				return c.SendFile(loginFile)
+			}
 			publicIndex := cfg.StaticPublicWebDir + "/index.html"
 			if _, err := os.Stat(publicIndex); err == nil {
 				return c.SendFile(publicIndex)
 			}
-			return c.SendFile(cfg.StaticWebDir + "/login.html")
+			return c.SendFile(cfg.StaticWebDir + "/index.html")
 		}
 
 		isMizanRoute := reqPath == "admin" || strings.HasPrefix(reqPath, "admin/") ||

@@ -243,3 +243,41 @@ func UpdatePassword(c *fiber.Ctx) error {
 
 	return utils.SendSuccess(c, nil, "Kata sandi berhasil diperbarui")
 }
+
+func Logout(cfg *config.Config) fiber.Handler {
+	return func(c *fiber.Ctx) error {
+		isHTTPS := c.Protocol() == "https" || c.Get("X-Forwarded-Proto") == "https"
+		c.Cookie(&fiber.Cookie{
+			Name:     "mizan_session",
+			Value:    "",
+			Expires:  time.Now().Add(-24 * time.Hour),
+			HTTPOnly: true,
+			Path:     "/",
+			SameSite: "Lax",
+			Secure:   isHTTPS,
+			MaxAge:   -1,
+		})
+		c.Cookie(&fiber.Cookie{
+			Name:     "mizan_auth",
+			Value:    "",
+			Expires:  time.Now().Add(-24 * time.Hour),
+			Path:     "/",
+			SameSite: "Lax",
+			Secure:   isHTTPS,
+			MaxAge:   -1,
+		})
+		c.Cookie(&fiber.Cookie{
+			Name:     "mizan_uid",
+			Value:    "",
+			Expires:  time.Now().Add(-24 * time.Hour),
+			Path:     "/",
+			SameSite: "Lax",
+			Secure:   isHTTPS,
+			MaxAge:   -1,
+		})
+		return c.JSON(fiber.Map{
+			"success": true,
+			"message": "Logout berhasil",
+		})
+	}
+}

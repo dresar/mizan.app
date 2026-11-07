@@ -26,6 +26,7 @@ import {
   BookOpen,
   ShieldCheck,
   Activity,
+  LogOut,
   X
 } from "lucide-react";
 import { useMizan } from "@/lib/mizan-context";
@@ -33,7 +34,7 @@ import { Avatar } from "@/components/ui/Avatar";
 
 export function Sidebar() {
   const pathname = usePathname();
-  const { activeRole, currentUser, isMobileNavOpen, setIsMobileNavOpen, settings } = useMizan();
+  const { activeRole, currentUser, isMobileNavOpen, setIsMobileNavOpen, settings, logoutUser } = useMizan();
   const appLogo = settings?.appLogoUrl || "/logo.png";
 
   useEffect(() => {
@@ -175,6 +176,17 @@ export function Sidebar() {
             );
           })}
         </nav>
+
+        <div className="pt-2 mt-auto border-t border-[#E2EBF4] dark:border-slate-800">
+          <button
+            type="button"
+            onClick={logoutUser}
+            className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-xs font-semibold text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 transition-all cursor-pointer"
+          >
+            <LogOut className="w-4 h-4 text-rose-600 dark:text-rose-400" />
+            <span>Keluar Aplikasi</span>
+          </button>
+        </div>
       </aside>
 
       {isMobileNavOpen && (
@@ -269,7 +281,18 @@ export function Sidebar() {
               })}
             </nav>
 
-            <div className="pt-3 border-t border-[#E2EBF4] dark:border-slate-800 mt-auto">
+            <div className="pt-3 border-t border-[#E2EBF4] dark:border-slate-800 mt-auto space-y-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setIsMobileNavOpen(false);
+                  logoutUser();
+                }}
+                className="w-full py-2.5 rounded-2xl bg-rose-50 dark:bg-rose-950/30 text-rose-600 dark:text-rose-400 hover:bg-rose-100 dark:hover:bg-rose-950/50 border border-rose-200 dark:border-rose-900/50 text-xs font-bold transition-colors flex items-center justify-center gap-2 cursor-pointer"
+              >
+                <LogOut className="w-4 h-4" />
+                <span>Keluar Aplikasi</span>
+              </button>
               <button
                 type="button"
                 onClick={() => setIsMobileNavOpen(false)}
