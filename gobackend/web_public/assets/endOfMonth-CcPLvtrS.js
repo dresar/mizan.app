@@ -1,0 +1,1 @@
+import{al as o}from"./index-NSQ8AlP-.js";function l(n,t){const e=o(n),a=o(t),r=e.getFullYear()-a.getFullYear(),s=e.getMonth()-a.getMonth();return r*12+s}function c(n){const t=o(n),e=t.getMonth();return t.setFullYear(t.getFullYear(),e+1,0),t.setHours(23,59,59,999),t}export{l as d,c as e};

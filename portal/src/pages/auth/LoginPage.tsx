@@ -65,7 +65,7 @@ export default function LoginPage() {
         return;
       }
       if (rawRole === 'SUPER_ADMIN' || role === 'super_admin' || role === 'superadmin' || role === 'admin') {
-        window.location.href = '/admin/dashboard';
+        window.location.href = 'https://mizan.agentai.my.id/admin/dashboard';
         return;
       }
       if (role === 'staff' || role === 'petugaspendaftaran') {
@@ -73,19 +73,19 @@ export default function LoginPage() {
         return;
       }
       if (rawRole === 'PENGASUHAN' || role === 'pengasuhan') {
-        window.location.href = '/bk/dashboard';
+        window.location.href = 'https://mizan.agentai.my.id/bk/dashboard';
         return;
       }
       if (rawRole === 'GURU' || role === 'guru') {
-        window.location.href = '/guru/dashboard';
+        window.location.href = 'https://mizan.agentai.my.id/guru/dashboard';
         return;
       }
       if (rawRole === 'SATPAM' || role === 'satpam') {
-        window.location.href = '/satpam';
+        window.location.href = 'https://mizan.agentai.my.id/satpam';
         return;
       }
       if (rawRole === 'ORTU' || role === 'ortu') {
-        window.location.href = '/ortu/dashboard';
+        window.location.href = 'https://mizan.agentai.my.id/ortu/dashboard';
         return;
       }
       if ((user.publicationStatus && user.publicationStatus !== 'none') || role === 'author') {

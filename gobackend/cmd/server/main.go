@@ -596,9 +596,9 @@ func main() {
 				MaxAge:   -1,
 			})
 			if isMizanHost(c) {
-				return c.Redirect("/login")
+				return c.Redirect("https://mizan.agentai.my.id/login")
 			}
-			return c.Redirect("/")
+			return c.Redirect("https://agentai.my.id/")
 		}
 
 		if reqPath == "login" || reqPath == "register" {
@@ -608,14 +608,11 @@ func main() {
 					c.Set("Cache-Control", "no-cache, no-store, must-revalidate")
 					return c.SendFile(loginFile)
 				}
-			}
-			cmsFile := cfg.StaticPublicWebDir + "/admin.html"
-			if _, err := os.Stat(cmsFile); err == nil {
-				c.Set("Cache-Control", "no-cache, no-store, must-revalidate")
-				return c.SendFile(cmsFile)
+				return c.SendFile(cfg.StaticWebDir + "/index.html")
 			}
 			publicIndex := cfg.StaticPublicWebDir + "/index.html"
 			if _, err := os.Stat(publicIndex); err == nil {
+				c.Set("Cache-Control", "no-cache, no-store, must-revalidate")
 				return c.SendFile(publicIndex)
 			}
 			return c.SendFile(cfg.StaticWebDir + "/login.html")
@@ -626,7 +623,8 @@ func main() {
 				reqPath == "guru" || strings.HasPrefix(reqPath, "guru/") ||
 				reqPath == "bk" || strings.HasPrefix(reqPath, "bk/") ||
 				reqPath == "santri" || strings.HasPrefix(reqPath, "santri/") ||
-				reqPath == "ortu" || strings.HasPrefix(reqPath, "ortu/")
+				reqPath == "ortu" || strings.HasPrefix(reqPath, "ortu/") ||
+				reqPath == "admin" || (strings.HasPrefix(reqPath, "admin/") && !strings.HasPrefix(reqPath, "admin-cms"))
 			if isMizanPath {
 				return c.Redirect("https://mizan.agentai.my.id/" + reqPath)
 			}

@@ -42,17 +42,27 @@ mizan.apps/
 
 ---
 
-## 3. 🛡️ Keamanan & Standar Koding
-- **RBAC Strict**:
-  - `adminwebsite`: Mengelola konten profil publik pesantren di CMS panel (`/admin-cms`).
-  - `SUPER_ADMIN`: Akses penuh administrasi internal & monitoring Mizan (`/admin/dashboard`).
-  - `PENGASUHAN`: Modul pengasuhan BK, asrama, kesehatan, perizinan (`/bk/dashboard`).
-  - `GURU`: Khusus KBM presensi dan penilaian kelas (`/guru/dashboard`).
-  - `SATPAM`: Pos jaga gerbang scanner QR izin santri (`/satpam`).
-  - `ORTU`: Portal monitoring wali santri (`/ortu/dashboard`).
-- **Unified Login (`/login`)**:
-  - Halaman login tunggal melayani seluruh role tanpa tabrakan URL.
-  - Redirect otomatis ke dashboard masing-masing berdasarkan hak akses.
+## 3. 🌐 Domain & Role Matrix
+- **Subdomain Mizan (`mizan.agentai.my.id`)**:
+  - Entrypoint: `/` dan `/login` -> Mizan App Login.
+  - Role `SUPER_ADMIN`: `admin` (pwd: `password123`) -> `/admin/dashboard`
+  - Role `PENGASUHAN` (BK): `doli` (putra), `sindih` (putri) (pwd: `RDS123`) -> `/bk/dashboard`
+  - Role `GURU`: `agung` (putra), `annurul` (putri) (pwd: `RDS123`) -> `/guru/dashboard`
+  - Role `SATPAM`: `satpam` (pwd: `password123`) -> `/satpam`
+  - Role `ORTU`: `ortu` atau NIS santri contoh `221488` (pwd: `RDS1234`) -> `/ortu/dashboard`
+- **Domain Utama (`agentai.my.id`)**:
+  - Entrypoint: `/` -> Web Publik Profil Pesantren.
+  - Entrypoint: `/login` -> Portal Login.
+  - Role `adminwebsite`: `adminwebsite` (pwd: `password123`) -> `/admin-cms`
+  - Role `author`: `penulis` (pwd: `password123`) -> `/author/dashboard`
+  - Role `santri`: `santri` (pwd: `password123`) -> `/santri/dashboard/:id`
+  - Jika route Mizan (`/satpam`, `/admin/*`, `/bk/*`, `/guru/*`, `/ortu/*`) diakses di domain utama, otomatis di-redirect ke `https://mizan.agentai.my.id/<route>`.
+
+---
+
+## 4. 🛡️ Keamanan & Standar Koding
+- **Domain Isolation**: Sesi cookie diatur ke `.agentai.my.id` namun origin `mizan.agentai.my.id` dan `agentai.my.id` terisolasi secara rute agar tidak terjadi tabrakan login.
 - **Strict Anti-Komentar (/nokomen)**: Nol komentar kode di file `.go`, `.ts`, `.tsx`.
 - **Modular Code**: Maksimal 500 baris kode per file.
+- **Supermemory Integration**: Memory API v5 (`SUPERMEMORY_API_KEY`, namespace format `^[a-zA-Z0-9_:-]+$`).
 - **Proteksi Rahasia**: File `.env` & `.env.local` dilarang di-push ke GitHub.
