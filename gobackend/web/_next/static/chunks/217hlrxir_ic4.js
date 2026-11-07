@@ -1,1 +1,0 @@
-(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentScript:void 0,24711,e=>{"use strict";var t=e.i(81216),u=e.i(36435);e.s(["default",0,function(){let e=(0,u.useRouter)();return(0,t.useEffect)(()=>{e.replace("/ortu/dashboard")},[e]),null}])}]);

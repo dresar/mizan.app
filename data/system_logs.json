@@ -1,5 +1,115 @@
 [
   {
+    "id": "log_1794063734520_68",
+    "timestamp": "2026-11-07T22:02:14+07:00",
+    "level": "INFO",
+    "category": "SYSTEM",
+    "action": "SERVER_INIT",
+    "actor": {
+      "name": "Mizan Core Engine",
+      "role": "SYSTEM",
+      "ip": "127.0.0.1"
+    },
+    "message": "Backend engine Mizan Go siap melayani"
+  },
+  {
+    "id": "log_1794063725318_67",
+    "timestamp": "2026-11-07T22:02:05+07:00",
+    "level": "INFO",
+    "category": "SYSTEM",
+    "action": "SERVER_INIT",
+    "actor": {
+      "name": "Mizan Core Engine",
+      "role": "SYSTEM",
+      "ip": "127.0.0.1"
+    },
+    "message": "Backend engine Mizan Go siap melayani"
+  },
+  {
+    "id": "log_1794062813133_66",
+    "timestamp": "2026-11-07T21:46:53+07:00",
+    "level": "INFO",
+    "category": "AUTH",
+    "action": "POST /api/auth/login",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[200] POST /api/auth/login (80ms)",
+    "details": {
+      "duration_ms": 80,
+      "error": "",
+      "method": "POST",
+      "path": "/api/auth/login",
+      "status": 200,
+      "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36"
+    }
+  },
+  {
+    "id": "log_1794062779879_65",
+    "timestamp": "2026-11-07T21:46:19+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "GET /api/admin/stats",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[401] GET /api/admin/stats (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "GET",
+      "path": "/api/auth/login/",
+      "status": 401,
+      "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36"
+    }
+  },
+  {
+    "id": "log_1794062779877_64",
+    "timestamp": "2026-11-07T21:46:19+07:00",
+    "level": "WARN",
+    "category": "HTTP",
+    "action": "GET /api/admin/generic/websiteSettings",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[401] GET /api/admin/generic/websiteSettings (0ms)",
+    "details": {
+      "duration_ms": 0,
+      "error": "",
+      "method": "GET",
+      "path": "/api/auth/login/__next._tree.txtjs",
+      "status": 401,
+      "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36"
+    }
+  },
+  {
+    "id": "log_1794062779553_63",
+    "timestamp": "2026-11-07T21:46:19+07:00",
+    "level": "INFO",
+    "category": "AUTH",
+    "action": "POST /api/auth/login",
+    "actor": {
+      "name": "Guest",
+      "role": "PUBLIC",
+      "ip": "127.0.0.1"
+    },
+    "message": "[200] POST /api/auth/login (80ms)",
+    "details": {
+      "duration_ms": 80,
+      "error": "",
+      "method": "GETT",
+      "path": "/assets/subDays",
+      "status": 200,
+      "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36"
+    }
+  },
+  {
     "id": "log_1794059751550_62",
     "timestamp": "2026-11-07T20:55:51+07:00",
     "level": "INFO",

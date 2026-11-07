@@ -5,7 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { persistQueryClient } from "@tanstack/react-query-persist-client";
 import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persister";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import { AdminLayout } from "@/components/layout";
 import { ConfirmDialog } from "@/components/common";
 import SkeletonPage from "@/components/common/SkeletonPage";
@@ -154,10 +154,10 @@ const AdminApp = () => {
                   <Route path="/admin" element={<Navigate to="/admin-cms/dashboard" replace />} />
                   <Route path="/admin-cms" element={<Navigate to="/admin-cms/dashboard" replace />} />
                   <Route path="/dashboard" element={<Navigate to="/admin-cms/dashboard" replace />} />
-                  <Route path="/login" element={<NativeLoginRedirect />} />
-                  <Route path="/register" element={<NativeLoginRedirect />} />
-                  <Route path="/admin-cms/login" element={<NativeLoginRedirect />} />
-                  <Route path="/admin/login" element={<NativeLoginRedirect />} />
+                  <Route path="/login" element={<AuthLayout><LoginPage /></AuthLayout>} />
+                  <Route path="/register" element={<AuthLayout><LoginPage /></AuthLayout>} />
+                  <Route path="/admin-cms/login" element={<AuthLayout><LoginPage /></AuthLayout>} />
+                  <Route path="/admin/login" element={<AuthLayout><LoginPage /></AuthLayout>} />
 
                   <Route element={<ProtectedRoute />}>
                     <Route path="/admin-cms/sync" element={<DataSyncPage />} />

@@ -85,7 +85,7 @@ export default function LoginPage() {
         loginUser(data.user, data.token);
         const r = (data.user.role || "").toString().toLowerCase();
         if (r === "adminwebsite") {
-          window.location.href = "/admin-cms";
+          setErrorMessage("Akun CMS Website hanya dapat digunakan di portal publik: agentai.my.id");
           return;
         } else if (data.user.role === "SUPER_ADMIN") {
           router.push("/admin/dashboard");
@@ -139,7 +139,7 @@ export default function LoginPage() {
         loginUser(data.user, data.token);
         const r = (data.user.role || "").toString().toLowerCase();
         if (r === "adminwebsite") {
-          window.location.href = "/admin-cms";
+          setErrorMessage("Akun CMS Website hanya dapat digunakan di portal publik: agentai.my.id");
           return;
         } else if (data.user.role === "SUPER_ADMIN") {
           router.push("/admin/dashboard");

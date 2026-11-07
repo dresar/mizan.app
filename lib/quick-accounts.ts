@@ -12,15 +12,6 @@ export interface QuickAccount {
 
 export const QUICK_ACCOUNTS: QuickAccount[] = [
   {
-    "username": "adminwebsite",
-    "name": "Admin Website Profil (CMS)",
-    "role": "adminwebsite",
-    "gender": "Putra",
-    "category": "Admin",
-    "password": "password123",
-    "roleTitle": "CMS Profil & Berita"
-  },
-  {
     "username": "admin",
     "name": "Ust. H. Ahmad Syukri, Lc.",
     "role": "SUPER_ADMIN",

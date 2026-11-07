@@ -504,9 +504,7 @@ func main() {
 					return true
 				}
 				if !isMizanHost(c) {
-					if p == "login" || p == "register" || p == "admin-cms" || p == "admin.html" {
-						return true
-					}
+					return true
 				}
 				return false
 			},

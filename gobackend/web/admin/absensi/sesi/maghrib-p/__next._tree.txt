@@ -1,7 +1,8 @@
-:HL["/_next/static/chunks/3v8-h2rpekl8b.css","style"]
+:HL["/_next/static/css/407da173f1fa2ee1.css","style"]
+:HL["https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap","style"]
 5:[["children",{"s":"__PAGE__","h":160}]]
 4:[["children",{"s":{"n":"id","t":"d","k":"maghrib-p","s":[]},"h":96,"c":"$Q5"}]]
 3:[["children",{"s":"sesi","h":96,"c":"$Q4"}]]
 2:[["children",{"s":"absensi","h":96,"c":"$Q3"}]]
 1:[["children",{"s":"admin","h":96,"c":"$Q2"}]]
-0:{"b":"l_w5n7_josZRqxh8YOl06","t":{"t":{"s":"","h":80,"c":"$Q1"}}}
+0:{"b":"8Od4h18RiPmyvCRpOZFPH","t":{"t":{"s":"","h":80,"c":"$Q1"}}}
