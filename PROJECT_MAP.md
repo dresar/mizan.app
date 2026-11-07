@@ -10,7 +10,7 @@
 - **Realtime**: Bidirectional WebSocket Hub (`/ws` & `/api/broadcast`) dengan channel absensi, penilaian, feedback, monitoring.
 - **Styling**: Tailwind CSS v4 (`@tailwindcss/turbopack`), Lucide React icons, Palet Mizan (Deep Green `#1B4D3E`, Gold `#C5A059`, Cream `#FAF7EE`).
 - **Database**: PostgreSQL (`pgx/v5` connection pool di `gobackend/internal/database`) dengan tabel absensi, penilaian, santri, tahfidz, kesehatan, perizinan, keuangan uang saku/SPP, sambangan, catatan musyrif.
-- **Production Server**: Single binary Go mandiri (`gobackend/mizan-server`) melayani API, WebSocket, dan frontend tanpa perlu Node.js di VPS.
+- **Production Server**: Single binary Go mandiri (`gobackend/mizan-server`) melayani API, WebSocket, dan Host-Based Routing (`agentai.my.id` untuk Web Publik vs `mizan.agentai.my.id` untuk Sistem Mizan).
 
 ---
 
