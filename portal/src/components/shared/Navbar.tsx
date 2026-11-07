@@ -164,9 +164,9 @@ const Navbar = () => {
                   </Link>
                 ) : (
                   <a 
-                    href="/login" 
+                    href="https://mizan.agentai.my.id" 
                     className={`p-2 rounded-full transition-colors ${scrolled ? 'text-muted-foreground hover:bg-secondary' : 'text-white hover:bg-white/10'}`}
-                    title="Masuk"
+                    title="Portal Mizan (Santri & Guru)"
                   >
                       <LogIn className="w-5 h-5" />
                   </a>
@@ -177,9 +177,10 @@ const Navbar = () => {
                   <PublicThemeToggle compact className={scrolled ? 'bg-secondary border-border text-foreground border' : 'bg-white/10 border-white/20 text-white border'} />
                   {!isAuthenticated && (
                     <a
-                      href="/login"
+                      href="https://mizan.agentai.my.id"
                       className={`p-2 rounded-md transition-colors ${scrolled ? 'text-foreground hover:bg-secondary' : 'text-white hover:bg-white/10'}`}
-                      aria-label="Masuk"
+                      aria-label="Portal Mizan"
+                      title="Portal Mizan"
                     >
                       <LogIn className="w-6 h-6" />
                     </a>
@@ -290,18 +291,18 @@ const Navbar = () => {
                       ) : (
                         <>
                           <a 
-                            href="/login"
-                            onClick={() => setIsOpen(false)}
-                            className="flex items-center justify-center gap-2 py-2.5 rounded-xl border border-border font-semibold text-sm hover:bg-secondary transition-colors"
-                          >
-                            Masuk
-                          </a>
-                          <a 
-                            href="/login"
+                            href="https://mizan.agentai.my.id"
                             onClick={() => setIsOpen(false)}
                             className="flex items-center justify-center gap-2 py-2.5 rounded-xl bg-primary text-white font-semibold text-sm hover:bg-primary/90 shadow-sm transition-colors"
                           >
-                            Daftar
+                            Masuk Mizan
+                          </a>
+                          <a 
+                            href="/admin-cms"
+                            onClick={() => setIsOpen(false)}
+                            className="flex items-center justify-center gap-2 py-2.5 rounded-xl border border-border font-semibold text-sm hover:bg-secondary transition-colors"
+                          >
+                            Admin CMS
                           </a>
                         </>
                       )}

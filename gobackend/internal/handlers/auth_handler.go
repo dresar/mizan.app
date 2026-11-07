@@ -107,6 +107,14 @@ func Login(cfg *config.Config) fiber.Handler {
 		}
 
 		isHTTPS := c.Protocol() == "https" || c.Get("X-Forwarded-Proto") == "https"
+		cookieDomain := ""
+		h := strings.ToLower(c.Hostname())
+		if xfh := c.Get("X-Forwarded-Host"); xfh != "" {
+			h = strings.ToLower(strings.TrimSpace(strings.Split(xfh, ",")[0]))
+		}
+		if strings.HasSuffix(h, "agentai.my.id") {
+			cookieDomain = ".agentai.my.id"
+		}
 
 		c.Cookie(&fiber.Cookie{
 			Name:     "mizan_session",
@@ -114,6 +122,7 @@ func Login(cfg *config.Config) fiber.Handler {
 			Expires:  time.Now().Add(24 * 7 * time.Hour),
 			HTTPOnly: true,
 			Path:     "/",
+			Domain:   cookieDomain,
 			SameSite: "Lax",
 			Secure:   isHTTPS,
 		})
@@ -247,12 +256,22 @@ func UpdatePassword(c *fiber.Ctx) error {
 func Logout(cfg *config.Config) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		isHTTPS := c.Protocol() == "https" || c.Get("X-Forwarded-Proto") == "https"
+		cookieDomain := ""
+		h := strings.ToLower(c.Hostname())
+		if xfh := c.Get("X-Forwarded-Host"); xfh != "" {
+			h = strings.ToLower(strings.TrimSpace(strings.Split(xfh, ",")[0]))
+		}
+		if strings.HasSuffix(h, "agentai.my.id") {
+			cookieDomain = ".agentai.my.id"
+		}
+
 		c.Cookie(&fiber.Cookie{
 			Name:     "mizan_session",
 			Value:    "",
 			Expires:  time.Now().Add(-24 * time.Hour),
 			HTTPOnly: true,
 			Path:     "/",
+			Domain:   cookieDomain,
 			SameSite: "Lax",
 			Secure:   isHTTPS,
 			MaxAge:   -1,
@@ -262,6 +281,7 @@ func Logout(cfg *config.Config) fiber.Handler {
 			Value:    "",
 			Expires:  time.Now().Add(-24 * time.Hour),
 			Path:     "/",
+			Domain:   cookieDomain,
 			SameSite: "Lax",
 			Secure:   isHTTPS,
 			MaxAge:   -1,
@@ -271,6 +291,7 @@ func Logout(cfg *config.Config) fiber.Handler {
 			Value:    "",
 			Expires:  time.Now().Add(-24 * time.Hour),
 			Path:     "/",
+			Domain:   cookieDomain,
 			SameSite: "Lax",
 			Secure:   isHTTPS,
 			MaxAge:   -1,

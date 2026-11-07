@@ -469,7 +469,18 @@ func main() {
 		return c.Status(fiber.StatusNotFound).SendString("Sitemap not found")
 	})
 
+	isMizanHost := func(c *fiber.Ctx) bool {
+		h := strings.ToLower(c.Hostname())
+		if xfh := c.Get("X-Forwarded-Host"); xfh != "" {
+			h = strings.ToLower(strings.TrimSpace(strings.Split(xfh, ",")[0]))
+		}
+		return strings.HasPrefix(h, "mizan.") || strings.HasPrefix(h, "mizan-") || c.Query("app") == "mizan"
+	}
+
 	cmsHandler := func(c *fiber.Ctx) error {
+		if isMizanHost(c) {
+			return c.Redirect("https://agentai.my.id/admin-cms")
+		}
 		cmsFile := cfg.StaticPublicWebDir + "/admin.html"
 		if _, err := os.Stat(cmsFile); err == nil {
 			c.Set("Cache-Control", "no-cache, no-store, must-revalidate")
@@ -488,7 +499,16 @@ func main() {
 			ByteRange: true,
 			Browse:    false,
 			Next: func(c *fiber.Ctx) bool {
-				return strings.Trim(c.Path(), "/") == ""
+				p := strings.Trim(c.Path(), "/")
+				if p == "" {
+					return true
+				}
+				if !isMizanHost(c) {
+					if p == "login" || p == "register" || p == "admin-cms" || p == "admin.html" {
+						return true
+					}
+				}
+				return false
 			},
 		})
 	}
@@ -507,6 +527,14 @@ func main() {
 
 		reqPath := strings.Trim(p, "/")
 		if reqPath == "" {
+			if isMizanHost(c) {
+				loginFile := cfg.StaticWebDir + "/login.html"
+				if _, err := os.Stat(loginFile); err == nil {
+					c.Set("Cache-Control", "no-cache, no-store, must-revalidate")
+					return c.SendFile(loginFile)
+				}
+				return c.SendFile(cfg.StaticWebDir + "/index.html")
+			}
 			publicIndex := cfg.StaticPublicWebDir + "/index.html"
 			if _, err := os.Stat(publicIndex); err == nil {
 				return c.SendFile(publicIndex)
@@ -515,6 +543,9 @@ func main() {
 		}
 
 		if reqPath == "admin-cms" || strings.HasPrefix(reqPath, "admin-cms/") || reqPath == "admin.html" {
+			if isMizanHost(c) {
+				return c.Redirect("https://agentai.my.id/admin-cms")
+			}
 			cmsFile := cfg.StaticPublicWebDir + "/admin.html"
 			if _, err := os.Stat(cmsFile); err == nil {
 				c.Set("Cache-Control", "no-cache, no-store, must-revalidate")
@@ -525,12 +556,21 @@ func main() {
 
 		if reqPath == "logout" {
 			isHTTPS := c.Protocol() == "https" || c.Get("X-Forwarded-Proto") == "https"
+			cookieDomain := ""
+			h := strings.ToLower(c.Hostname())
+			if xfh := c.Get("X-Forwarded-Host"); xfh != "" {
+				h = strings.ToLower(strings.TrimSpace(strings.Split(xfh, ",")[0]))
+			}
+			if strings.HasSuffix(h, "agentai.my.id") {
+				cookieDomain = ".agentai.my.id"
+			}
 			c.Cookie(&fiber.Cookie{
 				Name:     "mizan_session",
 				Value:    "",
 				Expires:  time.Now().Add(-24 * time.Hour),
 				HTTPOnly: true,
 				Path:     "/",
+				Domain:   cookieDomain,
 				SameSite: "Lax",
 				Secure:   isHTTPS,
 				MaxAge:   -1,
@@ -540,6 +580,7 @@ func main() {
 				Value:    "",
 				Expires:  time.Now().Add(-24 * time.Hour),
 				Path:     "/",
+				Domain:   cookieDomain,
 				SameSite: "Lax",
 				Secure:   isHTTPS,
 				MaxAge:   -1,
@@ -549,24 +590,46 @@ func main() {
 				Value:    "",
 				Expires:  time.Now().Add(-24 * time.Hour),
 				Path:     "/",
+				Domain:   cookieDomain,
 				SameSite: "Lax",
 				Secure:   isHTTPS,
 				MaxAge:   -1,
 			})
-			return c.Redirect("/login")
+			if isMizanHost(c) {
+				return c.Redirect("/login")
+			}
+			return c.Redirect("/")
 		}
 
 		if reqPath == "login" || reqPath == "register" {
-			loginFile := cfg.StaticWebDir + "/login.html"
-			if _, err := os.Stat(loginFile); err == nil {
+			if isMizanHost(c) {
+				loginFile := cfg.StaticWebDir + "/login.html"
+				if _, err := os.Stat(loginFile); err == nil {
+					c.Set("Cache-Control", "no-cache, no-store, must-revalidate")
+					return c.SendFile(loginFile)
+				}
+			}
+			cmsFile := cfg.StaticPublicWebDir + "/admin.html"
+			if _, err := os.Stat(cmsFile); err == nil {
 				c.Set("Cache-Control", "no-cache, no-store, must-revalidate")
-				return c.SendFile(loginFile)
+				return c.SendFile(cmsFile)
 			}
 			publicIndex := cfg.StaticPublicWebDir + "/index.html"
 			if _, err := os.Stat(publicIndex); err == nil {
 				return c.SendFile(publicIndex)
 			}
-			return c.SendFile(cfg.StaticWebDir + "/index.html")
+			return c.SendFile(cfg.StaticWebDir + "/login.html")
+		}
+
+		if !isMizanHost(c) && strings.Contains(strings.ToLower(c.Hostname()), "agentai.my.id") {
+			isMizanPath := reqPath == "satpam" || strings.HasPrefix(reqPath, "satpam/") ||
+				reqPath == "guru" || strings.HasPrefix(reqPath, "guru/") ||
+				reqPath == "bk" || strings.HasPrefix(reqPath, "bk/") ||
+				reqPath == "santri" || strings.HasPrefix(reqPath, "santri/") ||
+				reqPath == "ortu" || strings.HasPrefix(reqPath, "ortu/")
+			if isMizanPath {
+				return c.Redirect("https://mizan.agentai.my.id/" + reqPath)
+			}
 		}
 
 		isMizanRoute := reqPath == "admin" || strings.HasPrefix(reqPath, "admin/") ||
