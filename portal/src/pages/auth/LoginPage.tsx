@@ -211,15 +211,6 @@ export default function LoginPage() {
     }
   };
   const filteredDemoUsers = ALL_DEMO_USERS.filter((u) => {
-    const matchRole =
-      roleFilter === 'ALL'
-        ? true
-        : roleFilter === 'GURU'
-        ? u.role === 'GURU'
-        : roleFilter === 'PENGASUHAN'
-        ? u.role === 'PENGASUHAN'
-        : u.role !== 'GURU' && u.role !== 'PENGASUHAN';
-    if (!matchRole) return false;
     if (!searchDemo.trim()) return true;
     const q = searchDemo.toLowerCase();
     return (
@@ -438,76 +429,34 @@ export default function LoginPage() {
             {}
             {activeTab === 'login' && (
                 <div className="mt-8 pt-6 border-t border-dashed border-border/80">
+                    <div className="p-3.5 mb-5 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                        <div className="space-y-0.5 text-left">
+                            <div className="flex items-center gap-1.5">
+                                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                                <span className="text-xs font-bold text-foreground">Sistem Mizan (Guru, BK, Satpam, Wali)</span>
+                            </div>
+                            <p className="text-[11px] text-muted-foreground">
+                                Portal penilaian sikap, sholat, dan perizinan berada di subdomain khusus Mizan.
+                            </p>
+                        </div>
+                        <a
+                            href="https://mizan.agentai.my.id/login"
+                            className="shrink-0 px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold transition-all shadow-sm flex items-center gap-1"
+                        >
+                            Ke Mizan ➔
+                        </a>
+                    </div>
+
                     <div className="flex items-center justify-between mb-3">
                         <div className="flex items-center gap-2">
-                            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                            <span className="w-2.5 h-2.5 rounded-full bg-primary animate-pulse"></span>
                             <span className="text-xs sm:text-sm font-semibold text-foreground">
-                                Mode Development — Dummy Login ({ALL_DEMO_USERS.length} Akun)
+                                Akun Demo Portal & CMS Website
                             </span>
                         </div>
                         <span className="text-[10px] font-mono text-muted-foreground bg-secondary px-2 py-0.5 rounded">
                             Pass: password123
                         </span>
-                    </div>
-
-                    <div className="space-y-2 mb-3">
-                        <div className="relative">
-                            <input
-                                type="text"
-                                value={searchDemo}
-                                onChange={(e) => setSearchDemo(e.target.value)}
-                                placeholder="Cari ustadz / guru / username..."
-                                className="w-full pl-9 pr-4 py-2 text-xs rounded-xl bg-secondary/40 border border-border focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/20 transition-all"
-                            />
-                            <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-                        </div>
-
-                        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs">
-                            <button
-                                type="button"
-                                onClick={() => setRoleFilter('ALL')}
-                                className={`px-2.5 py-1 rounded-lg text-xs font-medium whitespace-nowrap transition-colors ${
-                                    roleFilter === 'ALL'
-                                        ? 'bg-primary text-primary-foreground'
-                                        : 'bg-secondary/60 text-muted-foreground hover:text-foreground'
-                                }`}
-                            >
-                                Semua ({ALL_DEMO_USERS.length})
-                            </button>
-                            <button
-                                type="button"
-                                onClick={() => setRoleFilter('GURU')}
-                                className={`px-2.5 py-1 rounded-lg text-xs font-medium whitespace-nowrap transition-colors ${
-                                    roleFilter === 'GURU'
-                                        ? 'bg-primary text-primary-foreground'
-                                        : 'bg-secondary/60 text-muted-foreground hover:text-foreground'
-                                }`}
-                            >
-                                Dewan Guru ({ALL_DEMO_USERS.filter((u) => u.role === 'GURU').length})
-                            </button>
-                            <button
-                                type="button"
-                                onClick={() => setRoleFilter('PENGASUHAN')}
-                                className={`px-2.5 py-1 rounded-lg text-xs font-medium whitespace-nowrap transition-colors ${
-                                    roleFilter === 'PENGASUHAN'
-                                        ? 'bg-primary text-primary-foreground'
-                                        : 'bg-secondary/60 text-muted-foreground hover:text-foreground'
-                                }`}
-                            >
-                                Pengasuhan/BK ({ALL_DEMO_USERS.filter((u) => u.role === 'PENGASUHAN').length})
-                            </button>
-                            <button
-                                type="button"
-                                onClick={() => setRoleFilter('OTHER')}
-                                className={`px-2.5 py-1 rounded-lg text-xs font-medium whitespace-nowrap transition-colors ${
-                                    roleFilter === 'OTHER'
-                                        ? 'bg-primary text-primary-foreground'
-                                        : 'bg-secondary/60 text-muted-foreground hover:text-foreground'
-                                }`}
-                            >
-                                Admin & Lainnya ({ALL_DEMO_USERS.filter((u) => u.role !== 'GURU' && u.role !== 'PENGASUHAN').length})
-                            </button>
-                        </div>
                     </div>
 
                     <div className="space-y-1.5 max-h-80 overflow-y-auto pr-1">
