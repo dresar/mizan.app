@@ -1,19 +1,51 @@
+import { Role } from "./mock-data";
+
 export interface QuickAccount {
   username: string;
   name: string;
-  role: "SUPER_ADMIN" | "PENGASUHAN" | "GURU";
+  role: Role;
   gender: "Putra" | "Putri";
   category: "Admin" | "BK Putra" | "BK Putri" | "Guru Putra" | "Guru Putri";
   password?: string;
+  roleTitle?: string;
 }
 
 export const QUICK_ACCOUNTS: QuickAccount[] = [
+  {
+    "username": "adminwebsite",
+    "name": "Admin Website Profil (CMS)",
+    "role": "adminwebsite",
+    "gender": "Putra",
+    "category": "Admin",
+    "password": "password123",
+    "roleTitle": "CMS Profil & Berita"
+  },
   {
     "username": "admin",
     "name": "Ust. H. Ahmad Syukri, Lc.",
     "role": "SUPER_ADMIN",
     "gender": "Putra",
-    "category": "Admin"
+    "category": "Admin",
+    "password": "password123",
+    "roleTitle": "Super Admin Mizan"
+  },
+  {
+    "username": "satpam",
+    "name": "Petugas Gerbang Satpam",
+    "role": "SATPAM",
+    "gender": "Putra",
+    "category": "Admin",
+    "password": "password123",
+    "roleTitle": "Pos Keamanan Gerbang"
+  },
+  {
+    "username": "ortu",
+    "name": "Wali Santri Demo",
+    "role": "ORTU",
+    "gender": "Putra",
+    "category": "Admin",
+    "password": "password123",
+    "roleTitle": "Wali Santri / Orang Tua"
   },
   {
     "username": "doli",

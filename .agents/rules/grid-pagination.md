@@ -1,6 +1,6 @@
 ---
 description: Standar layout tampilan kartu (kotak) wajib 4 grid di desktop dan 3 grid di tablet/mobile, serta paginasi wajib 20 item per halaman untuk seluruh halaman data Mizan Apps.
-globs: ["app/**/*.tsx", "components/**/*.tsx"]
+globs: "app/**/*.tsx, components/**/*.tsx"
 ---
 
 # Aturan Baku Grid Kartu & Paginasi Data Mizan Apps

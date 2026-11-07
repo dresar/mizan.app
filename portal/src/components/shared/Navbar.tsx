@@ -163,26 +163,26 @@ const Navbar = () => {
                       <LayoutDashboard className="w-5 h-5" />
                   </Link>
                 ) : (
-                  <Link 
-                    to="/login" 
+                  <a 
+                    href="/login" 
                     className={`p-2 rounded-full transition-colors ${scrolled ? 'text-muted-foreground hover:bg-secondary' : 'text-white hover:bg-white/10'}`}
                     title="Masuk"
                   >
                       <LogIn className="w-5 h-5" />
-                  </Link>
+                  </a>
                 )}
               </div>
               {}
               <div className="lg:hidden flex items-center gap-3">
                   <PublicThemeToggle compact className={scrolled ? 'bg-secondary border-border text-foreground border' : 'bg-white/10 border-white/20 text-white border'} />
                   {!isAuthenticated && (
-                    <Link
-                      to="/login"
+                    <a
+                      href="/login"
                       className={`p-2 rounded-md transition-colors ${scrolled ? 'text-foreground hover:bg-secondary' : 'text-white hover:bg-white/10'}`}
                       aria-label="Masuk"
                     >
                       <LogIn className="w-6 h-6" />
-                    </Link>
+                    </a>
                   )}
               </div>
             </div>
@@ -289,20 +289,20 @@ const Navbar = () => {
                         </Link>
                       ) : (
                         <>
-                          <Link 
-                            to="/login"
+                          <a 
+                            href="/login"
                             onClick={() => setIsOpen(false)}
                             className="flex items-center justify-center gap-2 py-2.5 rounded-xl border border-border font-semibold text-sm hover:bg-secondary transition-colors"
                           >
                             Masuk
-                          </Link>
-                          <Link 
-                            to="/login"
+                          </a>
+                          <a 
+                            href="/login"
                             onClick={() => setIsOpen(false)}
                             className="flex items-center justify-center gap-2 py-2.5 rounded-xl bg-primary text-white font-semibold text-sm hover:bg-primary/90 shadow-sm transition-colors"
                           >
                             Daftar
-                          </Link>
+                          </a>
                         </>
                       )}
                     </div>

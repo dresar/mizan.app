@@ -83,7 +83,11 @@ export default function LoginPage() {
 
       if (data.success && data.user) {
         loginUser(data.user, data.token);
-        if (data.user.role === "SUPER_ADMIN") {
+        const r = (data.user.role || "").toString().toLowerCase();
+        if (r === "adminwebsite") {
+          window.location.href = "/admin-cms";
+          return;
+        } else if (data.user.role === "SUPER_ADMIN") {
           router.push("/admin/dashboard");
         } else if (data.user.role === "PENGASUHAN") {
           router.push("/bk/dashboard");
@@ -133,7 +137,11 @@ export default function LoginPage() {
 
       if (data.success && data.user) {
         loginUser(data.user, data.token);
-        if (data.user.role === "SUPER_ADMIN") {
+        const r = (data.user.role || "").toString().toLowerCase();
+        if (r === "adminwebsite") {
+          window.location.href = "/admin-cms";
+          return;
+        } else if (data.user.role === "SUPER_ADMIN") {
           router.push("/admin/dashboard");
         } else if (data.user.role === "PENGASUHAN") {
           router.push("/bk/dashboard");

@@ -100,6 +100,13 @@ const KMIGuruMapelPage = lazy(() => import("./pages/kmi/KMIGuruMapelPage"));
 const KMIJadwalPage = lazy(() => import("./pages/kmi/KMIJadwalPage"));
 const KMIKokurPage = lazy(() => import("./pages/kmi/KMIKokurPage"));
 
+const NativeLoginRedirect = () => {
+  useEffect(() => {
+    window.location.href = '/login';
+  }, []);
+  return null;
+};
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -147,11 +154,10 @@ const AdminApp = () => {
                   <Route path="/admin" element={<Navigate to="/admin-cms/dashboard" replace />} />
                   <Route path="/admin-cms" element={<Navigate to="/admin-cms/dashboard" replace />} />
                   <Route path="/dashboard" element={<Navigate to="/admin-cms/dashboard" replace />} />
-                  <Route path="/login" element={<AuthLayout><LoginPage /></AuthLayout>} />
-                  <Route path="/register" element={<AuthLayout><LoginPage /></AuthLayout>} />
-                  <Route path="/admin-cms/login" element={<AuthLayout><LoginPage /></AuthLayout>} />
-                  <Route path="/admin/login" element={<AuthLayout><LoginPage /></AuthLayout>} />
-                  <Route path="/admin-cms/login" element={<AuthLayout><LoginPage /></AuthLayout>} />
+                  <Route path="/login" element={<NativeLoginRedirect />} />
+                  <Route path="/register" element={<NativeLoginRedirect />} />
+                  <Route path="/admin-cms/login" element={<NativeLoginRedirect />} />
+                  <Route path="/admin/login" element={<NativeLoginRedirect />} />
 
                   <Route element={<ProtectedRoute />}>
                     <Route path="/admin-cms/sync" element={<DataSyncPage />} />

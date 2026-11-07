@@ -338,6 +338,17 @@ export default function Header() {
               </div>
             )}
           </div>
+
+          <button
+            type="button"
+            onClick={handleLogout}
+            className="p-2 sm:px-2.5 sm:py-1.5 rounded-2xl bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 hover:bg-rose-100 dark:hover:bg-rose-900/60 border border-rose-200 dark:border-rose-900/50 transition-all focus:outline-none cursor-pointer flex items-center gap-1.5 text-xs font-bold shrink-0"
+            aria-label="Keluar Aplikasi"
+            title="Keluar / Logout"
+          >
+            <LogOut className="w-4 h-4" />
+            <span className="hidden sm:inline">Keluar</span>
+          </button>
         </div>
       </div>
     </header>

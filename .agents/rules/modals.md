@@ -1,6 +1,6 @@
 ---
 description: Standar pembatasan modal maksimal 4 form field dan larangan keras modal untuk informasi detail, tabel, atau dasbor data.
-globs: ["app/**/*.tsx", "components/**/*.tsx"]
+globs: "app/**/*.tsx, components/**/*.tsx"
 ---
 
 # Aturan Baku Penggunaan Modal vs Halaman Mandiri (Pages)

@@ -16,6 +16,7 @@ Aturan baku ini berlaku untuk seluruh agent yang membaca, menulis, atau mengaudi
 2. **Single-Word Action Buttons**: Seluruh label tombol aksi interaktif WAJIB terdiri dari 1 kata tunggal saja (contoh: `Bagikan`, `Unduh`, `Salin`, `Cetak`, `Tambah`, `Ubah`, `Detail`, `Simpan`, `Keluar`, `Buka`, `Tutup`).
 3. **Zero Infrastructure Disclosure**: Dilarang menampilkan nama teknis infrastruktur/backend (seperti PostgreSQL, Neon, VPS, Docker, API, port, server) pada antarmuka pengguna.
 4. **Validasi Tipe & Build**: Setiap kode baru wajib lulus verifikasi tanpa error (`npx tsc --noEmit` dan `go build ./cmd/server`).
+5. **Resource-Constrained Build**: Kompilasi `npm run build` WAJIB menyertakan pembatas `NODE_OPTIONS="--max-old-space-size=1024" NEXT_CPU_COUNT=2` guna mencegah OOM Killer pada limitasi cgroup 4GB.
 
 ## 3. Protokol Efisiensi Operasional
 - Gunakan pencarian simbol tertarget (`grep_search` / ripgrep) alih-alih membuka file besar utuh.

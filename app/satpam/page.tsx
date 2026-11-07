@@ -102,11 +102,11 @@ export default function SatpamGatePage() {
             <button
               type="button"
               onClick={logoutUser}
-              className="px-2.5 py-1.5 rounded-xl text-rose-600 dark:text-rose-400 bg-rose-50/60 dark:bg-rose-950/40 hover:bg-rose-100 dark:hover:bg-rose-900/60 border border-rose-200 dark:border-rose-900/50 transition-colors flex items-center gap-1.5 text-xs font-bold cursor-pointer"
+              className="px-3 py-1.5 rounded-xl text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 dark:hover:bg-rose-900/60 border border-rose-200 dark:border-rose-900/50 transition-colors flex items-center gap-1.5 text-xs font-bold cursor-pointer shrink-0 shadow-xs"
               title="Keluar dari Akun Satpam"
             >
-              <LogOut className="w-3.5 h-3.5" />
-              <span>Keluar</span>
+              <LogOut className="w-4 h-4" />
+              <span>Keluar Akun</span>
             </button>
           </div>
 

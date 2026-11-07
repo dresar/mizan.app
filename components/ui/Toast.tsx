@@ -11,7 +11,7 @@ export function ToastContainer() {
 
   return (
     <div
-      className="fixed top-3 right-3 sm:top-4 sm:right-4 z-50 flex flex-col gap-1.5 max-w-[290px] sm:max-w-xs w-auto pointer-events-none"
+      className="fixed bottom-5 right-5 sm:bottom-6 sm:right-6 z-50 flex flex-col gap-1.5 max-w-[290px] sm:max-w-xs w-auto pointer-events-none"
       role="region"
       aria-label="Notifikasi"
     >

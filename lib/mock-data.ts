@@ -1,4 +1,4 @@
-export type Role = "SUPER_ADMIN" | "PENGASUHAN" | "GURU" | "ORTU" | "SATPAM";
+export type Role = "SUPER_ADMIN" | "PENGASUHAN" | "GURU" | "ORTU" | "SATPAM" | "adminwebsite";
 
 export type WaktuSholat =
   | "Subuh"

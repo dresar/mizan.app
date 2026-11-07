@@ -68,6 +68,13 @@ const AuthorCollaborationsPage = lazy(() => import("./pages/author/AuthorCollabo
 const AuthorCollaborationDetailPage = lazy(() => import("./pages/author/AuthorCollaborationDetailPage"));
 const AuthorDiscussionsPage = lazy(() => import("./pages/author/AuthorDiscussionsPage"));
 
+const NativeLoginRedirect = () => {
+  useEffect(() => {
+    window.location.href = '/login';
+  }, []);
+  return null;
+};
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -195,8 +202,8 @@ const App = () => {
                   <Route path="/alur-pendaftaran" element={<MainLayout><AlurPendaftaranPage /></MainLayout>} />
                   <Route path="/alur" element={<Navigate to="/alur-pendaftaran" replace />} />
 
-                  <Route path="/login" element={<AuthLayout><LoginPage /></AuthLayout>} />
-                  <Route path="/register" element={<AuthLayout><LoginPage /></AuthLayout>} />
+                  <Route path="/login" element={<NativeLoginRedirect />} />
+                  <Route path="/register" element={<NativeLoginRedirect />} />
                   <Route path="/admin-cms" element={<Navigate to="/admin.html" replace />} />
                   <Route path="/admin-cms/*" element={<Navigate to="/admin.html" replace />} />
 
